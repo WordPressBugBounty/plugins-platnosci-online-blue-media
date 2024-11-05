@@ -47,14 +47,14 @@ class Vas {
 
 	private function parse_body_string( string $body ): string {
 		$patterns = [
-			'#<script(.*?)>(.*?)</script>#is',  // Usuwanie znaczników <script>
-			'#<link(.*?)>#is',                  // Usuwanie znaczników <link>
-			'#<title(.*?)>(.*?)</title>#is',    // Usuwanie znaczników <title>
-			'#<meta(.*?)>#is',                  // Usuwanie znaczników <meta>
-			'#<!--(.*?)-->#is'                  // Usuwanie komentarzy HTML
+			'#<script(.*?)>(.*?)</script>#is',
+			'#<link(.*?)>#is',
+			'#<title(.*?)>(.*?)</title>#is',
+			'#<meta(.*?)>#is',
+			'#<!--(.*?)-->#is',
 		];
 
-		return preg_replace($patterns, '', $body);
+		return preg_replace( $patterns, '', $body );
 	}
 
 	/**

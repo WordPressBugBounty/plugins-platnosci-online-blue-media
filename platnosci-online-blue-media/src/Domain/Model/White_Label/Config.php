@@ -18,8 +18,12 @@ class Config {
 				'position'   => 0,
 				'ids'        => [ 509 ],
 				'extra_html' => $blik0_type === 'blik_0_without_redirect' ? $this->get_blik0_html_info()
-					: $this->get_desc_html_info( __( 'Pay comfortably using Blik payments',
+					: $this->get_desc_html_info( __( 'Pay comfortably using BLIK payments',
 						'bm-woocommerce' ) ),
+				'data'       => [
+					'blik0'    => $blik0_type === 'blik_0_without_redirect',
+					'test_key' => 'test_value',
+				],
 			],
 
 			/*[
@@ -101,7 +105,7 @@ class Config {
 					'bm-woocommerce' ),
 			],
 			[
-				'name'              => __( 'Blik Pay Later', 'bm-woocommerce' ),
+				'name'              => __( 'BLIK Pay Later', 'bm-woocommerce' ),
 				'position'          => 10,
 				'ids'               => [ 523 ],
 				'extra_html'        => $this->get_desc_html_info( __( 'Buy now and pay within 30 days',

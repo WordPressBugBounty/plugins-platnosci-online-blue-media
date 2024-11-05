@@ -8,6 +8,7 @@ use Ilabs\BM_Woocommerce\Domain\Model\White_Label\Expandable_Group;
 use Ilabs\BM_Woocommerce\Domain\Model\White_Label\Expandable_Group_Interface;
 use Ilabs\BM_Woocommerce\Domain\Model\White_Label\Group;
 use Ilabs\BM_Woocommerce\Domain\Service\Legacy\Importer;
+use Ilabs\BM_Woocommerce\Domain\Service\Settings\Settings_Manager;
 use Ilabs\BM_Woocommerce\Domain\Service\White_Label\Group_Mapper;
 use Ilabs\BM_Woocommerce\Domain\Woocommerce\Autopay_Order_Factory;
 use Ilabs\BM_Woocommerce\Helpers\Helper;
@@ -16,6 +17,7 @@ use SimpleXMLElement;
 use WC_Order;
 use WC_Payment_Gateway;
 use Ilabs\BM_Woocommerce\Gateway\Hooks\Payment_On_Account_Page;
+use function GuzzleHttp\Psr7\str;
 
 class Blue_Media_Gateway extends WC_Payment_Gateway {
 
@@ -65,6 +67,8 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 	private $payment_on_account_page = false;
 
+	private Settings_Manager $settings_manager;
+
 
 	/**
 	 *
@@ -74,6 +78,10 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		( new Hooks() )->init();
 
 		blue_media()->set_bluemedia_gateway( $this );
+
+		$this->settings_manager = new Settings_Manager();
+		$this->settings_manager->init_once();
+
 
 		( new Importer() )->handle_import();
 
@@ -115,7 +123,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 		add_action( 'woocommerce_update_options_payment_gateways_' . $this->id,
 			[ $this, 'process_admin_options' ] );
-
 
 		if ( isset( $_GET['autopay_express_payment'] ) || isset( $_GET['autopay_payment_on_account_page'] ) ) {
 			if ( is_object( WC()->session ) && ! wp_doing_ajax() ) {
@@ -184,8 +191,10 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 						$order->add_meta_data( 'bm_transaction_init_params',
 							$params );
 						$order->save_meta_data();
-						/*blue_media()->update_payment_cache( 'bm_payment_start',
-							'1' );*/
+
+						blue_media()->update_payment_cache( 'bm_payment_start',
+							'1' );
+
 						exit;
 					} else {
 						WC()->session->set( 'bm_order_payment_params', null );
@@ -310,426 +319,16 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		return false;
 	}
 
+
 	/**
 	 * @return void
 	 * @throws Exception
 	 */
 	public function init_form_fields() {
-		add_filter( 'woocommerce_generate_import_from_bm_legacy_html',
-			[ $this, 'generate_import_field' ] );
 
-		if ( ! empty( blue_media()
-			->get_request()
-			->get_by_key( 'bmtab' ) ) ) {
-			return;
-		}
+		$this->form_fields = $this->settings_manager->get_form_fields();
 
-		$this->form_fields = [
-			'whitelabel'      => [
-				'title'       => __( 'Gateway mode',
-					'bm-woocommerce' ),
-				'label'       => __( 'Enable whitelabel mode',
-					'bm-woocommerce' ),
-				'type'        => 'checkbox',
-				'description' => __( 'White label is not available when block editor for Checkout page is active',
-					'bm-woocommerce' ),
-				'default'     => 'no',
-				'desc_tip'    => false,
-			],
-			'blik_type'       => [
-				'title'       => __( 'BLIK payment type',
-					'bm-woocommerce' ),
-				'type'        => 'select',
-				'description' => __( 'BLIK-0 is not available when block editor for Checkout page is active',
-					'bm-woocommerce' ),
-				'options'     => [
-					'with_redirect'           => __( 'Blik with redirect',
-						'bm-woocommerce' ),
-					'blik_0_without_redirect' => __( 'Blik-0 without redirect',
-						'bm-woocommerce' ),
-				],
-				'default'     => 'with_redirect',
-			],
-			'testmode_header' => [
-				'title' => __( 'Test environment',
-					'bm-woocommerce' ),
-				'type'  => 'title',
-			],
-			'testmode'        => [
-				'title'       => __( 'Sandbox mode',
-					'bm-woocommerce' ),
-				'label'       => __( 'Enable Sandbox mode',
-					'bm-woocommerce' ),
-				'type'        => 'radio',
-				'default'     => 'no',
-				'options'     => [
-					'yes' => __( 'Yes', 'bm-woocommerce' ),
-					'no'  => __( 'No', 'bm-woocommerce' ),
-				],
-				'description' => __( 'It allows you to check the module\'s operation without having to pay for the order (no order fees are charged in the test mode).',
-					'bm-woocommerce' ),
-				'desc_tip'    => true,
-			],
-			'testmode_info'   => [
-				'title'       => __( '',
-					'bm-woocommerce' ),
-				'description' => "<span class='p-info'>" . __( 'The service ID and shared key for the test environment are different from production data.',
-						'bm-woocommerce' )
-								 . '<br>' . __( 'To get the data for the test environment,',
-						'bm-woocommerce' ) . '<a href="https://developers.autopay.pl/kontakt?mtm_campaign=woocommerce_developers_formularz&mtm_source=woocommerce_backoffice&mtm_medium=hiperlink">'
-								 . ' ' . __( 'please contact us.',
-						'bm-woocommerce' ) . '</a></span>',
-				'type'        => 'title',
-			],
-
-			'service_id'  => [
-				'title'       => __( 'Service ID',
-					'bm-woocommerce' ),
-				'description' => __( 'It contains only numbers. It is different for each shop',
-					'bm-woocommerce' ),
-				'type'        => 'text',
-			],
-			'private_key' => [
-				'title'       => __( 'Production private Key',
-					'bm-woocommerce' ),
-				'description' => __( 'Contains numbers and lowercase letters. It is used to verify communication with the payment gateway. It should not be made available to the public',
-					'bm-woocommerce' ),
-				'type'        => 'password',
-			],
-			'ga4_tracking_id'                         => [
-				'title'       => __( 'Measurement ID',
-					'bm-woocommerce' ),
-				'description' => ( function () {
-					$desc           = __( 'The identifier is in the format G-XXXXXXX.',
-						'bm-woocommerce' );
-					$desc_link_text = __( 'Where can I find the Measurement ID?',
-						'bm-woocommerce' );
-
-					return "$desc <br><a class='bm_ga_help_modal' href='#'>$desc_link_text</a>";
-				} )(),
-				'type'        => 'text',
-				'bmtab'       => 'analytics',
-			],
-			'ga4_client_id'                           => [
-				'title'       => __( 'Stream ID',
-					'bm-woocommerce' ),
-				'description' => ( function () {
-					$desc           = __( 'The identifier is in numeric format.',
-						'bm-woocommerce' );
-					$desc_link_text = __( 'Where can I find the Stream ID?',
-						'bm-woocommerce' );
-
-					return "$desc <br><a class='bm_ga_help_modal' href='#'>$desc_link_text</a>";
-				} )(),
-				'type'        => 'text',
-				'bmtab'       => 'analytics',
-			],
-			'ga4_api_secret'                          => [
-				'title'       => __( 'API Secret',
-					'bm-woocommerce' ),
-				'description' => ( function () {
-					$desc           = __( '',
-						'bm-woocommerce' );
-					$desc_link_text = __( 'Where can I find the Api secret?',
-						'bm-woocommerce' );
-
-					return "$desc <a class='bm_ga_help_modal' href='#'>$desc_link_text</a>";
-				} )(),
-				'type'        => 'password',
-				'bmtab'       => 'analytics',
-			],
-			'wc_payment_statuses'                     => [
-				'title'       => __( 'Payment statuses',
-					'bm-woocommerce' ),
-				'description' => __( '',
-					'bm-woocommerce' ),
-				'type'        => 'title',
-			],
-			'wc_payment_status_on_bm_pending'         => [
-				'title'       => __( 'Payment pending',
-					'bm-woocommerce' ),
-				'description' => __( '',
-					'bm-woocommerce' ),
-				'type'        => 'select',
-				'options'     => wc_get_order_statuses(),
-				'default'     => 'wc-pending',
-			],
-			'wc_payment_status_on_bm_success'         => [
-				'title'       => __( 'Payment success',
-					'bm-woocommerce' ),
-				'description' => __( '',
-					'bm-woocommerce' ),
-				'type'        => 'select',
-				'options'     => wc_get_order_statuses(),
-				'default'     => 'wc-completed',
-			],
-			'wc_payment_status_on_bm_success_virtual' => [
-				'title'       => __( 'Payment success for a cart containing only virtual products',
-					'bm-woocommerce' ),
-				'description' => __( '',
-					'bm-woocommerce' ),
-				'type'        => 'select',
-				'options'     => wc_get_order_statuses(),
-				'default'     => 'wc-completed',
-			],
-			'wc_payment_status_on_bm_failure'         => [
-				'title'       => __( 'Payment failure',
-					'bm-woocommerce' ),
-				'description' => __( '',
-					'bm-woocommerce' ),
-				'type'        => 'select',
-				'options'     => wc_get_order_statuses(),
-				'default'     => 'wc-failed',
-			],
-			'advanced_opts_title'                     => [
-				'title'       => __( 'Advanced settings',
-					'bm-woocommerce' ),
-				'description' => __( '',
-					'bm-woocommerce' ),
-				'type'        => 'title',
-			],
-			'test_service_id'                         => [
-				'title'       => __( 'Test Service ID',
-					'bm-woocommerce' ),
-				'description' => __( 'It contains only numbers. It is different for each shop',
-					'bm-woocommerce' ),
-				'type'        => 'text',
-			],
-			'test_private_key'                        => [
-				'title'       => __( 'Test Private Key',
-					'bm-woocommerce' ),
-				'description' => __( 'Contains numbers and lowercase letters. It is used to verify communication with the payment gateway. It should not be made available to the public',
-					'bm-woocommerce' ),
-				'type'        => 'password',
-			],
-			'debug_mode'                              => [
-				'title'   => __( 'Debug mode',
-					'bm-woocommerce' ),
-				'label'   => __( 'Enable debug mode',
-					'bm-woocommerce' ),
-				'type'    => 'select',
-				'default' => 'no',
-				'options' => [
-					'no'  => __( 'No', 'bm-woocommerce' ),
-					'yes' => __( 'Yes', 'bm-woocommerce' ),
-				],
-			],
-			'sandbox_for_admins'                      => [
-				'title'   => __( 'Sandbox mode for logged-in administrator',
-					'bm-woocommerce' ),
-				'label'   => __( '',
-					'bm-woocommerce' ),
-				'type'    => 'select',
-				'default' => 'no',
-				'options' => [
-					'no'  => __( 'No', 'bm-woocommerce' ),
-					'yes' => __( 'Yes', 'bm-woocommerce' ),
-				],
-			],
-			'autopay_only_for_admins'                 => [
-				'title'   => __( 'Show Autopay payment gateway in Checkout only to logged-in administrators',
-					'bm-woocommerce' ),
-				'label'   => __( '',
-					'bm-woocommerce' ),
-				'type'    => 'select',
-				'default' => 'no',
-				'options' => [
-					'no'  => __( 'No', 'bm-woocommerce' ),
-					'yes' => __( 'Yes', 'bm-woocommerce' ),
-				],
-			],
-			'countdown_before_redirection'            => [
-				'title'   => __( 'Show countdown screen before redirection to increase compatibility',
-					'bm-woocommerce' ),
-				'label'   => __( '',
-					'bm-woocommerce' ),
-				'type'    => 'select',
-				'default' => 'no',
-				'options' => [
-					'no'  => __( 'No', 'bm-woocommerce' ),
-					'yes' => __( 'Yes', 'bm-woocommerce' ),
-				],
-			],
-			'compatibility_with_live_update_checkout' => [
-				'title'   => __( 'Compatibility mode with third-party plugins that reload checkout fragments',
-					'bm-woocommerce' ),
-				'label'   => __( '',
-					'bm-woocommerce' ),
-				'type'    => 'select',
-				'default' => 'no',
-				'options' => [
-					'no'  => __( 'No', 'bm-woocommerce' ),
-					'yes' => __( 'Yes', 'bm-woocommerce' ),
-				],
-			],
-
-			'gateway_url' => [
-				'title'       => __( 'Alternative transaction start production URL',
-					'bm-woocommerce' ),
-				'description' => '',
-				'type'        => 'text',
-			],
-
-			'test_gateway_url' => [
-				'title'       => __( 'Alternative transaction start test URL',
-					'bm-woocommerce' ),
-				'description' => '',
-				'type'        => 'text',
-			],
-
-			'order_received_url_filter_from' => [
-				'title'       => __( 'Filter checkout order received url from',
-					'bm-woocommerce' ),
-				'description' => '',
-				'type'        => 'text',
-			],
-
-			'order_received_url_filter_to' => [
-				'title'       => __( 'Filter checkout order received url to',
-					'bm-woocommerce' ),
-				'description' => '',
-				'type'        => 'text',
-			],
-
-			'ga4_purchase_status'         => [
-				'title'       => __( 'Order status that triggers the "Purchase" server side GA4 event',
-					'bm-woocommerce' ),
-				'description' => __( '',
-					'bm-woocommerce' ),
-				'type'        => 'select',
-				'options'     => wc_get_order_statuses(),
-				'default'     => 'wc-on-hold',
-			],
-
-			'custom_button' => [
-				'title'       => __( 'Import settings from legacy plugin',
-					'bm-woocommerce' ),
-				'type'        => 'import_from_bm_legacy',
-				'description' => "",
-				'desc_tip'    => false,
-				'default'     => __( 'Import now',
-					'bm-woocommerce' ),
-			],
-		];
 	}
-
-	public function generate_import_field() {
-		ob_start();
-		?>
-		<tr valign="top">
-			<th scope="row"
-				class="titledesc"><?php _e( 'Import settings from 2.x/3.x version',
-					'bm-woocommerce' ) ?></th>
-			<td class="forminp">
-				<fieldset>
-					<input type="submit" id="autopay_start_import"
-						   class="button-primary"
-						   value="<?php _e( 'Start import',
-							   'bm-woocommerce' ) ?>">
-					<input type="hidden" name="autopay_import_legacy_settings"
-						   id="autopay_import_legacy_settings"
-						   value="0">
-					<p class="description"><?php _e( 'Imports Service ID, configuration key and environment setting ( testing / production)',
-							'bm-woocommerce' ) ?></p>
-				</fieldset>
-			</td>
-		</tr>
-
-		<script>
-			jQuery(document).ready(function () {
-				jQuery('#autopay_start_import').click(function (e) {
-					e.preventDefault();
-					var form = jQuery(this).closest('form');
-					form.submit(function () {
-						return false;
-					});
-					jQuery('#autopay_import_legacy_settings').val("1")
-					form.unbind('submit').submit();
-				});
-			});
-		</script>
-		<?php
-		return ob_get_clean();
-	}
-
-	public function render_gateway_channels_test() {
-		echo '<h2>test</h2>';
-	}
-
-
-	/**
-	 * Generate Select HTML.
-	 *
-	 * @param string $key Field key.
-	 * @param array $data Field data.
-	 *
-	 * @return string
-	 * @since  1.0.0
-	 */
-	public function generate_radio_html( $key, $data ) {
-		$field_key = $this->get_field_key( $key );
-		$defaults  = [
-			'title'             => '',
-			'disabled'          => false,
-			'class'             => '',
-			'css'               => '',
-			'placeholder'       => '',
-			'type'              => 'text',
-			'desc_tip'          => false,
-			'description'       => '',
-			'custom_attributes' => [],
-			'options'           => [],
-		];
-
-		$data  = wp_parse_args( $data, $defaults );
-		$value = $this->get_option( $key );
-
-		ob_start();
-		?>
-		<tr valign="top">
-			<th scope="row" class="titledesc">
-				<label
-					for="<?php echo esc_attr( $field_key ); ?>"><?php echo wp_kses_post( $data['title'] ); ?><?php echo $this->get_tooltip_html( $data ); // WPCS: XSS ok. ?></label>
-			</th>
-			<td class="forminp">
-				<fieldset>
-					<legend class="screen-reader-text">
-						<span><?php echo wp_kses_post( $data['title'] ); ?></span>
-					</legend>
-					<?php foreach ( (array) $data['options'] as $option_key => $option_value ) : ?>
-				<?php if ( is_array( $option_value ) ) : ?>
-
-					<optgroup label="<?php echo esc_attr( $option_key ); ?>">
-						<?php foreach ( $option_value as $option_key_inner => $option_value_inner ) : ?>
-							<label
-								for="<?php echo esc_attr( $option_key ); ?>"><?php echo esc_html( $option_value_inner ); ?></label>
-							<input id="<?php echo esc_attr( $option_key ); ?>"
-								   type="radio"
-								   name="<?php echo esc_attr( $field_key ); ?>"
-								   value="<?php echo esc_attr( $option_key_inner ); ?>" <?php checked( (string) $option_key_inner,
-								esc_attr( $value ) ); ?>>
-						<?php endforeach; ?>
-					</optgroup>
-				<?php else : ?>
-					<label
-						for="<?php echo esc_attr( $option_key ); ?>"><?php echo esc_html( $option_value ); ?></label>
-					<input id="<?php echo esc_attr( $option_key ); ?>"
-						   type="radio"
-						   name="<?php echo esc_attr( $field_key ); ?>"
-						   value="<?php echo esc_attr( $option_key ); ?>" <?php checked( (string) $option_key,
-						esc_attr( $value ) ); ?>>
-						<?php endif; ?>
-						<?php endforeach; ?>
-					</input>
-					<?php echo $this->get_description_html( $data ); // WPCS: XSS ok. ?>
-				</fieldset>
-			</td>
-		</tr>
-		<?php
-
-		return ob_get_clean();
-	}
-
 
 	private function is_whitelabel_mode_enabled(): bool {
 		$whitelabel = apply_filters( 'autopay_filter_option_whitelabel',
@@ -759,7 +358,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 	 * @throws Exception
 	 */
 	public function process_payment( $order_id ) {
-
 		blue_media()->get_woocommerce_logger()->log_debug(
 			sprintf( '[process_payment start] [Order id: %s]',
 				$order_id
@@ -797,20 +395,25 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		$blik0_type = $this->get_option( 'blik_type', 'with_redirect' );
 
 		if ( self::BLIK_0_CHANNEL === $payment_channel && 'blik_0_without_redirect' === $blik0_type ) {
-			$blik_code = (string) $_POST['bluemedia_blik_code'];
+			$blik_code            = (string) $_POST['bluemedia_blik_code'];
+			$blik_0_block_payment = $_POST['blik_0_block_payment'] && (int) $_POST['blik_0_block_payment'] === 1;
+
 
 			if ( $this->is_blik_0_code_valid( $blik_code ) ) {
-				$this->process_blik_0_payment( $order, $blik_code );
+				$this->process_blik_0_payment( $order,
+					$blik_code,
+					$blik_0_block_payment );
 				$is_blik_0 = true;
 			} else {
+
 				wc_add_notice( __( 'The code you provided is invalid. Code should be 6 digits.',
 					'bm-woocommerce' ),
 					'error' );
 
-				return [];
+				return  [
+					'status'   => 'failure'
+				];
 			}
-		} elseif ( false && self::CARD_CHANNEL === $payment_channel ) {
-			$this->process_card_payment( $order );
 		} else {
 			$params = [
 				'params' => $this->prepare_initial_transaction_parameters(
@@ -820,9 +423,13 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			];
 			WC()->session->set( 'bm_order_payment_params', $params );
 			WC()->session->save_data();
-
 			$order->add_meta_data( 'bm_order_payment_params', $params );
-			$order->save();
+			$order->save_meta_data();
+
+			blue_media()->get_woocommerce_logger()->log_debug(
+				sprintf( '[bm_order_payment_params saved to wc_session] [Order id: %s]',
+					$order_id
+				) );
 		}
 
 		$this->schedule_remove_unpaid_orders( $order_id );
@@ -839,7 +446,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		}
 
 		$order_received_url_filtered = $this->resolve_return_url( $order );
-		$original_order_received_url   = $this->get_return_url( $order );
+		$original_order_received_url = $this->get_return_url( $order );
 		if ( $this->payment_on_account_page ) {
 
 			if ( ! is_user_logged_in() ) {
@@ -947,90 +554,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		return strlen( $code ) === 6 && ctype_digit( $code );
 	}
 
-	private function process_card_payment(
-		WC_Order $order
-	) {
-		add_filter( 'woocommerce_get_checkout_order_received_url',
-			function ( $redirect_url, $order ) {
-				WC()->session->set( 'bm_original_order_received_url',
-					$redirect_url );
-				WC()->session->set( 'bm_wc_order_id',
-					$order->get_id() );
-
-				return '#';
-			},
-			10,
-			2 );
-
-
-		$client = new Client();
-		$params = [
-			'ServiceID'     => $this->service_id,
-			'OrderID'       => $order->get_id(),
-			'Amount'        => $this->get_price_for_api_request( $order ),
-			'Description'   => (string) $order->get_id(),
-			'GatewayID'     => self::CARD_CHANNEL,
-			'Currency'      => 'PLN',
-			'CustomerEmail' => $order->get_billing_email(),
-			'CustomerIP'    => blue_media()
-				->get_core_helpers()
-				->get_visitor_ip(),
-			'Title'         => (string) $order->get_id(),
-			'ScreenType'    => 'IFRAME',
-		];
-
-		$params = array_merge( $params, [
-			'Hash' => $this->hash_transaction_parameters(
-				$params ),
-		] );
-
-		try {
-			update_post_meta( $order->get_id(),
-				'bm_transaction_init_params',
-				$params );
-
-			$result = $this->decode_continue_transaction_response( $client->continue_transaction_request(
-				$params,
-				$this->gateway_url . 'payment'
-			) );
-
-			if ( isset( $result['reason'] ) ) {
-				throw new Exception( $result['reason'] );
-			}
-
-			if ( empty( $result ) || ! is_array( $result ) || ! isset( $result['redirecturl'] ) ) {
-				throw new Exception( sprintf( 'Continue transaction response invalid format (%s)',
-					serialize( $result ) ) );
-			}
-
-			update_option( 'bm_api_last_error',
-				sprintf( '[%s server time] [BlueMedia Card debug] [Response: %s]',
-					date( "Y-m-d H:i:s", time() ),
-					$result['redirecturl']
-				)
-			);
-
-			WC()->session->set( 'bm_continue_transaction_start_error', '' );
-			WC()->session->set( 'bm_continue_transaction_redirect_url',
-				$result['redirecturl'] );
-
-		} catch ( Exception $e ) {
-			WC()->session->set( 'bm_continue_transaction_redirect_url', '' );
-			WC()->session->set( 'bm_continue_transaction_start_error',
-				$e->getMessage() );
-
-
-			update_option( 'bm_api_last_error',
-				sprintf( '[%s server time] [BlueMedia Card debug ERROR] [Response: %s]',
-					date( "Y-m-d H:i:s", time() ),
-					$e->getMessage()
-				)
-			);
-
-		}
-	}
-
-
 	public function decode_continue_transaction_response( $response_xml ) {
 		$xml = simplexml_load_string( $response_xml );
 
@@ -1056,23 +579,35 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 	private function process_blik_0_payment(
 		WC_Order $order,
-		string $blik_authorization_code
+		string $blik_authorization_code,
+		bool $block_payment = false
 	) {
-		add_filter( 'woocommerce_get_checkout_order_received_url',
-			function ( $redirect_url, WC_Order $order ) {
-				WC()->session->set( 'bm_original_order_received_url',
-					$redirect_url );
-				WC()->session->set( 'bm_wc_order_id',
-					$order->get_id() );
+		if ( ! $block_payment ) {
+			add_filter( 'woocommerce_get_checkout_order_received_url',
+				function ( $redirect_url, WC_Order $order ) {
+					WC()->session->set( 'bm_original_order_received_url',
+						$redirect_url );
 
-				$order->add_meta_data( 'autopay_original_order_received_url',
-					$redirect_url );
-				$order->save_meta_data();
+					$order->add_meta_data( 'autopay_original_order_received_url',
+						$redirect_url );
+					$order->save_meta_data();
 
-				return '#';
-			},
-			10,
-			2 );
+					return '#';
+				},
+				10,
+				2 );
+		}
+
+		WC()->session->set( 'bm_wc_order_id', $order->get_id() );
+		WC()->session->save_data();
+
+
+		blue_media()->get_woocommerce_logger()->log_debug(
+			sprintf( '[process_blik_0_payment] [Order ID: %s] [block_payment: %s]',
+				print_r( $order->get_id(), true ),
+				print_r( $block_payment ? 'true' : 'false', true )
+			) );
+
 
 		$client = new Client();
 		$params = [
@@ -1123,7 +658,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			WC()->session->set( 'bm_continue_transaction_start_error', '' );
 
 			$this->update_order_status( $order, 'pending' );
-			$order->add_order_note( __( 'Autopay: Blik-0 payment process started for order ID:',
+			$order->add_order_note( __( 'Autopay: BLIK-0 payment process started for order ID:',
 					'bm-woocommerce' ) . $order->get_id() );
 
 		} catch ( Exception $e ) {
@@ -1144,6 +679,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				$new_status,
 				'Autopay ITN: paymentStatus FAILURE' );
 			$order->save();
+			WC()->session->save_data();
 		}
 	}
 
@@ -1254,7 +790,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 						} else {
 							$init_params = null;
 						}
-
 
 						if ( ! is_array( $init_params ) ) {
 							continue;
@@ -1378,9 +913,12 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 							'bm_order_itn_status',
 							self::ITN_SUCCESS_STATUS_ID );
 
+
 						do_action( 'woocommerce_payment_complete',
 							$wc_order->get_id(),
 							'' );
+
+
 					}
 
 					foreach ( $order_pending_to_update as $k => $wc_order ) {
@@ -1908,9 +1446,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 	) {
 		$group_arr = ( new Group_Mapper( $channels ) )->map_for_admin_panel();
 
-		echo '<div class="payment_box payment_box_wpadmin payment_method_bacs">';
-		echo '<div class="bm-payment-channels-wrapper">';
-		echo '<ul id="shipping_method" class="woocommerce-shipping-methods">';
+		echo '<ul id="shipping_method" class="woocommerce-shipping-methods payment_box payment_box_wpadmin payment_method_bacs bm-payment-channels__wrapper">';
 
 		/**
 		 * @var Group[] $group_arr
@@ -1923,7 +1459,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				continue;
 			}
 
-			printf( "<div class='bm-group-%s%s'><li><ul>",
+			printf( "<li class='bm-payment-channel bm-group-%s%s'><ul class='bm-payment-channel__wrapper'>",
 				$group->get_slug(),
 				$expandable_Group ? ' bm-group-expandable' : '' );
 
@@ -1933,13 +1469,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			}
 
 			foreach ( $group->get_items() as $item ) {
-				printf( '
-                    <li class="bm-payment-channel-item %s">
-                    <span class="bm-payment-channel-method-logo">
-                            <img style="" src="%s">
-                            </span>
-                    <span class="%s">%s</span>
-                            </li>',
+				printf( '<li class="bm-payment-channel__item %s"><img class="bm-payment-channel__logo" src="%s"><p class="bm-payment-channel__desc %s">%s</p></li>',
 					(string) $item->get_class(),
 					$item->get_icon(),
 					$expandable_Group ? 'bm-inside-expandable-group' : 'bm-inside-single-item',
@@ -1947,13 +1477,12 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				);
 			}
 
-			printf( "</li></ul></div>" );
+			printf( "</li></ul>" );
 
 
 		}
 
-		echo '</ul></div>';
-		echo '</div>';
+		echo '</ul>';
 	}
 
 	/**
@@ -2000,6 +1529,12 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			) );
 
 		return $result;
+	}
+
+	public function admin_options() {
+		$this->settings_manager->render_settings(
+			$this->generate_settings_html( $this->get_form_fields(), false )
+		);
 	}
 
 	public function get_gateway_url(): string {

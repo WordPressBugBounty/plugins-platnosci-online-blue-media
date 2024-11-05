@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 
 <div class="bm-settings-css-editor">
-	<h3><?php _e( 'CSS Editor', 'bm-woocommerce' ) ?></h3>
+	<h3><?php _e( 'Use own CSS styles', 'bm-woocommerce' ) ?></h3>
 
 	<div>
 		<?php

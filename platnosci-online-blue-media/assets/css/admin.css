@@ -1,70 +1,36 @@
 .bm-settings-banner {
-  border: 1px solid #c3c4c7;
-  position: relative;
-  font-size: 15px;
-  padding: 10px;
-  margin: 5px 0 15px;
-  background-color: white; }
-  .bm-settings-banner-title {
-    padding: 5px;
-    background: #f0f0f1;
-    font-size: 15px;
-    font-weight: bold;
-    margin: 0px 0px 15px 0px; }
-  .bm-settings-banner-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    margin: 0px 0px 15px 0px; }
-    .bm-settings-banner-row .bm-settings-banner-image {
-      width: 100px;
-      height: 100%;
-      margin: 0px 70px 0px 0px; }
-    .bm-settings-banner-row span a,
-    .bm-settings-banner-row span span a {
-      text-decoration: none;
-      color: #0068B4; }
-    .bm-settings-banner-row .banner-txt {
-      margin-right: 55px;
-      height: 40px; }
-      .bm-settings-banner-row .banner-txt > a span,
-      .bm-settings-banner-row .banner-txt > span:last-child {
-        padding-left: 25px; }
-      .bm-settings-banner-row .banner-txt-icon {
-        font-size: 15px;
-        margin: 0px 15px 0px 0px;
-        font-weight: bolder; }
-  .bm-settings-banner-row-iconBox {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    margin: 0px 0px 15px 0px;
-    border-top: 1px solid #c3c4c7; }
-    .bm-settings-banner-row-iconBox .bm-settings-banner-icon-box {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100px;
-      margin: 0px 10px 0px 0px; }
-      .bm-settings-banner-row-iconBox .bm-settings-banner-icon-box a {
-        margin-left: 5px;
-        text-decoration: none;
-        color: #0068B4; }
-      .bm-settings-banner-row-iconBox .bm-settings-banner-icon-box span {
-        font-size: 14px; }
-        .bm-settings-banner-row-iconBox .bm-settings-banner-icon-box span:first-child {
-          align-items: center;
-          display: flex;
-          border: 2px solid #0068B4;
-          border-radius: 50%;
-          width: 20px;
-          padding: 10px;
-          margin: 0px 10px 0px 0px;
-          height: 20px;
-          justify-content: center; }
+  margin: 5px 0 15px; }
 
-.bm-modalbackground {
+.bm-settings-tabs {
+  max-width: 1250px; }
+  .bm-settings-tabs .autopay-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    margin-bottom: 18px;
+    width: 100%; }
+    .bm-settings-tabs .autopay-tabs .autopay-tab {
+      font-weight: 600;
+      margin-bottom: unset;
+      padding: 5px 10px 18px; }
+      .bm-settings-tabs .autopay-tabs .autopay-tab a {
+        color: #555555;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 18.4px;
+        text-decoration: none; }
+        .bm-settings-tabs .autopay-tabs .autopay-tab a:hover {
+          color: #0073AF; }
+      .bm-settings-tabs .autopay-tabs .autopay-tab.current {
+        color: #555555;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 18.4px;
+        border-bottom: 2px solid #0073AF;
+        color: #0073AF; }
+
+.bm-modal-background {
   position: relative; }
 
 .bm-modal-content {
@@ -101,62 +67,602 @@
   .bm-modal-overlay.active {
     display: block !important; }
 
-/* label text under the radio buttons start */
-label[for=no], label[for=yes] {
-  top: 37px;
-  position: absolute; }
-  @media screen and (max-width: 782px) {
-    label[for=no], label[for=yes] {
-      top: 46px; } }
-
-input#yes[name="woocommerce_bluemedia_testmode"] {
-  margin-right: 20px; }
-
-/* label text under the radio buttons end */
-.p-info {
-  margin-left: 234px;
-  display: block; }
-
-.woocommerce table.form-table th label .woocommerce-help-tip {
-  margin: 0px 0px 1px 4px !important;
-  position: relative !important;
-  right: unset !important;
-  top: unset !important; }
-
-.bm-settings-channel-list .bm-payment-channels-wrapper ul.woocommerce-shipping-methods > div > li > ul .bm-group-name {
-  display: block;
-  font-weight: bolder;
-  margin-bottom: 5px;
-  flex: 1 0 100%; }
-
-.bm-settings-channel-list .bm-payment-channels-wrapper ul.woocommerce-shipping-methods > div > li > ul > li {
-  display: flex;
-  align-items: center;
-  -moz-column-gap: 10px;
-       column-gap: 10px; }
-  .bm-settings-channel-list .bm-payment-channels-wrapper ul.woocommerce-shipping-methods > div > li > ul > li .bm-payment-channel-method-logo img {
-    width: 75px; }
-
-.bm-settings-channel-list .bm-payment-channels-wrapper ul.woocommerce-shipping-methods > div.bm-group-przelew-internetowy {
-  margin-bottom: 1em; }
-  .bm-settings-channel-list .bm-payment-channels-wrapper ul.woocommerce-shipping-methods > div.bm-group-przelew-internetowy > li > ul {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 10px; }
-    .bm-settings-channel-list .bm-payment-channels-wrapper ul.woocommerce-shipping-methods > div.bm-group-przelew-internetowy > li > ul > li > .bm-payment-channel-method-logo img {
-      width: 60px !important;
-      height: 30px;
-      -o-object-fit: cover;
-         object-fit: cover; }
-    .bm-settings-channel-list .bm-payment-channels-wrapper ul.woocommerce-shipping-methods > div.bm-group-przelew-internetowy > li > ul > li .bm-inside-expandable-group {
+.woocommerce .autopay-settings-section {
+  background-color: #FFF;
+  border-left: 1px solid #E5E5E5;
+  border-right: 1px solid #E5E5E5;
+  box-sizing: border-box;
+  color: #23282D;
+  font-family: Arial, Helvetica, sans-serif;
+  max-width: 1250px;
+  padding: 35px 0;
+  /* Tab > Authentication */
+  /* Tab > Payment settings */
+  /* Tab > Analytics */
+  /* Tab > Advanced Settings */
+  /* Tab > Help */ }
+  .woocommerce .autopay-settings-section .autopay-section-header {
+    border-bottom: 1px solid #E5E5E5;
+    padding: 0 25px 30px; }
+    .woocommerce .autopay-settings-section .autopay-section-header > * {
+      margin: 0; }
+    .woocommerce .autopay-settings-section .autopay-section-header h2 {
+      color: #23282D;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 25.3px;
+      margin-bottom: 10px; }
+    .woocommerce .autopay-settings-section .autopay-section-header p {
+      color: #72777C;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 14.95px; }
+  .woocommerce .autopay-settings-section table.form-table a {
+    color: #0073AF; }
+  .woocommerce .autopay-settings-section table.form-table fieldset {
+    margin-top: unset !important; }
+    .woocommerce .autopay-settings-section table.form-table fieldset p.description {
+      margin: unset !important; }
+    .woocommerce .autopay-settings-section table.form-table fieldset .placement-bottom a {
+      display: block;
+      font-size: 13px;
+      padding-top: 5px; }
+  .woocommerce .autopay-settings-section table.form-table tr > * {
+    display: block;
+    max-width: 480px;
+    padding: 0 25px;
+    width: calc(100% - 50px); }
+  .woocommerce .autopay-settings-section table.form-table tr th {
+    color: #23282D; }
+    .woocommerce .autopay-settings-section table.form-table tr th label {
+      display: inline-block; }
+      .woocommerce .autopay-settings-section table.form-table tr th label .woocommerce-help-tip {
+        margin: 0 0 1px 10px !important;
+        position: relative !important;
+        right: unset !important;
+        top: unset !important; }
+        .woocommerce .autopay-settings-section table.form-table tr th label .woocommerce-help-tip.autopay-help-tip::after {
+          content: '\f348';
+          color: #0073AF;
+          top: -3px; }
+    .woocommerce .autopay-settings-section table.form-table tr th .autopay-url-tip {
+      font-weight: 400;
+      right: 25px;
+      position: absolute; }
+      .woocommerce .autopay-settings-section table.form-table tr th .autopay-url-tip::first-letter {
+        text-transform: uppercase; }
+  .woocommerce .autopay-settings-section table.form-table tr td {
+    margin-bottom: unset; }
+  .woocommerce .autopay-settings-section table.form-table tr .titledesc {
+    padding-top: 20px; }
+  .woocommerce .autopay-settings-section table.form-table tr .input-text,
+  .woocommerce .autopay-settings-section table.form-table tr .select {
+    color: #72777C; }
+  .woocommerce .autopay-settings-section table.form-table tr .select {
+    max-width: 470px;
+    width: 100%; }
+  .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-radio .titledesc > label {
+    color: #23282D;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 14.95px;
+    margin-bottom: 4px; }
+  .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-radio .titledesc .autopay-fieldset label {
+    color: #23282D;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 14.95px; }
+    .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-radio .titledesc .autopay-fieldset label:first-of-type {
+      padding-right: 20px; }
+  .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-radio .description {
+    color: #72777C;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 14.95px;
+    margin-top: 15px; }
+  .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-text th, .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-text td, .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-password th, .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-password td {
+    display: block; }
+  .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-text th, .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-password th {
+    color: #23282D;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 14.95px;
+    margin-bottom: 4px; }
+  .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-text th, .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-text .forminp, .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-password th, .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-password .forminp {
+    max-width: 470px; }
+  .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-text table, .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-password table {
+    border-collapse: collapse; }
+    .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-text table tr > *, .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-password table tr > * {
+      display: table-cell;
+      border: 1px solid #ddd;
+      padding: 5px 10px;
+      vertical-align: top; }
+  .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-text .input-text, .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-password .input-text {
+    border-color: #ddd;
+    box-shadow: 0 1px 0 0 #CCCCCC;
+    width: 100%; }
+  .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-text .description, .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-password .description {
+    color: #72777C;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 14.95px;
+    padding-top: 5px; }
+  .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-select .titledesc {
+    padding-bottom: 5px; }
+    .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-select .titledesc label {
+      color: #23282D;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 14.95px; }
+  .woocommerce .autopay-settings-section table.form-table tr.autopay-comp-select .forminp .select {
+    border-color: #ddd;
+    box-shadow: 0 1px 0 0 #CCCCCC; }
+  @media screen and (min-width: 900px) {
+    .woocommerce .autopay-settings-section.section-authentication table.form-table tbody {
+      position: relative; } }
+  .woocommerce .autopay-settings-section.section-authentication table.form-table tbody tr.woocommerce_bluemedia_testmode-tr {
+    display: block;
+    margin-bottom: 10px; }
+    @media screen and (min-width: 900px) {
+      .woocommerce .autopay-settings-section.section-authentication table.form-table tbody tr.woocommerce_bluemedia_testmode-tr {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        padding-bottom: 17px;
+        margin-bottom: 20px; } }
+    .woocommerce .autopay-settings-section.section-authentication table.form-table tbody tr.woocommerce_bluemedia_testmode-tr.autopay-comp-radio .titledesc > label {
+      color: #555555;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 18.4px;
+      margin-bottom: 17px; }
+    @media screen and (min-width: 505px) {
+      .woocommerce .autopay-settings-section.section-authentication table.form-table tbody tr.woocommerce_bluemedia_testmode-tr .titledesc {
+        display: flex;
+        -moz-column-gap: 30px;
+             column-gap: 30px; } }
+    @media screen and (max-width: 505px) {
+      .woocommerce .autopay-settings-section.section-authentication table.form-table tbody tr.woocommerce_bluemedia_testmode-tr .titledesc > label {
+        margin-bottom: 10px; } }
+  @media screen and (min-width: 900px) {
+    .woocommerce .autopay-settings-section.section-authentication table.form-table tbody tr.woocommerce_bluemedia_campaign_tracking-desc-tr {
+      border-bottom: unset;
+      margin-bottom: unset;
+      position: absolute;
+      top: 20px;
+      right: 0px; } }
+  @media screen and (max-width: 900px) {
+    .woocommerce .autopay-settings-section.section-authentication table.form-table tbody tr.woocommerce_bluemedia_testmode-desc-tr {
+      display: block;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      padding-bottom: 17px;
+      margin-bottom: 20px; } }
+  @media screen and (min-width: 900px) {
+    .woocommerce .autopay-settings-section.section-authentication table.form-table tbody tr.woocommerce_bluemedia_testmode-desc-tr {
+      border-bottom: unset;
+      margin-bottom: unset;
+      position: absolute;
+      top: 0;
+      left: 565px; } }
+  .woocommerce .autopay-settings-section.section-authentication table.form-table tbody tr.woocommerce_bluemedia_testmode-desc-tr .formdesc .description {
+    color: #72777C;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 14.95px;
+    margin-top: 5px; }
+    @media screen and (min-width: 900px) {
+      .woocommerce .autopay-settings-section.section-authentication table.form-table tbody tr.woocommerce_bluemedia_testmode-desc-tr .formdesc .description {
+        margin-top: 20px; } }
+  .woocommerce .autopay-settings-section.section-authentication table.form-table tbody tr.woocommerce_bluemedia_service_id-tr .titledesc, .woocommerce .autopay-settings-section.section-authentication table.form-table tbody tr.woocommerce_bluemedia_test_service_id-tr .titledesc {
+    padding-top: 0; }
+  .woocommerce .autopay-settings-section.section-authentication table.form-table tbody tr.woocommerce_bluemedia_private_key-tr .titledesc, .woocommerce .autopay-settings-section.section-authentication table.form-table tbody tr.woocommerce_bluemedia_test_private_key-tr .titledesc {
+    padding-top: 25px; }
+  .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.woocommerce_bluemedia_whitelabel-tr > * {
+    max-width: 540px; }
+  .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.woocommerce_bluemedia_whitelabel-tr .titledesc {
+    padding-top: unset; }
+    .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.woocommerce_bluemedia_whitelabel-tr .titledesc .autopay-fieldset .description {
+      margin-top: 15px !important; }
+  .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.woocommerce_bluemedia_blik_type-tr {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
+    .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.woocommerce_bluemedia_blik_type-tr .titledesc {
       display: none; }
+    .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.woocommerce_bluemedia_blik_type-tr .forminp .select {
+      margin-bottom: 20px; }
+  .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.autopay-comp-channels {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
+    .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.autopay-comp-channels .titledesc {
+      color: #23282D;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 14.95px; }
+    .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.autopay-comp-channels .forminp {
+      max-width: 470px;
+      width: 100%; }
+      .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.autopay-comp-channels .forminp ul.bm-payment-channels__wrapper li.bm-payment-channel {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        margin-bottom: 10px;
+        padding-bottom: 10px; }
+        .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.autopay-comp-channels .forminp ul.bm-payment-channels__wrapper li.bm-payment-channel:last-child {
+          border-bottom: unset; }
+        .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.autopay-comp-channels .forminp ul.bm-payment-channels__wrapper li.bm-payment-channel ul.bm-payment-channel__wrapper li.bm-payment-channel__item {
+          display: flex;
+          align-items: center;
+          -moz-column-gap: 10px;
+               column-gap: 10px; }
+          .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.autopay-comp-channels .forminp ul.bm-payment-channels__wrapper li.bm-payment-channel ul.bm-payment-channel__wrapper li.bm-payment-channel__item .bm-payment-channel__desc {
+            color: #72777C; }
+          .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.autopay-comp-channels .forminp ul.bm-payment-channels__wrapper li.bm-payment-channel ul.bm-payment-channel__wrapper li.bm-payment-channel__item .bm-payment-channel__logo {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            width: 24px; }
+        .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.autopay-comp-channels .forminp ul.bm-payment-channels__wrapper li.bm-payment-channel.bm-group-expandable {
+          padding-left: 34px; }
+          .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.autopay-comp-channels .forminp ul.bm-payment-channels__wrapper li.bm-payment-channel.bm-group-expandable ul.bm-payment-channel__wrapper {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 10px;
+            cursor: pointer; }
+            .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.autopay-comp-channels .forminp ul.bm-payment-channels__wrapper li.bm-payment-channel.bm-group-expandable ul.bm-payment-channel__wrapper .bm-group-name {
+              display: inline-flex;
+              align-items: center;
+              flex: 1 0 100%;
+              color: #72777C;
+              position: relative; }
+              .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.autopay-comp-channels .forminp ul.bm-payment-channels__wrapper li.bm-payment-channel.bm-group-expandable ul.bm-payment-channel__wrapper .bm-group-name::before {
+                content: url("../../assets/img/transfer-icon.svg");
+                position: absolute;
+                left: -32px; }
+              .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.autopay-comp-channels .forminp ul.bm-payment-channels__wrapper li.bm-payment-channel.bm-group-expandable ul.bm-payment-channel__wrapper .bm-group-name::after {
+                content: '\276F';
+                color: #0073AF;
+                position: absolute;
+                right: 0;
+                transform: rotate(90deg); }
+            .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.autopay-comp-channels .forminp ul.bm-payment-channels__wrapper li.bm-payment-channel.bm-group-expandable ul.bm-payment-channel__wrapper li.bm-payment-channel__item {
+              display: none;
+              margin-bottom: unset; }
+              .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.autopay-comp-channels .forminp ul.bm-payment-channels__wrapper li.bm-payment-channel.bm-group-expandable ul.bm-payment-channel__wrapper li.bm-payment-channel__item.show {
+                display: flex; }
+              .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.autopay-comp-channels .forminp ul.bm-payment-channels__wrapper li.bm-payment-channel.bm-group-expandable ul.bm-payment-channel__wrapper li.bm-payment-channel__item .bm-inside-expandable-group {
+                display: none; }
+            .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.autopay-comp-channels .forminp ul.bm-payment-channels__wrapper li.bm-payment-channel.bm-group-expandable ul.bm-payment-channel__wrapper.show .bm-group-name::after {
+              transform: rotate(270deg); }
+            .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.autopay-comp-channels .forminp ul.bm-payment-channels__wrapper li.bm-payment-channel.bm-group-expandable ul.bm-payment-channel__wrapper.show li.bm-payment-channel__item {
+              display: flex; }
+        .woocommerce .autopay-settings-section.section-payment_settings table.form-table tr.autopay-comp-channels .forminp ul.bm-payment-channels__wrapper li.bm-payment-channel.bm-group-blik .bm-payment-channel__desc {
+          text-transform: uppercase; }
+  .woocommerce .autopay-settings-section.section-payment_settings .autopay-comp-title {
+    padding: 20px 25px 0; }
+    .woocommerce .autopay-settings-section.section-payment_settings .autopay-comp-title__wrapper {
+      max-width: 470px;
+      position: relative; }
+      .woocommerce .autopay-settings-section.section-payment_settings .autopay-comp-title__wrapper > * {
+        margin: unset; }
+      .woocommerce .autopay-settings-section.section-payment_settings .autopay-comp-title__wrapper p {
+        color: #72777C;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 14.95px;
+        color: #72777C; }
+      .woocommerce .autopay-settings-section.section-payment_settings .autopay-comp-title__wrapper .woocommerce_bluemedia_whitelabel_title-title {
+        color: #555555; }
+      .woocommerce .autopay-settings-section.section-payment_settings .autopay-comp-title__wrapper .woocommerce_bluemedia_wc_payment_statuses-title,
+      .woocommerce .autopay-settings-section.section-payment_settings .autopay-comp-title__wrapper .woocommerce_bluemedia_ga4_title-title {
+        color: #555555;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 18.4px;
+        margin-bottom: 10px; }
+      .woocommerce .autopay-settings-section.section-payment_settings .autopay-comp-title__wrapper .autopay-url-tip {
+        position: absolute;
+        right: 0;
+        top: 0; }
+    .woocommerce .autopay-settings-section.section-payment_settings .autopay-comp-title.section-woocommerce_bluemedia_blik_type_title .autopay-comp-title__wrapper h3.wc-settings-sub-title {
+      color: #23282D;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 14.95px;
+      margin-bottom: 3px; }
+  @media screen and (min-width: 1250px) {
+    .woocommerce .autopay-settings-section.section-analytics table.form-table > tbody {
+      display: grid;
+      grid-template-columns: 520px auto;
+      grid-template-areas: 'tracking-id table' 'client-id table' 'api-secret table' 'purchase-status table' '. table';
+      grid-template-rows: auto;
+      -moz-column-gap: 0;
+           column-gap: 0; } }
+  .woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr .titledesc {
+    padding-top: 25px; }
+    .woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr .titledesc:first-of-type {
+      padding-top: 20px; }
+  @media screen and (min-width: 1250px) {
+    .woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr.woocommerce_bluemedia_ga4_tracking_id-tr {
+      grid-area: tracking-id; } }
+  @media screen and (min-width: 1250px) {
+    .woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr.woocommerce_bluemedia_ga4_client_id-tr {
+      grid-area: client-id; } }
+  @media screen and (min-width: 1250px) {
+    .woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr.woocommerce_bluemedia_ga4_api_secret-tr {
+      grid-area: api-secret; } }
+  @media screen and (min-width: 1250px) {
+    .woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr.woocommerce_bluemedia_ga4_purchase_status-tr {
+      grid-area: purchase-status; } }
+  @media screen and (min-width: 1250px) {
+    .woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr.woocommerce_bluemedia_wc_payment_statuses_table-tr {
+      grid-area: table; } }
+  .woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr.woocommerce_bluemedia_wc_payment_statuses_table-tr .titledesc {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 18.4px;
+    max-width: unset;
+    padding-bottom: 20px; }
+  .woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr.woocommerce_bluemedia_wc_payment_statuses_table-tr .forminp {
+    max-width: unset; }
+    .woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr.woocommerce_bluemedia_wc_payment_statuses_table-tr .forminp table tr:hover {
+      background-color: #F8F8F8; }
+    .woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr.woocommerce_bluemedia_wc_payment_statuses_table-tr .forminp table tr th, .woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr.woocommerce_bluemedia_wc_payment_statuses_table-tr .forminp table tr td {
+      border: 1px solid #ddd;
+      padding: 14px 20px; }
+    .woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr.woocommerce_bluemedia_wc_payment_statuses_table-tr .forminp table tr th {
+      background-color: #E8E8E8;
+      font-weight: 700; }
+  .woocommerce .autopay-settings-section.section-advanced_settings .autopay-settings-sidebar {
+    background-color: #F8F8F8;
+    border: 1px solid #DCDCDC;
+    box-sizing: border-box;
+    margin: 20px 25px 0;
+    padding: 18px 20px;
+    max-width: 473px; }
+    @media screen and (min-width: 1180px) {
+      .woocommerce .autopay-settings-section.section-advanced_settings .autopay-settings-sidebar {
+        position: absolute;
+        left: 567px;
+        min-width: -moz-max-content;
+        min-width: max-content;
+        z-index: 1; } }
+    @media screen and (min-width: 1330px) {
+      .woocommerce .autopay-settings-section.section-advanced_settings .autopay-settings-sidebar {
+        width: 473px; } }
+    .woocommerce .autopay-settings-section.section-advanced_settings .autopay-settings-sidebar__header {
+      color: #555555;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 18.4px;
+      margin: 0 0 20px; }
+    .woocommerce .autopay-settings-section.section-advanced_settings .autopay-settings-sidebar a {
+      background-color: #0c73bd;
+      border-radius: 24px;
+      color: #FFF;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 13px 39px;
+      text-decoration: none;
+      display: block;
+      padding: 13px 39px 13px 67px;
+      width: -moz-max-content;
+      width: max-content;
+      position: relative; }
+      .woocommerce .autopay-settings-section.section-advanced_settings .autopay-settings-sidebar a:hover {
+        background-color: #0661a2; }
+      .woocommerce .autopay-settings-section.section-advanced_settings .autopay-settings-sidebar a::before {
+        content: url("../../assets/img/documentation.svg");
+        filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(212deg) brightness(111%) contrast(110%);
+        position: absolute;
+        top: 9px;
+        left: 35px; }
+  .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.woocommerce_bluemedia_test_gateway_url-tr .forminp {
+    padding-bottom: 20px; }
+  .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.woocommerce_bluemedia_order_received_url_filter-tr {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-wrap: wrap; }
+    .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.woocommerce_bluemedia_order_received_url_filter-tr .titledesc {
+      color: #23282D;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 14.95px;
+      font-weight: 700;
+      flex: 1 1 100%;
+      max-width: unset; }
+    .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.woocommerce_bluemedia_order_received_url_filter-tr .forminp {
+      padding-bottom: 20px; }
+      .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.woocommerce_bluemedia_order_received_url_filter-tr .forminp:first-of-type {
+        padding-right: 0; }
+      .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.woocommerce_bluemedia_order_received_url_filter-tr .forminp--dashicons {
+        width: auto;
+        padding: 20px 3px 20px 25px; }
+      .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.woocommerce_bluemedia_order_received_url_filter-tr .forminp .dashicons {
+        height: 100%;
+        position: relative; }
+        .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.woocommerce_bluemedia_order_received_url_filter-tr .forminp .dashicons::before {
+          display: block;
+          position: absolute;
+          bottom: 6px; }
+      .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.woocommerce_bluemedia_order_received_url_filter-tr .forminp label {
+        color: #72777C;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 14.95px; }
+      .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.woocommerce_bluemedia_order_received_url_filter-tr .forminp input {
+        width: 100%; }
+  .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.autopay-comp-css-importer {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    grid-template-areas: 'title button' 'desc button';
+    max-width: 495px;
+    padding-bottom: 20px; }
+    .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.autopay-comp-css-importer .titledesc {
+      grid-area: title; }
+    .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.autopay-comp-css-importer .importer-desc {
+      grid-area: desc;
+      padding-top: 5px; }
+      .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.autopay-comp-css-importer .importer-desc p {
+        color: #72777C;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 14.95px; }
+    .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.autopay-comp-css-importer .importer-btn {
+      grid-area: button;
+      padding: 20px 0 0;
+      width: 100%; }
+      .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.autopay-comp-css-importer .importer-btn input {
+        width: 100%; }
+  .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.autopay-comp-css-editor > * {
+    max-width: unset; }
+  .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.autopay-comp-css-editor .warning {
+    color: #72777C;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 14.95px;
+    color: #FC2945;
+    position: absolute;
+    padding-left: 160px;
+    text-align: right;
+    width: calc(100% - 165px); }
+    .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.autopay-comp-css-editor .warning::before {
+      content: "\f14c";
+      font-family: Dashicons;
+      font-weight: 600;
+      padding-right: 5px;
+      transform: rotate(180deg); }
+  .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.autopay-comp-css-editor .forminp fieldset {
+    position: relative; }
+    .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.autopay-comp-css-editor .forminp fieldset .bm_woocommerce_css_editor_checkbox_field {
+      color: #72777C;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 14.95px;
+      color: #72777C;
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+      padding-bottom: 10px;
+      position: relative; }
+      @media screen and (max-width: 675px) {
+        .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.autopay-comp-css-editor .forminp fieldset .bm_woocommerce_css_editor_checkbox_field {
+          padding-bottom: 22px; } }
+      .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.autopay-comp-css-editor .forminp fieldset .bm_woocommerce_css_editor_checkbox_field .checkbox {
+        margin-right: 10px; }
+    .woocommerce .autopay-settings-section.section-advanced_settings table.form-table tr.autopay-comp-css-editor .forminp fieldset .CodeMirror-wrap {
+      border: 1px solid #72777c40; }
+  .woocommerce .autopay-settings-section.section-help {
+    padding-bottom: 20px; }
+    .woocommerce .autopay-settings-section.section-help .autopay-section-header h2 {
+      margin-bottom: 0; }
+    .woocommerce .autopay-settings-section.section-help .autopay-section-header p {
+      display: none; }
+    .woocommerce .autopay-settings-section.section-help .autopay-comp-contact {
+      margin-top: 14px; }
+      .woocommerce .autopay-settings-section.section-help .autopay-comp-contact > * {
+        padding: 0 25px; }
+      .woocommerce .autopay-settings-section.section-help .autopay-comp-contact__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+        gap: 30px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        padding-bottom: 15px; }
+        @media screen and (min-width: 1200px) {
+          .woocommerce .autopay-settings-section.section-help .autopay-comp-contact__header {
+            flex-wrap: nowrap; } }
+        .woocommerce .autopay-settings-section.section-help .autopay-comp-contact__header h3 {
+          color: #23282D;
+          font-size: 22px;
+          font-weight: 700;
+          line-height: 25.3px;
+          margin: 0;
+          text-align: center; }
+      .woocommerce .autopay-settings-section.section-help .autopay-comp-contact__content .wc-settings-sub-title {
+        color: #555555;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 18.4px; }
+      .woocommerce .autopay-settings-section.section-help .autopay-comp-contact__content ul li {
+        color: #555555;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 18.4px;
+        font-weight: 400;
+        display: flex;
+        padding-bottom: 20px; }
+        .woocommerce .autopay-settings-section.section-help .autopay-comp-contact__content ul li::before {
+          content: "\f139";
+          color: #0073AF;
+          font-family: Dashicons;
+          font-size: 18px;
+          font-weight: 600;
+          padding-right: 6px; }
+        .woocommerce .autopay-settings-section.section-help .autopay-comp-contact__content ul li a {
+          color: #555555;
+          font-size: 16px;
+          font-weight: 700;
+          line-height: 18.4px;
+          color: #0073AF;
+          font-weight: 400; }
+      .woocommerce .autopay-settings-section.section-help .autopay-comp-contact__footer .autopay-button {
+        background-color: #0c73bd;
+        border-radius: 24px;
+        color: #FFF;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 13px 39px;
+        text-decoration: none; }
+        .woocommerce .autopay-settings-section.section-help .autopay-comp-contact__footer .autopay-button:hover {
+          background-color: #0661a2; }
+  .woocommerce .autopay-settings-section + p.submit {
+    background-color: #FFF;
+    border-left: 1px solid #E5E5E5;
+    border-right: 1px solid #E5E5E5;
+    border-bottom: 1px solid #E5E5E5;
+    box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.07);
+    box-sizing: border-box;
+    margin: 0;
+    max-width: 1250px;
+    padding: 0 25px 45px; }
+    .woocommerce .autopay-settings-section + p.submit button {
+      border-radius: 3px;
+      justify-content: center;
+      max-width: 470px;
+      width: 100%; }
 
-.bm_settings_no_form > h2,
-.bm_settings_no_form > h3,
-.bm_settings_no_form > p,
-.bm_settings_no_form > table {
+.woocommerce .bm_settings_no_form > h2,
+.woocommerce .bm_settings_no_form > h3,
+.woocommerce .bm_settings_no_form > p,
+.woocommerce .bm_settings_no_form > table {
   display: none; }
 
-.bm-settings-css-editor .bm_woocommerce_css_editor_checkbox_field label {
-  margin-right: .25em; }
+.woocommerce .bm_settings_no_form .autopay-settings-section {
+  background-color: unset;
+  border-left: 0;
+  border-right: 0;
+  font-family: initial;
+  padding: initial; }
+
+.autopay-badge {
+  display: inline-block;
+  font-size: 13px;
+  padding: 10px; }
+  .autopay-badge-success {
+    background-color: green;
+    color: #FFF; }
+  .autopay-badge-error {
+    background-color: #FC2945;
+    color: #FFF; }
+  .autopay-badge-info {
+    background-color: #FFDC37;
+    color: #555555; }
+
+/* Tab > VAS */
+.autopay-active-tab-vas .autopay-section-header,
+.autopay-active-tab-vas .autopay-settings-section.section-vas,
+.autopay-active-tab-vas .submit {
+  display: none; }
+
+.autopay-active-tab-vas .autopay-vas {
+  margin: 20px auto 0; }
+
+.autopay_disabled {
+  pointer-events: none;
+  opacity: 0.5; }

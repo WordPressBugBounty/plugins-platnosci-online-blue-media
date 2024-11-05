@@ -2,8 +2,8 @@
 Contributors: inspirelabs
 Tags: woocommerce, bluemedia, autopay
 Requires at least: 6.0
-Tested up to: 6.6.1
-Stable tag: 4.3.4
+Tested up to: 6.6.2
+Stable tag: 4.4.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -11,21 +11,35 @@ Autopay to moduł płatności umożliwiający realizację transakcji bezgotówko
 
 == Opis ==
 
-Autopay to moduł płatności umożliwiający realizację transakcji bezgotówkowych w sklepie opartym na platformie WordPress (WooCommerce).
+Autopay to moduł płatności umożliwiający realizację transakcji bezgotówkowych w sklepie opartym na platformie WordPress (WooCommerce). Jeżeli jeszcze nie masz wtyczki, możesz ją pobrać [tutaj](https://github.com/bluepayment-plugin/autopay-payments/releases).
 
-Do najważniejszych funkcji modułu zalicza się:
-- realizację płatności online poprzez odpowiednie zbudowanie startu transakcji
-- obsługę powiadomień o statusie transakcji (notyfikacje XML)
-- obsługę zakupów bez rejestracji w serwisie
-- obsługę dwóch trybów działania – testowego i produkcyjnego (dla każdego z nich wymagane są osobne dane kont, po które zwróć się do nas)
-- obsługę popularnych metod płatności, które pozwalają Twoim klientom płacić za zakupy w wygodny sposób
-- możliwość korzystania z BLIKA.
-- wybór banku po stronie sklepu i bezpośrednie przekierowanie do płatności w wybranym banku
+Wtyczka płatnicza Autopay oferuje szereg funkcjonalności wspierających sprzedaż na Twoim sklepie:
+- Najpopularniejsze metody płatności w Polsce i Europie
+  - Przelewy online ([Pay By Link](https://autopay.pl/baza-wiedzy/blog/ecommerce/platnosc-pay-by-link-na-czym-polega-i-co-mozesz-dzieki-niej-zyskac))
+  - Szybkie przelewy bankowe
+  - [BLIK](https://autopay.pl/rozwiazania/blik)
+  - Visa Mobile
+  - [Google Pay](https://autopay.pl/rozwiazania/google-pay)
+  - [Apple Pay](https://autopay.pl/rozwiazania/apple-pay)
+  - Płatności ratalne
+  - Płatności cykliczne
+  - Płatności zagraniczne
+- Najpopularniejsze sposoby sprzedaży dla platformy WooCommerce
+- kup jako gość / kup jak zarejestrowany użytkownik
+- checkout krokowy lub checkout blokowy
+- przetwarzanie płatności z przekierowaniem do zewnętrznej strony płatności lub pozostając bezpośrednio na sklepie (wybrane metody: karty, BLIK)
+- wsparcie środowiska testowego (realizacja testowych transakcji w celu poprawnej instalacji i konfiguracji wtyczki)
+- płatności odroczone i ratalne
+- natywna integracja z Google Analytics 4 z poziomu wtyczki płatniczej Autopay
+- automatyczna weryfikacja poprawności konfiguracji danych autoryzacyjnych we wtyczce
+
+[Zarejestruj swój sklep!](https://autopay.pl/oferta/platnosci-online?utm_campaign=woocommerce&utm_source=woocommerce_description&utm_medium=offer_cta#kalkulator)
+
 
 Wymagania
 
-- WordPress – przetestowane na wersjach od 6.0 do 6.6.1
-- Wtyczka WooCommerce – przetestowano na wersjach od 8.1 do 9.1.4
+- WordPress – przetestowane na wersjach od 6.0 do 6.6.2
+- Wtyczka WooCommerce – przetestowano na wersjach od 8.1 do 9.3.3
 
 == Installation	 ==
 
@@ -37,19 +51,23 @@ Zainstaluj wtyczkę w panelu administracyjnym Wordpress:
 1. Przejdź do zakładki WooCommerce ➝ Ustawienia ➝ Płatności.
 2. Wybierz Autopay, żeby przejść do konfiguracji.
 
-Konfiguracja podstawowych pól wtyczki:
+## Skonfiguruj wtyczkę
+Zaloguj się do panelu i przejdź do zakładki **Płatności** i odnajdź metodę **Autopay**. Wybierz **Konfiguruj**, by rozpocząć konfigurację wtyczki. Lub zaznacz odpowiednią opcję na przełączniku, by **włączyć** / **wyłączyć** działanie wtyczki na sklepie.
 
-1.	Przy nazwie Autopay ustaw Włącz, dzięki temu Twoi klienci będą mogli już korzystać z płatności internetowych.
-2.	Zaznacz pole: “Pokazuj metody płatności w sklepie”
-3.	W polu Nazwa modułu płatności w sklepie wpisz nazwę płatności, czyli np.: Płatności Autopay.
+Jeżeli spotkałeś się z jakimś problemem podczas instalacji wtyczki odwiedź naszą [sekcję FAQ](#najczesciej-zadawane-pytania).
 
-4.	W polu Opis modułu płatności w sklepie dodaj opis używanej bramki płatności, czyli Autopay – Twoi klienci będą widzieć tę nazwę składając zamówienie i wybierając metodę płatności.
-      W polu “Identyfikator serwisu” wpisz identyfikator serwisu.
-5.	W polu “Klucz współdzielony” wpisz klucz współdzielony.
+### Uwierzytelnianie
 
-Powyższe pola uzupełnisz danymi, które otrzymasz od Autopay S.A. Jeśli jeszcze ich nie masz - skontaktuj się z nami.
-W momencie, gdy skończysz już sprawdzać, czy wszystko działa prawidłowo – wyłącz tryb testowy, wówczas płatności na Twojej stronie będą w 100% aktywne.
-Po uzupełnieniu wszystkich pól – wybierz: Zapisz zmiany i gotowe.
+Zakładka "Uwierzytelnianie" umożliwi Ci wprowadzenie danych dostępowych Twojego konta w Autopay do wtyczki, a także ustalenie, czy płatności Autopay mają działać na środowisku testowym czy produkcyjnym.
+1. **Środowisko testowe**
+    - ustawione na **tak** - Służy do przetestowania integracji i konfiguracji wtyczki Autopay na Twoim sklepie. Na środowisku testowym płatnik nie zostanie obciążony za żaden zakup, a Ty nie otrzymasz wpłaty za żadną sprzedaż. Transakcje będą jedynie wirtualne. Pamiętaj, aby nigdy nie wysyłać transakcji za transakcje opłacone w trybie testowym!
+    - ustawione na **nie** - Wtyczka działa na środowisku produkcyjnym. Innymi słowy, transakcje i płatności odbywają się naprawdę. Płatnik zostaje obciążony finansowo za zaku, a sprzedawca otrzymuje środki od Autopay za prowadzoną sprzedaż.
+2. **Identyfikator serwisu** - Jest to identyfikator Twojego konta Autopay. Znajdziesz go po zalogowaniu się na swoje konto, wybierz z menu "Ustawienia serwisu" a następnie dla sekcji "Konfiguracja techniczna serwisu" kliknij na guzik "Wybierz". ID serwisu to wartość "Identyfikatora serwisu"
+3. **Klucz konfiguracyjny (hash)** - Jest to wartość dedykowana dla Twojej strony na Twoim koncie Autopay. Znajdziesz go po zalogowaniu się na swoje konto, wybierz z menu "**Ustawienia serwisu**", a następnie dla sekcji "Konfiguracja techniczna serwisu" kliknij na guzik "Wybierz". Podpisany jest jako Klucz konfiguracyjny (hash)
+> Środowisko testowe a Identyfikator serwisu i Klucz konfiguracyjny (hash)
+Wartości Identyfikatora serwisu oraz Klucza konfiguracyjnego są różne dla środowiska testowego i produkcyjnego. Jeżeli założyłeś nowe konto Autopay i nie masz jeszcze dostępu do środowiska testowego możesz je uzyskać [wysyłając prośbę o dostęp](https://developers.autopay.pl/kontakt?utm_campaign=help&utm_source=woocommerce_documentation&utm_medium=text_link).
+>
+> Wybierz kategorię weryfikacje, uzupełnij dane, a w treści wiadomości podaj id swojego obecnego serwisu i poproś o utworzenie środowiska testowego dla Twojego sklepu.
 
 
 == Screenshots ==
@@ -57,12 +75,17 @@ Po uzupełnieniu wszystkich pól – wybierz: Zapisz zmiany i gotowe.
 1. Widok pól do uzupełnienia
 2. Dostępne metody płatności
 
+
 == Changelog ==
 
-## [4.3.4] - 2024-08-12
+## [4.4.0] - 2024-11-06
 
-### Fixed
-- **Checkout Page** - Fixed the issue with redirecting to payment on classic Checkout in case of editing address details.
+### Changes
+- **Simplified configuration for the merchant** - The number of configuration steps has been significantly reduced, making it quicker and easier to start using the plugin. A clear interface and a reduction in the amount of data required minimises the time required for configuration.
+
+### Added
+- **Support for BLIK-0 payments on the block checkout** - We have introduced support for BLIK-0 payments directly on the block checkout. Users can now use the fast and convenient BLIK-0 option without any additional work, increasing conversions and making it easier to finalise purchases.
+- **Adaptation to the FunnelKit Funnel Builder plugin** - The plugin is now compatible with FunnelKit Funnel Builder, allowing for easy integration and the creation of advanced purchase funnel paths.
 
 ## [4.3.3] - 2024-08-01
 
@@ -216,137 +239,5 @@ We are excited to bring you these latest updates and improvements. Your feedback
 ### Fixed
 - Show log only on demand
 
-## [4.1.20] - 2023-05-05
-### Fixed
-- Fatal error on activate / deactivate hook for some scenarios
 
-## [4.1.19] - 2023-05-02
-### Fixed
-- Redirect to payment issues for some scenarios
-- WP 6.2 compatibility
-
-## [4.1.18] - 2023-03-27
-### Added
-- Astra theme support
-
-## [4.1.17] - 2023-03-21
-### Fixed
-- Styles
-
-## [4.1.16] - 2023-03-08
-### Added
-- Protection against accidentally installing the development version instead of the production package
-
-### Fixed
-- Missing call of payment_complete() method on Order object
-
-## [4.1.15] - 2023-02-23
-### Updated
-- Docs
-
-## [4.1.14] - 2023-02-23
-### Updated
-- Update frontend scripts
-- Update translations
-- Update docs
-- PayPO whitelabel descriptions
-
-## [4.1.13] - 2023-02-17
-### Fixed
-- Update plugin core
-- Update translations
-- Update docs
-
-## [4.1.12] - 2023-01-23
-### Fixed
-- Minor fixes
-- Fix Google Analitics module: submit proper value of pseudo_user_id field
-
-## [4.1.11] - 2023-01-12
-### Updated
-- Ga4 integration
-- Docs
-
-### Fixed
-- Unpaid order cancel feature
-- Minor fixes
-- Admin panel fixes
-
-### Added
-- Payment channels grouping refactor
-
-## [4.1.10] - 2022-11-10
-### Updated
-- Documentation
-
-## [4.1.9] - 2022-11-02
-### Updated
-- Documentation
-
-## [4.1.8] - 2022-11-02
-### Added
-- First release on wp.org
-
-## [4.1.7] - 2022-10-26
-### Fixed
-- Fatal error in Item_In_Cart_DTO.php
-
-## [4.1.6] - 2022-10-21
-### Updated
-- Documentation
-
-## [4.1.5] - 2022-10-20
-### Fixed
-- Fatal error in Item_In_Cart_DTO.php
-
-## [4.1.4] - 2022-10-17
-### Fixed
-- GA4
-
-## [4.1.3] - 2022-10-11
-### Fixed
-- Fatal error on change order status
-- Minor fixes
-
-### Added
-- Tutorial banner on bm setting page
-
-## [4.1.2] - 2022-10-06
-### Fixed
-- Minor fixes
-
-### Added
-- GA4 support
-- Settings page updates
-
-## [4.0.10] - 2022-08-19
-### Fixed
-- Docs
-
-## [4.0.9] - 2022-08-19
-### Fixed
-- Docs
-
-## [4.0.8] - 2022-08-19
-### Fixed
-- Docs
-
-## [4.0.7] - 2022-08-19
-### Fixed
-- Minor fixes
-
-## [4.0.6] - 2022-07-27
-### Fixed
-- README.md revert
-
-## [4.0.5] - 2022-07-27
-### Fixed
-- CSS fix
-
-## [4.0.4] - 2022-07-20
-### Fixed
-- Plugin boilerplate refactor
-
-## [4.0.3] - 2022-07-15
-### Fixed
-- Show API errors only if BLUE_MEDIA_DEBUG constant is defined
+[You can find all previous changes on Our Github.](https://github.com/bluepayment-plugin/autopay-payments/blob/main/changelog.txt).

@@ -15,9 +15,11 @@ use Ilabs\BM_Woocommerce\Domain\Service\Ga4\Complete_Transation_Use_Case;
 use Ilabs\BM_Woocommerce\Domain\Service\Ga4\Init_Checkout_Use_Case;
 use Ilabs\BM_Woocommerce\Domain\Service\Ga4\Remove_Product_From_Cart_Use_Case;
 use Ilabs\BM_Woocommerce\Domain\Service\Ga4\View_Product_On_List_Use_Case;
-use Ilabs\BM_Woocommerce\Domain\Service\Settings\Banner;
-use Ilabs\BM_Woocommerce\Domain\Service\Settings\Vas;
+use Ilabs\BM_Woocommerce\Domain\Service\Legacy\Importer;
+use Ilabs\BM_Woocommerce\Domain\Service\Settings\Settings_Manager;
+use Ilabs\BM_Woocommerce\Domain\Service\Settings\WC_Form_Fields_Integration;
 use Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway;
+use Ilabs\BM_Woocommerce\Integration\Funnel_Builder\Funnel_Builder_Integration;
 use Ilabs\BM_Woocommerce\Integration\Woocommerce_Blocks\WC_Gateway_Autopay_Blocks_Support;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Abstract_Ilabs_Plugin;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Alerts;
@@ -27,11 +29,14 @@ use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Event_Chain\Event\Wc_Remove_Cart_Item;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Event_Chain\Interfaces\Wc_Cart_Aware_Interface;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Event_Chain\Interfaces\Wc_Order_Aware_Interface;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Event_Chain\Interfaces\Wc_Product_Aware_Interface;
+use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Features_Config_Interface;
+use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\File_System\Mime_Type;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Woocommerce_Logger;
 use WC_Order;
 use WC_Session;
 use WC_Session_Handler;
 use Ilabs\BM_Woocommerce\Controller\Payment_Status_Controller;
+use Ilabs\BM_Woocommerce\Domain\Service\Product_Feed\Product_Feed;
 use WP_Post;
 
 class Plugin extends Abstract_Ilabs_Plugin {
@@ -51,8 +56,7 @@ class Plugin extends Abstract_Ilabs_Plugin {
 		return new \Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Logger\Wp_Debug_Logger();
 	}
 
-	public function get_woocommerce_logger( ?string $log_id = null
-	): Woocommerce_Logger {
+	public function get_woocommerce_logger(): Woocommerce_Logger {
 		$settings = get_option( 'woocommerce_bluemedia_settings' );
 
 		$debug_mode = 'no';
@@ -60,8 +64,7 @@ class Plugin extends Abstract_Ilabs_Plugin {
 			$debug_mode = $settings['debug_mode'];
 		}
 
-		$log_id = $log_id ?: $this->get_from_config( 'slug' );
-		$logger = new Woocommerce_Logger( $log_id );
+		$logger = parent::get_woocommerce_logger();
 
 		if ( 'yes' === $debug_mode ) {
 			$logger->set_null_logger( false );
@@ -72,12 +75,19 @@ class Plugin extends Abstract_Ilabs_Plugin {
 		return $logger;
 	}
 
-	private function accesss_log() {
-		if ( isset( $_REQUEST ) ) {
+	public function get_features_config(): Features_Config_Interface {
+		return ( new Features() );
+	}
 
-			update_option( 'autopay_access_log',
+	private function debug_status_change_by_remote() {
+		if ( strpos( $_SERVER['REQUEST_URI'],
+				'wp-json/wc/v2/orders' ) !== false ) {
+
+
+			update_option( 'autopay_wpjson_log',
 				(
-				sprintf( '[access_log] [ip: %s] [method: %s] [request uri: %s] [headers: %s] [request: %s] [payload: %s]',
+				sprintf( '[wp-json debug %s] [ip: %s] [method: %s] [request uri: %s] [headers: %s] [request: %s] [payload: %s]',
+					rand( 1, 100000 ),
 					$this->get_ip(),
 					$_SERVER['REQUEST_METHOD'],
 					$_SERVER['REQUEST_URI'],
@@ -87,25 +97,26 @@ class Plugin extends Abstract_Ilabs_Plugin {
 				) ) );
 		}
 
-		$events = blue_media()->get_event_chain();
-
+		$events                 = blue_media()->get_event_chain();
+		$wc_api_debug_log_cache = $events->get_wp_options_based_cache( 'wc_api_debug_log_cache' );
 		$events
 			->on_wc_loaded()
-			->action( function () {
-				$log = get_option( 'autopay_access_log' );
+			->action( function () use ( $wc_api_debug_log_cache ) {
+				$log = get_option( 'autopay_wpjson_log' );
 
 				if ( ! empty( $log ) && is_string( $log ) ) {
 					blue_media()
-						->get_woocommerce_logger( 'autopay_access_log' )
+						->get_woocommerce_logger()
 						->log_debug( $log );
 				}
 
 				update_option( 'autopay_wpjson_log', false );
+				$wc_api_debug_log_cache->clear();
 			} )
 			->execute();
 	}
 
-	public function get_ip(): string {
+	private function get_ip(): string {
 		$headers = [
 			'HTTP_CF_CONNECTING_IP',
 			'HTTP_X_FORWARDED_FOR',
@@ -147,7 +158,9 @@ class Plugin extends Abstract_Ilabs_Plugin {
 	 * @throws Exception
 	 */
 	protected function before_init() {
+		$this->configure_third_party_integrations();
 		$this->start_output_buffer_on_itn_request();
+		$this->debug_status_change_by_remote();
 
 		if ( $this->resolve_is_autopay_hidden() ) {
 			return;
@@ -160,12 +173,8 @@ class Plugin extends Abstract_Ilabs_Plugin {
 
 		$this->implement_ga4();
 		$this->implement_ga4_serverside();
-		$this->implement_settings_modal();
-		$this->implement_settings();
 
 		( new Payment_Status_Controller() )->handle();
-		( new Connection_Testing_Controller() )->handle();
-		( new Transaction_Testing_Controller() )->handle();
 
 		add_action( 'bm_cancel_failed_pending_order_after_one_hour',
 			function ( $order_id ) {
@@ -216,7 +225,6 @@ class Plugin extends Abstract_Ilabs_Plugin {
 		}
 
 		if ( class_exists( 'Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType' ) ) {
-			//require_once 'includes/blocks/class-wc-dummy-payments-blocks.php';
 			add_action(
 				'woocommerce_blocks_payment_method_type_registration',
 				function ( PaymentMethodRegistry $payment_method_registry ) {
@@ -268,6 +276,8 @@ class Plugin extends Abstract_Ilabs_Plugin {
 	 * @throws Exception
 	 */
 	public function enqueue_frontend_scripts() {
+		global $wp_version;
+
 		wp_enqueue_style( $this->get_plugin_prefix() . '_front_css',
 			$this->get_plugin_css_url() . '/frontend.css',
 			[],
@@ -288,11 +298,18 @@ class Plugin extends Abstract_Ilabs_Plugin {
 				1.1,
 				true );
 
+
 			wp_localize_script( $this->get_plugin_prefix() . '_front_js',
 				'blueMedia',
 				[
 					'ga4TrackingId' => $ga4_tracking_id,
 				]
+			);
+
+			wp_enqueue_script( $this->get_plugin_prefix() . '_autopay_pixel',
+				"https://plugins-api.autopay.pl/dokumenty/autopay-pixel.js?ecommerce=woocommerce&ecommerce_version=$wp_version&programming_language_version=" . phpversion() . "&plugin_name=Autopay_Blue_Media&plugin_version=" . blue_media()->get_plugin_version(),
+				[],
+				null
 			);
 		}
 	}
@@ -308,7 +325,7 @@ class Plugin extends Abstract_Ilabs_Plugin {
 		if ( is_a( $current_screen,
 				'WP_Screen' ) && 'woocommerce_page_wc-settings' === $current_screen->id ) {
 			if ( isset( $_GET['tab'] ) && $_GET['tab'] == 'checkout' ) {
-				if ( isset( $_GET['section'] ) && $_GET['section'] == 'bluemedia' ) {
+				if ( isset( $_GET['section'] ) && $_GET['section'] === 'bluemedia' ) {
 
 					Css_Editor::enqueue_scripts();
 
@@ -318,6 +335,12 @@ class Plugin extends Abstract_Ilabs_Plugin {
 						1.1,
 						true );
 
+					wp_localize_script( $this->get_plugin_prefix() . '_admin_js',
+						'blueMedia',
+						[
+							'whitelabel_description' => WC_Form_Fields_Integration::get_whitelabel_description(),
+						]
+					);
 
 					wp_enqueue_style( $this->get_plugin_prefix() . '_admin_css',
 						$this->get_plugin_css_url() . '/admin.css'
@@ -343,182 +366,6 @@ class Plugin extends Abstract_Ilabs_Plugin {
 			ob_start();
 		}
 	}
-
-	/**
-	 * @throws Exception
-	 */
-	private function implement_settings() {
-		$banner = blue_media()->get_event_chain();
-		$banner
-			->on_wc_before_settings( 'checkout' )
-			->action( function () {
-				if ( isset( $_GET['section'] ) && $_GET['section'] === 'bluemedia' ) {
-					if ( ! ( isset( $_GET['bmtab'] ) && $_GET['bmtab'] === 'vas' ) ) {
-						$content = ( new Banner() )->get_banner_content();
-						blue_media()->locate_template( 'settings_banner.php',
-							[ 'content' => $content ] );
-					}
-					blue_media()->locate_template( 'settings_tabs.php' );
-				}
-			} )
-			->on_wc_before_settings( 'checkout' )
-			->action( function () {
-				if ( isset( $_GET['bmtab'] ) && $_GET['bmtab'] === 'channels' ) {
-					echo wp_kses( "<div class='bm_settings_no_form'>", [
-						'div' => [
-							'class' => [],
-						],
-					] );
-					add_action( 'woocommerce_after_settings_checkout',
-						function () {
-							echo wp_kses( "<!--bm_settings_no_form--></div>", [
-								'div' => [
-								],
-							] );
-						} );
-					blue_media()->locate_template( 'settings_channel_list.php' );
-				}
-			} )
-			->on_wc_before_settings( 'checkout' )
-			->action( function () {
-				if ( isset( $_GET['bmtab'] ) && $_GET['bmtab'] === 'css_editor' ) {
-					echo wp_kses( "<div class='bm_settings_no_form'>", [
-						'div' => [
-							'class' => [],
-						],
-					] );
-					add_action( 'woocommerce_after_settings_checkout',
-						function () {
-							echo wp_kses( "<!--bm_settings_no_form--></div>", [
-								'div' => [
-								],
-							] );
-						} );
-
-					$editor = new Css_Editor();
-					blue_media()->locate_template( 'settings_css_editor.php',
-						[ 'editor' => $editor ] );
-				}
-			} )
-			->on_wc_before_settings( 'checkout' )
-			->action( function () {
-				if ( isset( $_GET['bmtab'] ) && $_GET['bmtab'] === 'status' ) {
-					echo wp_kses( "<div class='bm_settings_no_form'>", [
-						'div' => [
-							'class' => [],
-						],
-					] );
-					add_action( 'woocommerce_after_settings_checkout',
-						function () {
-							echo wp_kses( "<!--bm_settings_no_form--></div>", [
-								'div' => [
-								],
-							] );
-						} );
-
-					$editor = new Css_Editor();
-					blue_media()->locate_template( 'settings_status.php',
-						[ 'editor' => $editor ] );
-				}
-			} )
-			->on_wc_before_settings( 'checkout' )
-			->action( function () {
-				if ( isset( $_GET['bmtab'] ) && $_GET['bmtab'] === 'vas' ) {
-					echo wp_kses( "<div class='bm_settings_no_form'>", [
-						'div' => [
-							'class' => [],
-						],
-					] );
-					add_action( 'woocommerce_after_settings_checkout',
-						function () {
-							echo wp_kses( "<!--bm_settings_no_form--></div>", [
-								'div' => [
-								],
-							] );
-						} );
-
-
-					$vas_content = ( new Vas() )->get_vas_content();
-					blue_media()->locate_template( 'settings_vas.php',
-						[ 'vas_content' => $vas_content ] );
-
-
-				}
-			} )
-			->on_wp_init()
-			->action( function () {
-				$editor = new Css_Editor();
-				$editor->handle_save();
-			} )
-			->execute();
-	}
-
-	/**
-	 * @throws Exception
-	 */
-	private function implement_settings_modal() {
-		$settings_modal = blue_media()->get_event_chain();
-		$settings_modal
-			->on_wp_admin_footer()
-			->action( function () {
-				$current_screen = get_current_screen();
-
-				if ( is_a( $current_screen,
-						'WP_Screen' ) && 'woocommerce_page_wc-settings' === $current_screen->id ) {
-					if ( isset( $_GET['tab'] ) && $_GET['tab'] == 'checkout' ) {
-						if ( isset( $_GET['section'] ) && $_GET['section'] == 'bluemedia' ) {
-							echo '<div class="bm-modal-content">
-                                    <span class="bm-close">&times;</span>
-                                    <p>' . __( 'Measurement ID',
-									'bm-woocommerce' ) . '</p>
-                                <ul>
-                                <li>' . __( 'Log into the Google Analytics dashboard and click on "Administration".',
-									'bm-woocommerce' ) . '</li>
-                                <li>' . __( 'In the "Services" section, click "Data Streams".',
-									'bm-woocommerce' ) . '</li>
-                                <li>' . __( 'Click the name of the data stream.',
-									'bm-woocommerce' ) . '</li>
-                                <li>' . __( 'Copy the Measurement ID from the "Web stream details" box.',
-									'bm-woocommerce' ) . '</li>
-                                </ul>
-
-                                <p>' . __( 'Stream ID',
-									'bm-woocommerce' ) . '</p>
-                                <ul>
-                                <li>' . __( 'Log into the Google Analytics dashboard and click on "Administration".',
-									'bm-woocommerce' ) . '</li>
-                                <li>' . __( 'In the "Services" section, click "Data Streams".',
-									'bm-woocommerce' ) . '</li>
-                                <li>' . __( 'Click the name of the data stream.',
-									'bm-woocommerce' ) . '</li>
-                                <li>' . __( 'Copy the Stream ID from the "Web stream details" box.',
-									'bm-woocommerce' ) . '</li>
-                                </ul>
-
-
-                                <p>' . __( 'Measurement Protocol API Secret',
-									'bm-woocommerce' ) . '</p>
-                                <ul>
-                                 <li>' . __( 'Log into the Google Analytics dashboard and click on "Administration".',
-									'bm-woocommerce' ) . '</li>
-                                <li>' . __( 'In the "Services" section, click "Data Streams".',
-									'bm-woocommerce' ) . '</li>
-                                <li>' . __( 'Click the name of the data stream.',
-									'bm-woocommerce' ) . '</li>
-									<li>' . __( 'Scroll down to find Measurement Protocol API secrets. Click into it.',
-									'bm-woocommerce' ) . '</li>
-                                <li>' . __( 'Here you can Create a new API secret.',
-									'bm-woocommerce' ) . '</li>
-                                </ul>
-
-                                  </div><div class="bm-modal-overlay"></div>';
-						}
-					}
-				}
-			} )->execute();
-
-	}
-
 
 	/**
 	 * @return void
@@ -658,10 +505,6 @@ class Plugin extends Abstract_Ilabs_Plugin {
 			} )->execute();
 	}
 
-	public function test_form() {
-
-	}
-
 	protected function plugins_loaded_hooks() {
 
 	}
@@ -684,16 +527,6 @@ class Plugin extends Abstract_Ilabs_Plugin {
 			return;
 		}
 
-		/*add_filter( 'woocommerce_get_checkout_order_received_url',
-			function ( $return_url, $order ) {
-				$this->update_payment_cache( 'bm_order_received_url',
-					$return_url );
-
-				return $return_url;
-			},
-			10,
-			2 );*/
-
 		require_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
 		require_once ABSPATH
 		             . 'wp-admin/includes/class-wp-filesystem-direct.php';
@@ -707,22 +540,13 @@ class Plugin extends Abstract_Ilabs_Plugin {
 			10,
 			2 );
 
-
-		/*if ( ! is_admin() ) {
-			if ( ! empty( $this->get_from_payment_cache( 'bm_order_received_url' ) )
-			     && empty( $this->get_from_payment_cache( 'bm_payment_start' ) ) ) {
-
-				$this->update_payment_cache( 'bm_order_received_url', null );
-				$this->update_payment_cache( 'bm_payment_start', null );
-			}
-		}*/
-
 		if ( get_option( 'bluemedia_activated' ) === '1' ) {
 			$this->reposition_on_activate();
 			update_option( 'bluemedia_activated', '0' );
 		}
 
 		$this->init_custom_css();
+
 	}
 
 	private function init_payment_gateway() {
@@ -752,21 +576,23 @@ class Plugin extends Abstract_Ilabs_Plugin {
 
 	public function return_redirect_handler() {
 		if ( isset( $_GET['bm_gateway_return'] ) ) {
-
-			blue_media()->get_woocommerce_logger()->log_debug(
-				sprintf( '[return_redirect_handler] [received get params: %s]',
-					serialize( $_GET )
-				) );
-
 			$order = null;
 
-			if ( isset( $_GET['OrderID'] ) ) {
-				$order = wc_get_order( $_GET['OrderID'] );
+			if ( isset( $_GET['key'] ) ) {
+				$order_id = wc_get_order_id_by_order_key( (int) $_GET['key'] );
+				$order    = wc_get_order( $order_id );
+				if ( $order instanceof WC_Order ) {
+					$init_params = $order->get_meta( 'bm_transaction_init_params' );
+					$order       = is_array( $init_params ) ? $order : null;
+				}
 			}
 
-			if ( isset( $_GET['key'] ) ) {
-				$order_id = wc_get_order_id_by_order_key( $_GET['key'] );
-				$order    = wc_get_order( $order_id );
+			if ( isset( $_GET['OrderID'] ) ) {
+				$order = wc_get_order( (int) $_GET['OrderID'] );
+				if ( $order instanceof WC_Order ) {
+					$init_params = $order->get_meta( 'bm_transaction_init_params' );
+					$order       = is_array( $init_params ) ? $order : null;
+				}
 			}
 
 			if ( $order ) {
@@ -807,11 +633,6 @@ class Plugin extends Abstract_Ilabs_Plugin {
 		}
 	}
 
-
-	/**
-	 * [JIRA] (WOOCOMERCE-26) Błędnie przydzielane statusy dla transkacji nie
-	 * opłaconych w ciągu godziny.
-	 */
 	public function bm_woocommerce_cancel_unpaid_order_filter(
 		$string,
 		$order
@@ -947,5 +768,7 @@ class Plugin extends Abstract_Ilabs_Plugin {
 		}
 	}
 
-
+	private function configure_third_party_integrations(): void {
+		( new Funnel_Builder_Integration() )->init();
+	}
 }

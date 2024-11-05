@@ -1,72 +1,31 @@
-<?php defined( 'ABSPATH' ) || exit; ?>
-<?php $tab = isset( $_GET['bmtab'] ) ? sanitize_text_field( $_GET['bmtab'] ) : ''; ?>
+<?php use Ilabs\BM_Woocommerce\Domain\Service\Settings\Settings_Tabs;
+
+defined( 'ABSPATH' ) || exit; ?>
+
+<?php
+
+/**
+ * @var Settings_Tabs $tabs
+ */
+
+$active_tab_id = $tabs->get_active_tab_id();
+$tabs          = $tabs->get_available_tabs();
+$last          = array_key_last( $tabs );
+?>
 
 
 <div class="bm-settings-tabs" style="display: flex">
-	<ul class="subsubsub">
-		<li>
-			<?php if ( empty( $tab ) ): ?>
-				<span class="autopay-tab current"><?php _e( 'Settings',
-						'bm-woocommerce' ) ?></span> |
-
+	<ul class="autopay-tabs">
+		<?php foreach ( $tabs as $tab_id => $tab_name ): ?>
+			<?php if ( $tab_id === $active_tab_id ): ?>
+				<li class="autopay-tab current">
+					<?php echo esc_html( $tab_name ) ?>
+				</li>
 			<?php else: ?>
-				<span class="autopay-tab"><a
-						href="<?php esc_attr_e( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=bluemedia' ) ) ?>">
-					<?php _e( 'Settings', 'bm-woocommerce' ) ?></a></span> |
-
+				<li class="autopay-tab">
+					<a href="<?php esc_attr_e( admin_url( "admin.php?page=wc-settings&tab=checkout&section=bluemedia&bmtab=$tab_id" ) ) ?>"><?php echo esc_html( $tab_name ) ?></a>
+				</li>
 			<?php endif; ?>
-		</li>
-
-
-		<li>
-			<?php if ( 'channels' === $tab ): ?>
-				<span
-					class="autopay-tab current"><?php _e( 'Payment gateway list',
-						'bm-woocommerce' ) ?></span> |
-			<?php else: ?>
-				<span class="autopay-tab"><a
-						href="<?php esc_attr_e( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=bluemedia&bmtab=channels' ) ) ?>">
-					<?php _e( 'Payment gateway list', 'bm-woocommerce' ) ?></a></span> |
-			<?php endif; ?>
-		</li>
-
-		<li>
-			<?php if ( 'css_editor' === $tab ): ?>
-				<span class="autopay-tab current"><?php _e( 'CSS Editor',
-						'bm-woocommerce' ) ?></span> |
-			<?php else: ?>
-				<span class="autopay-tab"><a
-						href="<?php esc_attr_e( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=bluemedia&bmtab=css_editor' ) ) ?>">
-					<?php _e( 'CSS Editor', 'bm-woocommerce' ) ?></a></span> |
-			<?php endif; ?>
-		</li>
-
-
-<li>
-			<?php if ( 'vas' === $tab ): ?>
-				<span class="autopay-tab current"><?php _e( 'Services for you',
-						'bm-woocommerce' ) ?></span>
-			<?php else: ?>
-				<span class="autopay-tab"><a
-						href="<?php esc_attr_e( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=bluemedia&bmtab=vas' ) ) ?>">
-					<?php _e( 'Services for you', 'bm-woocommerce' ) ?></a></span>
-			<?php endif; ?>
-		</li>
-
-
-
+		<?php endforeach; ?>
 	</ul>
 </div>
-
-<?php return?>
-
-<li>
-	<?php if ( 'status' === $tab ): ?>
-		<span class="autopay-tab current"><?php _e( 'Status',
-				'bm-woocommerce' ) ?></span>
-	<?php else: ?>
-		<span class="autopay-tab"><a
-				href="<?php esc_attr_e( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=bluemedia&bmtab=status' ) ) ?>">
-					<?php _e( 'Status', 'bm-woocommerce' ) ?></a></span>
-	<?php endif; ?>
-</li>

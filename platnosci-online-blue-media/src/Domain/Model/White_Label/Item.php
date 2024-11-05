@@ -39,6 +39,11 @@ class Item {
 	 */
 	private $block_description;
 
+	/**
+	 * @var array | null
+	 */
+	private ?array $data;
+
 
 	/**
 	 * @param string $name
@@ -56,7 +61,8 @@ class Item {
 		?string $extra_class,
 		?string $script,
 		?string $description,
-		?string $block_description
+		?string $block_description,
+		?array $data = null
 
 	) {
 		$this->name              = $name;
@@ -66,6 +72,7 @@ class Item {
 		$this->script            = $script;
 		$this->description       = $description;
 		$this->block_description = $block_description;
+		$this->data              = $data;
 	}
 
 	public function to_array(): array {
@@ -79,6 +86,7 @@ class Item {
 			'class'             => $this->class,
 			'description'       => (string) $this->description,
 			'block_description' => (string) $this->block_description,
+			'data'              => $this->data,
 		];
 	}
 
@@ -173,5 +181,9 @@ class Item {
 
 	public function set_block_description( ?string $block_description ): void {
 		$this->block_description = $block_description;
+	}
+
+	public function get_data(): ?array {
+		return $this->data;
 	}
 }

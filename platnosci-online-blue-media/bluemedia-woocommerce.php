@@ -6,8 +6,8 @@ declare( strict_types=1 );
  * Plugin URI: https://wordpress.org/plugins/platnosci-online-blue-media
  * Description: Autopay for Woocommerce
  * Tags: woocommerce, bluemedia, Autopay
- * Version: 4.3.4
- * Tested up to: 6.6.1
+ * Version: 4.4.0
+ * Tested up to: 6.6.2
  * Requires PHP: 7.4
  * Author: Autopay S.A.
  * Author URI: autopay.pl
@@ -58,6 +58,3 @@ if ( blue_media_system_check() ) {
 
 	blue_media()->execute( $config );
 }
-
-
-

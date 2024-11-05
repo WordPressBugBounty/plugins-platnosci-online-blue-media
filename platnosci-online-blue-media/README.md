@@ -1,105 +1,77 @@
-# Instrukcja modułu Autopay dla platformy WooCommerce
+### Autopay to moduł płatności umożliwiający realizację transakcji bezgotówkowych w sklepie opartym na platformie WordPress (WooCommerce). Jeżeli jeszcze nie masz wtyczki, możesz ją pobrać [tutaj](https://github.com/bluepayment-plugin/autopay-payments/releases).
 
-## Podstawowe informacje
+### Wtyczka płatnicza Autopay oferuje szereg funkcjonalności wspierających sprzedaż na Twoim sklepie:
 
-Autopay to moduł płatności umożliwiający realizację transakcji bezgotówkowych w sklepie opartym na platformie WordPress (WooCommerce). Jeżeli jeszcze nie masz wtyczki, możesz ją pobrać [tutaj.](https://github.com/bluepayment-plugin/autopay-payments/releases)
+- Najpopularniejsze metody płatności w Polsce i Europie
+	- Przelewy online ([Pay By Link](https://autopay.pl/baza-wiedzy/blog/ecommerce/platnosc-pay-by-link-na-czym-polega-i-co-mozesz-dzieki-niej-zyskac))
+	- Szybkie przelewy bankowe
+	- [BLIK](https://autopay.pl/rozwiazania/blik)
+	- Visa Mobile
+	- [Google Pay](https://autopay.pl/rozwiazania/google-pay)
+	- [Apple Pay](https://autopay.pl/rozwiazania/apple-pay)
+	- Płatności ratalne
+	- Płatności cykliczne
+	- Płatności zagraniczne
+- Najpopularniejsze sposoby sprzedaży dla platformy WooCommerce
+- kup jako gość / kup jak zarejestrowany użytkownik
+- checkout krokowy lub checkout blokowy
+- przetwarzanie płatności z przekierowaniem do zewnętrznej strony płatności lub pozostając bezpośrednio na sklepie (wybrane metody: karty, BLIK)
+- wsparcie środowiska testowego (realizacja testowych transakcji w celu poprawnej instalacji i konfiguracji wtyczki)
+- płatności odroczone i ratalne
+- natywna integracja z Google Analytics 4 z poziomu wtyczki płatniczej Autopay
+- automatyczna weryfikacja poprawności konfiguracji danych autoryzacyjnych we wtyczce
 
-Należy zawsze pobierać najnowsze wydanie oznaczone etykietą "latest" (plik z ikonką paczki, zobacz poniższy screen).
+[Zarejestruj swój sklep!](https://autopay.pl/oferta/platnosci-online?utm_campaign=woocommerce&utm_source=woocommerce_description&utm_medium=offer_cta#kalkulator)
 
-![Instrukcja pobierania archiwum z wtyczką](/assets/img/screenshot_3.png)
-<em>Instrukcja pobierania archiwum z wtyczką<em>
+## Wymagania
 
-
-### Główne funkcje
-
-Do najważniejszych funkcji modułu zalicza się:
-- realizację płatności online poprzez odpowiednie zbudowanie startu transakcji
-- obsługę powiadomień o statusie transakcji (notyfikacje XML)
-- obsługę zakupów bez rejestracji w serwisie
-- obsługę dwóch trybów działania – testowego i produkcyjnego (dla każdego z nich wymagane są osobne dane kont, po które zwróć się do nas)
-- obsługę popularnych metod płatności, które pozwalają Twoim klientom płacić za zakupy w wygodny sposób
-- możliwość korzystania z BLIKA
-- wybór banku po stronie sklepu i bezpośrednie przekierowanie do płatności w wybranym banku
-
-### Wymagania
-
-- WordPress – przetestowane na wersjach od 6.0 do 6.6.1
-- Wtyczka WooCommerce – przetestowano na wersjach od 8.1 do 9.1.4
+- WordPress – przetestowane na wersjach od 6.0 do 6.6.2
+- Wtyczka WooCommerce – przetestowano na wersjach od 8.1 do 9.3.3
 - PHP minimum 7.4
 
 ## Instalacja modułu
-1. Pobierz wtyczkę.
-2. Zaloguj się do swojego panelu administracyjnego w serwisie WordPress – używając loginu i hasła.
-3. W menu po lewej stronie wybierz Wtyczki ➝ Dodaj nową.
-4. Zainstaluj wtyczkę wybierając jedną z poniższych metod.
 
-### Instalacja wtyczki
+### Zainstaluj wtyczkę w panelu administracyjnym Wordpress:
 
-1. Kliknij Wyślij wtyczkę na serwer.
-2. Wybierz plik z wtyczką z rozszerzeniem .zip
-3. Kliknij Zainstaluj teraz, żeby wgrać wtyczkę do systemu.
-
-## Konfiguracja
-
+1. Pobierz wtyczkę
+2. Przejdź do zakładki Wtyczki > Dodaj nową a następnie wskaż pobrany plik instalacyjny.
+3. Po zainstalowaniu wtyczki włącz moduł.
 1. Przejdź do zakładki WooCommerce ➝ Ustawienia ➝ Płatności.
 2. Wybierz Autopay, żeby przejść do konfiguracji.
 
-### Konfiguracja podstawowych pól wtyczki
+### Skonfiguruj wtyczkę
+Zaloguj się do panelu i przejdź do zakładki **Płatności** i odnajdź metodę **Autopay**. Wybierz **Konfiguruj**, by rozpocząć konfigurację wtyczki. Lub zaznacz odpowiednią opcję na przełączniku, by **włączyć** / **wyłączyć** działanie wtyczki na sklepie.
 
-1. Przy nazwie Autopay ustaw Włącz, dzięki temu Twoi klienci będą mogli już korzystać z płatności internetowych.
-2. Zaznacz pole: “Pokazuj metody płatności w sklepie”
-3. W polu “Identyfikator serwisu” wpisz identyfikator serwisu.
-4. W polu “Klucz konfiguracyjny (hash)” wpisz Klucz konfiguracyjny (hash).
-
-Powyższe pola uzupełnisz danymi, które otrzymasz od Autopay S.A. Jeśli jeszcze ich nie masz - skontaktuj się z nami.
-Po uzupełnieniu wszystkich pól – wybierz: Zapisz zmiany i gotowe.
-
-![Widok pól do uzupełnienia](/assets/img/screenshot_12.jpg)
-<em>Widok pól do uzupełnienia<em>
+Jeżeli spotkałeś się z jakimś problemem podczas instalacji wtyczki odwiedź naszą [sekcję FAQ](#najczesciej-zadawane-pytania).
 
 
-![Dostępne metody płatności](/assets/img/screenshot_5.jpg)
+## Uwierzytelnianie
 
-<em>Dostępne metody płatności</em>
+Zakładka "Uwierzytelnianie" umożliwi Ci wprowadzenie danych dostępowych Twojego konta w Autopay do wtyczki, a także ustalenie, czy płatności Autopay mają działać na środowisku testowym czy produkcyjnym.
+1. **Środowisko testowe**
+	- ustawione na **tak** - Służy do przetestowania integracji i konfiguracji wtyczki Autopay na Twoim sklepie. Na środowisku testowym płatnik nie zostanie obciążony za żaden zakup, a Ty nie otrzymasz wpłaty za żadną sprzedaż. Transakcje będą jedynie wirtualne. Pamiętaj, aby nigdy nie wysyłać transakcji za transakcje opłacone w trybie testowym!
+	- ustawione na **nie** - Wtyczka działa na środowisku produkcyjnym. Innymi słowy, transakcje i płatności odbywają się naprawdę. Płatnik zostaje obciążony finansowo za zaku, a sprzedawca otrzymuje środki od Autopay za prowadzoną sprzedaż.
+2. **Identyfikator serwisu** - Jest to identyfikator Twojego konta Autopay. Znajdziesz go po zalogowaniu się na swoje konto, wybierz z menu "Ustawienia serwisu" a następnie dla sekcji "Konfiguracja techniczna serwisu" kliknij na guzik "Wybierz". ID serwisu to wartość "Identyfikatora serwisu"
+3. **Klucz konfiguracyjny (hash)** - Jest to wartość dedykowana dla Twojej strony na Twoim koncie Autopay. Znajdziesz go po zalogowaniu się na swoje konto, wybierz z menu "**Ustawienia serwisu**", a następnie dla sekcji "Konfiguracja techniczna serwisu" kliknij na guzik "Wybierz". Podpisany jest jako Klucz konfiguracyjny (hash)
+> Środowisko testowe a Identyfikator serwisu i Klucz konfiguracyjny (hash)
+Wartości Identyfikatora serwisu oraz Klucza konfiguracyjnego są różne dla środowiska testowego i produkcyjnego. Jeżeli założyłeś nowe konto Autopay i nie masz jeszcze dostępu do środowiska testowego możesz je uzyskać [wysyłając prośbę o dostęp](https://developers.autopay.pl/kontakt?utm_campaign=help&utm_source=woocommerce_documentation&utm_medium=text_link).
+>
+> Wybierz kategorię weryfikacje, uzupełnij dane, a w treści wiadomości podaj id swojego obecnego serwisu i poproś o utworzenie środowiska testowego dla Twojego sklepu.
 
-### Konfiguracja adresów URL
 
-Upewnij się, że w panelach administracyjnych Autopay https://portal.autopay.eu/admin oraz https://testportal.autopay.eu/admin poniższe pola zawierają poprawne adresy sklepu.
 
-●	Konfiguracja adresu powrotu do płatności
-{URL Twojego sklepu}/?bm_gateway_return
+## Zrzuty ekranu
 
-Przykład: https://mój-sklep.com/?bm_gateway_return
+<figure>
+  <img
+  src="assets/img/screenshot_1.jpg"
+  alt="Widok pól do uzupełnienia">
+  <figcaption>Widok pól do uzupełnienia</figcaption>
+</figure>
 
-●	Konfiguracja adresu, na który jest wysyłany ITN
-{URL Twojego sklepu}/?wc-api=wc_gateway_bluemedia
-
-Przykład: https://mój-sklep.com/?wc-api=wc_gateway_bluemedia
-
-### Rozszerzona Analityka Google Analytics 4
-
-Dzięki temu rozwiązaniu, możesz dokładniej analizować ścieżkę zakupową Twoich klientów.
-
-Po dokonaniu poniższej konfiguracji, Google Analytics zacznie zbierać szczegółowe dane na temat zachowań użytkowników
-
-Moduł dodaje obsługę dodatkowych zdarzeń w Google Analytics 4:
-- view_item_list – użytkownik zobaczył produkt na liście,
-- view_item – użytkownik wyświetlił stronę produktu,
-- add_to_cart – użytkownik dodał produkt do koszyka,
-- remove_from_cart – użytkownik usunął produkt z koszyka,
-- begin_checkout – użytkownik rozpoczął proces zamówienia (koszyk i/lub wybór metody dostawy),
-- checkout_progress – użytkownik przeszedł do drugiego kroku zamówienia (wybór metody płatności),
-- set_checkout_option – użytkownik uzupełnił dane zamówienia,
-- purchase – użytkownik złożył zamówienie oraz opłacił je poprzez płatność Autopay (oznaczenie jako konwersja).
-
-### Konfiguracja Google Analytics
-
-Wpisz Klucz śledzący Google Analytics oraz pozostałe dane GA4 we wskazane pola i zapisz zmiany.
-
-![Konfiguracja Google Analytics](/assets/img/screenshot_6.jpg)
-
-### Statusy płatności
-
-Nowa funkcja wyboru i dopasowania statusów płatności pozwala na automatyczną zmianę statusu zamówienia Woocoemmerce w momencie zmiany statusu płatności.
-
-![Konfiguracja statusów](/assets/img/screenshot_4.jpg)
+<figure>
+  <img
+  src="assets/img/screenshot_2.jpg"
+  alt="Dostępne metody płatności">
+  <figcaption>Dostępne metody płatności</figcaption>
+</figure>

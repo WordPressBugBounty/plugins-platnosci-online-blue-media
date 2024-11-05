@@ -11,7 +11,7 @@ abstract class Abstract_Controller {
 	protected function send_response(
 		string $status,
 		string $message,
-		string $order_received_url,
+		?string $order_received_url,
 		?string $continue_transaction_redirect_url
 
 	) {
@@ -21,6 +21,12 @@ abstract class Abstract_Controller {
 			$order_received_url,
 			$continue_transaction_redirect_url
 		);
+
+
+		blue_media()->get_woocommerce_logger()->log_error(
+			sprintf( '[Abstract_Controller] [send_response]  [response: %s]',
+				print_r( $response, true )
+			) );
 
 		$this->output_response( $response );
 	}

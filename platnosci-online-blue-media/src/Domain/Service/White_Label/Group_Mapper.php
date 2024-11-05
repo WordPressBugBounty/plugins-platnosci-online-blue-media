@@ -272,7 +272,9 @@ class Group_Mapper {
 							$raw_channel->iconURL, $extra_class,
 							$extra_script,
 							null,
-							$config_item['block_description'] ?? null
+							$config_item['block_description'] ?? null,
+							$config_item['data'] ?? null
+
 						) ) );
 					} elseif ( ! in_array( $raw_channel->gatewayID,
 						$ids_from_config ) ) {
@@ -313,46 +315,3 @@ class Group_Mapper {
 		return $result_arr;
 	}
 }
-
-
-/*const list = [
-        {
-	        key: "inbox",
-            value: "test",
-            name: "bm_white_label",
-            label: "Inbox",
-            icon: iconSrc,
-            items: [
-                {
-	                key: "starred",
-                    value: "test",
-                    name: "bm_white_label",
-                    label: "Starred",
-                    icon: iconSrc
-                },
-                {
-	                key: "starred2",
-                    value: "test",
-                    name: "bm_white_label",
-                    label: "Starred 2",
-                    icon: iconSrc
-                }
-            ]
-        },
-        {
-	        key: "drafts",
-            value: "test",
-            name: "bm_white_label",
-            label: "Drafts",
-            icon: iconSrc,
-            items: []
-        },
-        {
-	        key: "drafts2",
-            value: "test",
-            name: "bm_white_label",
-            label: "Drafts 2",
-            icon: iconSrc,
-            items: []
-        }
-    ];*/

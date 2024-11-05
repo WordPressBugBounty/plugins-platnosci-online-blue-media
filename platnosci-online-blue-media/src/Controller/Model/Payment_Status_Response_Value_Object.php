@@ -38,13 +38,13 @@ class Payment_Status_Response_Value_Object {
 	/**
 	 * @param string $status
 	 * @param string $message
-	 * @param string $order_received_url
+	 * @param string|null $order_received_url
 	 * @param string|null $continue_transaction_redirect_url
 	 */
 	public function __construct(
 		string $status,
 		string $message,
-		string $order_received_url,
+		?string $order_received_url,
 		?string $continue_transaction_redirect_url
 	) {
 		$this->status                            = $status;
@@ -69,9 +69,9 @@ class Payment_Status_Response_Value_Object {
 	}
 
 	/**
-	 * @return string
+	 * @return string|null
 	 */
-	public function get_order_received_url(): string {
+	public function get_order_received_url(): ?string {
 		return $this->order_received_url;
 	}
 

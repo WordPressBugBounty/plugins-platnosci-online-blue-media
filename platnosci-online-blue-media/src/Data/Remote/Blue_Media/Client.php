@@ -8,7 +8,7 @@ use \Isolated\Blue_Media\Isolated_Guzzlehttp\GuzzleHttp\Client as GuzzleHttpClie
 class Client {
 
 
-	function continue_transaction_request(
+	public function continue_transaction_request(
 		array $data,
 		string $gateway_url
 	) {

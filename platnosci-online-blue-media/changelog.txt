@@ -1,5 +1,14 @@
 *** Autopay Changelog ***
 
+## [4.4.0] - 2024-11-06
+
+### Changes
+- **Simplified configuration for the merchant** - The number of configuration steps has been significantly reduced, making it quicker and easier to start using the plugin. A clear interface and a reduction in the amount of data required minimises the time required for configuration.
+
+### Added
+- **Support for BLIK-0 payments on the block checkout** - We have introduced support for BLIK-0 payments directly on the block checkout. Users can now use the fast and convenient BLIK-0 option without any additional work, increasing conversions and making it easier to finalise purchases.
+- **Adaptation to the FunnelKit Funnel Builder plugin** - The plugin is now compatible with FunnelKit Funnel Builder, allowing for easy integration and the creation of advanced purchase funnel paths.
+
 ## [4.3.4] - 2024-08-12
 
 ### Fixed

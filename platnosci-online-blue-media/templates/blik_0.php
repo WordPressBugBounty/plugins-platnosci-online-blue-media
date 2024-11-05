@@ -198,7 +198,7 @@ $generic_error_message = __( 'Payment failed.',
 
 
         }
-0
+
 
         function blueMediaUpdateStatus(message, status) {
             $('.bm-blik-overlay').show();

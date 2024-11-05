@@ -20,17 +20,20 @@ msgstr ""
 msgid "Description of Autopay payment gateway"
 msgstr "Opis modułu płatności Autopay"
 
-msgid "Gateway mode"
-msgstr "Pokazuj metody płatności w sklepie"
+msgid "Select mode of displaying payment methods"
+msgstr "Wybierz tryb wyświetlania metod płatności"
 
 msgid "Enable whitelabel mode"
 msgstr "Tak, pokazuj metody płatności w sklepie"
+
+msgid "Allowed payment method list"
+msgstr "Lista aktywnych metod płatności"
 
 msgid "Title"
 msgstr "Nazwa modułu płatności w sklepie"
 
 msgid "Description"
-msgstr "Opis modułu płatności w sklepie"
+msgstr "Opis"
 
 msgid "Instant payment"
 msgstr "Szybka płatność"
@@ -41,22 +44,34 @@ msgstr "Szybka płatność Autopay"
 msgid "This controls the description which the user sees during checkout."
 msgstr "Opis, który widzi użytkownik w koszyku sklepu"
 
-msgid "Sandbox mode"
+msgid "Use in sandbox mode"
 msgstr "Użyj środowiska testowego"
+
+msgid "Payments processed using sandbox environment will not affect store’s settlement with Autopay. Sandbox allows stores to verify integration with Autopay and configuration of this plugin."
+msgstr "Środowisko testowe umożliwia sprawdzenie poprawności działania i konfiguracji wtyczki Autopay na sklepie sprzedawcy, bez konieczności wykonywania realnych płatności."
+
+msgid "In order to get access to the sandbox environment contact Autopay using"
+msgstr "W celu uzyskania dostępu do środowiska testowego należy skontaktować się z Autopay korzystając z"
+
+msgid "this form"
+msgstr "tego formularza"
 
 msgid "Enable Sandbox mode"
 msgstr "Włącz tryb testowy"
 
-msgid "Test Service ID"
+msgid "Test service identifier"
 msgstr "Testowy identyfikator serwisu"
 
-msgid "Test Private Key"
+msgid "Test configuration key (hash)"
 msgstr "Testowy Klucz konfiguracyjny (hash)"
 
 msgid "Service ID"
 msgstr "Identyfikator serwisu"
 
-msgid "Production private Key"
+msgid "Service identifier"
+msgstr "Identyfikator serwisu"
+
+msgid "Configuration key (hash)"
 msgstr "Klucz konfiguracyjny (hash)"
 
 msgid "Gateway host"
@@ -65,10 +80,13 @@ msgstr "Adres modułu płatności"
 msgid "For a store operating in production mode the address is: https://pay.bm.pl/ and for test mode: https://pay-accept.bm.pl/"
 msgstr "Dla sklepu działającego w trybie produkcyjnym adres to: https://pay.bm.pl/, a dla trybu testowego: https://pay-accept.bm.pl"
 
-msgid "Contains numbers and lowercase letters. It is used to verify communication with the payment gateway. It should not be made available to the public"
-msgstr "Zawiera cyfry i małe litery. Służy do weryfikacji komunikacji z bramką płatności. Nie powinien być udostępniany publicznie."
+msgid "Key containing numbers and lowercase letters to verify communication. Do not share it with anyone."
+msgstr "Klucz zawierający cyfry i małe litery służący weryfikacji komunikacji. Nie udostępniaj go nikomu."
 
-msgid "It contains only numbers. It is different for each shop"
+msgid "where to find?"
+msgstr "gdzie znaleźć?"
+
+msgid "Consists of numbers only. Is unique for each store."
 msgstr "Zawiera tylko cyfry. Jest inny dla każdego sklepu."
 
 msgid "Google Analytics Tracking ID"
@@ -77,17 +95,14 @@ msgstr "Klucz śledzący Google Analitics"
 msgid "Payment statuses"
 msgstr "Statusy płatności"
 
-msgid "Payment pending"
+msgid "Payment started"
 msgstr "Płatność rozpoczęta"
 
-msgid "Payment success"
+msgid "Payment accepted"
 msgstr "Płatność zatwierdzona"
 
-msgid "Payment failure"
+msgid "Payment rejected"
 msgstr "Płatność nieudana"
-
-msgid "Click the name of the data stream."
-msgstr "Kliknij nazwę strumienia danych"
 
 msgid "The identifier is in the format G-XXXXXXX."
 msgstr "Identyfikator jest w formacie G-XXXXXXX."
@@ -141,13 +156,13 @@ msgid "It looks like the developer version of the Autopay plug-in is installed i
 msgstr "Wygląda na to, że zainstalowana została deweloperska wersja wtyczki Autopay zamiast produkcyjnego wydania. Usuń ją i zainstaluj z tego URL: %s"
 
 msgid "BLIK payment type"
-msgstr "Typ płatności Blik"
+msgstr "Typ płatności BLIK"
 
-msgid "Blik-0 without redirect"
-msgstr "Blik 0 bez przekierowania"
+msgid "enter BLIK code directly on your store"
+msgstr "wprowadź kod BLIK bezpośrednio na sklepie"
 
-msgid "Blik with redirect"
-msgstr "Blik z przekierowaniem"
+msgid "redirect payer to BLIK’s website"
+msgstr "przenieś na stronę BLIK"
 
 msgid "The code you provided is invalid. Code should be 6 digits."
 msgstr "Wprowadzony kod BLIK jest nieprawidłowy. Kod powinien składać się z 6 cyfr."
@@ -160,6 +175,9 @@ msgstr "Podaj kod BLIK."
 
 msgid "The code has 6 digits. You'll find it in your banking app."
 msgstr "Kod ma 6 cyfr. Znajdziesz go w swojej aplikacji bankowej."
+
+msgid "You'll find it in your banking app."
+msgstr "Znajdziesz go w swojej aplikacji bankowej."
 
 msgid "Payment successful."
 msgstr "Płatność zakończona powodzeniem."
@@ -242,8 +260,8 @@ msgstr "Spingo"
 msgid "Deferred payment for companies"
 msgstr "Płatność odroczona dla firm"
 
-msgid "Blik Pay Later"
-msgstr "Blik Płacę Później"
+msgid "BLIK Pay Later"
+msgstr "BLIK Płacę Później"
 
 msgid "Buy now and pay within 30 days"
 msgstr "Kup teraz i płać w ciągu 30 dni"
@@ -251,7 +269,7 @@ msgstr "Kup teraz i płać w ciągu 30 dni"
 msgid "We will redirect you to the website of our partner Autopay, where you will provide your card details"
 msgstr "Przekierujemy Cie na stronę naszego partnera Autopay, gdzie podasz dane swojej karty"
 
-msgid "Płać wygodnie za pomocą płatności Blik"
+msgid "Płać wygodnie za pomocą płatności BLIK"
 msgstr "Przekierujemy Cie na stronę naszego partnera Autopay, gdzie podasz dane swojej karty"
 
 msgid "You will be redirected to the page of the selected bank. Select the bank in order to make the payment."
@@ -260,17 +278,17 @@ msgstr "Przekierujemy Cię na stronę wybranego banku. Wybierz bank, z którego 
 msgid "Select the payment method you want to use."
 msgstr "Wybierz metodę płatności, z której chcesz skorzystać."
 
-msgid "Pay comfortably using Blik payments"
-msgstr "Płać wygodnie za pomocą płatności Blik"
+msgid "Pay comfortably using BLIK payments"
+msgstr "Płać wygodnie za pomocą płatności BLIK"
 
-msgid "Payment success for a cart containing only virtual products"
+msgid "Payment accepted for purchase of ONLY digital products"
 msgstr "Płatność zatwierdzona dla koszyka zawierającego tylko produkty wirtualne"
 
 msgid "Sandbox mode for logged-in administrator"
 msgstr "Tryb Sandbox dla zalogowanego administratora"
 
 msgid "Show Autopay payment gateway in Checkout only to logged-in administrators"
-msgstr "Pokazuj w Checkout bramkę płatności Autopay tylko zalogowanym administratorom"
+msgstr "Pokazuj metody płatności Autopay na sklepie tylko zalogowanym administratorom"
 
 msgid "In a while you'll be redirected to the payment page screen"
 msgstr "Za chwilę zostaniesz przekierowany do ekranu płatności"
@@ -287,9 +305,8 @@ msgstr "Tryb kompatybilności z wtyczkami trzecimi, które przeładowują fragme
 msgid "White label is not available when block editor for Checkout page is active"
 msgstr "Metody płatności w sklepie nie są dostępne, gdy aktywny jest edytor blokowy dla strony zamówienia"
 
-msgid "BLIK-0 is not available when block editor for Checkout page is active"
-msgstr "BLIK-0 nie jest dostępny, gdy aktywny jest edytor blokowy dla strony zamówienia"
-
+msgid "Block-based checkout experience"
+msgstr "Edytor blokowy"
 
 msgid "Autopay: No values found for import"
 msgstr "Autopay: Nie znaleziono danych do zaimportowania"
@@ -324,14 +341,11 @@ msgstr "Alternatywny produkcyjny adres startu transakcji"
 msgid "The block-based payment module will not work with the installed version of Woocommerce. Install at least 8.1.0 version."
 msgstr "Moduł płatności oparty o bloki nie będzie działać z zainstalowaną wersją Woocommerce. Zainstaluj wersję co najmniej 8.1.0."
 
-msgid "CSS Editor"
-msgstr "Edytor CSS"
+msgid "Use own CSS styles"
+msgstr "Nadaj własne stylowanie CSS"
 
 msgid "Apply styles"
 msgstr "Zastosuj style"
-
-msgid "Save changes"
-msgstr "Zapisz zmiany"
 
 msgid "Insert your CSS code here"
 msgstr "Umieść własny kod CSS w tym polu"
@@ -345,14 +359,20 @@ msgstr "Używaj tej funkcji ostrożnie. Wprowadzony kod CSS, może spowodować n
 msgid "Changes have been saved."
 msgstr "Zmiany zostały zapisane."
 
+msgid "Filter checkout order received url."
+msgstr "Filtruj adres URL finalizacji zamówienia."
+
+msgid "Replace the phrase:"
+msgstr "Zamień frazę:"
+
+msgid "To:"
+msgstr "Zamień na:"
+
 msgid "Filter checkout order received url from"
 msgstr "Filtruj adres URL finalizacji zamówienia. Fraza do zmiany:"
 
 msgid "Filter checkout order received url to"
 msgstr "Filtruj adres URL finalizacji zamówienia. Zamień na:"
-
-msgid "Measurement ID"
-msgstr "Identyfikator pomiaru"
 
 msgid "Where can I find the Measurement ID?"
 msgstr "Gdzie mogę znaleźć Identyfikator pomiaru?"
@@ -402,7 +422,7 @@ msgstr "Autopay BLIK-0: Upłynął czas na potwierdzenie transakcji."
 msgid "Autopay: Payment process started for order id:"
 msgstr "Autopay: Rozpoczęto płatność dla zamówienia ID:"
 
-msgid "Autopay: Blik-0 payment process started for order ID:"
+msgid "Autopay: BLIK-0 payment process started for order ID:"
 msgstr "Autopay: Rozpoczęto płatność BLIK-0 dla zamówienia ID:"
 
 msgid "Services for you"
@@ -416,3 +436,255 @@ msgstr "Nie udało się załadować listy usług dla Merchanta. Może to być ch
 
 msgid "let us know."
 msgstr "daj nam znać."
+
+msgid "Authentication"
+msgstr "Uwierzytelnienie"
+
+msgid "Payment settings"
+msgstr "Ustawienia płatności"
+
+msgid "Analytics"
+msgstr "Analityka"
+
+msgid "Help"
+msgstr "Pomoc"
+
+msgid "Check the connection"
+msgstr "Sprawdź połączenie"
+
+msgid "Check transaction"
+msgstr "Sprawdź poprawność transakcji"
+
+msgid "Learn more"
+msgstr "Dowiedz się więcej"
+
+msgid "Choose how your order statuses will change depending on the status payment has in Autopay."
+msgstr "Wybierz jakie statusy zamówienia w sklepie ustawiane będą dla poszczególnych statusów procesowania płatności w Autopay."
+
+msgid "In the available payment methods list we will render a separate, dedicated button for each of the payment methods available through Autopay."
+msgstr "Na liście pojawi się dedykowany przycisk dla każdej z dostępnych metod płatności."
+
+msgid "In the available payment methods list we will render one button, upon clicking which payer will be redirected to Autopay’s hosted payment page where all available payment methods will be displayed."
+msgstr "Na liście metod pojawi się jeden przycisk przekierowujący klienta do strony płatności hostowanej przez Autopay, gdzie płatnik zobaczy pełną listę dostępnych metod płatności."
+
+msgid "Display each payment method separately"
+msgstr "Wyświetl każdą dostępną metodę osobno"
+
+msgid "Redirect to Autopay’s hosted payment page"
+msgstr "Przenieś na stronę płatności Autopay"
+
+msgid "Sandbox active: the payments are simulated. Customers will not be actually charged for any purchases."
+msgstr "Środowisko testowe aktywne: płatnik nie zostanie obciążony za żadną płatność, a sklep nie otrzyma żadnej wypłaty za swoją sprzedaż."
+
+msgid "Autopay plugin supports sending information about the payment status directly to Google Analytics. This feature allows e.g., tracking sales conversion within the Google Analytics platform."
+msgstr "Wtyczka Autopay umożliwia wysyłanie bezpośrednio do Google Analytics informacji o dokonaniu płatności. Umożliwia to m.in. śledzenie konwersji sprzedażowej w ramach platformy Google Analytics."
+
+msgid "Communication between the plugin and Google Analytics is an optional feature, and as such is not required for proper functioning of this plugin."
+msgstr "Komunikacja z Google Analytics jest opcjonalną funkcją wtyczki i nie jest wymagana do poprawnego działania wtyczki."
+
+msgid "Once connected with this plugin, Google Analytics will start registering the following events:"
+msgstr "Po połączeniu z wtyczką, w koncie Google Analytics pojawią się następujące zdarzenia:"
+
+msgid "Expected format: G-XXXXXXX"
+msgstr "Identyfikator jest w formacie G-XXXXXXX"
+
+msgid "Where can I find this value?"
+msgstr "Gdzie mogę znaleźć ten identyfikator?"
+
+msgid "Google Analytics API secret"
+msgstr "Tajny klucz API"
+
+msgid "Where can I find API secret?"
+msgstr "Gdzie mogę znaleźć tajny klucz API?"
+
+msgid "Order status triggering the event ‘Completion of transaction’"
+msgstr "Status zamówienia wyzwalający zdarzenie “Zakończenie transakcji”"
+
+msgid "Save changes"
+msgstr "Zapisz zmiany"
+
+msgid "Where do I find the measurement identifier?"
+msgstr "Gdzie znajdę identyfikator pomiaru?"
+
+msgid "Go to ‘Admin’ in the bottom left corner."
+msgstr "Przejdź do „Administrator” w lewym dolnym rogu."
+
+msgid "In the ‘Collecting and modifying data’ section, click ‘Data streams’."
+msgstr "W sekcji „Zbieranie i modyfikowanie danych” kliknij „Strumienie danych”."
+
+msgid "Your measurement identifier is located in the top right corner (e.g. G-QCX4K9GSPC)."
+msgstr "Twój identyfikator pomiaru znajduje się w prawym górnym rogu (np. G-QCX4K9GSPC)."
+
+msgid "How do I create a secret API?"
+msgstr "Jak utworzyć API secret?"
+
+msgid "In your Google Analytics 4 panel"
+msgstr "W panelu Google Analytics 4"
+
+msgid "In the ‘Services’ section, click ‘Data streams’."
+msgstr "W sekcji „Usługi” kliknij „Strumienie danych”."
+
+msgid "Click the name of the data stream."
+msgstr "Kliknij nazwę strumienia danych."
+
+msgid "Then click ‘Create’ in the ‘Measurement Protocol’ section."
+msgstr "Następnie kliknij “Utwórz” w sekcji “Measurement Protocol”"
+
+msgid "View product on list"
+msgstr "Wyświetl produkt na liście"
+
+msgid "View product details"
+msgstr "Zobacz szczegóły produktu"
+
+msgid "Click on a product"
+msgstr "Kliknij na produkt"
+
+msgid "Remove a product from the cart"
+msgstr "Usuń produkt z koszyka"
+
+msgid "Start the checkout process"
+msgstr "Rozpocznij proces realizacji zamówienia"
+
+msgid "Completed order details"
+msgstr "Wypełnione dane zamówienia"
+
+msgid "Select payment method"
+msgstr "Wybór metody płatności"
+
+msgid "Complete transaction"
+msgstr "Zakończenie transakcji"
+
+msgid "Event name"
+msgstr "Nazwa zdarzenia"
+
+msgid "Event ID"
+msgstr "Identyfikator zdarzenia"
+
+msgid "Measurement identifier"
+msgstr "Identyfikator pomiaru"
+
+msgid "Triggered for each product that is listed and visible to the customer when browsing the site."
+msgstr "Wyzwalane dla każdego produktu, który znajduje się na liście i jest widoczny dla klienta podczas przeglądania strony."
+
+msgid "Triggered when a user visits a specific product page. Triggered when the page is displayed/loaded."
+msgstr "Wyzwalane, gdy użytkownik odwiedzi stronę określonego produktu. Wyzwalane podczas wyświetlania/ładowania strony."
+
+msgid "Triggered when a user adds a product to the cart."
+msgstr "Wyzwalane, gdy użytkownik doda produkt do koszyka."
+
+msgid "Triggered when a user removes a product from the cart."
+msgstr "Wyzwalane, gdy użytkownik usunie produkt z koszyka."
+
+msgid "Triggered when a user proceeds to checkout."
+msgstr "Wyzwalane, gdy użytkownik przejdzie do kasy."
+
+msgid "Triggered when the user has completed the checkout details."
+msgstr "Wyzwalane, gdy użytkownik uzupełnił dane zamówienia."
+
+msgid "Triggered when the user has proceeded to the second step of the checkout (selection of payment method)."
+msgstr "Wyzwalane, gdy użytkownik przeszedł do drugiego kroku zamówienia (wybór metody płatności)."
+
+msgid "Triggered when the transaction is successfully completed. It is sent on the server side so that the transaction is marked, even if the Customer has not returned to the thank you page."
+msgstr "Wyzwalane po pomyślnym zakończeniu transakcji. Wysyłane jest po stronie serwera, by transakcja została oznaczona, nawet jeśli klient nie powrócił do strony z podziękowaniem."
+
+msgid "Read more about this plugin:"
+msgstr "Zapoznaj się z materiałami dotyczącymi naszej wtyczki:"
+
+msgid "Plugin configuration"
+msgstr "Konfiguracja wtyczki Autopay"
+
+msgid "step by step guide"
+msgstr "krok po kroku"
+
+msgid "Frequently Asked Questions"
+msgstr "Często zadawane pytania"
+
+msgid "Ask question about this plugin"
+msgstr "Skontaktuj się z nami"
+
+msgid "Advanced settings listed below can be used to diagnose occurring issues and solving uncommon integration bugs. Use them only when having issues with standard plugin configuration. Before saving any changes read the relevant documentation."
+msgstr "Poniżej znajdują się zaawansowane ustawienia wtyczki służące do diagnostyki oraz rozwiązywania ewentualnych problemów integracyjnych. Korzystaj z nich tylko, jeżeli masz problemy z obecną konfiguracją wtyczki. Przed ich użyciem zapoznaj się z dokumentacją."
+
+msgid "Sandbox mode for logged in Administrator"
+msgstr "Tryb Sandbox dla Zalogowanego Administratora"
+
+msgid "Display Autopay payment methods on story only to logged in Administrators"
+msgstr "Pokazuj metody płatności Autopay na sklepie tylko zalogowanym administratorom"
+
+msgid "Display redirect countdown screen to solve compatibility issues"
+msgstr "Wyświetl ekran odliczania przed przekierowaniem w celu zwiększenia kompatybilności"
+
+msgid "3rd party compatibility mode for plugins reloading checkout code elements"
+msgstr "Tryb kompatybilności z wtyczkami trzecimi, które przeładowują fragmenty checkout"
+
+msgid "Alternative production start address"
+msgstr "Alternatywny produkcyjny adres startu transakcji"
+
+msgid "Alternative test start address"
+msgstr "Alternatywny testowy adres startu transakcji"
+
+msgid "Filter the order finalisation URL. Phrase to change"
+msgstr "Filtruj adres URL finalizacji zamówienia. Fraza do zmiany"
+
+msgid "Filter order finalisation URL."
+msgstr "Filtruj adres URL finalizacji zamówienia."
+
+msgid "Replace with:"
+msgstr "Zamień na:"
+
+msgid "Import settings from version 2.x/3.x"
+msgstr "Zaimportuj ustawienia z wersji 2.x/3.x"
+
+msgid "Turn on sandbox mode or accept real payments."
+msgstr "Włącz tryb testowy lub przyjmuj realne płatności."
+
+msgid "Select the payment methods you wish to use."
+msgstr "Wybierz metody płatności z których chcesz skorzystać."
+
+msgid "The Autopay plugin allows you to send payment information to Google Analytics. Among other things, this makes it possible to track sales conversions within the Google Analytics platform. Communication with Google Analytics is an optional feature of the plug-in."
+msgstr "Wtyczka Autopay umożliwia wysyłanie do Google Analytics informacji o dokonaniu płatności. Umożliwia to m.in. śledzenie konwersji sprzedażowej w ramach platformy Google Analytics. Komunikacja z Google Analytics jest opcjonalną funkcją wtyczki."
+
+msgid "Use the services of official and verified Autopay partners!"
+msgstr "Korzystaj z usług oficjalnych i sprawdzonych partnerów Autopay!"
+
+msgid "Advanced settings intended for developers. When making changes in this section, please refer to the technical specifications to know how it will affect plugin."
+msgstr "Ustawienia zaawansowane przeznaczone dla developerów. Dokonując zmian w tej sekcji zapoznaj się ze specyfikacją techniczną narzędzia, by wiedzieć jakiego efektu się spodziewać."
+
+msgid "Need support? Discover the content library that makes installing and configuring Autopay solutions a piece of cake."
+msgstr "Potrzebujesz wsparcia. Poznaj bibliotekę treści dzięki, której instalacja i konfiguracja rozwiązań Autopay staną się banalnie proste."
+
+msgid "Check documentation before enabling"
+msgstr "Sprawdź dokumentację przed włączeniem"
+
+msgid "Check documentation"
+msgstr "Sprawdź dokumentację"
+
+msgid "Detailed documentation of advanced parameters:"
+msgstr "Szczegółowa dokumentacja parametrów zaawansowanych:"
+
+msgid "Show documentation"
+msgstr "Zobacz dokumentację"
+
+msgid "Replace the default order confirmation endpoint address."
+msgstr "Zamień domyślny adres potwierdzenia zamówienia."
+
+msgid "Meet Autopay."
+msgstr "Poznaj Autopay."
+
+msgid "Advertising services"
+msgstr "Usługi reklamowe"
+
+msgid "The Ad services is a comprehensive solution that enables merchants to effectively promote their products directly from the shop's administration panel. The service is fully integrated with WooCommerce which allows the automatic creation of advertising campaigns tailored to the shop's product range, customers' purchase history and analysis of their preferences."
+msgstr "Usługa świadczenia reklam to kompleksowe rozwiązanie, które umożliwia merchantom efektywne promowanie swoich produktów bezpośrednio z panelu administracyjnego sklepu. Usługa jest w pełni zintegrowana z WooCommerce co pozwala na automatyczne tworzenie kampanii reklamowych dopasowanych do asortymentu sklepu, historii zakupowej klientów oraz analizie ich preferencji."
+
+msgid "Enable campaign tracking via Autopay and publish the product stream."
+msgstr "Włącz śledzenie kampanii przez Autopay oraz opublikuj strumień produktów."
+
+msgid "See how you can run straightforward campaigns with us!"
+msgstr "Zobacz jak możesz z nami przeprowadzić prosto kampanie!"
+
+msgid "Launch in 5 minutes!"
+msgstr "Uruchom w 5 minut!"
+
+msgid "Payment failed"
+msgstr "Płatność nieudana"

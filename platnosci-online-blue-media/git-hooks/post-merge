@@ -1,0 +1,10 @@
+#!/bin/bash
+composer install
+. $HOME/.nvm/nvm.sh
+./"$NVM_DIR"/nvm.sh install 16
+./"$NVM_DIR"/nvm.sh use 16
+npm install --save-dev node-sass
+npm install
+npm install -g gulp-cli
+gulp
+

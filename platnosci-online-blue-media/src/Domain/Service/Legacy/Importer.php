@@ -106,57 +106,11 @@ class Importer {
 		update_option( 'woocommerce_bluemedia_settings',
 			$this->autopay_settings );
 	}
+
+	/**
+	 * @return false|mixed|null
+	 */
+	public function get_legacy_settings() {
+		return $this->legacy_settings;
+	}
 }
-
-/*
-
-array(24) {
-	["whitelabel"]=>
-  string(3) "yes"
-	["testmode_header"]=>
-  string(0) ""
-	["testmode"]=>
-  string(3) "yes"
-	["testmode_info"]=>
-  string(0) ""
-	["test_service_id"]=>
-  string(6) ""
-	["test_private_key"]=>
-  string(40) ""
-	["service_id"]=>
-  string(0) ""
-	["private_key"]=>
-  string(0) ""
-	["ga4_tracking_id"]=>
-  string(12) "G-LTC07K0XN2"
-	["ga4_api_secret"]=>
-  string(18) "L24tL^tp#Su$qicXxq"
-	["ga4_client_id"]=>
-  string(10) "3995440075"
-	["wc_payment_statuses"]=>
-  string(0) ""
-	["wc_payment_status_on_bm_pending"]=>
-  string(10) "wc-pending"
-	["wc_payment_status_on_bm_success"]=>
-  string(12) "wc-completed"
-	["wc_payment_status_on_bm_failure"]=>
-  string(9) "wc-failed"
-	["enabled"]=>
-  string(3) "yes"
-	["test_publishable_key"]=>
-  string(0) ""
-	["blik_type"]=>
-  string(13) "with_redirect"
-	["debug_mode"]=>
-  string(3) "yes"
-	["wc_payment_status_on_bm_success_virtual"]=>
-  string(12) "wc-completed"
-	["sandbox_for_admins"]=>
-  string(2) "no"
-	["autopay_only_for_admins"]=>
-  string(2) "no"
-	["countdown_before_redirection"]=>
-  string(3) "yes"
-	["compatibility_with_live_update_checkout"]=>
-  string(2) "no"
-}*/

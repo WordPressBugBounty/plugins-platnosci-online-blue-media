@@ -14,33 +14,42 @@ class Payment_Status_Controller extends Abstract_Controller implements Controlle
 
 	const NONCE_ACTION = 'bluemedia_payment';
 
-	const GENERIC_ERROR_MESSAGE = 'Wystąpił błąd. Płatność zakończona niepowodzeniem';
-
 	public function execute_request() {
-		$order_id                = WC()->session->get( 'bm_wc_order_id' );
+		$order_id = WC()->session->get( 'bm_wc_order_id' );
 		$transaction_start_error = WC()->session->get( 'bm_continue_transaction_start_error' );
 
-		/*blue_media()->get_woocommerce_logger()->log_debug(
-			sprintf( '[order_id: %s]',
-				print_r( $order_id, true )
-			) );*/
 
-		if (empty($order_id)){
+		if ( empty( $order_id ) ) {
+			blue_media()->get_woocommerce_logger()->log_error(
+				sprintf( '[Payment_Status_Controller] [order_id is empty]'
+				) );
+
 			return;
 		}
 
 		$nonce = $_POST['nonce'];
 
 		if ( ! wp_verify_nonce( $nonce, self::NONCE_ACTION ) ) {
+			blue_media()->get_woocommerce_logger()->log_error(
+				sprintf( '[Payment_Status_Controller] [wp_verify_nonce failed]  [order_id: %s]',
+					print_r( $order_id, true )
+				) );
+
 			$this->send_response(
 				Payment_Status_Response_Value_Object::STATUS_ERROR,
-				self::GENERIC_ERROR_MESSAGE,
+				self::get_generic_err_msg(),
 				WC()->session->get( 'bm_original_order_received_url' ),
 				null
 			);
 		}
 
 		if ( '' !== $transaction_start_error ) {
+			blue_media()->get_woocommerce_logger()->log_error(
+				sprintf( '[Payment_Status_Controller] [transaction_start_error: %s]  [order_id: %s]',
+					print_r( $transaction_start_error, true ),
+					print_r( $order_id, true )
+				) );
+
 			$this->send_response(
 				Payment_Status_Response_Value_Object::STATUS_ERROR,
 				$transaction_start_error,
@@ -76,6 +85,7 @@ class Payment_Status_Controller extends Abstract_Controller implements Controlle
 				$status = Payment_Status_Response_Value_Object::STATUS_WAIT;
 		}
 
+
 		$this->send_response(
 			$status,
 			Payment_Status_Response_Value_Object::get_message_by_itn_status_id( $itn_status ),
@@ -85,9 +95,6 @@ class Payment_Status_Controller extends Abstract_Controller implements Controlle
 	}
 
 	public function handle() {
-		//todo dodać endpoint do postowania
-
-
 		add_action( $this->get_ajax_action_name( self::ACTION_NAME ),
 			function () {
 				$this->execute_request();
@@ -97,5 +104,9 @@ class Payment_Status_Controller extends Abstract_Controller implements Controlle
 			function () {
 				$this->execute_request();
 			} );
+	}
+
+	public static function get_generic_err_msg(): string {
+		return __( 'Payment failed', 'bm-woocommerce' );
 	}
 }
