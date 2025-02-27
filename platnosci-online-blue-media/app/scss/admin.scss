@@ -1,13 +1,13 @@
-$color-black: #23282D;
+$color-black: #23282d;
 $color-gray-bold: #555555;
-$color-gray-thin: #72777C;
-$color-gray-light: #F8F8F8;
-$color-white: #FFF;
-$color-blue: #0073AF;
-$color-red: #FC2945;
+$color-gray-thin: #72777c;
+$color-gray-light: #f8f8f8;
+$color-white: #fff;
+$color-blue: #0073af;
+$color-red: #fc2945;
 $color-green: green;
-$color-yellow: #FFDC37;
-$border-color: #E5E5E5;
+$color-yellow: #ffdc37;
+$border-color: #e5e5e5;
 
 @mixin section-line {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -209,7 +209,7 @@ $border-color: #E5E5E5;
 
 							&.autopay-help-tip {
 								&::after {
-									content: '\f348';
+									content: "\f348";
 									color: $color-blue;
 									top: -3px;
 								}
@@ -270,9 +270,10 @@ $border-color: #E5E5E5;
 					}
 				}
 
-				&.autopay-comp-text ,
+				&.autopay-comp-text,
 				&.autopay-comp-password {
-					th, td {
+					th,
+					td {
 						display: block;
 					}
 
@@ -281,7 +282,8 @@ $border-color: #E5E5E5;
 						margin-bottom: 4px;
 					}
 
-					th, .forminp {
+					th,
+					.forminp {
 						max-width: 470px;
 					}
 
@@ -294,14 +296,13 @@ $border-color: #E5E5E5;
 								border: 1px solid #ddd;
 								padding: 5px 10px;
 								vertical-align: top;
-
 							}
 						}
 					}
 
 					.input-text {
 						border-color: #ddd;
-						box-shadow: 0 1px 0 0 #CCCCCC;
+						box-shadow: 0 1px 0 0 #cccccc;
 						width: 100%;
 					}
 
@@ -323,7 +324,7 @@ $border-color: #E5E5E5;
 					.forminp {
 						.select {
 							border-color: #ddd;
-							box-shadow: 0 1px 0 0 #CCCCCC;
+							box-shadow: 0 1px 0 0 #cccccc;
 						}
 					}
 				}
@@ -339,6 +340,23 @@ $border-color: #E5E5E5;
 					}
 
 					tr {
+						&.woocommerce_bluemedia_whitelabel-tr {
+							> * {
+								max-width: 540px;
+							}
+
+							.titledesc {
+								padding-top: unset;
+
+								.autopay-fieldset {
+									.description {
+										margin-top: 15px !important;
+										margin-bottom: 25px !important;
+									}
+								}
+							}
+						}
+
 						&.woocommerce_bluemedia_testmode-tr {
 							display: block;
 							margin-bottom: 10px;
@@ -421,153 +439,6 @@ $border-color: #E5E5E5;
 					}
 				}
 			}
-		}
-
-		/* Tab > Payment settings */
-		&.section-payment_settings {
-			table.form-table {
-				tr {
-					&.woocommerce_bluemedia_whitelabel-tr {
-						> * {
-							max-width: 540px;
-						}
-
-						.titledesc {
-							padding-top: unset;
-
-							.autopay-fieldset {
-								.description {
-									margin-top: 15px !important;
-								}
-							}
-						}
-					}
-
-					&.woocommerce_bluemedia_blik_type-tr {
-						@include section-line;
-
-						.titledesc {
-							display: none;
-						}
-
-						.forminp {
-							.select {
-								margin-bottom: 20px;
-							}
-						}
-					}
-
-					&.autopay-comp-channels {
-						@include section-line;
-
-						.titledesc {
-							@include heading-2;
-						}
-
-						.forminp {
-							max-width: 470px;
-							width: 100%;
-
-							ul.bm-payment-channels__wrapper {
-								li.bm-payment-channel {
-									@include section-line;
-									margin-bottom: 10px;
-									padding-bottom: 10px;
-
-									&:last-child {
-										border-bottom: unset;
-									}
-
-									ul.bm-payment-channel__wrapper {
-										li.bm-payment-channel__item {
-											display: flex;
-											align-items: center;
-											column-gap: 10px;
-
-											.bm-payment-channel {
-												&__desc {
-													color: $color-gray-thin;
-												}
-
-												&__logo {
-													border: 1px solid rgba(0, 0, 0, .1);
-													width: 24px;
-												}
-											}
-
-										}
-									}
-
-									&.bm-group-expandable {
-										padding-left: 34px;
-
-										ul.bm-payment-channel__wrapper {
-											display: flex;
-											flex-direction: row;
-											flex-wrap: wrap;
-											gap: 10px;
-											cursor: pointer;
-
-											.bm-group-name {
-												display: inline-flex;
-												align-items: center;
-												flex: 1 0 100%;
-												color: $color-gray-thin;
-												position: relative;
-
-												&::before {
-													content: url('../../assets/img/transfer-icon.svg');
-													position: absolute;
-													left: -32px;
-												}
-
-												&::after {
-													content: '\276F';
-													color: $color-blue;
-													position: absolute;
-													right: 0;
-													transform: rotate(90deg);
-												}
-											}
-
-											li.bm-payment-channel__item {
-												display: none;
-												margin-bottom: unset;
-
-												&.show {
-													display: flex;
-												}
-
-												.bm-inside-expandable-group {
-													display: none;
-												}
-											}
-
-											&.show {
-												.bm-group-name {
-													&::after {
-														transform: rotate(270deg);
-													}
-												}
-
-												li.bm-payment-channel__item {
-													display: flex;
-												}
-											}
-										}
-									}
-
-									&.bm-group-blik {
-										.bm-payment-channel__desc {
-											text-transform: uppercase;
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
 
 			.autopay-comp-title {
 				padding: 20px 25px 0;
@@ -613,6 +484,181 @@ $border-color: #E5E5E5;
 			}
 		}
 
+		/* Tab > Payment settings */
+		&.section-payment_settings {
+			table.form-table {
+				tr {
+					&.woocommerce_bluemedia_blik_type-tr {
+						@include section-line;
+
+						.titledesc {
+							display: none;
+						}
+
+						.forminp {
+							.select {
+								margin-bottom: 20px;
+							}
+						}
+					}
+
+					&.autopay-comp-channels {
+						@include section-line;
+
+						.titledesc {
+							@include heading-2;
+						}
+
+						.forminp {
+							max-width: 470px;
+							padding-bottom: 20px;
+							width: 100%;
+
+							fieldset {
+								color: $color-red;
+							}
+
+							ul.bm-payment-channels__wrapper {
+								margin-bottom: 0;
+
+								li.bm-payment-channel {
+									@include section-line;
+									margin-bottom: 10px;
+									padding-bottom: 10px;
+
+									&:last-child {
+										border-bottom: unset;
+										margin-bottom: unset;
+										padding-bottom: unset;
+									}
+
+									ul.bm-payment-channel__wrapper {
+										li.bm-payment-channel__item {
+											display: flex;
+											align-items: center;
+											column-gap: 10px;
+
+											.bm-payment-channel {
+												&__desc {
+													color: $color-gray-thin;
+												}
+
+												&__logo {
+													border: 1px solid
+														rgba(0, 0, 0, 0.1);
+													width: 24px;
+												}
+											}
+										}
+									}
+
+									&.bm-group-expandable {
+										padding-left: 34px;
+
+										ul.bm-payment-channel__wrapper {
+											display: flex;
+											flex-direction: row;
+											flex-wrap: wrap;
+											gap: 10px;
+											cursor: pointer;
+
+											.bm-group-name {
+												display: inline-flex;
+												align-items: center;
+												flex: 1 0 100%;
+												color: $color-gray-thin;
+												position: relative;
+
+												&::before {
+													content: url("../../assets/img/transfer-icon.svg");
+													position: absolute;
+													left: -32px;
+												}
+
+												&::after {
+													content: "\276F";
+													color: $color-blue;
+													position: absolute;
+													right: 0;
+													transform: rotate(90deg);
+												}
+											}
+
+											li.bm-payment-channel__item {
+												display: none;
+												margin-bottom: unset;
+
+												&.show {
+													display: flex;
+												}
+
+												.bm-inside-expandable-group {
+													display: none;
+												}
+											}
+
+											&.show {
+												.bm-group-name {
+													&::after {
+														transform: rotate(
+															270deg
+														);
+													}
+												}
+
+												li.bm-payment-channel__item {
+													display: flex;
+												}
+											}
+										}
+									}
+
+									&.bm-group-blik {
+										.bm-payment-channel__desc {
+											text-transform: uppercase;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+
+			.autopay-comp-title {
+				padding: 20px 25px 0;
+
+				&__wrapper {
+					max-width: 470px;
+					position: relative;
+
+					> * {
+						margin: unset;
+					}
+
+					p {
+						@include desc;
+						color: $color-gray-thin;
+					}
+
+					.autopay-url-tip {
+						position: absolute;
+						right: 0;
+						top: 0;
+					}
+				}
+
+				&.section-woocommerce_bluemedia_blik_type_title {
+					.autopay-comp-title__wrapper {
+						h3.wc-settings-sub-title {
+							@include heading-2;
+							margin-bottom: 3px;
+						}
+					}
+				}
+			}
+		}
+
 		/* Tab > Analytics */
 		&.section-analytics {
 			table.form-table {
@@ -620,11 +666,12 @@ $border-color: #E5E5E5;
 					@media screen and (min-width: 1250px) {
 						display: grid;
 						grid-template-columns: 520px auto;
-						grid-template-areas: 'tracking-id table'
-							'client-id table'
-							'api-secret table'
-							'purchase-status table'
-							'. table';
+						grid-template-areas:
+							"tracking-id table"
+							"client-id table"
+							"api-secret table"
+							"purchase-status table"
+							". table";
 						grid-template-rows: auto;
 						column-gap: 0;
 					}
@@ -681,13 +728,14 @@ $border-color: #E5E5E5;
 											background-color: $color-gray-light;
 										}
 
-										th, td {
+										th,
+										td {
 											border: 1px solid #ddd;
 											padding: 14px 20px;
 										}
 
 										th {
-											background-color: #E8E8E8;
+											background-color: #e8e8e8;
 											font-weight: 700;
 										}
 									}
@@ -703,7 +751,7 @@ $border-color: #E5E5E5;
 		&.section-advanced_settings {
 			.autopay-settings-sidebar {
 				background-color: $color-gray-light;
-				border: 1px solid #DCDCDC;
+				border: 1px solid #dcdcdc;
 				box-sizing: border-box;
 				margin: 20px 25px 0;
 				padding: 18px 20px;
@@ -731,8 +779,10 @@ $border-color: #E5E5E5;
 					position: relative;
 
 					&::before {
-						content: url('../../assets/img/documentation.svg');
-						filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(212deg) brightness(111%) contrast(110%);
+						content: url("../../assets/img/documentation.svg");
+						filter: brightness(0) saturate(100%) invert(100%)
+							sepia(100%) saturate(0%) hue-rotate(212deg)
+							brightness(111%) contrast(110%);
 						position: absolute;
 						top: 9px;
 						left: 35px;
@@ -798,8 +848,9 @@ $border-color: #E5E5E5;
 						@include section-line;
 						display: grid;
 						grid-template-columns: 3fr 1fr;
-						grid-template-areas: 'title button'
-							'desc button';
+						grid-template-areas:
+							"title button"
+							"desc button";
 						max-width: 495px;
 						padding-bottom: 20px;
 
@@ -834,7 +885,7 @@ $border-color: #E5E5E5;
 
 						.warning {
 							@include desc;
-							color: #FC2945;
+							color: #fc2945;
 							position: absolute;
 							padding-left: 160px;
 							text-align: right;
@@ -978,6 +1029,106 @@ $border-color: #E5E5E5;
 				width: 100%;
 			}
 		}
+
+		#autopay-currencies-menu {
+			.nav-tab {
+				border: none;
+				background: transparent;
+				color: #555555;
+			}
+
+			.nav-tab:hover,
+			.nav-tab-active {
+				border: none;
+				border-bottom: 4px solid #0073aa;
+				background: transparent;
+				color: #0073aa;
+			}
+
+			.autopay-add-currency-tab,
+			.autopay-add-currency-tab:hover {
+				border: 1px solid #0073aa;
+				background: #e0f0f7;
+				color: #0073aa;
+				border-radius: 3px;
+
+				ul li,
+				span {
+					cursor: pointer;
+				}
+			}
+		}
+		.autopay-remove-currency {
+			text-decoration: underline;
+			margin: 20px 0px;
+			float: right;
+			cursor: pointer;
+
+			a {
+				color: #fc2945 !important;
+				display: flex;
+				gap: 8px;
+				align-items: center;
+				font-size: 13px;
+				line-height: 1;
+				font-weight: 700;
+			}
+
+			a:focus {
+				box-shadow: none;
+			}
+
+			#autopay-remove-currency-btn {
+				text-decoration: none;
+			}
+		}
+
+		.remove_currency_modal_target.active {
+			display: flex !important;
+			flex-direction: column;
+			gap: 30px;
+			padding: 45px;
+			background-color: $color-white;
+			height: max-content;
+			box-sizing: border-box;
+			width: 100% !important;
+			max-width: 387px;
+			top: 50% !important;
+			left: 50% !important;
+			transform: translate(-50%, -50%) !important;
+
+			& > p {
+				text-align: center;
+				font-size: 22px;
+				line-height: 1;
+				font-weight: 700;
+			}
+
+			& .remove-currency-buttons-wrapper {
+				display: flex;
+				gap: 10px;
+
+				& > button {
+					position: static;
+					background-color: $color-white;
+					border: 1px solid #006799;
+					text-align: center;
+					font-size: 13px;
+					line-height: 1;
+					color: #006799;
+					width: 144px;
+					margin: 0;
+					padding: 8px 0;
+					border-radius: 3px;
+					cursor: pointer;
+
+					&.autopay-remove-currency-cancel {
+						background-color: #006799;
+						color: $color-white;
+					}
+				}
+			}
+		}
 	}
 
 	.bm_settings_no_form {
@@ -1036,4 +1187,3 @@ $border-color: #E5E5E5;
 	pointer-events: none;
 	opacity: 0.5;
 }
-

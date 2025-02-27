@@ -18,7 +18,7 @@ $placement = empty( $placement ) ? 'top' : $placement;
 
 <?php if ( ! empty( $tip_modal_id ) ): ?>
 	<span class="autopay-url-tip placement-<?php esc_attr_e( $placement ); ?>">
-	<a class="bm_ga_help_modal" href="#"
+	<a `class="bm_ga_help_modal" href="#"`
 	   data-modal='<?php esc_attr_e( $tip_modal_id ); ?>'><?php echo $label ?></a>
 </span>
 <?php else: ?>

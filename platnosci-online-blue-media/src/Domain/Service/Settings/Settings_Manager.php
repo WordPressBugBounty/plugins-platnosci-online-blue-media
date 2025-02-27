@@ -181,4 +181,18 @@ class Settings_Manager {
 				'tab_id'        => $active_tab_id,
 			] );
 	}
+
+	public static function get_currency_option_key(
+		string $option,
+		?string $currency_code = null
+	) {
+		$currency_manager = blue_media()->get_currency_manager();
+
+		if ( 'PLN' !== $currency_code ) {
+			return $currency_manager->add_currency_postfix( $option,
+				$currency_code );
+		}
+
+		return $option;
+	}
 }

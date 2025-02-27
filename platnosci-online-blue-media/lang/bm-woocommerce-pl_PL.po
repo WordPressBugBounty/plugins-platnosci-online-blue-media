@@ -688,3 +688,21 @@ msgstr "Uruchom w 5 minut!"
 
 msgid "Payment failed"
 msgstr "Płatność nieudana"
+
+msgid "Czech koruna"
+msgstr "Korona czeska"
+
+msgid "Euro"
+msgstr "Euro"
+
+msgid "Hungarian forint"
+msgstr "Forint"
+
+msgid "Polish z&#x142;oty"
+msgstr "Złoty polski"
+
+msgid "Romanian leu"
+msgstr "Lej rumuński"
+
+msgid "Remove currency"
+msgstr "Usuń walutę"

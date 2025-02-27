@@ -23,12 +23,13 @@ $defaults = [
 	'custom_attributes' => [],
 ];
 
-$data = wp_parse_args( $data, $defaults );
-
+$data       = wp_parse_args( $data, $defaults );
+$tr_classes = empty( $tr_classes ) ? [] : $tr_classes;
 ?>
 
 <tr valign="top"
-	class="<?php echo esc_attr( $field_key ); ?>-tr autopay-comp-password">
+	class="<?php echo esc_attr( $field_key ); ?>-tr autopay-comp-password <?php esc_attr_e( implode( ' ',
+		$tr_classes ) ) ?>">
 	<th scope="row" class="titledesc">
 		<label
 			for="<?php echo esc_attr( $field_key ); ?>"><?php echo wp_kses_post( $data['title'] ); ?></label>

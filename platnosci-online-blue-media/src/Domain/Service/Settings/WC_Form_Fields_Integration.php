@@ -3,6 +3,8 @@
 namespace Ilabs\BM_Woocommerce\Domain\Service\Settings;
 
 use Exception;
+use Ilabs\BM_Woocommerce\Domain\Service\Currency\Currency;
+use Ilabs\BM_Woocommerce\Domain\Service\Currency\Interfaces\Currency_Interface;
 use Ilabs\BM_Woocommerce\Domain\Service\Custom_Styles\Css_Editor;
 use Ilabs\BM_Woocommerce\Domain\Service\Legacy\Importer;
 use WC_Settings_API;
@@ -19,6 +21,8 @@ class WC_Form_Fields_Integration {
 					$disabled              = $data['disabled'] ?? false;
 					$custom_attributes     = $data['custom_attributes'] ?? [];
 					$tr_classes            = $data['tr_classes'] ?? [];
+
+
 					if ( ! empty( $data['required'] ) && true === $data['required'] ) {
 						$custom_attributes         = array_merge( $custom_attributes,
 							[ 'required' => '' ] );
@@ -27,7 +31,6 @@ class WC_Form_Fields_Integration {
 					if ( $disabled ) {
 						$tr_classes += [ 'autopay_disabled' ];
 					}
-
 
 					ob_start();
 
@@ -44,6 +47,7 @@ class WC_Form_Fields_Integration {
 							'visible'           => $visible,
 							'custom_attributes' => $custom_attributes,
 							'tr_classes'        => $tr_classes,
+							'active_tab'        => ( new Settings_Tabs() )->get_active_tab_id(),
 						] );
 
 					return ob_get_clean();
@@ -107,11 +111,22 @@ class WC_Form_Fields_Integration {
 	}
 
 	public function get_authentication_fields(): array {
+		$currency_tabs               = new Currency_Tabs();
+		$current_admin_currency_code = $currency_tabs->get_active_tab_currency()
+		                                             ->get_code();
+
 		$testmode_opt_value = blue_media()
 			->get_blue_media_gateway()
 			->get_option( 'testmode', 'no' );
 
-		return [
+		$whitelabel_opt_value = blue_media()
+			->get_blue_media_gateway()
+			->get_option( Settings_Manager::get_currency_option_key( 'whitelabel',
+				$current_admin_currency_code ),
+				'no' );
+
+
+		$return = [
 
 			'testmode' => [
 				'title'         => __( 'Use in sandbox mode',
@@ -143,7 +158,61 @@ class WC_Form_Fields_Integration {
 				'bmtab'         => 'authentication',
 			],
 
-			'service_id' => [
+			'currency_tabs' => [
+				'title'         => '',
+				'description'   => '',
+				'type'          => 'autopay_template',
+				'bmtab'         => 'authentication',
+				'desc_tip'      => false,
+				'template'      => 'settings_field_currency_tabs',
+				'template_args' =>
+					[
+						'currency_tabs' => $currency_tabs,
+					],
+			],
+
+			'whitelabel_title' => [
+				'title' => __( 'Select mode of displaying payment methods',
+					'bm-woocommerce' ),
+
+				'description' => '',
+
+				'type'          => 'autopay_template',
+				'template'      => 'settings_field_extended_title',
+				'template_args' =>
+					[
+						'tip_url'       => 'https://developers.autopay.pl/online/wtyczki/woocommerce#ustawienia-p%C5%82atno%C5%9Bci',
+						'tip_url_label' => __( 'Learn more',
+							'bm-woocommerce' ),
+					],
+				'bmtab'         => 'authentication',
+			],
+
+			Settings_Manager::get_currency_option_key( 'whitelabel',
+				$current_admin_currency_code ) => [
+				'title'       => '',
+				'type'        => 'autopay_template',
+				'template'    => 'settings_field_extended_radio',
+				'default'     => 'no',
+				'class'       => 'woocommerce_bluemedia_whitelabel',
+				'options'     => [
+					'no'  => __( 'Redirect to Autopay’s hosted payment page',
+						'bm-woocommerce' ),
+					'yes' => __( 'Display each payment method separately',
+						'bm-woocommerce' ),
+				],
+				'description' => self::get_whitelabel_description()[ $whitelabel_opt_value ],
+				'desc_tip'    => false,
+				'bmtab'       => 'authentication',
+			],
+
+			'blik_type_title'                  => [],
+			Settings_Manager::get_currency_option_key( 'blik_type',
+				$current_admin_currency_code ) => [],
+
+
+			Settings_Manager::get_currency_option_key( 'service_id',
+				$current_admin_currency_code ) => [
 				'title'         => __( 'Service identifier',
 					'bm-woocommerce' ),
 				'description'   => __( 'Consists of numbers only. Is unique for each store.',
@@ -160,9 +229,12 @@ class WC_Form_Fields_Integration {
 						'input_field_type_arg' => 'number',
 					],
 				'required'      => ! ( 'yes' === $testmode_opt_value ),
+				'class' => 'woocommerce_bluemedia_service_id_i',
+				'tr_classes' => ['woocommerce_bluemedia_service_id-tr'],
 			],
 
-			'private_key' => [
+			Settings_Manager::get_currency_option_key( 'private_key',
+				$current_admin_currency_code ) => [
 				'title'         => __( 'Configuration key (hash)',
 					'bm-woocommerce' ),
 				'description'   => __( 'Key containing numbers and lowercase letters to verify communication. Do not share it with anyone.',
@@ -178,9 +250,12 @@ class WC_Form_Fields_Integration {
 							'bm-woocommerce' ),
 					],
 				'required'      => ! ( 'yes' === $testmode_opt_value ),
+				'class' => 'woocommerce_bluemedia_private_key_i',
+				'tr_classes' => ['woocommerce_bluemedia_private_key-tr'],
 			],
 
-			'test_service_id'  => [
+			Settings_Manager::get_currency_option_key( 'test_service_id',
+				$current_admin_currency_code ) => [
 				'title'         => __( 'Test service identifier',
 					'bm-woocommerce' ),
 				'description'   => __( 'Consists of numbers only. Is unique for each store.',
@@ -196,8 +271,11 @@ class WC_Form_Fields_Integration {
 						'input_field_type_arg' => 'number',
 					],
 				'required'      => 'yes' === $testmode_opt_value,
+				'class' => 'woocommerce_bluemedia_test_service_id_i',
+				'tr_classes' => ['woocommerce_bluemedia_test_service_id-tr'],
 			],
-			'test_private_key' => [
+			Settings_Manager::get_currency_option_key( 'test_private_key',
+				$current_admin_currency_code ) => [
 				'title'         => __( 'Test configuration key (hash)',
 					'bm-woocommerce' ),
 				'description'   => __( 'Key containing numbers and lowercase letters to verify communication. Do not share it with anyone.',
@@ -212,64 +290,26 @@ class WC_Form_Fields_Integration {
 							'bm-woocommerce' ),
 					],
 				'required'      => 'yes' === $testmode_opt_value,
+				'class' => 'woocommerce_bluemedia_test_private_key_i',
+				'tr_classes' => ['woocommerce_bluemedia_test_private_key-tr'],
 			],
-		];
-	}
 
-	private function get_channels_opt_val(): ?array {
-		try {
-			$channels_opt_value = blue_media()
-				->get_blue_media_gateway()
-				->gateway_list( true );
-
-		} catch ( Exception $exception ) {
-			$channels_opt_value = null;
-		}
-
-		return $channels_opt_value;
-	}
-
-	public function get_payment_settings_fields(): array {
-		$whitelabel_opt_value = blue_media()
-			->get_blue_media_gateway()
-			->get_option( 'whitelabel', 'no' );
-
-
-		return [
-			'whitelabel_title' => [
-				'title' => __( 'Select mode of displaying payment methods',
-					'bm-woocommerce' ),
-
-				'description' => '',
-
+			'remove_currency' => [
+				'title'         => '',
+				'description'   => '',
 				'type'          => 'autopay_template',
-				'template'      => 'settings_field_extended_title',
+				'bmtab'         => 'authentication',
+				'desc_tip'      => false,
+				'template'      => 'settings_field_currency_remove',
 				'template_args' =>
 					[
-						'tip_url'       => 'https://developers.autopay.pl/online/wtyczki/woocommerce#ustawienia-p%C5%82atno%C5%9Bci',
-						'tip_url_label' => __( 'Learn more',
-							'bm-woocommerce' ),
+						'currency_tabs' => $currency_tabs,
 					],
-				'bmtab'         => 'payment_settings',
 			],
+		];
 
-			'whitelabel' => [
-				'title'       => '',
-				'type'        => 'autopay_template',
-				'template'    => 'settings_field_extended_radio',
-				'default'     => 'no',
-				'options'     => [
-					'no'  => __( 'Redirect to Autopay’s hosted payment page',
-						'bm-woocommerce' ),
-					'yes' => __( 'Display each payment method separately',
-						'bm-woocommerce' ),
-				],
-				'description' => self::get_whitelabel_description()[ $whitelabel_opt_value ],
-				'desc_tip'    => false,
-				'bmtab'       => 'authentication',
-			],
-
-			'blik_type_title' => [
+		if ( 'PLN' === $current_admin_currency_code ) {
+			$return['blik_type_title'] = [
 				'title' => __( 'BLIK payment type',
 					'bm-woocommerce' ),
 
@@ -291,13 +331,14 @@ class WC_Form_Fields_Integration {
 
 				'bmtab'    => 'payment_settings',
 				'disabled' => 'no' === $whitelabel_opt_value,
-			],
+			];
 
-			'blik_type' => [
-				'title'            => '',
-				'type'             => 'autopay_template',
-				'template'         => 'settings_field_extended_select',
-				'description'      => '',
+			$return[ Settings_Manager::get_currency_option_key( 'blik_type',
+				$current_admin_currency_code ) ] = [
+				'title'       => '',
+				'type'        => 'autopay_template',
+				'template'    => 'settings_field_extended_select',
+				'description' => '',
 				'options'          => [
 					'with_redirect'           => __( 'redirect payer to BLIK’s website',
 						'bm-woocommerce' ),
@@ -305,13 +346,58 @@ class WC_Form_Fields_Integration {
 						'bm-woocommerce' ),
 				],
 				'default'          => 'with_redirect',
-				'bmtab'            => 'payment_settings',
+				'bmtab'            => 'authentication',
 				'template_tr_args' =>
 					[
 						'test1' => 'val1',
 						'test2' => 'val2',
 					],
 				'disabled'         => 'no' === $whitelabel_opt_value,
+			];
+
+		} else {
+			unset( $return['blik_type_title'] );
+			unset( $return[ Settings_Manager::get_currency_option_key( 'blik_type',
+					$current_admin_currency_code ) ] );
+		}
+
+		return $return;
+	}
+
+	private function get_channels_opt_val(): ?array {
+		try {
+			$channels_opt_value = blue_media()
+				->get_blue_media_gateway()
+				->gateway_list( true );
+
+		} catch ( Exception $exception ) {
+			$channels_opt_value = null;
+		}
+
+		return $channels_opt_value;
+	}
+
+	public function get_payment_settings_fields(): array {
+		$currency_tabs       = new Currency_Tabs();
+		$admin_currency_code = $currency_tabs->get_active_tab_currency()
+		                                     ->get_code();
+
+
+		$return = [
+
+
+			'currency_tabs' => [
+				'title'         => '',
+				'description'   => '',
+				'type'          => 'autopay_template',
+				'bmtab'         => 'authentication',
+				'desc_tip'      => false,
+				'template'      => 'settings_field_currency_tabs',
+				'template_args' =>
+					[
+						'currency_tabs' => $currency_tabs,
+						'hide_add_tab'  => true,
+					],
 			],
 
 			'custom_button' => [
@@ -324,14 +410,14 @@ class WC_Form_Fields_Integration {
 					'bm-woocommerce' ),
 				'template'      => 'settings_field_channels',
 				'template_args' => [
-					'channels' => function () {
+					'channels' => function () use ( $admin_currency_code ) {
 						try {
 							$channels_opt_value = blue_media()
 								->get_blue_media_gateway()
-								->gateway_list( true );
+								->gateway_list( true, $admin_currency_code );
 
 						} catch ( Exception $exception ) {
-							$channels_opt_value = null;
+							$channels_opt_value = $exception;
 						}
 
 						return $channels_opt_value;
@@ -403,6 +489,9 @@ class WC_Form_Fields_Integration {
 
 
 		];
+
+
+		return $return;
 	}
 
 	public function get_analytics_fields(): array {

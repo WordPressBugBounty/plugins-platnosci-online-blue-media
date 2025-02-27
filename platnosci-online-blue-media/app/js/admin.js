@@ -1,5 +1,8 @@
 jQuery(document).ready(function () {
   const $ = jQuery
+
+  submitCurrencyEdit();
+
   //var radio = jQuery('#woocommerce_bluemedia_testmode');
 
   function api_fields_logic(radio_val) {
@@ -21,10 +24,10 @@ jQuery(document).ready(function () {
 
 
   function setupView(isChecked) {
-    let test_service_id_input = jQuery('#woocommerce_bluemedia_test_service_id')
-    let test_private_key_input = jQuery('#woocommerce_bluemedia_test_private_key')
-    let prod_service_id_input = jQuery('#woocommerce_bluemedia_service_id')
-    let prod_private_key_input = jQuery('#woocommerce_bluemedia_private_key')
+    let test_service_id_input = jQuery('.woocommerce_bluemedia_test_service_id_i')
+    let test_private_key_input = jQuery('.woocommerce_bluemedia_test_private_key_i')
+    let prod_service_id_input = jQuery('.woocommerce_bluemedia_service_id_i')
+    let prod_private_key_input = jQuery('.woocommerce_bluemedia_private_key_i')
 
     if (true === isChecked) {
 
@@ -62,14 +65,16 @@ jQuery(document).ready(function () {
 
       if (targetObj.length) {
         targetObj.show();
+        targetObj.addClass('active');
         jQuery('body').toggleClass('bm-modal-background');
         jQuery('.bm-modal-overlay').toggleClass('active');
       }
     }
   });
 
-  jQuery('.bm-modal-content .bm-close').click(function () {
+  jQuery('.bm-modal-content .bm-close, .bm-modal-overlay').click(function () {
     jQuery('.bm-modal-content').hide();
+    jQuery('.bm-modal-content').removeClass('active');
     jQuery('body').toggleClass('bm-modal-background');
     jQuery('.bm-modal-overlay').toggleClass('active');
   });
@@ -114,7 +119,30 @@ jQuery(document).ready(function () {
     }
   }
 
+  function submitCurrencyEdit() {
 
+    jQuery('.autopay-select-currency-item').click(function (e) {
+      e.preventDefault()
+      jQuery("[name='autopay_currency_edit[currency_code]']").val(jQuery(this).data('cur'));
+      jQuery("[name='autopay_currency_edit[action]']").val('add');
+      jQuery('#autopay_form_currency').submit();
+      return false
+    });
 
+    jQuery('.autopay-add-currency-tab').click(function (e) {
+      e.preventDefault()
+      jQuery('.autopay-select-currency-list').toggleClass('hidden');
+      return false
+    });
 
-});
+    jQuery('.autopay-remove-currency-item').click(function (e) {
+      e.preventDefault()
+      jQuery("[name='autopay_currency_edit[currency_code]']").val(jQuery(this).data('cur'));
+      jQuery("[name='autopay_currency_edit[action]']").val('remove');
+      jQuery('#autopay_form_currency').submit();
+      return false
+    });
+
+  }
+})
+;

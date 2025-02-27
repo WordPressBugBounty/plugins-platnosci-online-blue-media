@@ -271,6 +271,8 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 	}
 
 	private function setup_variables() {
+		$currency = blue_media()->resolve_blue_media_currency_symbol();
+
 		if ( $this->testmode ) {
 			$test_gateway_url = $this->get_option( 'test_gateway_url' );
 			if ( Helper::is_string_url( $test_gateway_url ) ) {
@@ -282,8 +284,10 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				$this->express_payment_redirect_url = $this->gateway_url . 'payment';
 			}
 			$this->gateway_url_not_modified_by_user = self::GATEWAY_SANDBOX;
-			$this->private_key                      = $this->get_option( 'test_private_key' );
-			$this->service_id                       = $this->get_option( 'test_service_id' );
+			$this->private_key                      = $this->get_option( Settings_Manager::get_currency_option_key( 'test_private_key',
+				$currency ) );
+			$this->service_id                       = $this->get_option( Settings_Manager::get_currency_option_key( 'test_service_id',
+				$currency ) );
 
 		} else {
 			$production_gateway_url = $this->get_option( 'gateway_url' );
@@ -296,8 +300,10 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				$this->express_payment_redirect_url = $this->gateway_url . 'payment';
 			}
 			$this->gateway_url_not_modified_by_user = self::GATEWAY_PRODUCTION;
-			$this->private_key                      = $this->get_option( 'private_key' );
-			$this->service_id                       = $this->get_option( 'service_id' );
+			$this->private_key                      = $this->get_option( Settings_Manager::get_currency_option_key( 'private_key',
+				$currency ) );
+			$this->service_id                       = $this->get_option( Settings_Manager::get_currency_option_key( 'service_id',
+				$currency ) );
 		}
 	}
 
@@ -331,8 +337,11 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 	}
 
 	private function is_whitelabel_mode_enabled(): bool {
+		$currency   = blue_media()->resolve_blue_media_currency_symbol();
+		$option_key = Settings_Manager::get_currency_option_key( 'whitelabel',
+			$currency );
 		$whitelabel = apply_filters( 'autopay_filter_option_whitelabel',
-			$this->get_option( 'whitelabel', 'no' ) );
+			$this->get_option( $option_key, 'no' ) );
 
 		return 'yes' === $whitelabel;
 	}
@@ -343,7 +352,14 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 	 */
 	public function payment_fields() {
 		if ( $this->is_whitelabel_mode_enabled() ) {
-			$this->render_channels( $this->gateway_list() );
+			try {
+
+				$gateway_list = $this->gateway_list();
+			} catch ( Exception $exception ) {
+				$gateway_list = [];
+			}
+
+			$this->render_channels( $gateway_list );
 		} else {
 			echo wpautop( wptexturize( $this->description ) );
 		}
@@ -410,8 +426,8 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 					'bm-woocommerce' ),
 					'error' );
 
-				return  [
-					'status'   => 'failure'
+				return [
+					'status' => 'failure',
 				];
 			}
 		} else {
@@ -720,12 +736,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			}
 
 			try {
-
-				/*
-				 * b) błędy autoryzacji (confirmation=NOTCONFIRMED oraz reason o jednej z wartości:
-				 * ALIAS_DECLINED, ALIAS_NOT_FOUND, WRONG_TICKET, TICKET_EXPIRED, TICKET_USED) –
-				 * wyświetlenie pola Kod Blik, w celu pobrania go i podania w parametrze AuthorizationCode kolejnej próby przedtransakcji
-				 */
 				if ( ! empty( $_POST ) ) {
 					$posted                  = wp_unslash( $_POST );
 					$posted_xml              = simplexml_load_string( base64_decode( $posted['transactions'] ) );
@@ -735,18 +745,32 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 					$order_failure_to_update = [];
 					$order_pending_to_update = [];
 
+
 					blue_media()->get_woocommerce_logger()->log_debug(
 						'Transactions from ITN: ' . print_r( base64_decode( $posted['transactions'] ),
 							true )
 					);
+
+					if (preg_match('/<currency>\s*(.*?)\s*<\/currency>/', base64_decode( $posted['transactions'] )
+						, $matches)
+					) {
+
+						blue_media()->get_woocommerce_logger()->log_debug(
+							sprintf( '[webhook] [Transactions from ITN] [currency found: %s]',
+								print_r( $matches[1], true ),
+							) );
+
+						blue_media()
+							->get_currency_manager()
+							->reconfigure( $matches[1] );
+						$this->setup_variables();
+					}
 
 					$xw = xmlwriter_open_memory();
 					xmlwriter_set_indent( $xw, 1 );
 					$res = xmlwriter_set_indent_string( $xw, ' ' );
 
 					xmlwriter_start_document( $xw, '1.0', 'UTF-8' );
-
-
 					xmlwriter_start_element( $xw, 'confirmationList' );
 					xmlwriter_start_element( $xw, 'serviceID' );
 					xmlwriter_text( $xw, $this->service_id );
@@ -758,6 +782,9 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 						$posted_xml->xpath( '/transactionList/transactions/transaction' )
 						as $transaction
 					) {
+
+						blue_media()->get_currency_manager()->reconfigure();
+						$this->setup_variables();
 
 						/**
 						 * @var SimpleXMLElement $field
@@ -779,9 +806,23 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 						}
 
 
-						$wc_order_id     = (int) (string) $transaction->orderID;
-						$bm_order_status = (string) $transaction->paymentStatus;
-						$bm_remote_id    = (string) $transaction->remoteID;
+						$wc_order_id        = (int) (string) $transaction->orderID;
+						$bm_order_status    = (string) $transaction->paymentStatus;
+						$bm_remote_id       = (string) $transaction->remoteID;
+						$bm_currency_symbol = (string) $transaction->currency;
+
+						blue_media()
+							->get_currency_manager()
+							->reconfigure( $bm_currency_symbol );
+						$this->setup_variables();
+
+						/*blue_media()->get_woocommerce_logger()->log_debug
+						(
+							sprintf( '[ITN webhook] [detected currency: %s]'
+								,
+								blue_media()->resolve_blue_media_currency_symbol()
+							) );*/
+
 
 						$order = wc_get_order( $wc_order_id );
 
@@ -1010,11 +1051,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			return false;
 		}
 
-		if ( ! empty( $params['GatewayID'] ) && (string) $transaction_params_from_itn->gatewayID !== (string) $params['GatewayID'] ) {
-			return false;
-
-		}
-
 		return true;
 
 	}
@@ -1027,6 +1063,11 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 	private function generate_response_xml_hash( array $all_fields_reponse
 	): string {
 		array_unshift( $all_fields_reponse, $this->service_id );
+
+		blue_media()->get_woocommerce_logger()->log_debug(
+			sprintf( '[generate_response_xml_hash] [$all_fields_reponse %s]',
+				print_r( $all_fields_reponse, true )
+			) );
 
 		return $this->hash_transaction_parameters( $all_fields_reponse );
 	}
@@ -1091,7 +1132,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 	function hash_transaction_parameters(
 		array $params
 	): string {
-
 		$private_key_secured     = $this->secure_private_key( $this->get_private_key() );
 		$imploded_string_secured = implode( '|',
 				$params ) . '|' . $private_key_secured;
@@ -1132,29 +1172,32 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 	 */
 	public
 	function gateway_list(
-		$force_rebuild_cache = false
+		$force_rebuild_cache = false,
+		?string $currency_code = null
 	): array {
+		$currency_code     = esc_attr( $currency_code ?: blue_media()->resolve_blue_media_currency_symbol() );
+		$currency_code_opt = strtolower( $currency_code );
 		if ( defined( 'BLUE_MEDIA_DISABLE_CACHE' ) || $force_rebuild_cache || time()
 																			  - (int) get_option( 'bm_gateway_list_cache_time' )
 																			  > 600//10 minutes cache
 		) {
-			$gateway_list_cache = $this->api_get_gateway_list();
+			$gateway_list_cache = $this->api_get_gateway_list( $currency_code );
 
 			if ( ! $this->resolve_is_test_mode() ) {
-				update_option( 'bm_gateway_list_cache', $gateway_list_cache );
-				update_option( 'bm_gateway_list_cache_time', time() );
+				update_option( "bm_gateway_list_cache_$currency_code_opt",
+					$gateway_list_cache );
+				update_option( "bm_gateway_list_cache_time_$currency_code_opt",
+					time() );
 			}
 
-			/*blue_media()->get_woocommerce_logger()->log_debug(
-				'Gateway list from API: ' . print_r( $gateway_list_cache, true )
-			);*/
-
 		} else {
-			$gateway_list_cache = get_option( 'bm_gateway_list_cache' );
+			$gateway_list_cache = get_option( "bm_gateway_list_cache_$currency_code_opt" );
 			if ( empty( $gateway_list_cache ) ) {
-				$gateway_list_cache = $this->api_get_gateway_list();
-				update_option( 'bm_gateway_list_cache', $gateway_list_cache );
-				update_option( 'bm_gateway_list_cache_time', time() );
+				$gateway_list_cache = $this->api_get_gateway_list( $currency_code );
+				update_option( "bm_gateway_list_cache_$currency_code_opt",
+					$gateway_list_cache );
+				update_option( "bm_gateway_list_cache_time_$currency_code_opt",
+					time() );
 			}
 		}
 
@@ -1165,10 +1208,13 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 	 * @throws Exception
 	 */
 	private
-	function api_get_gateway_list(): ?array {
+	function api_get_gateway_list(
+		?string $currency_code = null
+
+	): ?array {
 		$service_id = $this->service_id;
 		$message_id = substr( bin2hex( random_bytes( 32 ) ), 32 );
-		$currencies = blue_media()->resolve_blue_media_currency_symbol();
+		$currencies = $currency_code ?: blue_media()->resolve_blue_media_currency_symbol();
 
 		$params = [
 			'ServiceID'  => $service_id,
@@ -1220,33 +1266,27 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				'result' )
 			 && $result_decoded->result === 'ERROR' ) {
 
-			blue_media()->get_woocommerce_logger()->log_error(
+			blue_media()->get_woocommerce_logger()->log_error( $message =
 				sprintf( '[gatewayList/v2] [URL: %s] [Error: %s]',
 					$url,
 					print_r( $result_decoded, true )
 				) );
 
-			return [];
+			throw new Exception( $message );
 		}
 
 		if ( is_object( $result_decoded ) && property_exists( $result_decoded,
 				'gatewayList' ) ) {
 
 			if ( empty( $result_decoded->gatewayList ) ) {
-				blue_media()->get_woocommerce_logger()->log_error(
+				blue_media()->get_woocommerce_logger()->log_error( $message =
 					sprintf( '[gatewayList/v2] [URL: %s] [Empty results: %s]',
 						$url,
 						serialize( $result_decoded )
 					) );
 
-				return [];
+				throw new Exception( $message );
 			}
-
-			/*blue_media()->get_woocommerce_logger()->log_debug(
-				sprintf( '[gatewayList/v2] [URL: %s] [Results: %s]',
-					$url,
-					serialize( $result_decoded )
-				) );*/
 
 			blue_media()->get_woocommerce_logger()->log_debug(
 				sprintf( '[api_get_gateway_list] [response code: %s] [gatewayList count %s]',
@@ -1259,13 +1299,12 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			return $result_decoded->gatewayList;
 		}
 
-		blue_media()->get_woocommerce_logger()->log_error(
+		blue_media()->get_woocommerce_logger()->log_error( $message =
 			sprintf( '[gatewayList/v2] [URL: %s] [Failed decode results: %s]',
 				$url,
 				serialize( $result )
 			) );
-
-		return [];
+		throw new Exception( $message );
 	}
 
 	/**

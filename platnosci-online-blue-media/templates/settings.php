@@ -1,5 +1,6 @@
 <?php
 
+use Ilabs\BM_Woocommerce\Domain\Service\Settings\Currency_Tabs;
 use Ilabs\BM_Woocommerce\Domain\Service\Settings\Settings_Tabs;
 
 defined( 'ABSPATH' ) || exit;
@@ -31,9 +32,9 @@ $tab_id   = esc_attr( $tab_id );
 			] ); ?>
 	<?php endif; ?>
 
-
 	<?php if ( Settings_Tabs::ADVANCED_SETTINGS_TAB_ID === $tab_id ): ?>
-		<div class="autopay-settings-sidebar section-<?php esc_attr_e( $tab_id ); ?>">
+		<div
+			class="autopay-settings-sidebar section-<?php esc_attr_e( $tab_id ); ?>">
 			<?php
 			blue_media()->locate_template( 'settings-advanced-sidebar.php' ); ?>
 		</div>

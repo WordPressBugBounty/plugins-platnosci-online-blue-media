@@ -2,8 +2,8 @@
 Contributors: inspirelabs
 Tags: woocommerce, bluemedia, autopay
 Requires at least: 6.0
-Tested up to: 6.6.2
-Stable tag: 4.4.0
+Tested up to: 6.7.2
+Stable tag: 4.5.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -77,36 +77,51 @@ Wartości Identyfikatora serwisu oraz Klucza konfiguracyjnego są różne dla ś
 
 
 == Changelog ==
-### 4.4.0 - 2024-11-06
-#### Changes
+
+## [4.5.0] - 2025-02-26
+
+### Added
+- **Multi-currency Support** - We have added multi-currency support in a single Autopay plugin, allowing merchants to more easily manage transactions in different currencies.
+	Benefits:
+		Simplicity: Manage all payments in one plugin panel.
+		Wider reach: Support for international transactions.
+		Better customer experience: Ability to pay in local currency.
+
+
+## [4.4.0] - 2024-11-06
+
+### Changes
 - **Simplified configuration for the merchant** - The number of configuration steps has been significantly reduced, making it quicker and easier to start using the plugin. A clear interface and a reduction in the amount of data required minimises the time required for configuration.
 
-#### Added
+### Added
 - **Support for BLIK-0 payments on the block checkout** - We have introduced support for BLIK-0 payments directly on the block checkout. Users can now use the fast and convenient BLIK-0 option without any additional work, increasing conversions and making it easier to finalise purchases.
 - **Adaptation to the FunnelKit Funnel Builder plugin** - The plugin is now compatible with FunnelKit Funnel Builder, allowing for easy integration and the creation of advanced purchase funnel paths.
 
-### 4.3.3 - 2024-08-01
-#### Added
+## [4.3.3] - 2024-08-01
+
+### Added
 - **Settings** - Added a new section: Services for You, aimed at supporting merchants in running an efficient store.
 
-#### Changes
+### Changes
 - **Settings** - Redesigned the informational banner.
 
-#### Fixed
+### Fixed
 - **My Account Page** - Fixed the issue with redirecting to payment for the Blik-0 payment method on the My Account page.
 
 
-### 4.3.2 - 2024-07-04
-#### Fixed
+## [4.3.2] - 2024-07-04
+
+### Fixed
 - **Checkout** - Fix purchasing process issues that can occur in specific configurations of the Merchant environments.
 
-### 4.3.1 - 2024-06-24
-#### Added
+## [4.3.1] - 2024-06-24
+
+### Added
 - **Custom CSS Editor** - Now you can add your individual look to our Paywall, tailoring it to your customers' needs.
 - **Option to Override Order Received URL** - Customize the URL customers are redirected to after placing an order.
 - **GA4: Option to Change Conversion Order Status** - You decide when the conversion counts!
 
-#### Fixed
+### Fixed
 - **BLIK-0 Payment Status** - Payment status now updates properly.
 - **WC Session Initialization** - Fixed initialization issues in some scenarios.
 - **Redirect to Payment** - Resolved issues with redirecting to payment in various situations.
@@ -114,124 +129,125 @@ Wartości Identyfikatora serwisu oraz Klucza konfiguracyjnego są różne dla ś
 - **Custom Transaction Start Endpoint** - Now works correctly in different scenarios.
 - **Translations** - Improved and updated GA4 field descriptions.
 
-#### Improved
+### Improved
 - **Documentation** - Now more comprehensive and user-friendly!
 
 We are excited to bring you these latest updates and improvements. Your feedback is invaluable and helps us continually enhance our products. Thank you for being with us!
 
-### 4.3.0 - 2024-04-26
-#### Added
+## [4.3.0] - 2024-04-26
+### Added
 - Block payment (white label)
-#### Fixed
+### Fixed
 - Problems with redirection to payment in some scenarios
 
-### 4.2.9 - 2024-04-02
-#### Fixed
+## [4.2.9] - 2024-04-02
+### Fixed
 - Styles
 - Displaying description on non-whitelabel mode
 - Order notes
 - Minor fixes
 
-#### Added
+### Added
 - Option: alternative transaction start URL
 - Improvement debugger
 
-### 4.2.8 - 2024-02-13
-#### Updated
+## [4.2.8] - 2024-02-13
+### Updated
 - Payment methods integration
 
-#### Fixed
+### Fixed
 - Blik-0 issues for some scenarios
 - Apple Pay method visibility problem
 - Styles
 - Payment process on "My account" page
 - Email payment link support
 
-#### Added
+### Added
 - Ability to migrate settings from 2.x and 3.x plugins
 
-### 4.2.7 - 2024-01-18
-#### Fixed
+## [4.2.7] - 2024-01-18
+### Fixed
 - CSS fixes
 
-#### Added
+### Added
 - Block Editor support (express payment)##
 
-### 4.2.6 - 2023-12-11
-#### Added
+## [4.2.6] - 2023-12-11
+### Added
 - Option: Compatibility mode with third-party plugins that reload checkout fragments
 
-#### Fixed
+### Fixed
 - CSS minor fixes
 
-### 4.2.5 - 2023-11-28
-#### Added
+## [4.2.5] - 2023-11-28
+### Added
 - Show countdown screen before redirection to increase compatibility
 - Minor changes in Admin Panel
 
-#### Fixed
+### Fixed
 - CSS compatibility issues
 
-### 4.2.4 - 2023-11-05
-#### Added
+## [4.2.4] - 2023-11-05
+### Added
 - Debug mode improved
 
-#### Fixed
+### Fixed
 - Minor CSS fixes
 - Redirect to payment loop issue for some scenarios
 
-### 4.2.3 - 2023-10-19
-#### Added
+## [4.2.3] - 2023-10-19
+### Added
 - Ability to assign a separate status for virtual products
 - Debug and testing new features
 
-#### Fixed
+### Fixed
 - Settings texts updates
 - An order cannot be paid if there is only one payment method available to the partner
 - Styles
 
-### 4.2.2 - 2023-10-02
-#### Fixed
+## [4.2.2] - 2023-10-02
+### Fixed
 - Translations
 
-### 4.2.1 - 2023-09-29
-#### Fixed
+## [4.2.1] - 2023-09-29
+### Fixed
 - Translations
 - Blik: problem with code starting with "0"
 - Improved payment method selection UI
 - Fatal error during a page update in a specific scenario
 
-### 4.2.0 - 2023-08-31
-#### Added
+## [4.2.0] - 2023-08-31
+### Added
 - Rebranding
 
-### 4.1.26 - 2023-08-24
-#### Added
+## [4.1.26] - 2023-08-24
+### Added
 - Blik-0 support
 
-#### Fixed
+### Fixed
 - Minor fixes
 - Styles
 
-### 4.1.25 - 2023-08-03
-#### Fixed
+## [4.1.25] - 2023-08-03
+### Fixed
 - Blik redirect fix
 
-### 4.1.24 - 2023-07-28
-#### Added
+## [4.1.24] - 2023-07-28
+### Added
 - New bank list styles
 - New module: Preview payment methods in Admin Panel
 
-### 4.1.23 - 2023-06-22
-#### Added
+## [4.1.23] - 2023-06-22
+### Added
 - Improved checkout UI
 
-#### Fixed
+### Fixed
 - Styles
 - Minor fixes
 
-### 4.1.21 - 2023-05-08
-#### Fixed
+## [4.1.21] - 2023-05-08
+### Fixed
 - Show log only on demand
+
 
 [You can find all previous changes on Our Github.](https://github.com/bluepayment-plugin/autopay-payments/blob/main/changelog.txt).

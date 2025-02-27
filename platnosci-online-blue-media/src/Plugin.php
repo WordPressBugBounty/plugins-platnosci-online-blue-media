@@ -7,6 +7,7 @@ use Exception;
 use Ilabs\BM_Woocommerce\Controller\Wp_Admin\Connection_Testing_Controller;
 use Ilabs\BM_Woocommerce\Controller\Wp_Admin\Transaction_Testing_Controller;
 use Ilabs\BM_Woocommerce\Data\Remote\Ga4_Service_Client;
+use Ilabs\BM_Woocommerce\Domain\Service\Currency\Currency;
 use Ilabs\BM_Woocommerce\Domain\Service\Custom_Styles\Css_Editor;
 use Ilabs\BM_Woocommerce\Domain\Service\Custom_Styles\Css_Frontend;
 use Ilabs\BM_Woocommerce\Domain\Service\Ga4\Add_Product_To_Cart_Use_Case;
@@ -16,6 +17,7 @@ use Ilabs\BM_Woocommerce\Domain\Service\Ga4\Init_Checkout_Use_Case;
 use Ilabs\BM_Woocommerce\Domain\Service\Ga4\Remove_Product_From_Cart_Use_Case;
 use Ilabs\BM_Woocommerce\Domain\Service\Ga4\View_Product_On_List_Use_Case;
 use Ilabs\BM_Woocommerce\Domain\Service\Legacy\Importer;
+use Ilabs\BM_Woocommerce\Domain\Service\Settings\Currency_Tabs;
 use Ilabs\BM_Woocommerce\Domain\Service\Settings\Settings_Manager;
 use Ilabs\BM_Woocommerce\Domain\Service\Settings\WC_Form_Fields_Integration;
 use Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway;
@@ -46,10 +48,17 @@ class Plugin extends Abstract_Ilabs_Plugin {
 	 */
 	private $blue_media_currency;
 
+	private static ?Currency $currency_manager = null;
+
 	/**
 	 * @var Blue_Media_Gateway
 	 */
 	private static $blue_media_gateway;
+
+	/**
+	 * @var bool
+	 */
+	private static bool $inactive_on_frontend = false;
 
 	public function get_logger(
 	): \Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Logger\Logger_Interface {
@@ -228,7 +237,18 @@ class Plugin extends Abstract_Ilabs_Plugin {
 			add_action(
 				'woocommerce_blocks_payment_method_type_registration',
 				function ( PaymentMethodRegistry $payment_method_registry ) {
-					$payment_method_registry->register( new WC_Gateway_Autopay_Blocks_Support() );
+
+					/*blue_media()->get_woocommerce_logger()->log_debug(
+						sprintf( '[woocommerce_block_support] [$inactive_on_frontend: %s] [shop_currency: %s]',
+							print_r( self::$inactive_on_frontend ? 'yes' : 'no',
+								true ),
+							print_r( $this->resolve_blue_media_currency_symbol(),
+								true ) ) );*/
+
+					if ( false === self::$inactive_on_frontend ) {
+						$payment_method_registry->register( new WC_Gateway_Autopay_Blocks_Support() );
+					}
+
 				}
 			);
 		}
@@ -550,15 +570,55 @@ class Plugin extends Abstract_Ilabs_Plugin {
 	}
 
 	private function init_payment_gateway() {
+
 		blue_media()->get_woocommerce_logger()->log_debug(
 			'[init_payment_gateway] [define filter]'
 		);
 
 		add_filter( 'woocommerce_payment_gateways',
 			function ( $gateways ) {
-				$gateways[]
-					= 'Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway';
+				if ( false === is_admin()
+				     && false === $this->get_currency_manager()
+				                       ->is_currency_selected(
+					                       $this
+						                       ->get_currency_manager()
+						                       ->get_shop_currency()
+						                       ->get_code()
+				                       ) ) {
 
+					blue_media()->get_woocommerce_logger()->log_debug(
+						sprintf( '[init_payment_gateway]
+					 [get_shop_currency: %s]
+					  [get_selected_currencies: %s]
+					  [is_currency_selected: %s]',
+							print_r( $this
+								->get_currency_manager()
+								->get_shop_currency()
+								->get_code(),
+								true ),
+
+							print_r( $this
+								->get_currency_manager()
+								->get_selected_currencies(),
+								true ),
+							print_r( $this->get_currency_manager()
+							              ->is_currency_selected(
+								              $this
+									              ->get_currency_manager()
+									              ->get_shop_currency()
+									              ->get_code()
+							              ),
+								true ),
+						),
+					);
+
+					self::$inactive_on_frontend = true;
+
+					return $gateways;
+				}
+
+				$gateways[]
+					             = 'Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway';
 				$order_key_found = '';
 				if ( isset( $_GET['key'] ) ) {
 					$keyValue = $_GET['key'];
@@ -596,6 +656,13 @@ class Plugin extends Abstract_Ilabs_Plugin {
 			}
 
 			if ( $order ) {
+
+				blue_media()->get_woocommerce_logger()->log_debug(
+					sprintf( '[return_redirect_handler] [order: %s]',
+						$order
+					) );
+
+
 				$order->add_meta_data( 'autopay_returned_from_payment', '1' );
 				$order->save_meta_data();
 				$finish_url = $order->get_meta( 'autopay_order_received_url' );
@@ -670,20 +737,14 @@ class Plugin extends Abstract_Ilabs_Plugin {
 	}
 
 	public function resolve_blue_media_currency_symbol(): ?string {
-		switch ( get_woocommerce_currency() ) {
-			case 'EUR':
-				return 'EUR';
-			case 'RON':
-				return 'RON';
-			case 'HUF':
-				return 'HUF';
-			case 'CZK':
-				return 'CZK';
-			case 'PLN':
-				return 'PLN';
-			default:
-				return null;
+		if ( is_admin() ) {
+			$currency_tabs = new Currency_Tabs();
+
+			return $currency_tabs->get_active_tab_currency()
+			                     ->get_code();
 		}
+
+		return self::get_currency_manager()->get_shop_currency()->get_code();
 	}
 
 	/**
@@ -770,5 +831,49 @@ class Plugin extends Abstract_Ilabs_Plugin {
 
 	private function configure_third_party_integrations(): void {
 		( new Funnel_Builder_Integration() )->init();
+	}
+
+	public function get_currency_manager(): Currency {
+		if ( ! self::$currency_manager ) {
+			self::$currency_manager = new Currency();
+			self::$currency_manager->init();
+		}
+
+		return self::$currency_manager;
+	}
+
+	public function get_autopay_option( string $key, $default = null ) {
+		if ( $this->get_blue_media_gateway() ) {
+			return $this->get_blue_media_gateway()
+			            ->get_option( $key, $default );
+		} else {
+			$settings = get_option( 'woocommerce_bluemedia_settings' );
+			if ( is_array( $settings ) && ! empty( $settings[ $key ] ) ) {
+				return $settings[ $key ];
+			}
+
+			return $default;
+		}
+	}
+
+	public function update_autopay_option( string $key, $value ): void {
+		blue_media()->get_woocommerce_logger()->log_debug(
+			sprintf( '[Plugin] [update_autopay_option] [%s]',
+				print_r( [
+					'key'   => $key,
+					'value' => $value,
+
+				], true ),
+			) );
+		if ( $this->get_blue_media_gateway() ) {
+			$this->get_blue_media_gateway()
+			     ->update_option( $key, $value );
+		} else {
+			$settings = get_option( 'woocommerce_bluemedia_settings' );
+			if ( is_array( $settings ) && ! empty( $settings[ $key ] ) ) {
+				$settings[ $key ] = $value;
+				update_option( 'woocommerce_bluemedia_settings', $settings );
+			}
+		}
 	}
 }

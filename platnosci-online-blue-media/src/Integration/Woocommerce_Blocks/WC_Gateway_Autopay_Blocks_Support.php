@@ -32,7 +32,12 @@ final class WC_Gateway_Autopay_Blocks_Support extends AbstractPaymentMethodType 
 	protected $settings = [];
 
 	public function initialize() {
-		$gateways      = WC()->payment_gateways->payment_gateways();
+		$gateways = WC()->payment_gateways->payment_gateways();
+
+		if ( ! isset( $gateways[ $this->name ] ) ) {
+			return;
+		}
+
 		$this->gateway = $gateways[ $this->name ];
 	}
 
@@ -40,6 +45,10 @@ final class WC_Gateway_Autopay_Blocks_Support extends AbstractPaymentMethodType 
 	 * @return boolean
 	 */
 	public function is_active(): bool {
+		if ( ! $this->gateway ) {
+			return false;
+		}
+
 		return $this->gateway->is_available();
 	}
 
@@ -83,9 +92,13 @@ final class WC_Gateway_Autopay_Blocks_Support extends AbstractPaymentMethodType 
 	}
 
 	public function get_payment_method_data(): array {
-		$channels = blue_media()
-			->get_blue_media_gateway()
-			->gateway_list( true );
+		try {
+			$channels = blue_media()
+				->get_blue_media_gateway()
+				->gateway_list( true );
+		} catch ( Exception $exception ) {
+			$channels = [];
+		}
 
 		return [
 			'title'                    => $this->gateway->get_title(),
