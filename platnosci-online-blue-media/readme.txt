@@ -3,7 +3,7 @@ Contributors: inspirelabs
 Tags: woocommerce, bluemedia, autopay
 Requires at least: 6.0
 Tested up to: 6.7.2
-Stable tag: 4.5.0
+Stable tag: 4.5.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -77,6 +77,13 @@ Wartości Identyfikatora serwisu oraz Klucza konfiguracyjnego są różne dla ś
 
 
 == Changelog ==
+
+## [4.5.1] - 2025-03-19
+
+### Fixed
+- **Checkout** - Validation and UI fixes for Blik field
+- **Multicurrency** - Problems with currency detection in some scenarios
+- **Debugger** - Debug mode optimizations
 
 ## [4.5.0] - 2025-02-26
 

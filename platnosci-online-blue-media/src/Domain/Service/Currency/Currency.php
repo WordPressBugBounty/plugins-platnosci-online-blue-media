@@ -251,9 +251,13 @@ class Currency {
 
 	public function get_shop_currency(): ?Currency_Interface {
 		if ( empty( self::$shop_currency ) ) {
-
 			$woo_currency_code = get_woocommerce_currency();
-			$found             = $this->get_currency( $woo_currency_code );
+
+			if ( empty( $woo_currency_code ) || ! is_string( $woo_currency_code ) ) {
+				$woo_currency_code = Currency_Interface::CODE_PLN;
+			}
+
+			$found = $this->get_currency( $woo_currency_code );
 
 			if ( $found ) {
 				self::$shop_currency = $found;
@@ -324,11 +328,6 @@ class Currency {
 
 	private function migrate() {
 		if ( ! empty( blue_media()->get_autopay_option( 'migrate_4_5' ) ) ) {
-			blue_media()->get_woocommerce_logger()->log_debug(
-				sprintf( '[Currency] [exit migrate] [migrate_4_5 found: %s]',
-					print_r( 1, true ),
-				) );
-
 			return;
 		}
 

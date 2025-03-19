@@ -1,5 +1,12 @@
 *** Autopay Changelog ***
 
+## [4.5.1] - 2025-03-19
+
+### Fixed
+- **Checkout** - Validation and UI fixes for Blik field
+- **Multicurrency** - Problems with currency detection in some scenarios
+- **Debugger** - Debug mode optimizations
+
 ## [4.5.0] - 2025-02-26
 
 ### Added
@@ -8,6 +15,8 @@
 		Simplicity: Manage all payments in one plugin panel.
 		Wider reach: Support for international transactions.
 		Better customer experience: Ability to pay in local currency.
+
+## [4.4.0] - 2024-11-06
 
 ### Changes
 - **Simplified configuration for the merchant** - The number of configuration steps has been significantly reduced, making it quicker and easier to start using the plugin. A clear interface and a reduction in the amount of data required minimises the time required for configuration.

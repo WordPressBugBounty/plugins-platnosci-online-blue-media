@@ -88,88 +88,12 @@ class Plugin extends Abstract_Ilabs_Plugin {
 		return ( new Features() );
 	}
 
-	private function debug_status_change_by_remote() {
-		if ( strpos( $_SERVER['REQUEST_URI'],
-				'wp-json/wc/v2/orders' ) !== false ) {
-
-
-			update_option( 'autopay_wpjson_log',
-				(
-				sprintf( '[wp-json debug %s] [ip: %s] [method: %s] [request uri: %s] [headers: %s] [request: %s] [payload: %s]',
-					rand( 1, 100000 ),
-					$this->get_ip(),
-					$_SERVER['REQUEST_METHOD'],
-					$_SERVER['REQUEST_URI'],
-					print_r( getallheaders(), true ),
-					print_r( $_REQUEST ?? '', true ),
-					$this->get_json_payload_as_string()
-				) ) );
-		}
-
-		$events                 = blue_media()->get_event_chain();
-		$wc_api_debug_log_cache = $events->get_wp_options_based_cache( 'wc_api_debug_log_cache' );
-		$events
-			->on_wc_loaded()
-			->action( function () use ( $wc_api_debug_log_cache ) {
-				$log = get_option( 'autopay_wpjson_log' );
-
-				if ( ! empty( $log ) && is_string( $log ) ) {
-					blue_media()
-						->get_woocommerce_logger()
-						->log_debug( $log );
-				}
-
-				update_option( 'autopay_wpjson_log', false );
-				$wc_api_debug_log_cache->clear();
-			} )
-			->execute();
-	}
-
-	private function get_ip(): string {
-		$headers = [
-			'HTTP_CF_CONNECTING_IP',
-			'HTTP_X_FORWARDED_FOR',
-			'HTTP_X_REAL_IP',
-			'HTTP_X_CLIENT_IP',
-			'HTTP_CLIENT_IP',
-			'HTTP_X_CLUSTER_CLIENT_IP',
-		];
-
-		foreach ( $headers as $header ) {
-			if ( array_key_exists( $header, $_SERVER ) ) {
-				$ip = $_SERVER[ $header ];
-				$ip = trim( explode( ',', $ip )[0] );
-
-				return $ip;
-			}
-		}
-
-		return $_SERVER['REMOTE_ADDR'] ?? '';
-	}
-
-	function get_json_payload_as_string() {
-		if ( strpos( $_SERVER['REQUEST_URI'], 'wp-json' ) !== false ) {
-			$rawData = file_get_contents( "php://input" );
-
-			$decodedData = json_decode( $rawData, true );
-
-			if ( json_last_error() === JSON_ERROR_NONE ) {
-				return print_r( $decodedData, true );
-			} else {
-				return "Błąd dekodowania JSON: " . json_last_error_msg();
-			}
-		} else {
-			return "To żądanie nie jest skierowane do wp-json.";
-		}
-	}
-
 	/**
 	 * @throws Exception
 	 */
 	protected function before_init() {
 		$this->configure_third_party_integrations();
 		$this->start_output_buffer_on_itn_request();
-		$this->debug_status_change_by_remote();
 
 		if ( $this->resolve_is_autopay_hidden() ) {
 			return;
@@ -177,6 +101,9 @@ class Plugin extends Abstract_Ilabs_Plugin {
 		add_action( 'woocommerce_blocks_loaded',
 			[ $this, 'woocommerce_block_support' ] );
 
+
+		$lang_dir = $this->get_from_config('lang_dir');
+		load_plugin_textdomain($this->get_text_domain(), \false, $this->get_plugin_basename() . "/{$lang_dir}/");
 
 		$this->init_payment_gateway();
 
@@ -237,13 +164,6 @@ class Plugin extends Abstract_Ilabs_Plugin {
 			add_action(
 				'woocommerce_blocks_payment_method_type_registration',
 				function ( PaymentMethodRegistry $payment_method_registry ) {
-
-					/*blue_media()->get_woocommerce_logger()->log_debug(
-						sprintf( '[woocommerce_block_support] [$inactive_on_frontend: %s] [shop_currency: %s]',
-							print_r( self::$inactive_on_frontend ? 'yes' : 'no',
-								true ),
-							print_r( $this->resolve_blue_media_currency_symbol(),
-								true ) ) );*/
 
 					if ( false === self::$inactive_on_frontend ) {
 						$payment_method_registry->register( new WC_Gateway_Autopay_Blocks_Support() );
@@ -570,11 +490,6 @@ class Plugin extends Abstract_Ilabs_Plugin {
 	}
 
 	private function init_payment_gateway() {
-
-		blue_media()->get_woocommerce_logger()->log_debug(
-			'[init_payment_gateway] [define filter]'
-		);
-
 		add_filter( 'woocommerce_payment_gateways',
 			function ( $gateways ) {
 				if ( false === is_admin()
@@ -585,32 +500,6 @@ class Plugin extends Abstract_Ilabs_Plugin {
 						                       ->get_shop_currency()
 						                       ->get_code()
 				                       ) ) {
-
-					blue_media()->get_woocommerce_logger()->log_debug(
-						sprintf( '[init_payment_gateway]
-					 [get_shop_currency: %s]
-					  [get_selected_currencies: %s]
-					  [is_currency_selected: %s]',
-							print_r( $this
-								->get_currency_manager()
-								->get_shop_currency()
-								->get_code(),
-								true ),
-
-							print_r( $this
-								->get_currency_manager()
-								->get_selected_currencies(),
-								true ),
-							print_r( $this->get_currency_manager()
-							              ->is_currency_selected(
-								              $this
-									              ->get_currency_manager()
-									              ->get_shop_currency()
-									              ->get_code()
-							              ),
-								true ),
-						),
-					);
 
 					self::$inactive_on_frontend = true;
 
@@ -761,11 +650,7 @@ class Plugin extends Abstract_Ilabs_Plugin {
 
 	private function reposition_on_activate() {
 		$id = 'bluemedia';
-
 		$array = (array) get_option( 'woocommerce_gateway_order' );
-
-		//var_dump($array);
-
 
 		if ( array_key_exists( 'pre_install_woocommerce_payments_promotion',
 				$array ) && $array['pre_install_woocommerce_payments_promotion'] === 0 ) {

@@ -17,8 +17,7 @@ $generic_error_message = __( 'Payment failed.',
 		_e( 'Podaj kod BLIK',
 			'bm-woocommerce' ); ?></label>
 	<input id="bluemedia_blik_code" type="text" name="bluemedia_blik_code"
-	       autocomplete="off">
-
+		   inputmode="numeric" minlength="6" maxlength="6" autocomplete="off">
 
 	<span><?php _e( 'The code has 6 digits. You\'ll find it in your banking app.',
 			'bm-woocommerce' ); ?></span>
@@ -41,8 +40,8 @@ $generic_error_message = __( 'Payment failed.',
 
 
 <script>
-    var bm_blik0_payment_in_progress = false;
-    var placeOrderBlikStarted = false;
+	var bm_blik0_payment_in_progress = false;
+	var placeOrderBlikStarted = false;
 
 	var autopayBlik0TimePassed = false;
 	var autopayBlik0TimerRunning = false;
@@ -59,89 +58,122 @@ $generic_error_message = __( 'Payment failed.',
 		autopayBlik0TimerRunning = false;
 
 
+
 	}
 
 
-    function bm_sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    jQuery(document).ready(function ($) {
-        const originalTriggerHandler = $.fn.triggerHandler;
+	function bm_sleep(ms) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
 
 
-        $.fn.triggerHandler = function (event, data) {
-            if (event === 'checkout_place_order_success') {
-                if ($('#bm-gateway-id-509').is(':checked')) {
-                    if (false === bm_blik0_payment_in_progress) {
-                        bm_blik0_payment_in_progress = true
-                        return originalTriggerHandler.apply(this, arguments);
-                    }
-                }
+	jQuery(document).ready(function ($) {
+		const originalTriggerHandler = $.fn.triggerHandler;
 
-                bmCheckBlik0Status()
+		const $blik0Radio = $('#bm-gateway-id-509');
+		const $bmBLikCode = $('#bluemedia_blik_code');
 
-                return originalTriggerHandler.apply(this, arguments);
-            }
+		$bmBLikCode.on('keydown', function (e) {
+			if ($.inArray(e.keyCode, [8, 9, 13, 27, 46, 37, 38, 39, 40]) !== -1) {
+				return;
+			}
+			if ((e.keyCode < 48 || e.keyCode > 57) && (e.keyCode < 96 || e.keyCode > 105)) {
+				e.preventDefault();
+			}
+		});
 
-            return originalTriggerHandler.apply(this, arguments);
-        };
+		$bmBLikCode.on('input', function () {
+			var value = $(this).val();
+			bmBLikCodeValidate(value)
+		});
+
+		$blik0Radio.on('click', function () {
+			BmDeactivateNewOrderButton()
+		});
+
+		function bmBLikCodeValidate(value) {
+			if (/^\d{6}$/.test(value)) {
+				$(this).removeClass('not-valid');
+				BmActivateNewOrderButton()
+			} else {
+				$(this).addClass('not-valid');
+				BmDeactivateNewOrderButton()
+			}
+		}
 
 
-        function bmCheckBlik0Status() {
-            jQuery('.bluemedia-loader').show()
-            jQuery('.bluemedia-status-box').show()
+		$.fn.triggerHandler = function (event, data) {
+			if (event === 'checkout_place_order_success') {
+				if ($('#bm-gateway-id-509').is(':checked')) {
+					if (false === bm_blik0_payment_in_progress) {
+						bm_blik0_payment_in_progress = true
+						return originalTriggerHandler.apply(this, arguments);
+					}
+				}
+
+				bmCheckBlik0Status()
+
+				return originalTriggerHandler.apply(this, arguments);
+			}
+
+			return originalTriggerHandler.apply(this, arguments);
+		};
+
+
+		function bmCheckBlik0Status() {
+			jQuery('.bluemedia-loader').show()
+			jQuery('.bluemedia-status-box').show()
 
 			autopayBlik0Countdown();
 
-            var data = {
-                action: "bm_payment_get_status_action",
-                nonce: "<?php echo wp_create_nonce( Payment_Status_Controller::NONCE_ACTION ) ?>"
-            };
+			var data = {
+				action: "bm_payment_get_status_action",
+				nonce: "<?php echo wp_create_nonce( Payment_Status_Controller::NONCE_ACTION ) ?>"
+			};
 
 
-            console.log('ajax start');
+			console.log('ajax start');
 
-            jQuery.post('<?php echo esc_url( admin_url( 'admin-ajax.php' ) )?>', data, function (response) {
+			jQuery.post('<?php echo esc_url( admin_url( 'admin-ajax.php' ) )?>', data, function (response) {
 
-                if (response !== 0) {
-                    response = JSON.parse(response);
-                    console.log(response.status);
+				if (response !== 0) {
+					response = JSON.parse(response);
+					console.log(response.status);
 
-                    if (response.hasOwnProperty('status')
-                        && (response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_SUCCESS ?>'
-                            || response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_ERROR ?>'
-                            || response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_WAIT ?>'
-                            ||
-                            response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_CHECK_DEVICE ?>'
-                        )
-                    ) {
-                        if (response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_SUCCESS ?>') {
+					if (response.hasOwnProperty('status')
+						&& (response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_SUCCESS ?>'
+							|| response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_ERROR ?>'
+							|| response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_WAIT ?>'
+							||
+							response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_CHECK_DEVICE ?>'
+						)
+					) {
+						if (response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_SUCCESS ?>') {
 
-                            if (response.hasOwnProperty('message')
+							if (response.hasOwnProperty('message')
 
-                            ) {
-                                blueMediaUpdateStatus(response.message, response.status)
+							) {
+								blueMediaUpdateStatus(response.message, response.status)
 
-                                setTimeout(function () {
-                                    window.location.href = response.order_received_url;
+								setTimeout(function () {
+									window.location.href = response.order_received_url;
 
-                                }, 3000)
+								}, 3000)
 
-                                return false
-                            }
-                            blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>', 'error')
-                            return false
-                        }
+								return false
+							}
+							blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>', 'error')
+							return false
+						}
 
-                        if (response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_WAIT ?>'
-                            || response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_CHECK_DEVICE ?>') {
+						if (response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_WAIT ?>'
+							|| response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_CHECK_DEVICE ?>') {
 
-                            if (response.hasOwnProperty('message')
+							if (response.hasOwnProperty('message')
 
-                            ) {
+							) {
 
-								if (autopayBlik0TimePassed){
+								if (autopayBlik0TimePassed) {
 									let urlObj = new URL(response.order_received_url);
 									urlObj.searchParams.set('blik0_timeout', '1');
 									blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>', 'error')
@@ -149,7 +181,7 @@ $generic_error_message = __( 'Payment failed.',
 										window.location.href = urlObj.toString();
 									}, 3000)
 
-								} else  {
+								} else {
 									blueMediaUpdateStatus(response.message, response.status)
 
 									setTimeout(function () {
@@ -158,68 +190,68 @@ $generic_error_message = __( 'Payment failed.',
 								}
 
 
-                                return false
-                            }
-                            blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
-                            return false
-                        }
+								return false
+							}
+							blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
+							return false
+						}
 
 
-                        if (response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_ERROR ?>') {
-                            if (response.hasOwnProperty('message')) {
-                                blueMediaUpdateStatus(response.message, response.status)
-                                setTimeout(function () {
-                                    //bmCheckBlik0Status()
-                                    window.location.href = response.order_received_url;
-                                }, 3000)
-                                return false
-                            }
+						if (response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_ERROR ?>') {
+							if (response.hasOwnProperty('message')) {
+								blueMediaUpdateStatus(response.message, response.status)
+								setTimeout(function () {
+									//bmCheckBlik0Status()
+									window.location.href = response.order_received_url;
+								}, 3000)
+								return false
+							}
 
-                            blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
+							blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
 
-                            return false
+							return false
 
-                        }
-                    }
-                    blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
+						}
+					}
+					blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
 
-                    return false
-                } else {
-                    blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
-                }
-
-
-            }).fail(function (jqXHR, textStatus, errorThrown) {
-                jQuery('.bluemedia-loader').hide()
-                blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + jqXHR.status, 'error');
-
-                return false
-            });
+					return false
+				} else {
+					blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
+				}
 
 
-        }
+			}).fail(function (jqXHR, textStatus, errorThrown) {
+				jQuery('.bluemedia-loader').hide()
+				blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + jqXHR.status, 'error');
+
+				return false
+			});
 
 
-        function blueMediaUpdateStatus(message, status) {
-            $('.bm-blik-overlay').show();
+		}
 
-            //$targetWrapper = $('.bluemedia-success-wrapper');
-            $targetSpan = $('#bm-blik-overlay-status');
 
-            if (status === '<?php echo Payment_Status_Response_Value_Object::STATUS_SUCCESS ?>') {
-                $targetSpan.addClass('bm-blik-overlay-status--success').removeClass('bm-blik-overlay-status--process bm-blik-overlay-status--error');
-            } else if (status === '<?php echo Payment_Status_Response_Value_Object::STATUS_CHECK_DEVICE ?>') {
-                $targetSpan.addClass('bm-blik-overlay-status--process').removeClass('bm-blik-overlay-status--success bm-blik-overlay-status--error');
-            } else if (status === '<?php echo Payment_Status_Response_Value_Object::STATUS_WAIT ?>') {
-                $targetSpan.addClass('bm-blik-overlay-status--process').removeClass('bm-blik-overlay-status--success bm-blik-overlay-status--error');
-            } else if (status === '<?php echo Payment_Status_Response_Value_Object::STATUS_ERROR ?>') {
-                $targetSpan.addClass('bm-blik-overlay-status--error').removeClass('bm-blik-overlay-status--success bm-blik-overlay-status--process');
-            }
+		function blueMediaUpdateStatus(message, status) {
+			$('.bm-blik-overlay').show();
 
-            $targetSpan.text(message);
-        }
+			//$targetWrapper = $('.bluemedia-success-wrapper');
+			$targetSpan = $('#bm-blik-overlay-status');
 
-    })
-    ;
+			if (status === '<?php echo Payment_Status_Response_Value_Object::STATUS_SUCCESS ?>') {
+				$targetSpan.addClass('bm-blik-overlay-status--success').removeClass('bm-blik-overlay-status--process bm-blik-overlay-status--error');
+			} else if (status === '<?php echo Payment_Status_Response_Value_Object::STATUS_CHECK_DEVICE ?>') {
+				$targetSpan.addClass('bm-blik-overlay-status--process').removeClass('bm-blik-overlay-status--success bm-blik-overlay-status--error');
+			} else if (status === '<?php echo Payment_Status_Response_Value_Object::STATUS_WAIT ?>') {
+				$targetSpan.addClass('bm-blik-overlay-status--process').removeClass('bm-blik-overlay-status--success bm-blik-overlay-status--error');
+			} else if (status === '<?php echo Payment_Status_Response_Value_Object::STATUS_ERROR ?>') {
+				$targetSpan.addClass('bm-blik-overlay-status--error').removeClass('bm-blik-overlay-status--success bm-blik-overlay-status--process');
+			}
+
+			$targetSpan.text(message);
+		}
+
+	})
+	;
 
 </script>
