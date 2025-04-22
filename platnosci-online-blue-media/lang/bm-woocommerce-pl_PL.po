@@ -4,8 +4,6 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-08T15:04:40+02:00\n"
 "PO-Revision-Date: 2023-01-10 13:19+0300\n"
-"Last-Translator: Sebastian Pisula <sebastian.pisula@gmail.com>\n"
-"Language-Team: Maciej Swoboda <maciej.swoboda@gmail.com>\n"
 "Language: pl_PL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -706,3 +704,210 @@ msgstr "Lej rumuński"
 
 msgid "Remove currency"
 msgstr "Usuń walutę"
+
+#: Log_Entry static header texts
+msgid "Critical"
+msgstr "Krytyczny"
+
+msgid "Warning"
+msgstr "Ostrzeżenie"
+
+msgid "Info"
+msgstr "Informacja"
+
+#: Auditor.php:xxx
+msgid "PHP version %s is below the minimum required version 7.4. Please update your PHP installation."
+msgstr "Wersja PHP %s jest niższa od minimalnie wymaganej 7.4. Proszę zaktualizować instalację PHP."
+
+#: Auditor.php:xxx
+msgid "PHP version %s is higher than 8.2. Potential compatibility issues detected."
+msgstr "Wersja PHP %s jest wyższa niż 8.2. Wykryto potencjalne problemy z kompatybilnością."
+
+#: Auditor.php:xxx
+msgid "Missing required PHP extensions: %s. Please install them."
+msgstr "Brak wymaganych rozszerzeń PHP: %s. Proszę je zainstalować."
+
+#: Auditor.php:xxx
+msgid "HTTPS is not enabled. Please secure your site with an SSL certificate."
+msgstr "HTTPS nie jest włączony. Proszę zabezpieczyć stronę certyfikatem SSL."
+
+#: Auditor.php:xxx
+msgid "WooCommerce log directory is not writable. Please check file permissions."
+msgstr "Katalog logów WooCommerce nie jest zapisywalny. Proszę sprawdzić uprawnienia do plików."
+
+#: Auditor.php:xxx
+msgid "No internet connection detected. Please contact your hosting provider."
+msgstr "Nie wykryto połączenia z internetem. Proszę skontaktować się z dostawcą hostingu."
+
+#: Auditor.php:xxx
+msgid "Detected unsupported WooCommerce version (%s). We recommend updating to version 8.1 or higher."
+msgstr "Wykryto nieobsługiwaną wersję WooCommerce (%s). Zalecamy aktualizację do wersji 8.1 lub wyższej."
+
+#: Auditor.php:xxx
+msgid "Beta version of WooCommerce (%s) detected. It might not be fully supported."
+msgstr "Wykryto wersję beta WooCommerce (%s). Może nie być w pełni obsługiwana."
+
+#: Auditor.php:xxx
+msgid "Detected unsupported WordPress version (%s). We recommend updating to version 6.0 or higher."
+msgstr "Wykryto nieobsługiwaną wersję WordPress (%s). Zalecamy aktualizację do wersji 6.0 lub wyższej."
+
+#: Auditor.php:xxx
+msgid "Beta version of WordPress ($%) detected. It might not be fully supported."
+msgstr "Wykryto wersję beta WordPress ($%). Może nie być w pełni obsługiwana."
+
+#: Auditor.php:xxx
+msgid "Unable to fetch the latest Autopay plugin version from the WordPress repository."
+msgstr "Nie można pobrać najnowszej wersji wtyczki Autopay z repozytorium WordPress."
+
+#: Auditor.php:xxx
+msgid "An update is available for the Autopay plugin. Current version: %s, latest version: %s."
+msgstr "Dostępna jest aktualizacja wtyczki Autopay. Obecna wersja: %s, najnowsza wersja: %s."
+
+#: Auditor.php:xxx
+msgid "Old BlueMedia plugin is installed but inactive. This may cause conflicts. Please remove it."
+msgstr "Stara wtyczka BlueMedia jest zainstalowana, lecz nieaktywna. Może to powodować konflikty. Proszę ją usunąć."
+
+#: Auditor.php:xxx
+msgid "Conflicting third-party plugin 'pay-wp' is active. Please deactivate it to avoid conflicts with Autopay."
+msgstr "Aktywna jest wtyczka 'pay-wp' mogąca powodować konflikty z Autopay. Proszę ją dezaktywować."
+
+#: Auditor.php:xxx
+msgid "ServiceID was not provided for currency: %s"
+msgstr "Nie podano identyfikatora ServiceID dla waluty: %s"
+
+#: Auditor.php:xxx
+msgid "An invalid ServiceID was provided for currency: %s"
+msgstr "Podano nieprawidłowy identyfikator ServiceID dla waluty: %s"
+
+#: Auditor.php:xxx
+msgid "API secret key (Hash) was not provided for currency: %s"
+msgstr "Nie podano klucza API (Hash) dla waluty: %s"
+
+#: Auditor.php:xxx
+msgid "Failed to download payment channel list for currency: %s. Check the validity of the provided key (hash) and serviceID"
+msgstr "Błąd podczas pobierania listy kanałów płatności dla waluty: %s. Sprawdź poprawność podanego klucza (hash) oraz serviceID"
+
+#: Auditor.php:xxx
+msgid "Transaction test is not available for your currency configuration"
+msgstr "Test transakcji nie jest dostępny dla konfiguracji walutowej Twojego sklepu"
+
+#: Auditor.php:xxx
+msgid "Autopay URL cannot be reached. Make sure you have a valid internet connection"
+msgstr "Adres URL Autopay jest nieosiągalny. Upewnij się, że masz prawidłowe połączenie z internetem."
+
+#: Auditor.php:xxx
+msgid "Failed to download payment channel list"
+msgstr "Nie udało się pobrać listy kanałów płatności."
+
+#: Auditor.php:xxx
+msgid "Blik-0 payment channel not found, transaction test will not be performed"
+msgstr "Nie znaleziono kanału płatności Blik-0, test transakcji nie zostanie wykonany."
+
+
+#: Strings.php:xxx
+msgid "Audit in progress"
+msgstr "Trwa audyt"
+
+#: Strings.php:xxx
+msgid "Audit Completed"
+msgstr "Audyt zakończony"
+
+#: Strings.php:xxx
+msgid "Server test"
+msgstr "Test serwera"
+
+#: Strings.php:xxx
+msgid "Please wait..."
+msgstr "Proszę czekać..."
+
+#: Strings.php:xxx
+msgid "Critical problems total"
+msgstr "Łączna liczba krytycznych problemów"
+
+#: Strings.php:xxx
+msgid "Warnings total"
+msgstr "Łączna liczba ostrzeżeń"
+
+#: Strings.php:xxx
+msgid "Start"
+msgstr "Rozpocznij"
+
+#: Strings.php:xxx
+msgid "Start again"
+msgstr "Rozpocznij ponownie"
+
+#: Strings.php:xxx
+msgid "The test couldn't continue due to server error."
+msgstr "Test nie mógł być kontynuowany z powodu błędu serwera."
+
+#: Strings.php:xxx
+msgid "A critical error occurred"
+msgstr "Wystąpił krytyczny błąd"
+
+#: audit-settings.php:xxx
+msgid "Connection and transaction validity audit"
+msgstr "Audyt poprawności połączenia i transakcji"
+
+#: audit-settings.php:xxx
+msgid "Critical problems total: "
+msgstr "Łączna liczba krytycznych problemów: "
+
+#: audit-settings.php:xxx
+msgid "Warnings total: "
+msgstr "Łączna liczba ostrzeżeń: "
+
+#: audit-settings.php:xxx
+msgid "Test has been completed. Click \"Download full log\" to download logs to disk."
+msgstr "Test został ukończony. Kliknij „Pobierz pełny log”, aby zapisać log na dysku."
+
+#: audit-settings.php:xxx
+msgid "An error occurred during finalization: "
+msgstr "Podczas finalizacji wystąpił błąd: "
+
+#: audit-settings.php:xxx
+msgid "An warning occurred during finalization: "
+msgstr "Podczas finalizacji wystąpiło ostrzeżenie: "
+
+#: audit-settings.php:xxx
+msgid "Download full log"
+msgstr "Pobierz pełny log"
+
+#: audit-settings.php:xxx
+msgid "Copy log to clipboard"
+msgstr "Kopiuj log do schowka"
+
+#: some-file.php:123
+msgid "All gateway prerequisites were met, and transactions should proceed smoothly. Keep this success summary so you can reference it if updates are needed."
+msgstr "Wszystkie wstępne wymogi dla bramki płatności zostały spełnione, a transakcje powinny przebiegać bez zakłóceń. Zachowaj to podsumowanie sukcesu, aby móc się na nie powołać w razie aktualizacji."
+
+#: some-file.php:123
+msgid "Your store is not ready to accept payments. Please check the logs for more details."
+msgstr "Twój sklep nie jest gotowy do przyjmowania płatności. Prosimy o zapoznanie się z logiem w celu uzyskania szczegółów."
+
+#: some-file.php:123
+msgid "Minor inconsistencies in your shop were detected, though they may not block transactions entirely. Review your integration steps to optimize performance. If you encounter issues, you can share the log file by downloading or copying it."
+msgstr "Wykryto drobne niespójności w Twoim sklepie, choć mogą one nie blokować całkowicie transakcji. Przejrzyj kroki integracji, aby zoptymalizować wydajność. Jeśli napotkasz problemy, możesz udostępnić plik dziennika, pobierając go lub kopiując."
+
+msgid "During the test transaction, the ITN (Instant Transaction Notification) message was not received within 30 seconds. Please verify the correctness of the URL where the ITN is sent. You can find it in the Autopay merchant panel."
+msgstr "Nie udało się podczas testowej transakcji odebrać komunikatu ITN w ciągu 30 sekund. Sprawdź poprawność adresu URL na który jest wysyłany ITN. Znajdziesz go w panelu merchanta Autopay."
+
+msgid "The testing procedure was stopped by a critical error. Copy the log contents to the clipboard and download the logs to disk. If you don't see the error message or can't download the logs to disk, ask the administrator for the server error log file."
+msgstr "Działanie modułu zostało przerwane przez błąd krytyczny. Skopiuj zawartość dziennika do schowka oraz pobierz logi na dysk. Jeżeli nie widać komunikatu błędu albo nie da się pobrać logów na dysk, poproś administratora o plik z logami błędów serwera."
+
+msgid "Old BlueMedia plugin is active. Please remove it or deactivate it."
+msgstr "Wykryto włączoną niewspieraną wtyczkę Blue Media. Należy ją deaktywować albo usunąć."
+
+msgid "Transaction testing"
+msgstr "Testowanie transakcji"
+
+msgid "Autopay configuration testing"
+msgstr "Testowanie konfiguracji Autopay"
+
+msgid "Server configuration testing"
+msgstr "Testowanie konfiguracji serwera"
+
+msgid "Wordpress configuration testing"
+msgstr "Testowanie konfiguracji Wordpressa"
+
+msgid "Transaction test is not available for currency: %s"
+msgstr "Test transakcji jest niedostępny dla waluty: %s"

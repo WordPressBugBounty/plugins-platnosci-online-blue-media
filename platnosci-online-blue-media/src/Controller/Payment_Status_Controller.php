@@ -86,12 +86,13 @@ class Payment_Status_Controller extends Abstract_Controller implements Controlle
 		}
 
 
-		$this->send_response(
+		$response_object = new Payment_Status_Response_Value_Object(
 			$status,
 			Payment_Status_Response_Value_Object::get_message_by_itn_status_id( $itn_status ),
 			WC()->session->get( 'bm_original_order_received_url' ),
 			$continue_transaction_redirect_url
 		);
+		$this->send_response($response_object);
 	}
 
 	public function handle() {

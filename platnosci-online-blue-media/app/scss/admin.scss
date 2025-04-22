@@ -5,9 +5,18 @@ $color-gray-light: #f8f8f8;
 $color-white: #fff;
 $color-blue: #0073af;
 $color-red: #fc2945;
-$color-green: green;
+$color-green: #0AB548;
 $color-yellow: #ffdc37;
 $border-color: #e5e5e5;
+
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
 
 @mixin section-line {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
@@ -46,6 +55,24 @@ $border-color: #e5e5e5;
 	&:hover {
 		background-color: #0661a2;
 	}
+}
+
+@mixin icon {
+	content: "";
+	display: block;
+	height: 24px;
+	width: 24px;
+	position: absolute;
+}
+
+@mixin icon-frame {
+	background-color: $color-gray-light;
+	background-repeat: no-repeat;
+	background-size: 14px;
+	background-position: center;
+	border: 1px solid #DCDCDC;
+	padding: 10px;
+	box-sizing: border-box;
 }
 
 .bm-settings {
@@ -168,7 +195,13 @@ $border-color: #e5e5e5;
 			}
 		}
 
-		table.form-table {
+		table.form-table,
+		table.table-testmode,
+		table.table-test_connection {
+			border-collapse: collapse;
+			font-size: 14px;
+			width: 100%;
+
 			a {
 				color: $color-blue;
 			}
@@ -333,107 +366,410 @@ $border-color: #e5e5e5;
 
 		/* Tab > Authentication */
 		&.section-authentication {
-			table.form-table {
-				tbody {
-					@media screen and (min-width: 900px) {
-						position: relative;
+			@media screen and (min-width: 1355px) {
+				display: flex;
+				flex-wrap: wrap;
+			}
+
+			table {
+				&.table-testmode {
+					@include section-line;
+					clear: both;
+					margin-bottom: 4px;
+					@media screen and (max-width: 782px) {
+						box-sizing: border-box;
 					}
 
-					tr {
-						&.woocommerce_bluemedia_whitelabel-tr {
-							> * {
-								max-width: 540px;
-							}
-
-							.titledesc {
-								padding-top: unset;
-
-								.autopay-fieldset {
-									.description {
-										margin-top: 15px !important;
-										margin-bottom: 25px !important;
-									}
-								}
-							}
+					tbody {
+						@media screen and (min-width: 900px) {
+							position: relative;
 						}
 
-						&.woocommerce_bluemedia_testmode-tr {
-							display: block;
-							margin-bottom: 10px;
-							@media screen and (min-width: 900px) {
-								@include section-line;
-								padding-bottom: 17px;
-								margin-bottom: 20px;
-							}
-
-							&.autopay-comp-radio {
-								.titledesc {
-									> label {
-										@include heading-1;
-										margin-bottom: 17px;
-									}
-								}
-							}
-
-							.titledesc {
-								@media screen and (min-width: 505px) {
-									display: flex;
-									column-gap: 30px;
-								}
-
-								> label {
-									@media screen and (max-width: 505px) {
-										margin-bottom: 10px;
-									}
-								}
-							}
-						}
-						&.woocommerce_bluemedia_campaign_tracking-desc-tr {
-							@media screen and (min-width: 900px) {
-								border-bottom: unset;
-								margin-bottom: unset;
-								position: absolute;
-								top: 20px;
-								right: 0px;
-							}
-						}
-						&.woocommerce_bluemedia_testmode-desc-tr {
-							@media screen and (max-width: 900px) {
+						tr {
+							&.woocommerce_bluemedia_testmode-tr {
 								display: block;
-								@include section-line;
-								padding-bottom: 17px;
-								margin-bottom: 20px;
-							}
-							@media screen and (min-width: 900px) {
-								border-bottom: unset;
-								margin-bottom: unset;
-								position: absolute;
-								top: 0;
-								left: 565px;
+								margin-bottom: 10px;
+								@media screen and (min-width: 900px) {
+									margin-bottom: 17px;
+								}
+
+								&.autopay-comp-radio {
+									.titledesc {
+										> label {
+											@include heading-1;
+											margin-bottom: 17px;
+										}
+									}
+								}
+
+								.titledesc {
+									@media screen and (min-width: 505px) {
+										display: flex;
+										column-gap: 30px;
+									}
+
+									> label {
+										@media screen and (max-width: 505px) {
+											margin-bottom: 10px;
+										}
+									}
+								}
 							}
 
-							.formdesc {
-								.description {
-									@include desc;
-									margin-top: 5px;
-									@media screen and (min-width: 900px) {
-										margin-top: 20px;
+							&.woocommerce_bluemedia_testmode-desc-tr {
+								@media screen and (max-width: 900px) {
+									display: block;
+									margin-bottom: 17px;
+								}
+								@media screen and (min-width: 900px) {
+									position: absolute;
+									top: 0;
+									left: 565px;
+								}
+
+								.formdesc {
+									.description {
+										@include desc;
+										margin-top: 5px;
+										@media screen and (min-width: 900px) {
+											margin-top: 20px;
+										}
 									}
 								}
 							}
 						}
+					}
+				}
 
-						&.woocommerce_bluemedia_service_id-tr,
-						&.woocommerce_bluemedia_test_service_id-tr {
-							.titledesc {
-								padding-top: 0;
+				&.form-table,
+				&.table-test_connection {
+					@media screen and (min-width: 1355px) {
+						width: 50%;
+					}
+				}
+
+				&.form-table {
+					@include section-line;
+					margin-bottom: 4px;
+
+					tbody {
+						tr {
+							&.woocommerce_bluemedia_whitelabel-tr {
+								> * {
+									max-width: 540px;
+								}
+
+								.titledesc {
+									padding-top: unset;
+
+									.autopay-fieldset {
+										.description {
+											margin-top: 15px !important;
+											margin-bottom: 25px !important;
+										}
+									}
+								}
+							}
+
+							&.woocommerce_bluemedia_campaign_tracking-desc-tr {
+								@media screen and (min-width: 900px) {
+									border-bottom: unset;
+									margin-bottom: unset;
+									position: absolute;
+									top: 20px;
+									right: 0px;
+								}
+							}
+
+							&.woocommerce_bluemedia_service_id-tr,
+							&.woocommerce_bluemedia_test_service_id-tr {
+								.titledesc {
+									padding-top: 0;
+								}
+							}
+
+							&.woocommerce_bluemedia_private_key-tr,
+							&.woocommerce_bluemedia_test_private_key-tr {
+								.titledesc {
+									padding-top: 25px;
+								}
 							}
 						}
+					}
+				}
 
-						&.woocommerce_bluemedia_private_key-tr,
-						&.woocommerce_bluemedia_test_private_key-tr {
-							.titledesc {
-								padding-top: 25px;
+				&.table-test_connection {
+					@include section-line;
+					margin-bottom: 4px;
+					tbody {
+						display: block;
+						margin-left: 25px;
+						width: 465px;
+
+						tr {
+							width: 100%;
+
+							td {
+								font-size: 13px;
+								line-height: 23px;
+								width: 100%;
+
+								span {
+									font-size: 13px;
+									margin: 0;
+									padding: 0;
+									text-decoration: none;
+								}
+							}
+
+							&.status,
+							&.logs-entries {
+								td {
+									border-right: 1px solid #DCDCDC;
+									border-left: 1px solid #DCDCDC;
+									box-sizing: border-box;
+									padding: 10px 15px;
+								}
+							}
+
+							&.status td:last-child,
+							&.logs-entries .log-entry {
+								border-bottom: 1px solid #DCDCDC;
+							}
+
+							&.status td,
+							&.logs-entries .log-entry {
+								padding-left: 44px;
+							}
+
+							&.woocommerce_bluemedia_test_connection-tr {
+								td {
+									display: flex;
+									align-items: center;
+									justify-content: space-between;
+									box-sizing: border-box;
+									padding: 20px 0 19px 0;
+									width: 465px;
+
+									h3 {
+										color: $color-gray-bold;
+										font-size: 16px;
+										margin: 0;
+									}
+
+									.button {
+										background-color: #0085BA;
+										border: 1px solid #006799;
+										border-bottom: 3px solid #006799;
+										border-radius: 3px;
+										color: $color-white;
+										line-height: 23px;
+										padding: 8px 29px 8px 53px;
+										position: relative;
+										text-shadow: -1px -1px 1px #006799,
+										1px -1px 1px #006799,
+										-1px 1px 1px #006799,
+										1px 1px 1px #006799;
+
+										&:hover {
+											background-color: #006799;
+										}
+
+										&::before {
+											@include icon;
+											background-image: url(../../assets/img/start.svg);
+											left: 22px;
+										}
+
+										&.disabled {
+											background-color: #0085BA !important;
+											border-color: #006799 !important;
+											color: $color-white !important;
+											opacity: .25;
+										}
+									}
+								}
+							}
+
+							&.status {
+								background-color: $color-gray-light;
+								color: $color-black;
+
+								td {
+									&:first-child {
+										border-top: 1px solid #DCDCDC;
+										font-weight: 700;
+									}
+
+									&:last-child {
+										border-bottom: 1px solid #DCDCDC;
+										display: flex;
+										column-gap: 25px;
+										padding-top: 0;
+									}
+
+									> .in-progress {
+										position: relative;
+
+										.icon {
+											display: block;
+											height: 24px;
+											width: 24px;
+											position: absolute;
+											left: -34px;
+										}
+
+										.in-progress {
+											background-image: url(../../assets/img/loading.svg);
+											animation: spin 2s linear infinite;
+										}
+
+										.completed {
+											background-image: url(../../assets/img/complete.svg);
+											background-size: cover;
+										}
+									}
+
+									.summary-critical,
+									.summary-warning,
+									.summary-success {
+										.counter {
+											font-weight: 700;
+										}
+									}
+								}
+							}
+
+							&.logs-entries {
+								display: flex;
+								flex-direction: column;
+								max-height: 183px;
+								max-width: 465px;
+								overflow-y: scroll;
+
+								.log-entry {
+									.line-content {
+										display: inline-block;
+										line-height: 16px;
+
+										.log-level {
+											border: unset;
+											line-height: inherit;
+											position: relative;
+
+											&::before {
+												content: none;
+											}
+
+											&::after {
+												@include icon;
+												@include icon-frame;
+												top: 0;
+												left: -35px;
+												visibility: visible;
+											}
+
+											&--info::after {
+												background-image: url(../../assets/img/information.svg);
+											}
+
+											&--warning::after {
+												background-image: url(../../assets/img/warning.svg);
+											}
+
+											&--critical {
+												color: $color-red;
+
+												&::after {
+													background-image: url(../../assets/img/critical.svg);
+												}
+											}
+										}
+									}
+								}
+							}
+
+							&.summary {
+								display: block;
+
+								td {
+									padding: 0;
+
+									ul {
+										li {
+											padding: 8px 15px;
+											line-height: 16px;
+
+											&:last-child {
+												margin-bottom: 0;
+											}
+										}
+
+										.summary-success {
+											border-left: 3px solid $color-green;
+											background-color: rgba(10, 181, 72, .25);
+										}
+
+										.summary-error {
+											border-left: 3px solid $color-red;
+											background-color: rgba(252, 41, 69, .25);
+										}
+
+										.summary-warning {
+											border-left: 3px solid $color-yellow;
+											background-color: rgba(255, 220, 55, .25);
+										}
+									}
+								}
+							}
+
+							&.buttons {
+								display: block;
+
+								td {
+									padding: 0;
+
+									ul, li {
+										margin: 0;
+									}
+
+									ul {
+										display: flex;
+										justify-content: flex-end;
+										column-gap: 30px;
+
+										li {
+											box-sizing: border-box;
+											padding-left: 40px;
+											width: min-content;
+
+											.button {
+												background: unset;
+												border: unset;
+												font-weight: 700;
+												position: relative;
+
+												&::before {
+													content: '';
+													display: block;
+													height: 24px;
+													width: 24px;
+													position: absolute;
+													left: -35px;
+
+												}
+
+												&--download::before {
+													background-image: url(../../assets/img/download.svg);
+												}
+
+												&--copy::before {
+													background-image: url(../../assets/img/copy.svg)
+												}
+											}
+										}
+									}
+								}
 							}
 						}
 					}
@@ -544,8 +880,7 @@ $border-color: #e5e5e5;
 												}
 
 												&__logo {
-													border: 1px solid
-														rgba(0, 0, 0, 0.1);
+													border: 1px solid rgba(0, 0, 0, 0.1);
 													width: 24px;
 												}
 											}
@@ -601,7 +936,7 @@ $border-color: #e5e5e5;
 												.bm-group-name {
 													&::after {
 														transform: rotate(
-															270deg
+																270deg
 														);
 													}
 												}
@@ -647,15 +982,6 @@ $border-color: #e5e5e5;
 						top: 0;
 					}
 				}
-
-				&.section-woocommerce_bluemedia_blik_type_title {
-					.autopay-comp-title__wrapper {
-						h3.wc-settings-sub-title {
-							@include heading-2;
-							margin-bottom: 3px;
-						}
-					}
-				}
 			}
 		}
 
@@ -690,16 +1016,19 @@ $border-color: #e5e5e5;
 								grid-area: tracking-id;
 							}
 						}
+
 						&.woocommerce_bluemedia_ga4_client_id-tr {
 							@media screen and (min-width: 1250px) {
 								grid-area: client-id;
 							}
 						}
+
 						&.woocommerce_bluemedia_ga4_api_secret-tr {
 							@media screen and (min-width: 1250px) {
 								grid-area: api-secret;
 							}
 						}
+
 						&.woocommerce_bluemedia_ga4_purchase_status-tr {
 							@media screen and (min-width: 1250px) {
 								grid-area: purchase-status;
@@ -780,9 +1109,7 @@ $border-color: #e5e5e5;
 
 					&::before {
 						content: url("../../assets/img/documentation.svg");
-						filter: brightness(0) saturate(100%) invert(100%)
-							sepia(100%) saturate(0%) hue-rotate(212deg)
-							brightness(111%) contrast(110%);
+						filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(212deg) brightness(111%) contrast(110%);
 						position: absolute;
 						top: 9px;
 						left: 35px;
@@ -939,6 +1266,7 @@ $border-color: #e5e5e5;
 				h2 {
 					margin-bottom: 0;
 				}
+
 				p {
 					display: none;
 				}
@@ -1058,6 +1386,7 @@ $border-color: #e5e5e5;
 				}
 			}
 		}
+
 		.autopay-remove-currency {
 			text-decoration: underline;
 			margin: 20px 0px;

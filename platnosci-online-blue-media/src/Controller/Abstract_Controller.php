@@ -4,23 +4,16 @@ namespace Ilabs\BM_Woocommerce\Controller;
 
 
 use Ilabs\BM_Woocommerce\Controller\Model\Payment_Status_Response_Value_Object;
+use Ilabs\BM_Woocommerce\Utilities\Test_Connection\Response_Interface;
 
 abstract class Abstract_Controller {
 
 
 	protected function send_response(
-		string $status,
-		string $message,
-		?string $order_received_url,
-		?string $continue_transaction_redirect_url
+		Response_Interface $response
 
 	) {
-		$response = new Payment_Status_Response_Value_Object(
-			$status,
-			$message,
-			$order_received_url,
-			$continue_transaction_redirect_url
-		);
+
 
 
 		blue_media()->get_woocommerce_logger()->log_error(
@@ -47,11 +40,11 @@ abstract class Abstract_Controller {
 		return 'wp_ajax_nopriv_bm_' . $action_name . '_action';
 	}
 
-	protected function get_ajax_action_name( string $action ): string {
+	public function get_ajax_action_name( string $action ): string {
 		return $this->build_full_action_name( $action );
 	}
 
-	protected function get_ajax_action_name_nopriv( string $action ): string {
+	public function get_ajax_action_name_nopriv( string $action ): string {
 		return $this->build_full_action_name_nopriv( $action );
 	}
 }

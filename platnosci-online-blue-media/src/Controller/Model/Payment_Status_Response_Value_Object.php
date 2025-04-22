@@ -3,8 +3,9 @@
 namespace Ilabs\BM_Woocommerce\Controller\Model;
 
 use Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway;
+use Ilabs\BM_Woocommerce\Utilities\Test_Connection\Response_Interface;
 
-class Payment_Status_Response_Value_Object {
+class Payment_Status_Response_Value_Object implements Response_Interface {
 
 	const STATUS_SUCCESS = 'payment_success';
 
@@ -34,6 +35,8 @@ class Payment_Status_Response_Value_Object {
 	 */
 	private $continue_transaction_redirect_url;
 
+	protected string $stage_name = '';
+
 
 	/**
 	 * @param string $status
@@ -59,6 +62,13 @@ class Payment_Status_Response_Value_Object {
 	 */
 	public function get_status(): string {
 		return $this->status;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function get_stage_name(): string {
+		return $this->stage_name;
 	}
 
 	/**

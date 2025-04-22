@@ -72,6 +72,8 @@ class File_Downloader
                 $file = new File($transient_value['name']);
                 $file->set_temp_path($transient_value['path']);
                 $file->set_mime_type($transient_value['mime']);
+
+
                 if (\file_exists($file->get_temp_path())) {
                     \header('Content-Description: File Transfer');
                     \header('Content-Type: ' . $file->get_mime_type());

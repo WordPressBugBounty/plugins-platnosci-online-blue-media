@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit399307b5f026e299c4e1eca5d403dadb
+class ComposerStaticInit4c9d59dbc44f436a3dad2741c624f746
 {
     public static $prefixLengthsPsr4 = array (
         'I' => 
@@ -32,7 +32,6 @@ class ComposerStaticInit399307b5f026e299c4e1eca5d403dadb
         'Ilabs\\BM_Woocommerce\\Controller\\Model\\Ajax_Response_Value_Object' => __DIR__ . '/../..' . '/src/Controller/Model/Ajax_Response_Value_Object.php',
         'Ilabs\\BM_Woocommerce\\Controller\\Model\\Payment_Status_Response_Value_Object' => __DIR__ . '/../..' . '/src/Controller/Model/Payment_Status_Response_Value_Object.php',
         'Ilabs\\BM_Woocommerce\\Controller\\Payment_Status_Controller' => __DIR__ . '/../..' . '/src/Controller/Payment_Status_Controller.php',
-        'Ilabs\\BM_Woocommerce\\Controller\\Wp_Admin\\Connection_Testing_Controller' => __DIR__ . '/../..' . '/src/Controller/Wp_Admin/Connection_Testing_Controller.php',
         'Ilabs\\BM_Woocommerce\\Controller\\Wp_Admin\\Transaction_Testing_Controller' => __DIR__ . '/../..' . '/src/Controller/Wp_Admin/Transaction_Testing_Controller.php',
         'Ilabs\\BM_Woocommerce\\Data\\Remote\\Blue_Media\\Admin_Section_Resources_Client' => __DIR__ . '/../..' . '/src/Data/Remote/Blue_Media/Admin_Section_Resources_Client.php',
         'Ilabs\\BM_Woocommerce\\Data\\Remote\\Blue_Media\\Client' => __DIR__ . '/../..' . '/src/Data/Remote/Blue_Media/Client.php',
@@ -48,6 +47,13 @@ class ComposerStaticInit399307b5f026e299c4e1eca5d403dadb
         'Ilabs\\BM_Woocommerce\\Domain\\Model\\White_Label\\Expandable_Group_Interface' => __DIR__ . '/../..' . '/src/Domain/Model/White_Label/Expandable_Group_Interface.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Model\\White_Label\\Group' => __DIR__ . '/../..' . '/src/Domain/Model/White_Label/Group.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Model\\White_Label\\Item' => __DIR__ . '/../..' . '/src/Domain/Model/White_Label/Item.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Service\\Currency\\Currency' => __DIR__ . '/../..' . '/src/Domain/Service/Currency/Currency.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Service\\Currency\\Interfaces\\Currency_Interface' => __DIR__ . '/../..' . '/src/Domain/Service/Currency/Interfaces/Currency_Interface.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Service\\Currency\\Value_Object\\CZK' => __DIR__ . '/../..' . '/src/Domain/Service/Currency/Value_Object/CZK.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Service\\Currency\\Value_Object\\EUR' => __DIR__ . '/../..' . '/src/Domain/Service/Currency/Value_Object/EUR.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Service\\Currency\\Value_Object\\HUF' => __DIR__ . '/../..' . '/src/Domain/Service/Currency/Value_Object/HUF.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Service\\Currency\\Value_Object\\PLN' => __DIR__ . '/../..' . '/src/Domain/Service/Currency/Value_Object/PLN.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Service\\Currency\\Value_Object\\RON' => __DIR__ . '/../..' . '/src/Domain/Service/Currency/Value_Object/RON.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Custom_Styles\\Css_Editor' => __DIR__ . '/../..' . '/src/Domain/Service/Custom_Styles/Css_Editor.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Custom_Styles\\Css_Frontend' => __DIR__ . '/../..' . '/src/Domain/Service/Custom_Styles/Css_Frontend.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Ga4\\Abstract_Ga4_Use_Case' => __DIR__ . '/../..' . '/src/Domain/Service/Ga4/Abstract_Ga4_Use_Case.php',
@@ -61,6 +67,7 @@ class ComposerStaticInit399307b5f026e299c4e1eca5d403dadb
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Legacy\\Importer' => __DIR__ . '/../..' . '/src/Domain/Service/Legacy/Importer.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Product_Feed\\Product_Feed' => __DIR__ . '/../..' . '/src/Domain/Service/Product_Feed/Product_Feed.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Settings\\Banner' => __DIR__ . '/../..' . '/src/Domain/Service/Settings/Banner.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Service\\Settings\\Currency_Tabs' => __DIR__ . '/../..' . '/src/Domain/Service/Settings/Currency_Tabs.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Settings\\Settings_Helper' => __DIR__ . '/../..' . '/src/Domain/Service/Settings/Settings_Helper.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Settings\\Settings_Manager' => __DIR__ . '/../..' . '/src/Domain/Service/Settings/Settings_Manager.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Settings\\Settings_Tabs' => __DIR__ . '/../..' . '/src/Domain/Service/Settings/Settings_Tabs.php',
@@ -76,8 +83,23 @@ class ComposerStaticInit399307b5f026e299c4e1eca5d403dadb
         'Ilabs\\BM_Woocommerce\\Gateway\\Hooks' => __DIR__ . '/../..' . '/src/Gateway/Hooks.php',
         'Ilabs\\BM_Woocommerce\\Gateway\\Hooks\\Payment_On_Account_Page' => __DIR__ . '/../..' . '/src/Gateway/Hooks/Payment_On_Account_Page.php',
         'Ilabs\\BM_Woocommerce\\Helpers\\Helper' => __DIR__ . '/../..' . '/src/Helpers/Helper.php',
+        'Ilabs\\BM_Woocommerce\\Integration\\Funnel_Builder\\Funnel_Builder_Integration' => __DIR__ . '/../..' . '/src/Integration/Funnel_Builder/Funnel_Builder_Integration.php',
         'Ilabs\\BM_Woocommerce\\Integration\\Woocommerce_Blocks\\WC_Gateway_Autopay_Blocks_Support' => __DIR__ . '/../..' . '/src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php',
         'Ilabs\\BM_Woocommerce\\Plugin' => __DIR__ . '/../..' . '/src/Plugin.php',
+        'Ilabs\\BM_Woocommerce\\Utilities\\Test_Connection\\Abstract_Response' => __DIR__ . '/../..' . '/src/Utilities/Test_Connection/Abstract_Response.php',
+        'Ilabs\\BM_Woocommerce\\Utilities\\Test_Connection\\Async_Request' => __DIR__ . '/../..' . '/src/Utilities/Test_Connection/Async_Request.php',
+        'Ilabs\\BM_Woocommerce\\Utilities\\Test_Connection\\Auditor' => __DIR__ . '/../..' . '/src/Utilities/Test_Connection/Auditor.php',
+        'Ilabs\\BM_Woocommerce\\Utilities\\Test_Connection\\Log_Entry' => __DIR__ . '/../..' . '/src/Utilities/Test_Connection/Log_Entry.php',
+        'Ilabs\\BM_Woocommerce\\Utilities\\Test_Connection\\Order_Creator' => __DIR__ . '/../..' . '/src/Utilities/Test_Connection/Order_Creator.php',
+        'Ilabs\\BM_Woocommerce\\Utilities\\Test_Connection\\Payment_Status_Controller' => __DIR__ . '/../..' . '/src/Utilities/Test_Connection/Payment_Status_Controller.php',
+        'Ilabs\\BM_Woocommerce\\Utilities\\Test_Connection\\Response_Continue' => __DIR__ . '/../..' . '/src/Utilities/Test_Connection/Response_Continue.php',
+        'Ilabs\\BM_Woocommerce\\Utilities\\Test_Connection\\Response_Finished' => __DIR__ . '/../..' . '/src/Utilities/Test_Connection/Response_Finished.php',
+        'Ilabs\\BM_Woocommerce\\Utilities\\Test_Connection\\Response_Interface' => __DIR__ . '/../..' . '/src/Utilities/Test_Connection/Response_Interface.php',
+        'Ilabs\\BM_Woocommerce\\Utilities\\Test_Connection\\Strings' => __DIR__ . '/../..' . '/src/Utilities/Test_Connection/Strings.php',
+        'Ilabs\\BM_Woocommerce\\Utilities\\Test_Connection\\Summary' => __DIR__ . '/../..' . '/src/Utilities/Test_Connection/Summary.php',
+        'Ilabs\\BM_Woocommerce\\Utilities\\Test_Connection\\Test_Case' => __DIR__ . '/../..' . '/src/Utilities/Test_Connection/Test_Case.php',
+        'Ilabs\\BM_Woocommerce\\Utilities\\Test_Connection\\Transaction_Test' => __DIR__ . '/../..' . '/src/Utilities/Test_Connection/Transaction_Test.php',
+        'Ilabs\\BM_Woocommerce\\Utilities\\Test_Connection\\Transaction_Testing_Controller' => __DIR__ . '/../..' . '/src/Utilities/Test_Connection/Transaction_Testing_Controller.php',
         'Isolated\\BlueMedia\\Ilabs\\Ilabs_Plugin\\Abstract_Ilabs_Plugin' => __DIR__ . '/..' . '/isolated-ilabs-plugin/ilabs-plugin/src/Abstract_Ilabs_Plugin.php',
         'Isolated\\BlueMedia\\Ilabs\\Ilabs_Plugin\\Alerts' => __DIR__ . '/..' . '/isolated-ilabs-plugin/ilabs-plugin/src/Alerts.php',
         'Isolated\\BlueMedia\\Ilabs\\Ilabs_Plugin\\Common\\Wc_Helpers' => __DIR__ . '/..' . '/isolated-ilabs-plugin/ilabs-plugin/src/Common/Wc_Helpers.php',
@@ -212,9 +234,9 @@ class ComposerStaticInit399307b5f026e299c4e1eca5d403dadb
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit399307b5f026e299c4e1eca5d403dadb::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit399307b5f026e299c4e1eca5d403dadb::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit399307b5f026e299c4e1eca5d403dadb::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit4c9d59dbc44f436a3dad2741c624f746::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit4c9d59dbc44f436a3dad2741c624f746::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit4c9d59dbc44f436a3dad2741c624f746::$classMap;
 
         }, null, ClassLoader::class);
     }

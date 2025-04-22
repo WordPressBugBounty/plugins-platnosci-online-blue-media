@@ -177,7 +177,7 @@ trait Environment
     public function get_plugin_header_info() : array
     {
         if (!self::$plugin_header_info) {
-            self::$plugin_header_info = get_plugin_data($this->get_from_config('__FILE__'));
+            self::$plugin_header_info = get_plugin_data($this->get_from_config('__FILE__'), \true, \false);
         }
         return self::$plugin_header_info;
     }

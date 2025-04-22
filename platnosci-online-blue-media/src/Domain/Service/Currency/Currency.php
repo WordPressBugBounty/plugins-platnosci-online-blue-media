@@ -241,17 +241,16 @@ class Currency {
 		}
 		self::$shop_currency = null;
 
-		sprintf( '[Currency] [reconfigured] [From: %s] [To: %s]',
-			$old,
-			self::$shop_currency ? self::$shop_currency->get_code() : ''
-		);
-
 		return $this->get_shop_currency();
 	}
 
 	public function get_shop_currency(): ?Currency_Interface {
 		if ( empty( self::$shop_currency ) ) {
-			$woo_currency_code = get_woocommerce_currency();
+			if ( ! function_exists( 'get_woocommerce_currency' ) ) {
+				$woo_currency_code = Currency_Interface::CODE_PLN;
+			} else {
+				$woo_currency_code = get_woocommerce_currency();
+			}
 
 			if ( empty( $woo_currency_code ) || ! is_string( $woo_currency_code ) ) {
 				$woo_currency_code = Currency_Interface::CODE_PLN;

@@ -36,19 +36,19 @@ class Settings_Tabs {
 
 	public function get_available_tabs(): array {
 		return [
-			self::AUTHENTICATION_TAB_ID       => __( 'Authentication',
+			self::AUTHENTICATION_TAB_ID    => __( 'Authentication',
 				'bm-woocommerce' ),
 			/*self::ADVERTISING_SERVICES_TAB_ID => __( 'Advertising services',
 				'bm-woocommerce' ),*/
-			self::PAYMENT_SETTINGS_TAB_ID     => __( 'Payment settings',
+			self::PAYMENT_SETTINGS_TAB_ID  => __( 'Payment settings',
 				'bm-woocommerce' ),
-			self::ANALYTICS_TAB_ID            => __( 'Analytics',
+			self::ANALYTICS_TAB_ID         => __( 'Analytics',
 				'bm-woocommerce' ),
-			self::VAS_TAB_ID                  => __( 'Services for you',
+			self::VAS_TAB_ID               => __( 'Services for you',
 				'bm-woocommerce' ),
-			self::ADVANCED_SETTINGS_TAB_ID    => __( 'Advanced settings',
+			self::ADVANCED_SETTINGS_TAB_ID => __( 'Advanced settings',
 				'bm-woocommerce' ),
-			self::HELP_TAB_ID                 => __( 'Help',
+			self::HELP_TAB_ID              => __( 'Help',
 				'bm-woocommerce' ),
 		];
 	}

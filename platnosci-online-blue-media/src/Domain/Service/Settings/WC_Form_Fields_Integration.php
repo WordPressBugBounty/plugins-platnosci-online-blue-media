@@ -3,6 +3,7 @@
 namespace Ilabs\BM_Woocommerce\Domain\Service\Settings;
 
 use Exception;
+use Ilabs\BM_Woocommerce\Utilities\Test_Connection\Async_Request as Connection_Testing_Controller;
 use Ilabs\BM_Woocommerce\Domain\Service\Currency\Currency;
 use Ilabs\BM_Woocommerce\Domain\Service\Currency\Interfaces\Currency_Interface;
 use Ilabs\BM_Woocommerce\Domain\Service\Custom_Styles\Css_Editor;
@@ -50,9 +51,23 @@ class WC_Form_Fields_Integration {
 							'active_tab'        => ( new Settings_Tabs() )->get_active_tab_id(),
 						] );
 
-					return ob_get_clean();
+
+					$return = ob_get_clean();
+
+					if ( isset( $autopay_template_args['on_hook'] ) ) {
+						add_action( $autopay_template_args['on_hook'],
+							function () use ( $return, $key ) {
+								printf("<table class='table-%s'>%s</table>",$key,  $return);
+							}, 10 );
+
+						return '';
+					}
+
+					return $return;
+
 				}
 
+				return '';
 			},
 			10,
 			4 );
@@ -128,6 +143,21 @@ class WC_Form_Fields_Integration {
 
 		$return = [
 
+			'test_connection' => [
+				'title'         => __( 'Test Connection',
+					'bm-woocommerce' ),
+				'description'   => __( 'Expected format: G-XXXXXXX',
+					'bm-woocommerce' ),
+				'type'          => 'autopay_template',
+				'template'      => 'settings_field_test_connection',
+				'bmtab'         => 'authentication',
+				'template_args' =>
+					[
+						'nonce'   => Connection_Testing_Controller::generate_nonce(),
+						'on_hook' => 'autopay_settings_after_table_authentication',
+					],
+			],
+
 			'testmode' => [
 				'title'         => __( 'Use in sandbox mode',
 					'bm-woocommerce' ),
@@ -150,6 +180,7 @@ class WC_Form_Fields_Integration {
 						                        . ' ' . '<a target="_blank" href="https://developers.autopay.pl/kontakt?utm_campaign=help&utm_source=woocommerce_panel&utm_medium=text_link">'
 						                        . ' ' . __( 'this form',
 								'bm-woocommerce' ) . '</a>',
+						'on_hook' => 'autopay_settings_before_table_authentication',
 
 					],
 				'help_tip'      => __( 'Payments processed using sandbox environment will not affect store’s settlement with Autopay. Sandbox allows stores to verify integration with Autopay and configuration of this plugin.',
@@ -229,8 +260,8 @@ class WC_Form_Fields_Integration {
 						'input_field_type_arg' => 'number',
 					],
 				'required'      => ! ( 'yes' === $testmode_opt_value ),
-				'class' => 'woocommerce_bluemedia_service_id_i',
-				'tr_classes' => ['woocommerce_bluemedia_service_id-tr'],
+				'class'         => 'woocommerce_bluemedia_service_id_i',
+				'tr_classes'    => [ 'woocommerce_bluemedia_service_id-tr' ],
 			],
 
 			Settings_Manager::get_currency_option_key( 'private_key',
@@ -250,8 +281,8 @@ class WC_Form_Fields_Integration {
 							'bm-woocommerce' ),
 					],
 				'required'      => ! ( 'yes' === $testmode_opt_value ),
-				'class' => 'woocommerce_bluemedia_private_key_i',
-				'tr_classes' => ['woocommerce_bluemedia_private_key-tr'],
+				'class'         => 'woocommerce_bluemedia_private_key_i',
+				'tr_classes'    => [ 'woocommerce_bluemedia_private_key-tr' ],
 			],
 
 			Settings_Manager::get_currency_option_key( 'test_service_id',
@@ -271,8 +302,8 @@ class WC_Form_Fields_Integration {
 						'input_field_type_arg' => 'number',
 					],
 				'required'      => 'yes' === $testmode_opt_value,
-				'class' => 'woocommerce_bluemedia_test_service_id_i',
-				'tr_classes' => ['woocommerce_bluemedia_test_service_id-tr'],
+				'class'         => 'woocommerce_bluemedia_test_service_id_i',
+				'tr_classes'    => [ 'woocommerce_bluemedia_test_service_id-tr' ],
 			],
 			Settings_Manager::get_currency_option_key( 'test_private_key',
 				$current_admin_currency_code ) => [
@@ -290,8 +321,8 @@ class WC_Form_Fields_Integration {
 							'bm-woocommerce' ),
 					],
 				'required'      => 'yes' === $testmode_opt_value,
-				'class' => 'woocommerce_bluemedia_test_private_key_i',
-				'tr_classes' => ['woocommerce_bluemedia_test_private_key-tr'],
+				'class'         => 'woocommerce_bluemedia_test_private_key_i',
+				'tr_classes'    => [ 'woocommerce_bluemedia_test_private_key-tr' ],
 			],
 
 			'remove_currency' => [
@@ -335,10 +366,10 @@ class WC_Form_Fields_Integration {
 
 			$return[ Settings_Manager::get_currency_option_key( 'blik_type',
 				$current_admin_currency_code ) ] = [
-				'title'       => '',
-				'type'        => 'autopay_template',
-				'template'    => 'settings_field_extended_select',
-				'description' => '',
+				'title'            => '',
+				'type'             => 'autopay_template',
+				'template'         => 'settings_field_extended_select',
+				'description'      => '',
 				'options'          => [
 					'with_redirect'           => __( 'redirect payer to BLIK’s website',
 						'bm-woocommerce' ),
@@ -582,7 +613,6 @@ class WC_Form_Fields_Integration {
 		];
 
 	}
-
 
 	public function get_advanced_settings_fields(): array {
 		$fields = [

@@ -26,11 +26,11 @@
         },
         {
             "name": "isolated-ilabs-plugin/ilabs-plugin",
-            "version": "1.2.0",
-            "version_normalized": "1.2.0.0",
+            "version": "1.2.4",
+            "version_normalized": "1.2.4.0",
             "dist": {
                 "type": "zip",
-                "url": "ilabs/setup/isolated_dependencies/isolated-ilabs-plugin-1.2.0.zip"
+                "url": "ilabs/setup/isolated_dependencies/isolated-ilabs-plugin-1.2.4.zip"
             },
             "type": "library",
             "installation-source": "dist",

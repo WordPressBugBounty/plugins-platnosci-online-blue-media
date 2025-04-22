@@ -40,10 +40,13 @@ $tab_id   = esc_attr( $tab_id );
 		</div>
 	<?php endif; ?>
 
+	<?php do_action( 'autopay_settings_before_table_' . $tab_id ); ?>
 
 	<table class="form-table">
 		<?php echo $settings_html ?>
 	</table>
+
+	<?php do_action( 'autopay_settings_after_table_' . $tab_id ); ?>
 
 
 </div>

@@ -7,6 +7,7 @@ use Ilabs\BM_Woocommerce\Data\Remote\Blue_Media\Client;
 use Ilabs\BM_Woocommerce\Domain\Model\White_Label\Expandable_Group;
 use Ilabs\BM_Woocommerce\Domain\Model\White_Label\Expandable_Group_Interface;
 use Ilabs\BM_Woocommerce\Domain\Model\White_Label\Group;
+use Ilabs\BM_Woocommerce\Domain\Service\Currency\Interfaces\Currency_Interface;
 use Ilabs\BM_Woocommerce\Domain\Service\Legacy\Importer;
 use Ilabs\BM_Woocommerce\Domain\Service\Settings\Settings_Manager;
 use Ilabs\BM_Woocommerce\Domain\Service\White_Label\Group_Mapper;
@@ -75,6 +76,10 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 	 * @throws Exception
 	 */
 	public function __construct() {
+
+		//blue_media()->update_autopay_option('test_service_id_czk', '');
+
+
 		( new Hooks() )->init();
 
 		blue_media()->set_bluemedia_gateway( $this );
@@ -270,8 +275,13 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		return $return_filtered;
 	}
 
-	private function setup_variables() {
-		$currency = blue_media()->resolve_blue_media_currency_symbol();
+	public function setup_variables( ?Currency_Interface $forced_currency = null
+	) {
+		if ( $forced_currency ) {
+			$currency = $forced_currency->get_code();
+		} else {
+			$currency = blue_media()->resolve_blue_media_currency_symbol();
+		}
 
 		if ( $this->testmode ) {
 			$test_gateway_url = $this->get_option( 'test_gateway_url' );
@@ -751,8 +761,10 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 							true )
 					);
 
-					if (preg_match('/<currency>\s*(.*?)\s*<\/currency>/', base64_decode( $posted['transactions'] )
-						, $matches)
+					if ( preg_match( '/<currency>\s*(.*?)\s*<\/currency>/',
+						base64_decode( $posted['transactions'] )
+						,
+						$matches )
 					) {
 
 						blue_media()->get_woocommerce_logger()->log_debug(
@@ -1162,7 +1174,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 	/**
 	 * @return string
 	 */
-	private
+	public
 	function get_private_key() {
 		return $this->private_key;
 	}
@@ -1289,10 +1301,12 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			}
 
 			blue_media()->get_woocommerce_logger()->log_debug(
-				sprintf( '[api_get_gateway_list] [response code: %s] [gatewayList count %s]',
+				sprintf( '[api_get_gateway_list] [response code: %s] [channels: %s] [gatewayList count %s]',
 					print_r( wp_remote_retrieve_response_code( $result ),
 						true ),
-					is_array( $result_decoded->gatewayList ) ? count( $result_decoded->gatewayList ) : 0
+					print_r( $result_decoded->gatewayList, true ),
+					print_r( is_array( $result_decoded->gatewayList ) ? count( $result_decoded->gatewayList ) : 0,
+						true )
 				) );
 
 
@@ -1318,11 +1332,16 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		array $channels
 	) {
 
+
 		$group_arr = ( new Group_Mapper( $channels ) )->map();
 
+		$payment_names = [];
+		foreach ( $group_arr as $group ) {
+			$payment_names[] = $group->get_name();
+		}
+
 		echo '<div class="payment_box payment_method_bacs">';
-		echo '<p>' . __( 'Instant payment, BLIK, credit card, Google Pay, Apple Pay',
-				'bm-woocommerce' ) . '</p>';
+		echo '<p>' . __( implode( ', ', $payment_names ), 'bm-woocommerce' ) . '</p>';
 		echo '<p>' . __( 'Select the payment method you want to use.',
 				'bm-woocommerce' ) . '</p>';
 		echo '</div>';

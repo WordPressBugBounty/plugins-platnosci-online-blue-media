@@ -4,8 +4,7 @@ namespace Ilabs\BM_Woocommerce;
 
 use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 use Exception;
-use Ilabs\BM_Woocommerce\Controller\Wp_Admin\Connection_Testing_Controller;
-use Ilabs\BM_Woocommerce\Controller\Wp_Admin\Transaction_Testing_Controller;
+use Ilabs\BM_Woocommerce\Utilities\Test_Connection\Async_Request as Connection_Testing_Controller;
 use Ilabs\BM_Woocommerce\Data\Remote\Ga4_Service_Client;
 use Ilabs\BM_Woocommerce\Domain\Service\Currency\Currency;
 use Ilabs\BM_Woocommerce\Domain\Service\Custom_Styles\Css_Editor;
@@ -16,13 +15,12 @@ use Ilabs\BM_Woocommerce\Domain\Service\Ga4\Complete_Transation_Use_Case;
 use Ilabs\BM_Woocommerce\Domain\Service\Ga4\Init_Checkout_Use_Case;
 use Ilabs\BM_Woocommerce\Domain\Service\Ga4\Remove_Product_From_Cart_Use_Case;
 use Ilabs\BM_Woocommerce\Domain\Service\Ga4\View_Product_On_List_Use_Case;
-use Ilabs\BM_Woocommerce\Domain\Service\Legacy\Importer;
 use Ilabs\BM_Woocommerce\Domain\Service\Settings\Currency_Tabs;
-use Ilabs\BM_Woocommerce\Domain\Service\Settings\Settings_Manager;
 use Ilabs\BM_Woocommerce\Domain\Service\Settings\WC_Form_Fields_Integration;
 use Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway;
 use Ilabs\BM_Woocommerce\Integration\Funnel_Builder\Funnel_Builder_Integration;
 use Ilabs\BM_Woocommerce\Integration\Woocommerce_Blocks\WC_Gateway_Autopay_Blocks_Support;
+use Ilabs\BM_Woocommerce\Utilities\Test_Connection\Strings;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Abstract_Ilabs_Plugin;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Alerts;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Event_Chain\Event\Wc_Add_To_Cart;
@@ -32,13 +30,11 @@ use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Event_Chain\Interfaces\Wc_Cart_Aware_I
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Event_Chain\Interfaces\Wc_Order_Aware_Interface;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Event_Chain\Interfaces\Wc_Product_Aware_Interface;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Features_Config_Interface;
-use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\File_System\Mime_Type;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Woocommerce_Logger;
 use WC_Order;
 use WC_Session;
 use WC_Session_Handler;
 use Ilabs\BM_Woocommerce\Controller\Payment_Status_Controller;
-use Ilabs\BM_Woocommerce\Domain\Service\Product_Feed\Product_Feed;
 use WP_Post;
 
 class Plugin extends Abstract_Ilabs_Plugin {
@@ -50,6 +46,8 @@ class Plugin extends Abstract_Ilabs_Plugin {
 
 	private static ?Currency $currency_manager = null;
 
+	private static ?Connection_Testing_Controller $connection_testing_controller = null;
+
 	/**
 	 * @var Blue_Media_Gateway
 	 */
@@ -60,22 +58,26 @@ class Plugin extends Abstract_Ilabs_Plugin {
 	 */
 	private static bool $inactive_on_frontend = false;
 
-	public function get_logger(
-	): \Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Logger\Logger_Interface {
-		return new \Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Logger\Wp_Debug_Logger();
-	}
-
-	public function get_woocommerce_logger(): Woocommerce_Logger {
+	public function get_woocommerce_logger(
+		?string $log_id = null,
+		bool $force = false
+	): Woocommerce_Logger {
 		$settings = get_option( 'woocommerce_bluemedia_settings' );
+
+		$log_id = apply_filters('autopay_log_id', $log_id);
+
+		if ( ! $log_id ) {
+			$log_id = $this->get_from_config( 'slug' );
+		}
 
 		$debug_mode = 'no';
 		if ( is_array( $settings ) && isset( $settings['debug_mode'] ) ) {
 			$debug_mode = $settings['debug_mode'];
 		}
 
-		$logger = parent::get_woocommerce_logger();
+		$logger = new Woocommerce_Logger( $log_id );
 
-		if ( 'yes' === $debug_mode ) {
+		if ( 'yes' === $debug_mode || $force ) {
 			$logger->set_null_logger( false );
 		} else {
 			$logger->set_null_logger( true );
@@ -110,6 +112,7 @@ class Plugin extends Abstract_Ilabs_Plugin {
 		$this->implement_ga4();
 		$this->implement_ga4_serverside();
 
+		$this->get_connection_testing_controller()->handle();
 		( new Payment_Status_Controller() )->handle();
 
 		add_action( 'bm_cancel_failed_pending_order_after_one_hour',
@@ -274,6 +277,21 @@ class Plugin extends Abstract_Ilabs_Plugin {
 						[ 'jquery' ],
 						1.1,
 						true );
+
+					wp_enqueue_script( $this->get_plugin_prefix() . '_test_con_js',
+						$this->get_plugin_js_url() . '/testConnection.js',
+						[ 'jquery' ],
+						1.1,
+						true );
+
+					wp_localize_script( $this->get_plugin_prefix() . '_test_con_js',
+						'autopayAuditData',
+						[
+							'adminAjaxUrl'        => esc_url( admin_url( 'admin-ajax.php' ) ),
+							'adminAjaxActionName' => sanitize_text_field( Connection_Testing_Controller::AJAX_ACTION_NAME ),
+							'strings'             => Strings::get_strings(),
+						]
+					);
 
 					wp_localize_script( $this->get_plugin_prefix() . '_admin_js',
 						'blueMedia',
@@ -725,6 +743,15 @@ class Plugin extends Abstract_Ilabs_Plugin {
 		}
 
 		return self::$currency_manager;
+	}
+
+	public function get_connection_testing_controller(
+	): Connection_Testing_Controller {
+		if ( ! self::$connection_testing_controller ) {
+			self::$connection_testing_controller = new Connection_Testing_Controller();
+		}
+
+		return self::$connection_testing_controller;
 	}
 
 	public function get_autopay_option( string $key, $default = null ) {
