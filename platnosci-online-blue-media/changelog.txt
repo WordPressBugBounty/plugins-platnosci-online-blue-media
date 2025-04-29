@@ -1,5 +1,10 @@
 *** Autopay Changelog ***
 
+## [4.6.1] - 2025-04-29
+
+### Added
+- **Product feed** Added support for Autopay Product ADS – enabled product feed generation and implementation of advertising tags required for the service.
+
 ## [4.6.0] - 2025-04-22
 
 ### Added

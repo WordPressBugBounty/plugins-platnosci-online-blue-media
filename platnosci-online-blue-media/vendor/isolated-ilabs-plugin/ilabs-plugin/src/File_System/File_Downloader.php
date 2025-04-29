@@ -6,8 +6,11 @@ use Exception;
 use ZipArchive;
 class File_Downloader
 {
-    public function __construct()
+    private $download_url_key;
+    public function __construct(string $download_url_key)
     {
+        $download_url_key = sanitize_key($download_url_key);
+        $this->download_url_key = $download_url_key . '_download';
         // Hook for deleting expired transients
         /*add_action( 'delete_expired_transients',
         		[ $this, 'cleanup_expired_transients' ] );*/
@@ -19,10 +22,17 @@ class File_Downloader
      * @return string
      * @throws Exception
      */
-    public function get_download_url(array $files, int $validity) : string
+    public function get_download_url(array $files, int $validity, string $zip_file_name = '', bool $always_create_zip = \true) : string
     {
+        if (empty($files)) {
+            return '';
+        }
+        $zip_file_name = sanitize_file_name($zip_file_name);
+        if ($zip_file_name === '') {
+            $zip_file_name = $this->get_random_sanitized_filename();
+        }
         // Check if there's only one file
-        if (\count($files) === 1) {
+        if (\count($files) === 1 && $always_create_zip === \false) {
             $file = $files[0];
             // Ensure the file has a temporary path
             if (empty($file->get_temp_path())) {
@@ -31,18 +41,19 @@ class File_Downloader
             // Generate a random MD5 hash
             $random_md5 = \md5(\uniqid(\rand(), \true));
             // Prepare the transient value
-            $transient_key = 'autopay_download_' . $random_md5;
+            $transient_key = $this->download_url_key . $random_md5;
             $transient_value = ['name' => $file->get_name(), 'path' => $file->get_temp_path(), 'mime' => $file->get_mime_type()];
             // Save the transient with the specified validity period
             set_transient($transient_key, $transient_value, $validity);
             // Generate the download URL
             $site_url = get_site_url();
-            $download_url = $site_url . '?autopay_download=' . $random_md5;
+            //$download_url = $site_url . '?' + i_plugin_download=' . $random_md5;
+            $download_url = add_query_arg([$this->download_url_key => $random_md5], $site_url);
             return $download_url;
         } else {
             // Handle multiple files - create a zip
             $zip = new ZipArchive();
-            $zip_name = 'autopay_' . \time() . '.zip';
+            $zip_name = $zip_file_name . '.zip';
             $zip_path = \sys_get_temp_dir() . \DIRECTORY_SEPARATOR . $zip_name;
             if ($zip->open($zip_path, ZipArchive::CREATE) !== \true) {
                 throw new Exception("Cannot open <{$zip_path}>\n");
@@ -59,21 +70,19 @@ class File_Downloader
             $zip_file->set_temp_path($zip_path);
             $zip_file->resolve_mime_type();
             // Recursively call get_download_url with the zip file
-            return $this->get_download_url([$zip_file], $validity);
+            return $this->get_download_url([$zip_file], $validity, '', \false);
         }
     }
     public function handle() : void
     {
-        if (isset($_GET['autopay_download'])) {
-            $download_key = sanitize_text_field($_GET['autopay_download']);
-            $transient_key = 'autopay_download_' . $download_key;
+        if (isset($_GET[$this->download_url_key])) {
+            $download_key = sanitize_text_field($_GET[$this->download_url_key]);
+            $transient_key = $this->download_url_key . $download_key;
             $transient_value = get_transient($transient_key);
             if ($transient_value) {
                 $file = new File($transient_value['name']);
                 $file->set_temp_path($transient_value['path']);
                 $file->set_mime_type($transient_value['mime']);
-
-
                 if (\file_exists($file->get_temp_path())) {
                     \header('Content-Description: File Transfer');
                     \header('Content-Type: ' . $file->get_mime_type());
@@ -95,7 +104,7 @@ class File_Downloader
     {
         global $wpdb;
         // Query for expired transients
-        $expired_transients = $wpdb->get_results("\n            SELECT option_name FROM {$wpdb->options}\n            WHERE option_name LIKE '_transient_timeout_autopay_download_%'\n            AND option_value < UNIX_TIMESTAMP()\n        ");
+        $expired_transients = $wpdb->get_results("\n            SELECT option_name FROM {$wpdb->options}\n            WHERE option_name LIKE '_transient_timeout_i_plugin_download_%'\n            AND option_value < UNIX_TIMESTAMP()\n        ");
         foreach ($expired_transients as $transient) {
             $transient_key = \str_replace('_transient_timeout_', '', $transient->option_name);
             $file_info = get_transient($transient_key);
@@ -109,5 +118,9 @@ class File_Downloader
             // Delete the transient
             delete_transient($transient_key);
         }
+    }
+    public function get_random_sanitized_filename() : string
+    {
+        return sanitize_file_name(\substr(\md5(\uniqid(\rand(), \true)), 0, 10));
     }
 }

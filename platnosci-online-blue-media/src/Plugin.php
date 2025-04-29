@@ -4,6 +4,7 @@ namespace Ilabs\BM_Woocommerce;
 
 use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 use Exception;
+use Ilabs\BM_Woocommerce\Domain\Service\Product_Feed\Product_Feed;
 use Ilabs\BM_Woocommerce\Utilities\Test_Connection\Async_Request as Connection_Testing_Controller;
 use Ilabs\BM_Woocommerce\Data\Remote\Ga4_Service_Client;
 use Ilabs\BM_Woocommerce\Domain\Service\Currency\Currency;
@@ -62,9 +63,15 @@ class Plugin extends Abstract_Ilabs_Plugin {
 		?string $log_id = null,
 		bool $force = false
 	): Woocommerce_Logger {
+
+		$transient_value = (string) get_transient( 'autopay_debug_enabled' );
+		if ( 'on' === $transient_value ) {
+			$force = true;
+		}
+
 		$settings = get_option( 'woocommerce_bluemedia_settings' );
 
-		$log_id = apply_filters('autopay_log_id', $log_id);
+		$log_id = apply_filters( 'autopay_log_id', $log_id );
 
 		if ( ! $log_id ) {
 			$log_id = $this->get_from_config( 'slug' );
@@ -104,8 +111,10 @@ class Plugin extends Abstract_Ilabs_Plugin {
 			[ $this, 'woocommerce_block_support' ] );
 
 
-		$lang_dir = $this->get_from_config('lang_dir');
-		load_plugin_textdomain($this->get_text_domain(), \false, $this->get_plugin_basename() . "/{$lang_dir}/");
+		$lang_dir = $this->get_from_config( 'lang_dir' );
+		load_plugin_textdomain( $this->get_text_domain(),
+			\false,
+			$this->get_plugin_basename() . "/{$lang_dir}/" );
 
 		$this->init_payment_gateway();
 
@@ -248,15 +257,24 @@ class Plugin extends Abstract_Ilabs_Plugin {
 					'ga4TrackingId' => $ga4_tracking_id,
 				]
 			);
+		}
 
-			wp_enqueue_script( $this->get_plugin_prefix() . '_autopay_pixel',
-				"https://plugins-api.autopay.pl/dokumenty/autopay-pixel.js?ecommerce=woocommerce&ecommerce_version=$wp_version&programming_language_version=" . phpversion() . "&plugin_name=Autopay_Blue_Media&plugin_version=" . blue_media()->get_plugin_version(),
-				[],
-				null
-			);
+		if ( $this->get_autopay_option( 'campaign_tracking',
+				'no' ) === 'yes' ) {
+
+			$pixel_js_src = $this->get_product_feed()
+			                     ->get_pixel_js_src();
+
+			if ( is_string( $pixel_js_src ) ) {
+				wp_enqueue_script(
+					$this->get_plugin_prefix() . '_autopay_pixel',
+					$pixel_js_src,
+					[],
+					$this->get_plugin_version()
+				);
+			}
 		}
 	}
-
 
 	/**
 	 * @throws Exception
@@ -471,6 +489,7 @@ class Plugin extends Abstract_Ilabs_Plugin {
 	 * @throws Exception
 	 */
 	public function init() {
+		$this->init_product_feed();
 		$this->check_woocommerce_version();
 		$this->blue_media_currency = $this->resolve_blue_media_currency_symbol();
 
@@ -505,6 +524,12 @@ class Plugin extends Abstract_Ilabs_Plugin {
 
 		$this->init_custom_css();
 
+	}
+
+	private function init_product_feed() {
+		$product_feed = new Product_Feed();
+
+		$product_feed->init();
 	}
 
 	private function init_payment_gateway() {
@@ -667,7 +692,7 @@ class Plugin extends Abstract_Ilabs_Plugin {
 
 
 	private function reposition_on_activate() {
-		$id = 'bluemedia';
+		$id    = 'bluemedia';
 		$array = (array) get_option( 'woocommerce_gateway_order' );
 
 		if ( array_key_exists( 'pre_install_woocommerce_payments_promotion',
@@ -787,5 +812,9 @@ class Plugin extends Abstract_Ilabs_Plugin {
 				update_option( 'woocommerce_bluemedia_settings', $settings );
 			}
 		}
+	}
+
+	public function get_product_feed(): Product_Feed {
+		return new Product_Feed();
 	}
 }

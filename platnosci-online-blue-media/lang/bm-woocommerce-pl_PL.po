@@ -672,8 +672,8 @@ msgstr "Poznaj Autopay."
 msgid "Advertising services"
 msgstr "Usługi reklamowe"
 
-msgid "The Ad services is a comprehensive solution that enables merchants to effectively promote their products directly from the shop's administration panel. The service is fully integrated with WooCommerce which allows the automatic creation of advertising campaigns tailored to the shop's product range, customers' purchase history and analysis of their preferences."
-msgstr "Usługa świadczenia reklam to kompleksowe rozwiązanie, które umożliwia merchantom efektywne promowanie swoich produktów bezpośrednio z panelu administracyjnego sklepu. Usługa jest w pełni zintegrowana z WooCommerce co pozwala na automatyczne tworzenie kampanii reklamowych dopasowanych do asortymentu sklepu, historii zakupowej klientów oraz analizie ich preferencji."
+msgid "The Ad services is a comprehensive solution that enables merchants to effectively promote their products directly from the shop's administration panel. The service is fully integrated with WooCommerce which allows the automatic creation of advertising campaigns tailored to the shop's product range, customers' purchase history and analysis of their preferences. This option is available only for stores with a single active currency."
+msgstr "Usługa świadczenia reklam to kompleksowe rozwiązanie, które umożliwia merchantom efektywne promowanie swoich produktów bezpośrednio z panelu administracyjnego sklepu. Usługa jest w pełni zintegrowana z WooCommerce co pozwala na automatyczne tworzenie kampanii reklamowych dopasowanych do asortymentu sklepu, historii zakupowej klientów oraz analizie ich preferencji. Opcja dostępna wyłącznie dla sklepów, w których aktywna jest tylko jedna waluta."
 
 msgid "Enable campaign tracking via Autopay and publish the product stream."
 msgstr "Włącz śledzenie kampanii przez Autopay oraz opublikuj strumień produktów."
@@ -720,8 +720,8 @@ msgid "PHP version %s is below the minimum required version 7.4. Please update y
 msgstr "Wersja PHP %s jest niższa od minimalnie wymaganej 7.4. Proszę zaktualizować instalację PHP."
 
 #: Auditor.php:xxx
-msgid "PHP version %s is higher than 8.2. Potential compatibility issues detected."
-msgstr "Wersja PHP %s jest wyższa niż 8.2. Wykryto potencjalne problemy z kompatybilnością."
+msgid "PHP version %s is higher than 8.3. Some Wordpress configurations may experience compatibility issues."
+msgstr "Wersja PHP %s jest wyższa niż 8.3. W niektórych konfiguracjach Wordpressa mogą wystąpić problemy ze zgodnością."
 
 #: Auditor.php:xxx
 msgid "Missing required PHP extensions: %s. Please install them."

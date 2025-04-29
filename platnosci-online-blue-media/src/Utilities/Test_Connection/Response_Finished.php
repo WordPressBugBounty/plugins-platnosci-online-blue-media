@@ -57,8 +57,11 @@ class Response_Finished extends Abstract_Response {
 
 	public function to_array(): array {
 		$log = [];
-		foreach ( $this->log as $k => $v ) {
-			$log[] = $v->to_array();
+		foreach ( $this->log as $v ) {
+			if ( $v instanceof Log_Entry ) {
+				$log[] = $v->to_array();
+			}
+
 		}
 
 		return [

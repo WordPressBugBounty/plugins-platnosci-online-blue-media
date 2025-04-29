@@ -141,7 +141,7 @@ class Settings_Manager {
 
 			case Settings_Tabs::ADVERTISING_SERVICES_TAB_ID:
 				$section_title    = $tabs->get_active_tab_name();
-				$section_subtitle = __( "The Ad services is a comprehensive solution that enables merchants to effectively promote their products directly from the shop's administration panel. The service is fully integrated with WooCommerce which allows the automatic creation of advertising campaigns tailored to the shop's product range, customers' purchase history and analysis of their preferences.",
+				$section_subtitle = __( "The Ad services is a comprehensive solution that enables merchants to effectively promote their products directly from the shop's administration panel. The service is fully integrated with WooCommerce which allows the automatic creation of advertising campaigns tailored to the shop's product range, customers' purchase history and analysis of their preferences. This option is available only for stores with a single active currency.",
 					'bm-woocommerce' );
 				break;
 			case Settings_Tabs::PAYMENT_SETTINGS_TAB_ID:

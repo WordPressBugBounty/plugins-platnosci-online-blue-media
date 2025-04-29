@@ -180,7 +180,7 @@ abstract class Abstract_Ilabs_Plugin
     public function get_file_downloader() : File_Downloader
     {
         if (!$this->file_downloader) {
-            $file_downloader = new File_Downloader();
+            $file_downloader = new File_Downloader($this->get_from_config('slug'));
             $this->file_downloader = $file_downloader;
         }
         return $this->file_downloader;

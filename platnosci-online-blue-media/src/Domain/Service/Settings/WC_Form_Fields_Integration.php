@@ -114,7 +114,7 @@ class WC_Form_Fields_Integration {
 					[
 						'bottom_description' => __( 'See how you can run straightforward campaigns with us!',
 								'bm-woocommerce' )
-						                        . ' ' . '<a target="_blank" href="https://developers.autopay.pl/kontakt?utm_campaign=help&utm_source=woocommerce_panel&utm_medium=text_link">'
+						                        . ' ' . '<a target="_blank" href="https://autopay.pl/oferta/reklama-produktow-w-google-i-meta">'
 						                        . ' ' . __( 'Launch in 5 minutes!',
 								'bm-woocommerce' ) . '</a>',
 

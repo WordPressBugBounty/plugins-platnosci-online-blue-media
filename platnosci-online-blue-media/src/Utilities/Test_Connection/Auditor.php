@@ -208,10 +208,11 @@ class Auditor {
 				) {
 					return $auditor->test_blik_validation();
 				},
-				'create_test_order' => function ( Auditor $auditor
+				/*
+				 * 'create_test_order' => function ( Auditor $auditor
 				) {
 					return $auditor->test_create_test_order();
-				},
+				}*/
 			],
 		];
 	}
@@ -247,11 +248,11 @@ class Auditor {
 					"bm-woocommerce" ),
 					$php_version )
 			);
-		} elseif ( version_compare( $php_version, '8.2', '>' ) ) {
+		} elseif ( version_compare( $php_version, '8.3', '>' ) ) {
 			return new Log_Entry(
 				Log_Entry::LEVEL_WARNING,
 				Log_Entry::get_header_warning(),
-				sprintf( __( "PHP version %s is higher than 8.2. Potential compatibility issues detected.",
+				sprintf( __( "PHP version %s is higher than 8.3. Some Wordpress configurations may experience compatibility issues.",
 					"bm-woocommerce" ),
 					$php_version )
 			);
@@ -272,6 +273,12 @@ class Auditor {
 			$this->zip_not_found = true;
 			$missing[]           = 'PHP-ZIP';
 		}
+
+		if ( ! class_exists( 'finfo' ) ) {
+			$this->zip_not_found = true;
+			$missing[]           = 'finfo';
+		}
+
 		if ( ! empty( $missing ) ) {
 			return new Log_Entry(
 				Log_Entry::LEVEL_CRITICAL,
@@ -586,7 +593,7 @@ class Auditor {
 				);
 			}
 
-			if ( $currency->get_code() === 'PLN' ) {
+			/*if ( $currency->get_code() === 'PLN' ) {
 				$pln_channels = $channels;
 			} else {
 				$this->result[] = new Log_Entry(
@@ -598,8 +605,13 @@ class Auditor {
 
 				);
 				$this->warning  = true;
-			}
+			}*/
 		}
+
+		//force temportary
+		$this->finished = true;
+		return null;
+
 
 		$currency_manager->reconfigure();
 

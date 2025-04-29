@@ -23,6 +23,7 @@ class Async_Request implements Controller_Interface {
 		try {
 			error_reporting( E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED );
 			ini_set( 'display_errors', 1 );
+			set_transient( 'autopay_debug_enabled', 'on', 3000 );
 
 			add_filter( 'autopay_log_id', function ( $id ) {
 				return 'bm_woocommerce_audit';
@@ -100,7 +101,7 @@ class Async_Request implements Controller_Interface {
 						if ( $auditor->is_zip_not_found() ) {
 							$logs_url = '';
 						} else {
-							$logs_url = $this->get_logs_url();
+							$logs_url = $this->get_logs_url( $auditor->get_id() );
 						}
 
 						$response->set_wc_log_url( $logs_url );
@@ -110,7 +111,7 @@ class Async_Request implements Controller_Interface {
 						if ( $auditor->is_zip_not_found() ) {
 							$logs_url = '';
 						} else {
-							$logs_url = $this->get_logs_url();
+							$logs_url = $this->get_logs_url( $auditor->get_id() );
 						}
 
 						$response = new Response_Continue( $test_id,
@@ -153,6 +154,8 @@ class Async_Request implements Controller_Interface {
 					print_r( $_POST, true )
 				) );
 
+			delete_transient( 'autopay_debug_enabled' );
+
 			echo wp_json_encode( [
 				'status'  => 'error',
 				'message' => $exception->getMessage(),
@@ -162,7 +165,7 @@ class Async_Request implements Controller_Interface {
 
 	}
 
-	public function get_logs_url() {
+	public function get_logs_url( string $test_id ) {
 		$logs = $this->get_autopay_audit_logs();
 		blue_media()
 			->get_woocommerce_logger( 'testing' )
@@ -177,9 +180,11 @@ class Async_Request implements Controller_Interface {
 			$files[] = $file;
 		}
 
-		$downloader = new File_Downloader();
+		$downloader = blue_media()->get_file_downloader();
 
-		return $downloader->get_download_url( $files, 3000 );
+		return $downloader->get_download_url( $files,
+			3000,
+			'autopay_logs_' . $test_id );
 
 	}
 
