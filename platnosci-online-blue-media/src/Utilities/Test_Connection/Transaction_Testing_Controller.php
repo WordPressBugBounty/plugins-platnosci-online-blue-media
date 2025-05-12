@@ -49,7 +49,8 @@ class Transaction_Testing_Controller {
 			return new Log_Entry(
 				Log_Entry::LEVEL_CRITICAL,
 				Log_Entry::get_header_critical(),
-				( new Strings() )::get_strings()['criticalGenericMessage']
+				( new Strings() )::get_strings()['criticalGenericMessage'] . sprintf( ' [Error message: %s]',
+					$exception->getMessage() )
 			);
 		}
 

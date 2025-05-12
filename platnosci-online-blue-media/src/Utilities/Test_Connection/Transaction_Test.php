@@ -14,7 +14,6 @@ class Transaction_Test {
 	 */
 	public function initialize( WC_Order $order ) {
 		$bm_gateway              = blue_media()->get_blue_media_gateway();
-		$blik_authorization_code = '888888';
 		$client                  = new Client();
 		$params                  = [
 			'ServiceID'         => $bm_gateway->get_service_id(),
@@ -26,7 +25,6 @@ class Transaction_Test {
 			'CustomerEmail'     => $order->get_billing_email(),
 			'CustomerIP'        => '127.0.0.1',
 			'Title'             => (string) $order->get_id(),
-			'AuthorizationCode' => $blik_authorization_code,
 		];
 
 		$params = array_merge( $params, [

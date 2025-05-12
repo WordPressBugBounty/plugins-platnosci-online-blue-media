@@ -208,11 +208,10 @@ class Auditor {
 				) {
 					return $auditor->test_blik_validation();
 				},
-				/*
-				 * 'create_test_order' => function ( Auditor $auditor
+				 'create_test_order' => function ( Auditor $auditor
 				) {
 					return $auditor->test_create_test_order();
-				}*/
+				}
 			],
 		];
 	}
@@ -593,7 +592,7 @@ class Auditor {
 				);
 			}
 
-			/*if ( $currency->get_code() === 'PLN' ) {
+			if ( $currency->get_code() === 'PLN' ) {
 				$pln_channels = $channels;
 			} else {
 				$this->result[] = new Log_Entry(
@@ -605,13 +604,8 @@ class Auditor {
 
 				);
 				$this->warning  = true;
-			}*/
+			}
 		}
-
-		//force temportary
-		$this->finished = true;
-		return null;
-
 
 		$currency_manager->reconfigure();
 
