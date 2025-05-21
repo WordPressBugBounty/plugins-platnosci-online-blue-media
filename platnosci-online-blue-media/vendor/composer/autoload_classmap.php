@@ -62,7 +62,6 @@ return array(
     'Ilabs\\BM_Woocommerce\\Gateway\\Blue_Media_Gateway' => $baseDir . '/src/Gateway/Blue_Media_Gateway.php',
     'Ilabs\\BM_Woocommerce\\Gateway\\Hooks' => $baseDir . '/src/Gateway/Hooks.php',
     'Ilabs\\BM_Woocommerce\\Gateway\\Hooks\\Payment_On_Account_Page' => $baseDir . '/src/Gateway/Hooks/Payment_On_Account_Page.php',
-    'Ilabs\\BM_Woocommerce\\Gateway\\Webhook\\Order_Remote_Status_Manager' => $baseDir . '/src/Gateway/Webhook/Order_Remote_Status_Manager.php',
     'Ilabs\\BM_Woocommerce\\Helpers\\Helper' => $baseDir . '/src/Helpers/Helper.php',
     'Ilabs\\BM_Woocommerce\\Integration\\Funnel_Builder\\Funnel_Builder_Integration' => $baseDir . '/src/Integration/Funnel_Builder/Funnel_Builder_Integration.php',
     'Ilabs\\BM_Woocommerce\\Integration\\Woocommerce_Blocks\\WC_Gateway_Autopay_Blocks_Support' => $baseDir . '/src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php',

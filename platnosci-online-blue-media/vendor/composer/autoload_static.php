@@ -82,7 +82,6 @@ class ComposerStaticInitcb6b96e899c87ec705e2eabecbd88946
         'Ilabs\\BM_Woocommerce\\Gateway\\Blue_Media_Gateway' => __DIR__ . '/../..' . '/src/Gateway/Blue_Media_Gateway.php',
         'Ilabs\\BM_Woocommerce\\Gateway\\Hooks' => __DIR__ . '/../..' . '/src/Gateway/Hooks.php',
         'Ilabs\\BM_Woocommerce\\Gateway\\Hooks\\Payment_On_Account_Page' => __DIR__ . '/../..' . '/src/Gateway/Hooks/Payment_On_Account_Page.php',
-        'Ilabs\\BM_Woocommerce\\Gateway\\Webhook\\Order_Remote_Status_Manager' => __DIR__ . '/../..' . '/src/Gateway/Webhook/Order_Remote_Status_Manager.php',
         'Ilabs\\BM_Woocommerce\\Helpers\\Helper' => __DIR__ . '/../..' . '/src/Helpers/Helper.php',
         'Ilabs\\BM_Woocommerce\\Integration\\Funnel_Builder\\Funnel_Builder_Integration' => __DIR__ . '/../..' . '/src/Integration/Funnel_Builder/Funnel_Builder_Integration.php',
         'Ilabs\\BM_Woocommerce\\Integration\\Woocommerce_Blocks\\WC_Gateway_Autopay_Blocks_Support' => __DIR__ . '/../..' . '/src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php',

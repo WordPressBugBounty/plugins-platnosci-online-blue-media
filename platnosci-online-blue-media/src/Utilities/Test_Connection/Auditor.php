@@ -208,10 +208,10 @@ class Auditor {
 				) {
 					return $auditor->test_blik_validation();
 				},
-				 'create_test_order' => function ( Auditor $auditor
+				'create_test_order' => function ( Auditor $auditor
 				) {
 					return $auditor->test_create_test_order();
-				}
+				},
 			],
 		];
 	}
@@ -595,15 +595,11 @@ class Auditor {
 			if ( $currency->get_code() === 'PLN' ) {
 				$pln_channels = $channels;
 			} else {
-				$this->result[] = new Log_Entry(
-					Log_Entry::LEVEL_WARNING,
-					Log_Entry::get_header_warning(),
-					sprintf( __( "Transaction test is not available for currency: %s",
-						"bm-woocommerce" ),
-						$currency->get_code() ),
-
-				);
-				$this->warning  = true;
+				blue_media()->get_woocommerce_logger()->log_debug(
+					sprintf( '[Auditor] [test_blik_validation] [Transaction test is not available for currency: %s]',
+						print_r( $currency->get_code(),
+							true ),
+					) );
 			}
 		}
 
@@ -612,12 +608,12 @@ class Auditor {
 		if ( ! key_exists( 'PLN', $active_currencies ) ) {
 			$this->finished = true;
 
-			return new Log_Entry(
-				Log_Entry::LEVEL_WARNING,
-				Log_Entry::get_header_warning(),
-				__( "Transaction test is not available for your currency configuration",
-					"bm-woocommerce" )
-			);
+			blue_media()->get_woocommerce_logger()->log_debug(
+				sprintf( '[Auditor] [test_blik_validation] [Transaction test is not available for your currency configuration]'
+				) );
+
+
+			return null;
 		}
 
 
@@ -633,16 +629,13 @@ class Auditor {
 
 		$this->save();
 
-		if ( $this->data['blik0found'] === true ) {
-			return null;
-		} else {
-			return new Log_Entry(
-				Log_Entry::LEVEL_CRITICAL,
-				Log_Entry::get_header_critical(),
-				__( "Blik-0 payment channel not found, transaction test will not be performed",
-					"bm-woocommerce" )
-			);
+		if ( $this->data['blik0found'] !== true ) {
+			blue_media()->get_woocommerce_logger()->log_debug(
+				sprintf( '[Auditor] [test_blik_validation] [Blik-0 payment channel not found, transaction test will not be performed]'
+				) );
 		}
+
+		return null;
 	}
 
 
@@ -693,12 +686,11 @@ class Auditor {
 						) );
 				}
 
-				return new Log_Entry(
-					Log_Entry::LEVEL_CRITICAL,
-					Log_Entry::get_header_critical(),
-					__( "During the test transaction, the ITN (Instant Transaction Notification) message was not received within 30 seconds. Please verify the correctness of the URL where the ITN is sent. You can find it in the Autopay merchant panel.",
-						"bm-woocommerce" )
-				);
+				blue_media()->get_woocommerce_logger()->log_debug(
+					sprintf( '[Auditor] [test_create_test_order] [During the test transaction, the ITN (Instant Transaction Notification) message was not received within 30 seconds. Please verify the correctness of the URL where the ITN is sent. You can find it in the Autopay merchant panel.]',
+					) );
+
+				return null;
 			}
 
 
