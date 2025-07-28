@@ -147,6 +147,7 @@
                                             color: #CCC5C5;
                                             font-size: 33px;
                                             padding: 1.3em;
+                                            height: max-content;
                                             max-width: 600px;
                                             width: 80vw;
 
@@ -166,6 +167,7 @@
 
                                                 span {
                                                     display: inline-block;
+                                                    text-align: center !important;
 
                                                     &.bm-blik-overlay-status {
                                                         font-weight: bold;

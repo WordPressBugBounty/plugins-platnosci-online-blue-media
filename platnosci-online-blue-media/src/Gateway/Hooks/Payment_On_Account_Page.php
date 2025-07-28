@@ -60,8 +60,8 @@ class Payment_On_Account_Page {
 					)
 				);
 
-			$order_params_recovered = get_post_meta( $order_id,
-				'bm_order_payment_params', true );
+			$order                  = wc_get_order( $order_id );
+			$order_params_recovered = $order->get_meta( 'bm_order_payment_params' );
 
 			blue_media()
 				->get_woocommerce_logger()

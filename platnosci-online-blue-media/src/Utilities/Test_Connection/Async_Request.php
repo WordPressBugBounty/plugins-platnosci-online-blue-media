@@ -4,8 +4,6 @@ namespace Ilabs\BM_Woocommerce\Utilities\Test_Connection;
 
 use Exception;
 use Ilabs\BM_Woocommerce\Controller\Controller_Interface;
-use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\File_System\File;
-use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\File_System\File_Downloader;
 
 class Async_Request implements Controller_Interface {
 
@@ -166,25 +164,19 @@ class Async_Request implements Controller_Interface {
 	}
 
 	public function get_logs_url( string $test_id ) {
-		$logs = $this->get_autopay_audit_logs();
-		blue_media()
+		/*blue_media()
 			->get_woocommerce_logger( 'testing' )
 			->log_debug(
 				sprintf( '[Connection_Testing_Controller] [logs %s] ',
 					print_r( $logs, true )
-				) );
+				) );*/
 
-		$files = [];
-		foreach ( $logs as $k => $log ) {
-			$file    = new File( 'log_' . $k . '.txt', $log );
-			$files[] = $file;
-		}
+		$site_url = get_site_url();
+		//$download_url = $site_url . '?' + i_plugin_download=' . $random_md5;
+		$download_url = add_query_arg( [ 'autopay_download_log' => $test_id ],
+			$site_url );
 
-		$downloader = blue_media()->get_file_downloader();
-
-		return $downloader->get_download_url( $files,
-			3000,
-			'autopay_logs_' . $test_id );
+		return $download_url;
 
 	}
 
@@ -213,31 +205,5 @@ class Async_Request implements Controller_Interface {
 
 	public static function get_nonce_action(): string {
 		return 'autopay_audit_';
-	}
-
-
-	public function get_autopay_audit_logs() {
-
-		$upload_dir = wp_upload_dir();
-
-
-		$log_dir = trailingslashit( $upload_dir['basedir'] ) . 'wc-logs';
-
-
-		if ( ! is_dir( $log_dir ) ) {
-			return [];
-		}
-
-		$pattern = trailingslashit( $log_dir ) . '*bm_woocommerce*.log';
-
-
-		$files = glob( $pattern );
-
-
-		if ( false === $files ) {
-			$files = [];
-		}
-
-		return $files;
 	}
 }

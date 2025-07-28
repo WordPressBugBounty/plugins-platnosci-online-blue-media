@@ -3,6 +3,7 @@
 namespace Ilabs\BM_Woocommerce\Utilities\Test_Connection;
 
 use Exception;
+use Ilabs\BM_Woocommerce\Gateway\Webhook\Order_Remote_Status_Manager;
 use WC_Order;
 
 class Transaction_Testing_Controller {
@@ -20,8 +21,14 @@ class Transaction_Testing_Controller {
 
 
 			if ( $order instanceof WC_Order ) {
-				$orderId = $order->get_id();
+				$order_id = $order->get_id();
+				blue_media()->get_order_remote_status_manager()
+				            ->install_db_schema();
 
+				blue_media()->get_order_remote_status_manager()
+				            ->add_order_remote_status( $order_id,
+					            Order_Remote_Status_Manager::STATUS_TEST_CONNECTION
+				            );
 			} else {
 
 				return new Log_Entry(
@@ -32,7 +39,7 @@ class Transaction_Testing_Controller {
 				);
 			}
 
-			return $orderId;
+			return $order_id;
 
 		} catch ( Exception $exception ) {
 			blue_media()->get_woocommerce_logger()->log_error(

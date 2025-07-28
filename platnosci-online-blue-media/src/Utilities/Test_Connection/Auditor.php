@@ -127,6 +127,14 @@ class Auditor {
 		return $obj;
 	}
 
+	public static function delete( string $id ) {
+		$status = get_transient( 'autopay_audit_' . $id );
+		if ( $status ) {
+			delete_transient( 'autopay_audit_' . $id );
+		}
+
+	}
+
 	public function get_id(): string {
 		return $this->id;
 	}
@@ -271,11 +279,6 @@ class Auditor {
 		if ( ! extension_loaded( 'zip' ) ) {
 			$this->zip_not_found = true;
 			$missing[]           = 'PHP-ZIP';
-		}
-
-		if ( ! class_exists( 'finfo' ) ) {
-			$this->zip_not_found = true;
-			$missing[]           = 'finfo';
 		}
 
 		if ( ! empty( $missing ) ) {
@@ -660,7 +663,7 @@ class Auditor {
 			$this->itn_expiry_time = $current_time + 30;
 
 			if ( $order_id instanceof Log_Entry ) {
-				return $order_id;
+				return null;
 			}
 
 			if ( (int) $order_id > 0 ) {

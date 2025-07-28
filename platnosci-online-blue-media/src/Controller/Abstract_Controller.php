@@ -4,16 +4,23 @@ namespace Ilabs\BM_Woocommerce\Controller;
 
 
 use Ilabs\BM_Woocommerce\Controller\Model\Payment_Status_Response_Value_Object;
-use Ilabs\BM_Woocommerce\Utilities\Test_Connection\Response_Interface;
 
 abstract class Abstract_Controller {
 
 
 	protected function send_response(
-		Response_Interface $response
+		string $status,
+		string $message,
+		?string $order_received_url,
+		?string $continue_transaction_redirect_url
 
 	) {
-
+		$response = new Payment_Status_Response_Value_Object(
+			$status,
+			$message,
+			$order_received_url,
+			$continue_transaction_redirect_url
+		);
 
 
 		blue_media()->get_woocommerce_logger()->log_error(

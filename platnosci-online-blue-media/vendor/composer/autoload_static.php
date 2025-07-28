@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitcb6b96e899c87ec705e2eabecbd88946
+class ComposerStaticIniteebd8837611a2fbc14b20aae1df81b5f
 {
     public static $prefixLengthsPsr4 = array (
         'I' => 
@@ -75,6 +75,7 @@ class ComposerStaticInitcb6b96e899c87ec705e2eabecbd88946
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Settings\\WC_Form_Fields_Integration' => __DIR__ . '/../..' . '/src/Domain/Service/Settings/WC_Form_Fields_Integration.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Testing\\Order_Creator' => __DIR__ . '/../..' . '/src/Domain/Service/Testing/Order_Creator.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Testing\\Transaction_Test' => __DIR__ . '/../..' . '/src/Domain/Service/Testing/Transaction_Test.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Service\\Versioning\\Versioning' => __DIR__ . '/../..' . '/src/Domain/Service/Versioning/Versioning.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\White_Label\\Group_Mapper' => __DIR__ . '/../..' . '/src/Domain/Service/White_Label/Group_Mapper.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Woocommerce\\Autopay_Order' => __DIR__ . '/../..' . '/src/Domain/Woocommerce/Autopay_Order.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Woocommerce\\Autopay_Order_Factory' => __DIR__ . '/../..' . '/src/Domain/Woocommerce/Autopay_Order_Factory.php',
@@ -82,10 +83,13 @@ class ComposerStaticInitcb6b96e899c87ec705e2eabecbd88946
         'Ilabs\\BM_Woocommerce\\Gateway\\Blue_Media_Gateway' => __DIR__ . '/../..' . '/src/Gateway/Blue_Media_Gateway.php',
         'Ilabs\\BM_Woocommerce\\Gateway\\Hooks' => __DIR__ . '/../..' . '/src/Gateway/Hooks.php',
         'Ilabs\\BM_Woocommerce\\Gateway\\Hooks\\Payment_On_Account_Page' => __DIR__ . '/../..' . '/src/Gateway/Hooks/Payment_On_Account_Page.php',
+        'Ilabs\\BM_Woocommerce\\Gateway\\Webhook\\Order_Remote_Status_Legacy_Manager' => __DIR__ . '/../..' . '/src/Gateway/Webhook/Order_Remote_Status_Legacy_Manager.php',
+        'Ilabs\\BM_Woocommerce\\Gateway\\Webhook\\Order_Remote_Status_Manager' => __DIR__ . '/../..' . '/src/Gateway/Webhook/Order_Remote_Status_Manager.php',
         'Ilabs\\BM_Woocommerce\\Helpers\\Helper' => __DIR__ . '/../..' . '/src/Helpers/Helper.php',
         'Ilabs\\BM_Woocommerce\\Integration\\Funnel_Builder\\Funnel_Builder_Integration' => __DIR__ . '/../..' . '/src/Integration/Funnel_Builder/Funnel_Builder_Integration.php',
         'Ilabs\\BM_Woocommerce\\Integration\\Woocommerce_Blocks\\WC_Gateway_Autopay_Blocks_Support' => __DIR__ . '/../..' . '/src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php',
         'Ilabs\\BM_Woocommerce\\Plugin' => __DIR__ . '/../..' . '/src/Plugin.php',
+        'Ilabs\\BM_Woocommerce\\Utilities\\File_System\\Log_Downloader' => __DIR__ . '/../..' . '/src/Utilities/File_System/Log_Downloader.php',
         'Ilabs\\BM_Woocommerce\\Utilities\\Test_Connection\\Abstract_Response' => __DIR__ . '/../..' . '/src/Utilities/Test_Connection/Abstract_Response.php',
         'Ilabs\\BM_Woocommerce\\Utilities\\Test_Connection\\Async_Request' => __DIR__ . '/../..' . '/src/Utilities/Test_Connection/Async_Request.php',
         'Ilabs\\BM_Woocommerce\\Utilities\\Test_Connection\\Auditor' => __DIR__ . '/../..' . '/src/Utilities/Test_Connection/Auditor.php',
@@ -174,9 +178,6 @@ class ComposerStaticInitcb6b96e899c87ec705e2eabecbd88946
         'Isolated\\BlueMedia\\Ilabs\\Ilabs_Plugin\\Event_Chain\\Wp_Options_Based_Cache' => __DIR__ . '/..' . '/isolated-ilabs-plugin/ilabs-plugin/src/Event_Chain/Wp_Options_Based_Cache.php',
         'Isolated\\BlueMedia\\Ilabs\\Ilabs_Plugin\\Features' => __DIR__ . '/..' . '/isolated-ilabs-plugin/ilabs-plugin/src/Features.php',
         'Isolated\\BlueMedia\\Ilabs\\Ilabs_Plugin\\Features_Config_Interface' => __DIR__ . '/..' . '/isolated-ilabs-plugin/ilabs-plugin/src/Features_Config_Interface.php',
-        'Isolated\\BlueMedia\\Ilabs\\Ilabs_Plugin\\File_System\\File' => __DIR__ . '/..' . '/isolated-ilabs-plugin/ilabs-plugin/src/File_System/File.php',
-        'Isolated\\BlueMedia\\Ilabs\\Ilabs_Plugin\\File_System\\File_Downloader' => __DIR__ . '/..' . '/isolated-ilabs-plugin/ilabs-plugin/src/File_System/File_Downloader.php',
-        'Isolated\\BlueMedia\\Ilabs\\Ilabs_Plugin\\File_System\\Mime_Type' => __DIR__ . '/..' . '/isolated-ilabs-plugin/ilabs-plugin/src/File_System/Mime_Type.php',
         'Isolated\\BlueMedia\\Ilabs\\Ilabs_Plugin\\Helper\\Core' => __DIR__ . '/..' . '/isolated-ilabs-plugin/ilabs-plugin/src/Helper/Core.php',
         'Isolated\\BlueMedia\\Ilabs\\Ilabs_Plugin\\Logger\\Logger_Interface' => __DIR__ . '/..' . '/isolated-ilabs-plugin/ilabs-plugin/src/Logger/Logger_Interface.php',
         'Isolated\\BlueMedia\\Ilabs\\Ilabs_Plugin\\Logger\\Null_Logger' => __DIR__ . '/..' . '/isolated-ilabs-plugin/ilabs-plugin/src/Logger/Null_Logger.php',
@@ -234,9 +235,9 @@ class ComposerStaticInitcb6b96e899c87ec705e2eabecbd88946
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitcb6b96e899c87ec705e2eabecbd88946::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitcb6b96e899c87ec705e2eabecbd88946::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitcb6b96e899c87ec705e2eabecbd88946::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticIniteebd8837611a2fbc14b20aae1df81b5f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticIniteebd8837611a2fbc14b20aae1df81b5f::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticIniteebd8837611a2fbc14b20aae1df81b5f::$classMap;
 
         }, null, ClassLoader::class);
     }

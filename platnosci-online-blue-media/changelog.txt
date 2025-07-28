@@ -1,5 +1,16 @@
 *** Autopay Changelog ***
 
+## [4.6.4] - 2025-07-28
+
+### Added
+- **Improved ITN status processing**
+- **Full HPOS support**
+
+### Fixed
+- Test Connection module is now compatible with the ”Sandbox Mode for logged-in administrator” option
+- In certain scenarios, REST API requests cause a fatal error in the multi-currency module
+
+
 ## [4.6.3] - 2025-05-21
 
 ### Fixed **Test Connection** - Improved compatibility with production environment.

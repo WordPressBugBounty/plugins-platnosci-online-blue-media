@@ -5,8 +5,6 @@ namespace Isolated\BlueMedia\Ilabs\Ilabs_Plugin;
 
 use Exception;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Event_Chain\Event_Chain;
-use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\File_System\File;
-use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\File_System\File_Downloader;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Helper\Core;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Logger\Logger_Interface;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Logger\Null_Logger;
@@ -28,10 +26,6 @@ abstract class Abstract_Ilabs_Plugin
      * @var Features | null
      */
     protected ?Features $features = null;
-    /**
-     * @var File_Downloader | null
-     */
-    protected ?File_Downloader $file_downloader = null;
     /**
      * @param array $config
      *
@@ -55,7 +49,6 @@ abstract class Abstract_Ilabs_Plugin
         if (!self::$logger) {
             self::$logger = new Null_Logger();
         }
-        $this->get_file_downloader()->handle();
         add_action('init', function () {
             $this->enqueue_scripts();
             $this->init();
@@ -176,18 +169,6 @@ abstract class Abstract_Ilabs_Plugin
             $this->features = $features;
         }
         return $this->features;
-    }
-    public function get_file_downloader() : File_Downloader
-    {
-        if (!$this->file_downloader) {
-            $file_downloader = new File_Downloader($this->get_from_config('slug'));
-            $this->file_downloader = $file_downloader;
-        }
-        return $this->file_downloader;
-    }
-    public function get_file(string $name, ?string $path = null, ?string $content = null) : File
-    {
-        return new File($name, $path, $content);
     }
     public abstract function enqueue_frontend_scripts();
     public abstract function enqueue_dashboard_scripts();

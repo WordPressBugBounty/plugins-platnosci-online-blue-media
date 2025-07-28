@@ -37,9 +37,9 @@ class Transaction_Test {
 				$params ),
 		] );
 
-		update_post_meta( $order->get_id(),
-			'bm_transaction_init_params',
-			$params );
+
+		$order->update_meta_data('bm_transaction_init_params', $params);
+		$order->save_meta_data();
 
 		$result = $bm_gateway->decode_continue_transaction_response( $client->continue_transaction_request(
 			$params,

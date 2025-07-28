@@ -4,7 +4,10 @@ namespace Ilabs\BM_Woocommerce;
 
 use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 use Exception;
+
 use Ilabs\BM_Woocommerce\Domain\Service\Product_Feed\Product_Feed;
+use Ilabs\BM_Woocommerce\Gateway\Webhook\Order_Remote_Status_Manager;
+use Ilabs\BM_Woocommerce\Utilities\File_System\Log_Downloader;
 use Ilabs\BM_Woocommerce\Utilities\Test_Connection\Async_Request as Connection_Testing_Controller;
 use Ilabs\BM_Woocommerce\Data\Remote\Ga4_Service_Client;
 use Ilabs\BM_Woocommerce\Domain\Service\Currency\Currency;
@@ -37,6 +40,7 @@ use WC_Session;
 use WC_Session_Handler;
 use Ilabs\BM_Woocommerce\Controller\Payment_Status_Controller;
 use WP_Post;
+use WP_REST_Request;
 
 class Plugin extends Abstract_Ilabs_Plugin {
 
@@ -53,6 +57,12 @@ class Plugin extends Abstract_Ilabs_Plugin {
 	 * @var Blue_Media_Gateway
 	 */
 	private static $blue_media_gateway;
+
+	/**
+	 * @var Log_Downloader | null
+	 */
+	protected ?Log_Downloader $file_downloader = null;
+
 
 	/**
 	 * @var bool
@@ -101,6 +111,10 @@ class Plugin extends Abstract_Ilabs_Plugin {
 	 * @throws Exception
 	 */
 	protected function before_init() {
+		if ( stripos( $_SERVER['REQUEST_URI'], 'wp-json/wc/v3' ) !== false ) {
+			return;
+		}
+
 		$this->configure_third_party_integrations();
 		$this->start_output_buffer_on_itn_request();
 
@@ -139,6 +153,9 @@ class Plugin extends Abstract_Ilabs_Plugin {
 					}
 				}
 			} );
+
+		$this->get_file_downloader()->handle();
+
 	}
 
 	private function init_custom_css() {
@@ -489,6 +506,12 @@ class Plugin extends Abstract_Ilabs_Plugin {
 	 * @throws Exception
 	 */
 	public function init() {
+		if ( stripos( $_SERVER['REQUEST_URI'], 'wp-json/wc/v3' ) !== false ) {
+			return;
+		}
+
+		$stat = $this->get_order_remote_status_manager();
+
 		$this->init_product_feed();
 		$this->check_woocommerce_version();
 		$this->blue_media_currency = $this->resolve_blue_media_currency_symbol();
@@ -688,6 +711,8 @@ class Plugin extends Abstract_Ilabs_Plugin {
 
 	public function plugin_activate_actions() {
 		update_option( 'bluemedia_activated', '1' );
+
+		$this->get_order_remote_status_manager()->install_db_schema();
 	}
 
 
@@ -814,7 +839,21 @@ class Plugin extends Abstract_Ilabs_Plugin {
 		}
 	}
 
+	public function get_order_remote_status_manager(
+	): Order_Remote_Status_Manager {
+		return new Order_Remote_Status_Manager();
+	}
+
 	public function get_product_feed(): Product_Feed {
 		return new Product_Feed();
+	}
+
+	public function get_file_downloader(): Log_Downloader {
+		if ( ! $this->file_downloader ) {
+			$file_downloader       = new Log_Downloader();
+			$this->file_downloader = $file_downloader;
+		}
+
+		return $this->file_downloader;
 	}
 }

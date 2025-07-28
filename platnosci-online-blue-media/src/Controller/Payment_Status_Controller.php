@@ -15,7 +15,7 @@ class Payment_Status_Controller extends Abstract_Controller implements Controlle
 	const NONCE_ACTION = 'bluemedia_payment';
 
 	public function execute_request() {
-		$order_id = WC()->session->get( 'bm_wc_order_id' );
+		$order_id                = WC()->session->get( 'bm_wc_order_id' );
 		$transaction_start_error = WC()->session->get( 'bm_continue_transaction_start_error' );
 
 
@@ -58,9 +58,9 @@ class Payment_Status_Controller extends Abstract_Controller implements Controlle
 			);
 		}
 
-		$itn_status = (string) get_post_meta( $order_id,
-			'bm_order_itn_status',
-			true );
+		$order      = wc_get_order( $order_id );
+		$itn_status = (string) $order->get_meta( 'bm_order_itn_status' );
+
 
 		$continue_transaction_redirect_url = WC()->session->get( 'bm_continue_transaction_redirect_url' );
 
@@ -85,14 +85,11 @@ class Payment_Status_Controller extends Abstract_Controller implements Controlle
 				$status = Payment_Status_Response_Value_Object::STATUS_WAIT;
 		}
 
-
-		$response_object = new Payment_Status_Response_Value_Object(
-			$status,
+		$this->send_response( $status,
 			Payment_Status_Response_Value_Object::get_message_by_itn_status_id( $itn_status ),
 			WC()->session->get( 'bm_original_order_received_url' ),
 			$continue_transaction_redirect_url
 		);
-		$this->send_response($response_object);
 	}
 
 	public function handle() {

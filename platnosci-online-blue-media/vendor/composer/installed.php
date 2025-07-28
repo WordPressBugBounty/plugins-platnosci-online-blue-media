@@ -38,8 +38,8 @@
             'dev_requirement' => false,
         ),
         'isolated-ilabs-plugin/ilabs-plugin' => array(
-            'pretty_version' => '1.2.6',
-            'version' => '1.2.6.0',
+            'pretty_version' => '1.3.0',
+            'version' => '1.3.0.0',
             'reference' => null,
             'type' => 'library',
             'install_path' => __DIR__ . '/../isolated-ilabs-plugin/ilabs-plugin',

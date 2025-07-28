@@ -2,8 +2,8 @@
 Contributors: inspirelabs
 Tags: woocommerce, bluemedia, autopay
 Requires at least: 6.0
-Tested up to: 6.8.1
-Stable tag: 4.6.3
+Tested up to: 6.8.2
+Stable tag: 4.6.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -38,8 +38,8 @@ Wtyczka płatnicza Autopay oferuje szereg funkcjonalności wspierających sprzed
 
 Wymagania
 
-- WordPress – przetestowane na wersjach od 6.0 do 6.8.1
-- Wtyczka WooCommerce – przetestowano na wersjach od 8.1 do 9.8.2
+- WordPress – przetestowane na wersjach od 6.0 do 6.8.2
+- Wtyczka WooCommerce – przetestowano na wersjach od 8.1 do 10.0.4
 
 == Installation	 ==
 
@@ -77,6 +77,16 @@ Wartości Identyfikatora serwisu oraz Klucza konfiguracyjnego są różne dla ś
 
 
 == Changelog ==
+
+## [4.6.4] - 2025-07-28
+
+### Added
+- **Improved ITN status processing**
+- **Full HPOS support**
+
+### Fixed
+- Test Connection module is now compatible with the ”Sandbox Mode for logged-in administrator” option
+- In certain scenarios, REST API requests cause a fatal error in the multi-currency module
 
 ## [4.6.3] - 2025-05-21
 

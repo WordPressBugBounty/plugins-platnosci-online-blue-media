@@ -10,8 +10,10 @@ use Ilabs\BM_Woocommerce\Domain\Model\White_Label\Group;
 use Ilabs\BM_Woocommerce\Domain\Service\Currency\Interfaces\Currency_Interface;
 use Ilabs\BM_Woocommerce\Domain\Service\Legacy\Importer;
 use Ilabs\BM_Woocommerce\Domain\Service\Settings\Settings_Manager;
+use Ilabs\BM_Woocommerce\Domain\Service\Versioning\Versioning;
 use Ilabs\BM_Woocommerce\Domain\Service\White_Label\Group_Mapper;
 use Ilabs\BM_Woocommerce\Domain\Woocommerce\Autopay_Order_Factory;
+use Ilabs\BM_Woocommerce\Gateway\Webhook\Order_Remote_Status_Manager;
 use Ilabs\BM_Woocommerce\Helpers\Helper;
 use Ilabs\BM_Woocommerce\Plugin;
 use SimpleXMLElement;
@@ -76,10 +78,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 	 * @throws Exception
 	 */
 	public function __construct() {
-
-		//blue_media()->update_autopay_option('test_service_id_czk', '');
-
-
 		( new Hooks() )->init();
 
 		blue_media()->set_bluemedia_gateway( $this );
@@ -384,10 +382,8 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 	 * @throws Exception
 	 */
 	public function process_payment( $order_id ) {
-		blue_media()->get_woocommerce_logger()->log_debug(
-			sprintf( '[process_payment start] [Order id: %s]',
-				$order_id
-			) );
+		blue_media()->get_order_remote_status_manager()
+					->install_db_schema();
 
 		if ( wc_notice_count( 'error' ) > 0 ) {
 			blue_media()->get_woocommerce_logger()->log_debug(
@@ -398,7 +394,20 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			return [];
 		}
 
-		$order           = wc_get_order( $order_id );
+		blue_media()->get_order_remote_status_manager()
+					->add_order_remote_status(
+						(int) $order_id,
+						Order_Remote_Status_Manager::STATUS_PROCESS_PAYMENT
+					);
+
+		blue_media()->get_woocommerce_logger()->log_debug(
+			sprintf( '[process_payment start] [Order id: %s]',
+				$order_id
+			) );
+
+
+		$order = wc_get_order( $order_id );
+		Versioning::update_autopay_version_in_order( $order );
 		$payment_channel = (int) $_POST['bm-payment-channel'] ?? null;//classic checkout
 
 		if ( 0 === $payment_channel ) {
@@ -756,10 +765,12 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 					$order_pending_to_update = [];
 
 
-					blue_media()->get_woocommerce_logger()->log_debug(
-						'Transactions from ITN: ' . print_r( base64_decode( $posted['transactions'] ),
-							true )
-					);
+					blue_media()
+						->get_woocommerce_logger( 'bm_woocommerce_itn' )
+						->log_debug(
+							'Transactions from ITN: ' . print_r( base64_decode( $posted['transactions'] ),
+								true )
+						);
 
 					if ( preg_match( '/<currency>\s*(.*?)\s*<\/currency>/',
 						base64_decode( $posted['transactions'] )
@@ -767,10 +778,12 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 						$matches )
 					) {
 
-						blue_media()->get_woocommerce_logger()->log_debug(
-							sprintf( '[webhook] [Transactions from ITN] [currency found: %s]',
-								print_r( $matches[1], true ),
-							) );
+						blue_media()
+							->get_woocommerce_logger( 'bm_woocommerce_itn' )
+							->log_debug(
+								sprintf( '[webhook] [Transactions from ITN] [currency found: %s]',
+									print_r( $matches[1], true ),
+								) );
 
 						blue_media()
 							->get_currency_manager()
@@ -828,44 +841,47 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 							->reconfigure( $bm_currency_symbol );
 						$this->setup_variables();
 
-						/*blue_media()->get_woocommerce_logger()->log_debug
-						(
-							sprintf( '[ITN webhook] [detected currency: %s]'
-								,
-								blue_media()->resolve_blue_media_currency_symbol()
-							) );*/
-
-
-						$order = wc_get_order( $wc_order_id );
+						$order               = wc_get_order( $wc_order_id );
+						$confirmation_result = '';
 
 						if ( $order instanceof WC_Order ) {
 							$init_params = $order->get_meta( 'bm_transaction_init_params' );
+							if ( ! is_array( $init_params ) ) {
+								$confirmation_result                = Order_Remote_Status_Manager::RESULT_CONFIRMED;
+								$status_processing_allowed_in_store = false;
+								blue_media()
+									->get_woocommerce_logger( 'bm_woocommerce_itn' )
+									->log_debug( '[webhook] [init params not found in order meta]' );
+
+							}
 						} else {
-							$init_params = null;
+							$confirmation_result                = Order_Remote_Status_Manager::RESULT_CONFIRMED;
+							$status_processing_allowed_in_store = false;
+							blue_media()
+								->get_woocommerce_logger( 'bm_woocommerce_itn' )
+								->log_debug( '[webhook] [order not found]' );
 						}
 
-						if ( ! is_array( $init_params ) ) {
-							continue;
+
+						if ( $confirmation_result === '' ) {
+							blue_media()
+								->get_woocommerce_logger( 'bm_woocommerce_itn' )
+								->log_debug( '[webhook] [remote_status_manager - do update status]' );
+
+							$remote_status_manager = blue_media()->get_order_remote_status_manager();
+							$remote_status_manager->install_db_schema();
+
+
+							$confirmation_result = $remote_status_manager->update_order_status( $wc_order_id,
+								$bm_order_status );
+
+							$status_processing_allowed_in_store = $remote_status_manager->is_status_processing_allowed_in_store();
+						} else {
+							blue_media()
+								->get_woocommerce_logger( 'bm_woocommerce_itn' )
+								->log_debug( '[webhook] [remote_status_manager - skip]' );
 						}
 
-						/**
-						 * @var $bm_order_status SimpleXMLElement
-						 */
-						if ( ! self::validate_itn_params( $transaction,
-							$init_params ) ) {
-							ob_start();
-							header( 'HTTP/1.0 401 Unauthorized' );
-							echo __( 'validate_itn_params - not valid',
-								esc_attr( blue_media()->get_from_config( 'slug' ) ) );
-
-							blue_media()->get_woocommerce_logger()->log_error(
-								sprintf( '[Validate_itn_params 401] [Transaction from ITN: %s] [Init params meta: %s]',
-									json_encode( $transaction ),
-									json_encode( $init_params )
-								) );
-
-							exit;
-						}
 
 						xmlwriter_start_element( $xw, 'transactionConfirmed' );
 						xmlwriter_start_element( $xw, 'orderID' );
@@ -873,29 +889,39 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 						$all_fields_reponse[] = $wc_order_id;
 						xmlwriter_end_element( $xw ); // orderID
 						xmlwriter_start_element( $xw, 'confirmation' );
-						xmlwriter_text( $xw, 'CONFIRMED' );
-						$all_fields_reponse[] = 'CONFIRMED';
+						xmlwriter_text( $xw, $confirmation_result );
+						$all_fields_reponse[] = $confirmation_result;
 						xmlwriter_end_element( $xw ); // confirmation
 						xmlwriter_end_element( $xw ); // transactionConfirmed
-						$wc_order = wc_get_order( $wc_order_id );
+
 
 						blue_media()
-							->get_woocommerce_logger()
-							->log_debug( sprintf( '[webhook] [$bm_order_status: %s]',
-								$bm_order_status ) );
+							->get_woocommerce_logger( 'bm_woocommerce_itn' )
+							->log_debug( sprintf( '[webhook] [%s]',
+								print_r( [
+									'order_id'                           => $wc_order_id,
+									'ITN status'                         => $bm_order_status,
+									'confirmation_result'                => $confirmation_result,
+									'status_processing_allowed_in_store' => $status_processing_allowed_in_store ? 'yes' : 'no',
+								], true )
+							) );
 
-						if ( self::ITN_SUCCESS_STATUS_ID === $bm_order_status ) {
-							$order_success_to_update[ $bm_remote_id ] = $wc_order;
+
+						if ( $status_processing_allowed_in_store ) {
+							$wc_order = wc_get_order( $wc_order_id );
+
+							if ( self::ITN_SUCCESS_STATUS_ID === $bm_order_status ) {
+								$order_success_to_update[ $bm_remote_id ] = $wc_order;
+							}
+
+							if ( self::ITN_PENDING_STATUS_ID === $bm_order_status ) {
+								$order_pending_to_update[ $bm_remote_id ] = $wc_order;
+							}
+
+							if ( self::ITN_FAILURE_STATUS_ID === $bm_order_status ) {
+								$order_failure_to_update[ $bm_remote_id ] = $wc_order;
+							}
 						}
-
-						if ( self::ITN_PENDING_STATUS_ID === $bm_order_status ) {
-							$order_pending_to_update[ $bm_remote_id ] = $wc_order;
-						}
-
-						if ( self::ITN_FAILURE_STATUS_ID === $bm_order_status ) {
-							$order_failure_to_update[ $bm_remote_id ] = $wc_order;
-						}
-
 					}
 
 					$hash_from_itn = $posted_xml->xpath( '/transactionList/hash' );
@@ -915,11 +941,13 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 					if ( ! $is_hash_valid ) {
 
-						blue_media()->get_woocommerce_logger()->log_debug(
-							sprintf( '[webhook] [validate_itn_hash - not valid] [fields_itn: %s] [Hash: %s]',
-								print_r( $all_fields_itn, true ),
-								$hash_from_itn
-							) );
+						blue_media()
+							->get_woocommerce_logger( 'bm_woocommerce_itn' )
+							->log_debug(
+								sprintf( '[webhook] [validate_itn_hash - not valid] [fields_itn: %s] [Hash: %s]',
+									print_r( $all_fields_itn, true ),
+									$hash_from_itn
+								) );
 
 
 						ob_start();
@@ -927,10 +955,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 						echo __( 'validate_itn_hash - not valid',
 							'bm-woocommerce' );
 						exit;
-					} else {
-						blue_media()
-							->get_woocommerce_logger()
-							->log_debug( '[webhook] [validate_itn_hash - OK]' );
 					}
 
 					foreach ( $order_success_to_update as $k => $wc_order ) {
@@ -938,10 +962,12 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 							'SUCCESS' );
 						$autopay_order = ( new Autopay_Order_Factory() )->create_by_wc_order( $wc_order );
 						if ( $autopay_order->is_order_only_virtual() ) {
-							blue_media()->get_woocommerce_logger()->log_debug(
-								sprintf( '[webhook] [is_order_only_virtual] returns true [Order_Id: %s]',
-									$wc_order->get_id()
-								) );
+							blue_media()
+								->get_woocommerce_logger( 'bm_woocommerce_itn' )
+								->log_debug(
+									sprintf( '[webhook] [is_order_only_virtual] returns true [Order_Id: %s]',
+										$wc_order->get_id()
+									) );
 
 							$new_status = $this->get_option( 'wc_payment_status_on_bm_success_virtual',
 								'completed' );
@@ -952,20 +978,22 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 						$wc_order->payment_complete( $k );
 
-						blue_media()->get_woocommerce_logger()->log_debug(
-							sprintf( '[webhook] [Status from ITN: SUCCESS] [Matched WC status: %s] [Order_Id: %s]',
-								$new_status,
-								$wc_order->get_id()
-							) );
+						blue_media()
+							->get_woocommerce_logger( 'bm_woocommerce_itn' )
+							->log_debug(
+								sprintf( '[webhook] [Status from ITN: SUCCESS] [Matched WC status: %s] [Order_Id: %s]',
+									$new_status,
+									$wc_order->get_id()
+								) );
 
 						$this->update_order_status( $wc_order,
 							$new_status,
 							'Autopay ITN: paymentStatus SUCCESS' );
 
-						update_post_meta( $wc_order->get_id(),
-							'bm_order_itn_status',
-							self::ITN_SUCCESS_STATUS_ID );
 
+						$wc_order->update_meta_data( 'bm_order_itn_status',
+							self::ITN_SUCCESS_STATUS_ID );
+						$wc_order->save_meta_data();
 
 						do_action( 'woocommerce_payment_complete',
 							$wc_order->get_id(),
@@ -979,19 +1007,22 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 							'PENDING' );
 						$new_status = $this->get_option( 'wc_payment_status_on_bm_pending',
 							'pending' );
-						blue_media()->get_woocommerce_logger()->log_debug(
-							sprintf( '[webhook] [Status from ITN: PENDING] [Matched WC status: %s] [Order_Id: %s]',
-								$new_status,
-								$wc_order->get_id()
-							) );
+						blue_media()
+							->get_woocommerce_logger( 'bm_woocommerce_itn' )
+							->log_debug(
+								sprintf( '[webhook] [Status from ITN: PENDING] [Matched WC status: %s] [Order_Id: %s]',
+									$new_status,
+									$wc_order->get_id()
+								) );
 
 						$this->update_order_status( $wc_order,
 							$new_status,
 							'Autopay ITN: paymentStatus PENDING' );
 
-						update_post_meta( $wc_order->get_id(),
-							'bm_order_itn_status',
+
+						$wc_order->update_meta_data( 'bm_order_itn_status',
 							self::ITN_PENDING_STATUS_ID );
+						$wc_order->save_meta_data();
 					}
 
 					foreach ( $order_failure_to_update as $k => $wc_order ) {
@@ -999,19 +1030,21 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 							'FAILURE' );
 						$new_status = $this->get_option( 'wc_payment_status_on_bm_failure',
 							'failed' );
-						blue_media()->get_woocommerce_logger()->log_debug(
-							sprintf( '[webhook] [Status from ITN: FAILURE] [Matched WC status: %s] [Order_Id: %s]',
-								$new_status,
-								$wc_order->get_id()
-							) );
+						blue_media()
+							->get_woocommerce_logger( 'bm_woocommerce_itn' )
+							->log_debug(
+								sprintf( '[webhook] [Status from ITN: FAILURE] [Matched WC status: %s] [Order_Id: %s]',
+									$new_status,
+									$wc_order->get_id()
+								) );
 
 						$this->update_order_status( $wc_order,
 							$new_status,
 							'Autopay ITN: paymentStatus FAILURE' );
 
-						update_post_meta( $wc_order->get_id(),
-							'bm_order_itn_status',
+						$wc_order->update_meta_data( 'bm_order_itn_status',
 							self::ITN_FAILURE_STATUS_ID );
+						$wc_order->save_meta_data();
 					}
 
 
@@ -1023,47 +1056,29 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 					xmlwriter_end_document( $xw );
 
 					$xml_response = xmlwriter_output_memory( $xw );
-					blue_media()->get_woocommerce_logger()->log_debug(
-						sprintf( '[webhook xml_response] [xml: %s]',
-							$xml_response
-						) );
+					blue_media()
+						->get_woocommerce_logger( 'bm_woocommerce_itn' )
+						->log_debug(
+							sprintf( '[webhook xml_response] [xml: %s]',
+								$xml_response
+							) );
 
 					echo $xml_response;
 
 					exit;//exit with 200
 				}
 			} catch ( Exception $e ) {
-				blue_media()->get_woocommerce_logger()->log_error(
-					sprintf( '[Webhook exception debug] [message: %s] [Post data: %s]',
-						json_encode( $e->getMessage() ),
-						json_encode( $_POST )
-					) );
+				blue_media()
+					->get_woocommerce_logger( 'bm_woocommerce_itn' )
+					->log_error(
+						sprintf( '[Webhook exception debug] [message: %s] [Post data: %s]',
+							json_encode( $e->getMessage() ),
+							json_encode( $_POST )
+						) );
 
 				die( 'Message: ' . $e->getMessage() . ' Code: ' . $e->getCode() );
 			}
 		} );
-
-	}
-
-
-	/**
-	 * @param object $transaction_params_from_itn
-	 * @param array $transaction_params_from_shop
-	 *
-	 * @return bool
-	 */
-	static private function validate_itn_params(
-		object $transaction_params_from_itn,
-		array $transaction_params_from_shop
-	): bool {
-		if ( (string) $transaction_params_from_shop['OrderID'] !== (string) $transaction_params_from_itn->orderID ) {
-			return false;
-		}
-		if ( (string) $transaction_params_from_shop['Amount'] !== (string) $transaction_params_from_itn->amount ) {
-			return false;
-		}
-
-		return true;
 
 	}
 
@@ -1300,14 +1315,14 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				throw new Exception( $message );
 			}
 
-			blue_media()->get_woocommerce_logger()->log_debug(
-				sprintf( '[api_get_gateway_list] [response code: %s] [channels: %s] [gatewayList count %s]',
-					print_r( wp_remote_retrieve_response_code( $result ),
-						true ),
-					print_r( $result_decoded->gatewayList, true ),
-					print_r( is_array( $result_decoded->gatewayList ) ? count( $result_decoded->gatewayList ) : 0,
-						true )
-				) );
+			blue_media()->get_woocommerce_logger( 'paywall_v3' )->log_debug(
+				sprintf( '[api_get_gateway_list] [%s]',
+					print_r(
+						[
+							'result_decoded' => $result_decoded,
+						]
+						, true ) )
+			);
 
 
 			return $result_decoded->gatewayList;
@@ -1341,7 +1356,8 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		}
 
 		echo '<div class="payment_box payment_method_bacs">';
-		echo '<p>' . __( implode( ', ', $payment_names ), 'bm-woocommerce' ) . '</p>';
+		echo '<p>' . __( implode( ', ', $payment_names ),
+				'bm-woocommerce' ) . '</p>';
 		echo '<p>' . __( 'Select the payment method you want to use.',
 				'bm-woocommerce' ) . '</p>';
 		echo '</div>';
