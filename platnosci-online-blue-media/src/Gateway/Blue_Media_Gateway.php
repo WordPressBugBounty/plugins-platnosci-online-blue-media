@@ -1256,7 +1256,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 		$params = array_merge( $params, [ 'Hash' => $params_hash ] );
 
-		$url = $this->gateway_url_not_modified_by_user . 'gatewayList/v2';
+		$url = $this->gateway_url_not_modified_by_user . 'gatewayList/v3';
 
 		$wp_remote_post_args = [
 			'headers' => [
@@ -1315,7 +1315,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				throw new Exception( $message );
 			}
 
-			blue_media()->get_woocommerce_logger( 'paywall_v3' )->log_debug(
+			blue_media()->get_woocommerce_logger('paywall_v3')->log_debug(
 				sprintf( '[api_get_gateway_list] [%s]',
 					print_r(
 						[

@@ -1,5 +1,19 @@
 *** Autopay Changelog ***
 
+== Changelog ==
+
+## [4.7.0] - 2025-08-18
+
+### Added
+- **gatewayList/v3** - Added integration with new endpoint
+	Details:
+		Extended configuration parameters
+		Advanced communication with payment gateways
+		Support for more payment options
+
+### Improved
+- ***Test Connection*** - PHP 8.3 integration updated
+
 ## [4.6.4] - 2025-07-28
 
 ### Added

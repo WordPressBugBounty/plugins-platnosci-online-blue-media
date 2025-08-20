@@ -60,18 +60,18 @@ class Group_Mapper {
 						$config_item['ids'] ) ) {
 						if ( ! $instance_created ) {
 							$group            = new Group( [],
-								$config_item['name'],
-								sanitize_title( $config_item['name'] ) );
+								$raw_channel->name,
+								sanitize_title( $raw_channel->name ) );
 							$instance_created = true;
 						}
 
-						$gateway_name = $config_item['extra_html'] ?? $raw_channel->gatewayName;
+						$gateway_name = $config_item['extra_html'] ?? $raw_channel->name;
 						$extra_class  = $config_item['extra_class'] ?? null;
 						$extra_script = $config_item['extra_script'] ?? null;
 
-						$group->push_item( ( new Item( $config_item['name'],
+						$group->push_item( ( new Item( $raw_channel->name,
 							$raw_channel->gatewayID,
-							$raw_channel->iconURL, $extra_class,
+							$raw_channel->iconUrl, $extra_class,
 							$extra_script,
 							$gateway_name,
 							null ) ) );
@@ -89,9 +89,9 @@ class Group_Mapper {
 
 		if ( ! empty( $unspecified_ids_group_key ) ) {
 			foreach ( $unknown_raw_channels as $raw_channel ) {
-				$result[ $unspecified_ids_group_key ]->push_item( ( new Item( $raw_channel->gatewayName,
+				$result[ $unspecified_ids_group_key ]->push_item( ( new Item( $raw_channel->name,
 					$raw_channel->gatewayID,
-					$raw_channel->iconURL,
+					$raw_channel->iconUrl,
 					null,
 					null,
 					null,
@@ -178,17 +178,17 @@ class Group_Mapper {
 						$config_item['ids'] ) ) {
 						if ( ! $instance_created ) {
 							$group            = new Group( [],
-								$config_item['name'],
-								sanitize_title( $config_item['name'] ) );
+								$raw_channel->name,
+								sanitize_title( $raw_channel->name ) );
 							$instance_created = true;
 						}
 
 						$extra_class  = $config_item['extra_class'] ?? null;
 						$extra_script = $config_item['extra_script'] ?? null;
 
-						$group->push_item( ( new Item( $config_item['name'],
+						$group->push_item( ( new Item( $raw_channel->name,
 							$raw_channel->gatewayID,
-							$raw_channel->iconURL, $extra_class,
+							$raw_channel->iconUrl, $extra_class,
 							$extra_script,
 							null,
 							null ) ) );
@@ -206,9 +206,9 @@ class Group_Mapper {
 
 		if ( ! empty( $unspecified_ids_group_key ) ) {
 			foreach ( $unknown_raw_channels as $raw_channel ) {
-				$result[ $unspecified_ids_group_key ]->push_item( ( new Item( $raw_channel->gatewayName,
+				$result[ $unspecified_ids_group_key ]->push_item( ( new Item( $raw_channel->name,
 					$raw_channel->gatewayID,
-					$raw_channel->iconURL,
+					$raw_channel->iconUrl,
 					null,
 					null,
 					'',
@@ -259,17 +259,17 @@ class Group_Mapper {
 						$config_item['ids'] ) ) {
 						if ( ! $instance_created ) {
 							$group            = new Group( [],
-								$config_item['name'],
-								sanitize_title( $config_item['name'] ) );
+								$raw_channel->name,
+								sanitize_title( $raw_channel->name ) );
 							$instance_created = true;
 						}
 
 						$extra_class  = $config_item['extra_class'] ?? null;
 						$extra_script = $config_item['extra_script'] ?? null;
 
-						$group->push_item( ( new Item( $config_item['name'],
+						$group->push_item( ( new Item( $raw_channel->name,
 							$raw_channel->gatewayID,
-							$raw_channel->iconURL, $extra_class,
+							$raw_channel->iconUrl, $extra_class,
 							$extra_script,
 							null,
 							$config_item['block_description'] ?? null,
@@ -290,9 +290,9 @@ class Group_Mapper {
 
 		if ( ! empty( $unspecified_ids_group_key ) ) {
 			foreach ( $unknown_raw_channels as $raw_channel ) {
-				$result[ $unspecified_ids_group_key ]->push_item( ( new Item( $raw_channel->gatewayName,
+				$result[ $unspecified_ids_group_key ]->push_item( ( new Item( $raw_channel->name,
 					$raw_channel->gatewayID,
-					$raw_channel->iconURL,
+					$raw_channel->iconUrl,
 					null,
 					null,
 					null,

@@ -3,6 +3,7 @@
 namespace Ilabs\BM_Woocommerce\Gateway\Webhook;
 
 use Exception;
+use Ilabs\BM_Woocommerce\Gateway\Webhook\Order_Remote_Status_Legacy_Manager;
 
 class Order_Remote_Status_Manager {
 

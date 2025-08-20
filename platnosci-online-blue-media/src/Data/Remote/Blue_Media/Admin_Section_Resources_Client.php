@@ -15,10 +15,16 @@ class Admin_Section_Resources_Client {
 	private const VAS_BASE_URL_PL = 'https://plugins-api.autopay.pl/woocomerce-vas';
 
 	private const VAS_BASE_URL_EN = 'https://plugins-api.autopay.pl/en/woocommerce-vas';
+	private const VAS_BASE_URL_ES = 'https://plugins-api.autopay.pl/es/woocommerce-vas';
+	private const VAS_BASE_URL_IT = 'https://plugins-api.autopay.pl/it/woocommerce-vas';
+	private const VAS_BASE_URL_DE = 'https://plugins-api.autopay.pl/de/woocommerce-vas';
 
 	private const BANNER_URL_PL = 'https://plugins-api.autopay.pl/plugins-baner-woocomerce/';
 
 	private const BANNER_URL_EN = 'https://plugins-api.autopay.pl/en/plugins-baner-woocomerce/';
+	private const BANNER_URL_ES = 'https://plugins-api.autopay.pl/es/plugins-baner-woocomerce/';
+	private const BANNER_URL_IT = 'https://plugins-api.autopay.pl/it/plugins-baner-woocomerce/';
+	private const BANNER_URL_DE = 'https://plugins-api.autopay.pl/de/plugins-baner-woocomerce/';
 
 
 	private GuzzleHttpClient $client;
@@ -139,14 +145,34 @@ class Admin_Section_Resources_Client {
 
 
 	private function resolve_vas_url( string $language_code ) {
-		return Woocomerce_Vas_Value_Object::LANGUAGE_CODE_PL === $language_code
-			? self::VAS_BASE_URL_PL
-			: self::VAS_BASE_URL_EN;
+		$prefix = substr( strtolower( $language_code ), 0, 2 );
+		switch ( $prefix ) {
+			case 'pl':
+				return self::VAS_BASE_URL_PL;
+			case 'es':
+				return self::VAS_BASE_URL_ES;
+			case 'it':
+				return self::VAS_BASE_URL_IT;
+			case 'de':
+				return self::VAS_BASE_URL_DE;
+			default:
+				return self::VAS_BASE_URL_EN;
+		}
 	}
 
 	public function resolve_banner_url( string $language_code ) {
-		return Woocomerce_Vas_Value_Object::LANGUAGE_CODE_PL === $language_code
-			? self::BANNER_URL_PL
-			: self::BANNER_URL_EN;
+		$prefix = substr( strtolower( $language_code ), 0, 2 );
+		switch ( $prefix ) {
+			case 'pl':
+				return self::BANNER_URL_PL;
+			case 'es':
+				return self::BANNER_URL_ES;
+			case 'it':
+				return self::BANNER_URL_IT;
+			case 'de':
+				return self::BANNER_URL_DE;
+			default:
+				return self::BANNER_URL_EN;
+		}
 	}
 }

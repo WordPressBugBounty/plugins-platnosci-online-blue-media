@@ -255,11 +255,11 @@ class Auditor {
 					"bm-woocommerce" ),
 					$php_version )
 			);
-		} elseif ( version_compare( $php_version, '8.3', '>' ) ) {
+		} elseif ( version_compare( $php_version, '8.5', '>=' ) ) {
 			return new Log_Entry(
 				Log_Entry::LEVEL_WARNING,
 				Log_Entry::get_header_warning(),
-				sprintf( __( "PHP version %s is higher than 8.3. Some Wordpress configurations may experience compatibility issues.",
+				sprintf( __( "PHP version %s is higher than 8.4. Some Wordpress configurations may experience compatibility issues.",
 					"bm-woocommerce" ),
 					$php_version )
 			);

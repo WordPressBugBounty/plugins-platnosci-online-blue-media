@@ -3,7 +3,7 @@ Contributors: inspirelabs
 Tags: woocommerce, bluemedia, autopay
 Requires at least: 6.0
 Tested up to: 6.8.2
-Stable tag: 4.6.4
+Stable tag: 4.7.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -77,6 +77,19 @@ Wartości Identyfikatora serwisu oraz Klucza konfiguracyjnego są różne dla ś
 
 
 == Changelog ==
+
+## [4.7.0] - 2025-08-18
+
+### Added
+- **gatewayList/v3** - Added integration with new endpoint
+	Details:
+		Extended configuration parameters
+		Advanced communication with payment gateways
+		Support for more payment options
+
+### Improved
+- ***Test Connection*** - PHP 8.3 integration updated
+
 
 ## [4.6.4] - 2025-07-28
 
