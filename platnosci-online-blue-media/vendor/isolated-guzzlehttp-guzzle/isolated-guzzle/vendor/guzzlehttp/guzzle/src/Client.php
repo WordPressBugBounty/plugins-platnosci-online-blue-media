@@ -49,7 +49,7 @@ class Client implements ClientInterface, \Isolated\Blue_Media\Isolated_Guzzlehtt
      *
      * @param array $config Client configuration settings.
      *
-     * @see \GuzzleHttp\RequestOptions for a list of available request options.
+     * @see RequestOptions for a list of available request options.
      */
     public function __construct(array $config = [])
     {
@@ -109,7 +109,7 @@ class Client implements ClientInterface, \Isolated\Blue_Media\Isolated_Guzzlehtt
     /**
      * The HttpClient PSR (PSR-18) specify this method.
      *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function sendRequest(RequestInterface $request) : ResponseInterface
     {
@@ -366,6 +366,9 @@ class Client implements ClientInterface, \Isolated\Blue_Media\Isolated_Guzzlehtt
             if (\is_bool($options['sink'])) {
                 throw new InvalidArgumentException('sink must not be a boolean');
             }
+        }
+        if (isset($options['version'])) {
+            $modify['version'] = $options['version'];
         }
         $request = Psr7\Utils::modifyRequest($request, $modify);
         if ($request->getBody() instanceof Psr7\MultipartStream) {

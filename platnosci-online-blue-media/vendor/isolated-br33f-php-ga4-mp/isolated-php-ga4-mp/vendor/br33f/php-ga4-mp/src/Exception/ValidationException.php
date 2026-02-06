@@ -9,7 +9,7 @@ namespace Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\
 
 use Exception;
 use Throwable;
-class ValidationException extends Exception
+class ValidationException extends AnalyticsException
 {
     /**
      * @var string|null

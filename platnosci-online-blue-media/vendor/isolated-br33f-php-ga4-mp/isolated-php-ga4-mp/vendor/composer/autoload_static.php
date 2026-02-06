@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitd78cf98d9635562879270e8950c3b3e4
+class ComposerStaticInit84b0090e968b2fb4c9d40eb12a4484c4
 {
     public static $files = array (
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
@@ -13,7 +13,7 @@ class ComposerStaticInitd78cf98d9635562879270e8950c3b3e4
     );
 
     public static $prefixLengthsPsr4 = array (
-        'I' => 
+        'I' =>
         array (
             'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Psr\\Http\\Message\\' => 57,
             'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Psr\\Http\\Client\\' => 56,
@@ -25,28 +25,28 @@ class ComposerStaticInitd78cf98d9635562879270e8950c3b3e4
     );
 
     public static $prefixDirsPsr4 = array (
-        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Psr\\Http\\Message\\' => 
+        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Psr\\Http\\Message\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-factory/src',
             1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
-        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Psr\\Http\\Client\\' => 
+        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Psr\\Http\\Client\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-client/src',
         ),
-        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Psr7\\' => 
+        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Psr7\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
         ),
-        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Promise\\' => 
+        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Promise\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
         ),
-        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\' => 
+        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
-        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\' => 
+        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\' =>
         array (
             0 => __DIR__ . '/..' . '/br33f/php-ga4-mp/src',
         ),
@@ -54,7 +54,11 @@ class ComposerStaticInitd78cf98d9635562879270e8950c3b3e4
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Common\\ConsentProperty' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Common/ConsentProperty.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Common\\EventCollection' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Common/EventCollection.php',
+        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Common\\UserAddress' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Common/UserAddress.php',
+        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Common\\UserData' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Common/UserData.php',
+        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Common\\UserDataItem' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Common/UserDataItem.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Common\\UserProperties' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Common/UserProperties.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Common\\UserProperty' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Common/UserProperty.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Common\\ValidationMessage' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Common/ValidationMessage.php',
@@ -62,6 +66,7 @@ class ComposerStaticInitd78cf98d9635562879270e8950c3b3e4
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Event\\AddPaymentInfoEvent' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Event/AddPaymentInfoEvent.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Event\\AddShippingInfoEvent' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Event/AddShippingInfoEvent.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Event\\AddToCartEvent' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Event/AddToCartEvent.php',
+        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Event\\AddToWishlistEvent' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Event/AddToWishlistEvent.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Event\\BaseEvent' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Event/BaseEvent.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Event\\BeginCheckoutEvent' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Event/BeginCheckoutEvent.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Event\\ItemBaseEvent' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Event/ItemBaseEvent.php',
@@ -82,15 +87,20 @@ class ComposerStaticInitd78cf98d9635562879270e8950c3b3e4
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Parameter\\BaseParameter' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Parameter/BaseParameter.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Parameter\\ItemCollectionParameter' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Parameter/ItemCollectionParameter.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Parameter\\ItemParameter' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Parameter/ItemParameter.php',
+        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\RequestValidateInterface' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/RequestValidateInterface.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Request\\AbstractRequest' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Request/AbstractRequest.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Request\\BaseRequest' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Request/BaseRequest.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Response\\AbstractResponse' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Response/AbstractResponse.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Response\\BaseResponse' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Response/BaseResponse.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Response\\DebugResponse' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Response/DebugResponse.php',
+        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Response\\StreamResponse' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/Response/StreamResponse.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\ValidateInterface' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Dto/ValidateInterface.php',
+        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Enum\\ConsentCode' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Enum/ConsentCode.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Enum\\ErrorCode' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Enum/ErrorCode.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Enum\\ValidationCode' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Enum/ValidationCode.php',
+        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Exception\\AnalyticsException' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Exception/AnalyticsException.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Exception\\HydrationException' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Exception/HydrationException.php',
+        'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Exception\\MisconfigurationException' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Exception/MisconfigurationException.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Exception\\ValidationException' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Exception/ValidationException.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\HttpClient' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/HttpClient.php',
         'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Service' => __DIR__ . '/..' . '/br33f/php-ga4-mp/src/Service.php',
@@ -202,9 +212,9 @@ class ComposerStaticInitd78cf98d9635562879270e8950c3b3e4
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitd78cf98d9635562879270e8950c3b3e4::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitd78cf98d9635562879270e8950c3b3e4::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitd78cf98d9635562879270e8950c3b3e4::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit84b0090e968b2fb4c9d40eb12a4484c4::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit84b0090e968b2fb4c9d40eb12a4484c4::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit84b0090e968b2fb4c9d40eb12a4484c4::$classMap;
 
         }, null, ClassLoader::class);
     }

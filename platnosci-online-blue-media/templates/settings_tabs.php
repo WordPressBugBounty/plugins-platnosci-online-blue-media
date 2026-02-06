@@ -17,6 +17,12 @@ $last          = array_key_last( $tabs );
 <div class="bm-settings-tabs" style="display: flex">
 	<ul class="autopay-tabs">
 		<?php foreach ( $tabs as $tab_id => $tab_name ): ?>
+			<?php
+			// Show VAS tab only for Polish locale (pl_PL), per requirements.
+			if ( $tab_id === Settings_Tabs::VAS_TAB_ID && get_locale() !== 'pl_PL' ) {
+				continue;
+			}
+			?>
 			<?php if ( $tab_id === $active_tab_id ): ?>
 				<li class="autopay-tab current">
 					<?php echo esc_html( $tab_name ) ?>

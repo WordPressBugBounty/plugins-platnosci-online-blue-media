@@ -1,5 +1,6 @@
 <?php
 
+declare (strict_types=1);
 namespace Isolated\Blue_Media\Isolated_Guzzlehttp\GuzzleHttp\Promise;
 
 /**

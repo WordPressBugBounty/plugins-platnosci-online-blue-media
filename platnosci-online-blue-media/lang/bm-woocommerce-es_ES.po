@@ -1,0 +1,1203 @@
+# Copyright (C) 2025 Autopay S.A.
+# This file is distributed under the same license as the Autopay plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Basic RequirementsReport-Msgid-Bugs-To: POT-Creation-Date: 2022-04-08T15:04:40+02:00PO-Revision-Date: 2025-09-17 08:51\\nLast-Translator: Language-Team: Language: es_ESMIME-Version: 1.0Content-Type: text/plain; charset=UTF-8Content-Transfer-Encoding: 8bitPlural-Forms: nplurals=2; plural=(n != 1);X-Generator: Poedit 3.6X-Poedit-Basepath: ../srcX-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2X-Poedit-SourceCharset: UTF-8X-Poedit-SearchPath-0: .X-Poedit-SearchPathExcluded-0: *.js\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: bm\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.6\n"
+
+#. Plugin Name of the plugin
+#: bluemedia-woocommerce.php
+msgid "Autopay"
+msgstr "Autopay"
+
+#. Plugin URI of the plugin
+#: bluemedia-woocommerce.php
+msgid "https://wordpress.org/plugins/platnosci-online-blue-media"
+msgstr "https://wordpress.org/plugins/platnosci-online-blue-media"
+
+#. Description of the plugin
+#: bluemedia-woocommerce.php
+msgid "Autopay for Woocommerce"
+msgstr "Autopay para WooCommerce"
+
+#. Author of the plugin
+#: bluemedia-woocommerce.php
+msgid "Autopay S.A."
+msgstr "Autopay S.A."
+
+#. Author URI of the plugin
+#: bluemedia-woocommerce.php
+msgid "autopay.pl"
+msgstr "autopay.pl"
+
+#: compatibility.php:18
+#, php-format
+msgid "It looks like the developer version of the Autopay plug-in is installed instead of the production release. Remove this plugin and install it from this URL: %s"
+msgstr "Parece que has instalado la versión de desarrollo del plugin Autopay en lugar de la versión estable. Desinstálalo e instálalo desde esta URL: %s"
+
+#: compatibility.php:34
+msgid "PHP version is older than 7.2 so this plugin will not work. Please contact your host and ask them to upgrade."
+msgstr "La versión de PHP es anterior a 7.2; el plugin no funcionará. Contacta con tu alojamiento para actualizarla."
+
+#: src/Controller/Model/Payment_Status_Response_Value_Object.php:108
+msgid "Payment successful."
+msgstr "Pago realizado con éxito."
+
+#: src/Controller/Model/Payment_Status_Response_Value_Object.php:112
+msgid "Check your device."
+msgstr "Comprueba tu dispositivo."
+
+#: src/Controller/Model/Payment_Status_Response_Value_Object.php:116
+#: src/Gateway/Blue_Media_Gateway.php:725
+#: templates/blik_0.php:6
+#: templates/settings_field_status.php:10
+#: templates/settings_status.php:9
+msgid "Payment failed."
+msgstr "Error en el pago."
+
+#: src/Controller/Model/Payment_Status_Response_Value_Object.php:120
+msgid "Waiting for transaction confirmation."
+msgstr "Esperando la confirmación de la transacción."
+
+#: src/Controller/Payment_Status_Controller.php:108
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:114
+#: src/Utilities/Test_Connection/Payment_Status_Controller.php:58
+msgid "Payment failed"
+msgstr "Pago fallido"
+
+#: src/Controller/Wp_Admin/Transaction_Testing_Controller.php:29
+#: src/Controller/Wp_Admin/Transaction_Testing_Controller.php:94
+#: src/Utilities/Test_Connection/Async_Request.php:36
+msgid "Nonce field not exists"
+msgstr "El campo nonce no existe"
+
+#: src/Controller/Wp_Admin/Transaction_Testing_Controller.php:36
+#: src/Controller/Wp_Admin/Transaction_Testing_Controller.php:107
+#: src/Utilities/Test_Connection/Async_Request.php:43
+msgid "Verification nonce failed"
+msgstr "La verificación del nonce ha fallado"
+
+#: src/Controller/Wp_Admin/Transaction_Testing_Controller.php:53
+#: src/Controller/Wp_Admin/Transaction_Testing_Controller.php:125
+#: src/Utilities/Test_Connection/Transaction_Testing_Controller.php:37
+#: src/Utilities/Test_Connection/Transaction_Testing_Controller.php:81
+msgid "Order create failed"
+msgstr "No se pudo crear el pedido"
+
+#: src/Controller/Wp_Admin/Transaction_Testing_Controller.php:99
+msgid "order_id field not exists"
+msgstr "El campo order_id no existe"
+
+#: src/Domain/Model/White_Label/Config.php:21
+msgid "Pay comfortably using BLIK payments"
+msgstr "Paga cómodamente con BLIK"
+
+#: src/Domain/Model/White_Label/Config.php:36
+msgid "Card Payment"
+msgstr "Pago con tarjeta"
+
+#: src/Domain/Model/White_Label/Config.php:39
+#: src/Domain/Model/White_Label/Config.php:41
+msgid "We will redirect you to the website of our partner Autopay, where you will provide your card details"
+msgstr "Te redirigiremos a la web de nuestro socio Autopay, donde introducirás los datos de tu tarjeta"
+
+#: src/Domain/Model/White_Label/Config.php:47
+msgid "Online bank transfer"
+msgstr "Transferencia online"
+
+#: src/Domain/Model/White_Label/Config.php:53
+msgid "VisaMobile"
+msgstr "Visa Mobile"
+
+#: src/Domain/Model/White_Label/Config.php:56
+#: src/Domain/Model/White_Label/Config.php:58
+msgid "Enter your phone number and confirm the payment in the application"
+msgstr "Introduce tu número de teléfono y confirma el pago en la aplicación"
+
+#: src/Domain/Model/White_Label/Config.php:62
+msgid "Google Pay"
+msgstr "Google Pay"
+
+#: src/Domain/Model/White_Label/Config.php:65
+#: src/Domain/Model/White_Label/Config.php:67
+#: src/Domain/Model/White_Label/Config.php:76
+#: src/Domain/Model/White_Label/Config.php:78
+msgid "Pay without having to log in to online banking"
+msgstr "Paga sin iniciar sesión en la banca online"
+
+#: src/Domain/Model/White_Label/Config.php:71
+msgid "Apple Pay"
+msgstr "Apple Pay"
+
+#: src/Domain/Model/White_Label/Config.php:84
+msgid "Alior installments"
+msgstr "Alior a plazos"
+
+#: src/Domain/Model/White_Label/Config.php:92
+msgid "PayPo"
+msgstr "PayPo"
+
+#: src/Domain/Model/White_Label/Config.php:99
+msgid "Spingo"
+msgstr "Spingo"
+
+#: src/Domain/Model/White_Label/Config.php:102
+#: src/Domain/Model/White_Label/Config.php:104
+msgid "Deferred payment for companies"
+msgstr "Pago aplazado para empresas"
+
+#: src/Domain/Model/White_Label/Config.php:108
+msgid "BLIK Pay Later"
+msgstr "BLIK Pago después"
+
+#: src/Domain/Model/White_Label/Config.php:111
+#: src/Domain/Model/White_Label/Config.php:113
+msgid "Buy now and pay within 30 days"
+msgstr "Compra ahora y paga en 30 días"
+
+#: src/Domain/Model/White_Label/Config.php:135
+#: src/Domain/Model/White_Label/Config.php:146
+msgid "Pick up your purchases, check them out and pay later - in 30 days or in convenient installments."
+msgstr "Recibe tus compras, revísalas y paga después: en 30 días o en cuotas flexibles."
+
+#: src/Domain/Model/White_Label/Config.php:137
+#: src/Domain/Model/White_Label/Config.php:148
+msgid "We will redirect you to the PayPo partner website."
+msgstr "Te redirigiremos al sitio web de nuestro socio PayPo."
+
+#: src/Domain/Model/White_Label/Config.php:139
+#: src/Domain/Model/White_Label/Config.php:150
+msgid "Get the details."
+msgstr "Ver detalles."
+
+#: src/Domain/Model/White_Label/Config.php:175
+#: src/Domain/Model/White_Label/Config.php:183
+msgid "Spread the payment into convenient installments and buy without any problems."
+msgstr "Divide tu compra en cómodas cuotas y compra sin complicaciones."
+
+#: src/Domain/Model/White_Label/Config.php:177
+#: src/Domain/Model/White_Label/Config.php:185
+msgid "Find out more"
+msgstr "Más información"
+
+#: src/Domain/Service/Currency/Value_Object/CZK.php:14
+msgid "Czech koruna"
+msgstr "Corona checa"
+
+#: src/Domain/Service/Currency/Value_Object/HUF.php:14
+msgid "Hungarian forint"
+msgstr "Forinto húngaro"
+
+#: src/Domain/Service/Currency/Value_Object/PLN.php:14
+msgid "Polish z&#x142;oty"
+msgstr "Zloty polaco"
+
+#: src/Domain/Service/Currency/Value_Object/RON.php:14
+msgid "Romanian leu"
+msgstr "Leu rumano"
+
+#: src/Domain/Service/Custom_Styles/Css_Editor.php:54
+msgid "Feature enabled"
+msgstr "Función activada"
+
+#: src/Domain/Service/Custom_Styles/Css_Editor.php:111
+msgid "Changes have been saved."
+msgstr "Los cambios se han guardado."
+
+#: src/Domain/Service/Custom_Styles/Css_Editor.php:133
+msgid "Insert your CSS code here"
+msgstr "Introduce aquí tu código CSS"
+
+#: src/Domain/Service/Legacy/Importer.php:38
+msgid "Autopay: No values found for import"
+msgstr "Autopay: No se encontraron datos que importar"
+
+#: src/Domain/Service/Legacy/Importer.php:61
+msgid "Autopay: Import completed"
+msgstr "Autopay: Importación completada"
+
+#: src/Domain/Service/Settings/Settings_Manager.php:87
+msgid "Use the services of official and verified Autopay partners!"
+msgstr "¡Utiliza los servicios de socios oficiales y verificados de Autopay!"
+
+#: src/Domain/Service/Settings/Settings_Manager.php:138
+msgid "Turn on sandbox mode or accept real payments."
+msgstr "Activa el modo pruebas o acepta pagos reales."
+
+#: src/Domain/Service/Settings/Settings_Manager.php:144
+msgid "The Ad services is a comprehensive solution that enables merchants to effectively promote their products directly from the shop's administration panel. The service is fully integrated with WooCommerce which allows the automatic creation of advertising campaigns tailored to the shop's product range, customers' purchase history and analysis of their preferences. This option is available only for stores with a single active currency."
+msgstr "El servicio de publicidad es una solución integral que permite a los comerciantes promocionar eficazmente sus productos directamente desde el panel de administración de la tienda. Está totalmente integrado con WooCommerce, lo que posibilita la creación automática de campañas adaptadas al catálogo, al historial de compra de los clientes y a sus preferencias. Disponible solo para tiendas con una única moneda activa."
+
+#: src/Domain/Service/Settings/Settings_Manager.php:149
+msgid "Select the payment methods you wish to use."
+msgstr "Elige los métodos de pago que quieras usar."
+
+#: src/Domain/Service/Settings/Settings_Manager.php:158
+msgid "The Autopay plugin allows you to send payment information to Google Analytics. Among other things, this makes it possible to track sales conversions within the Google Analytics platform. Communication with Google Analytics is an optional feature of the plug-in."
+msgstr "El plugin de Autopay permite enviar información de pagos a Google Analytics, lo que facilita el seguimiento de conversiones de ventas. La comunicación con Google Analytics es opcional."
+
+#: src/Domain/Service/Settings/Settings_Manager.php:163
+msgid "Need support? Discover the content library that makes installing and configuring Autopay solutions a piece of cake."
+msgstr "¿Necesitas ayuda? Descubre la biblioteca de contenido que facilita la instalación y configuración de Autopay."
+
+#: src/Domain/Service/Settings/Settings_Manager.php:168
+msgid "Advanced settings intended for developers. When making changes in this section, please refer to the technical specifications to know how it will affect plugin."
+msgstr "Ajustes avanzados para desarrolladores. Consulta la documentación técnica antes de modificarlos para entender su impacto en el plugin."
+
+#: src/Domain/Service/Settings/Settings_Tabs.php:39
+msgid "Authentication"
+msgstr "Autenticación"
+
+#: src/Domain/Service/Settings/Settings_Tabs.php:41
+msgid "Advertising services"
+msgstr "Servicios de publicidad"
+
+#: src/Domain/Service/Settings/Settings_Tabs.php:43
+msgid "Payment settings"
+msgstr "Ajustes de pago"
+
+#: src/Domain/Service/Settings/Settings_Tabs.php:45
+msgid "Analytics"
+msgstr "Análisis"
+
+#: src/Domain/Service/Settings/Settings_Tabs.php:47
+msgid "Services for you"
+msgstr "Servicios para ti"
+
+#: src/Domain/Service/Settings/Settings_Tabs.php:49
+msgid "Advanced settings"
+msgstr "Ajustes avanzados"
+
+#: src/Domain/Service/Settings/Settings_Tabs.php:51
+msgid "Help"
+msgstr "Ayuda"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:102
+msgid "Enable campaign tracking via Autopay and publish the product stream."
+msgstr "Activa el seguimiento de campañas mediante Autopay y publica el flujo de productos."
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:109
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:169
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:645
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:659
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:673
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:687
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:701
+#: templates/settings_field_currency_remove.php:45
+msgid "Yes"
+msgstr "Sí"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:110
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:170
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:644
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:658
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:672
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:686
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:700
+msgid "No"
+msgstr "No"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:115
+msgid "See how you can run straightforward campaigns with us!"
+msgstr "¡Descubre cómo lanzar campañas fácilmente con nosotros!"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:118
+msgid "Launch in 5 minutes!"
+msgstr "¡Ponte en marcha en 5 minutos!"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:147
+msgid "Test Connection"
+msgstr "Probar conexión"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:149
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:486
+msgid "Expected format: G-XXXXXXX"
+msgstr "Formato esperado: G‑XXXXXXX"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:162
+msgid "Use in sandbox mode"
+msgstr "Usar entorno de pruebas"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:164
+msgid "Enable Sandbox mode"
+msgstr "Activar modo pruebas"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:175
+msgid "Sandbox active: the payments are simulated. Customers will not be actually charged for any purchases."
+msgstr "Entorno de pruebas activo: los pagos son simulados. No se cargará ninguna compra a los clientes."
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:178
+msgid "In order to get access to the sandbox environment contact Autopay using"
+msgstr "Para obtener acceso al entorno de pruebas ponte en contacto con Autopay mediante"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:181
+msgid "this form"
+msgstr "este formulario"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:186
+msgid "Payments processed using sandbox environment will not affect store’s settlement with Autopay. Sandbox allows stores to verify integration with Autopay and configuration of this plugin."
+msgstr "El entorno de pruebas permite comprobar la integración y la configuración del plugin Autopay sin realizar pagos reales ni afectar a la liquidación con Autopay."
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:206
+msgid "Select mode of displaying payment methods"
+msgstr "Selecciona el modo de mostrar los métodos de pago"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:216
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:366
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:584
+msgid "Learn more"
+msgstr "Más información"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:230
+msgid "Redirect to Autopay’s hosted payment page"
+msgstr "Redirigir a la página de pago de Autopay"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:232
+msgid "Display each payment method separately"
+msgstr "Mostrar cada método por separado"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:247
+msgid "Service identifier"
+msgstr "Identificador del servicio"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:249
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:292
+msgid "Consists of numbers only. Is unique for each store."
+msgstr "Solo contiene números y es único para cada tienda."
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:258
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:280
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:300
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:320
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:426
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:494
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:510
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:525
+msgid "where to find?"
+msgstr "¿dónde encontrarla?"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:269
+msgid "Configuration key (hash)"
+msgstr "Clave de configuración (hash)"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:271
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:312
+msgid "Key containing numbers and lowercase letters to verify communication. Do not share it with anyone."
+msgstr "Clave compuesta por números y letras minúsculas que verifica la comunicación. No la compartas con nadie."
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:290
+msgid "Test service identifier"
+msgstr "Identificador de servicio de pruebas"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:310
+msgid "Test configuration key (hash)"
+msgstr "Clave de configuración de pruebas (hash)"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:347
+msgid "BLIK payment type"
+msgstr "Tipo de pago BLIK"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:352
+msgid "redirect payer to BLIK’s website"
+msgstr "redirige al cliente a la web de BLIK"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:354
+msgid "enter BLIK code directly on your store"
+msgstr "introduce el código BLIK directamente en la tienda"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:402
+msgid "Header and description at checkout"
+msgstr "Encabezado y descripción en la página de pago"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:409
+msgid "Payment method title"
+msgstr "Título del método de pago"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:419
+msgid "Payment method description"
+msgstr "Descripción del método de pago"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:452
+#: templates/settings_field_channels.php:46
+msgid "Allowed payment method list"
+msgstr "Lista de métodos de pago activos"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:457
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:763
+msgid "Import now"
+msgstr "Importar ahora"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:484
+#: templates/settings_ga4_modals.php:5
+msgid "Measurement identifier"
+msgstr "Identificador de medición"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:500
+#: templates/settings_ga4_modals.php:20
+msgid "Stream ID"
+msgstr "ID de flujo"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:502
+msgid "The identifier is in numeric format."
+msgstr "El identificador es numérico."
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:516
+#: templates/settings_ga4_modals.php:37
+msgid "Google Analytics API secret"
+msgstr "Clave secreta de la API de Google Analytics"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:532
+msgid "Order status triggering the event ‘Completion of transaction’"
+msgstr "Estado del pedido que dispara el evento «Conclusión de la transacción»"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:543
+msgid "Once connected with this plugin, Google Analytics will start registering the following events:"
+msgstr "Una vez conectado, Google Analytics comenzará a registrar los siguientes eventos:"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:573
+msgid "Payment statuses"
+msgstr "Estados de pago"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:576
+msgid "Choose how your order statuses will change depending on the status payment has in Autopay."
+msgstr "Elige cómo cambiarán los estados del pedido en función del estado del pago en Autopay."
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:590
+msgid "Payment started"
+msgstr "Pago iniciado"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:601
+msgid "Payment accepted"
+msgstr "Pago aceptado"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:612
+msgid "Payment accepted for purchase of ONLY digital products"
+msgstr "Pago aceptado para un carrito que contiene solo productos virtuales"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:623
+msgid "Payment rejected"
+msgstr "Pago rechazado"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:636
+msgid "Debug mode"
+msgstr "Modo depuración"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:638
+msgid "Enable debug mode"
+msgstr "Activar modo depuración"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:650
+msgid "Sandbox mode for logged-in administrator"
+msgstr "Modo de pruebas para administradores conectados"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:664
+msgid "Show Autopay payment gateway in Checkout only to logged-in administrators"
+msgstr "Mostrar los métodos de pago de Autopay solo a administradores conectados"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:678
+msgid "Show countdown screen before redirection to increase compatibility"
+msgstr "Mostrar una pantalla de cuenta atrás antes de la redirección para aumentar la compatibilidad"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:692
+msgid "Compatibility mode with third-party plugins that reload checkout fragments"
+msgstr "Modo de compatibilidad con plugins externos que recargan fragmentos del checkout"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:707
+msgid "Alternative transaction start production URL"
+msgstr "URL alternativa de inicio de transacción en producción"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:716
+msgid "Alternative transaction start test URL"
+msgstr "URL alternativa de inicio de transacción en pruebas"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:758
+msgid "Import settings from legacy plugin"
+msgstr "Importar ajustes desde el complemento anterior"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:771
+#: templates/settings_css_editor.php:13
+#: templates/settings_field_css_editor.php:14
+msgid "Use own CSS styles"
+msgstr "Aplicar estilos CSS propios"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:795
+msgid "In the available payment methods list we will render a separate, dedicated button for each of the payment methods available through Autopay."
+msgstr "En la lista de métodos de pago se mostrará un botón independiente para cada método disponible a través de Autopay."
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:797
+msgid "In the available payment methods list we will render one button, upon clicking which payer will be redirected to Autopay’s hosted payment page where all available payment methods will be displayed."
+msgstr "En la lista de métodos de pago se mostrará un único botón que redirige al cliente a la página de pago alojada por Autopay, donde verá todas las opciones disponibles."
+
+#: src/Domain/Service/Testing/Order_Creator.php:21
+#: src/Utilities/Test_Connection/Order_Creator.php:21
+msgid "Failed to create product"
+msgstr "No se pudo crear el producto"
+
+#: src/Domain/Service/Testing/Order_Creator.php:28
+#: src/Utilities/Test_Connection/Order_Creator.php:28
+msgid "Failed to create order"
+msgstr "No se pudo crear el pedido"
+
+#: src/Domain/Service/Testing/Order_Creator.php:42
+#: src/Domain/Service/Testing/Order_Creator.php:63
+#: src/Utilities/Test_Connection/Order_Creator.php:42
+#: src/Utilities/Test_Connection/Order_Creator.php:60
+msgid "Failed to delete test order"
+msgstr "No se pudo eliminar el pedido de prueba"
+
+#: src/Domain/Service/White_Label/Group_Mapper.php:54
+msgid "You will be redirected to the page of the selected bank. Select the bank in order to make the payment."
+msgstr "Te redirigiremos a la web de tu banco. Selecciónalo para realizar el pago."
+
+#: src/Domain/Service/White_Label/Group_Mapper.php:194
+#: src/Domain/Service/White_Label/Group_Mapper.php:278
+msgid "You will be redirected to the page of the selected bank."
+msgstr "Te redirigiremos a la página de tu banco."
+
+#: src/Gateway/Blue_Media_Gateway.php:99
+msgid "Autopay Instant payment"
+msgstr "Pago inmediato Autopay"
+
+#: src/Gateway/Blue_Media_Gateway.php:102
+#: src/Gateway/Blue_Media_Gateway.php:118
+msgid "Instant payment, BLIK, credit card, Google Pay, Apple Pay"
+msgstr "Transferencia inmediata, BLIK, tarjeta, Google Pay, Apple Pay"
+
+#: src/Gateway/Blue_Media_Gateway.php:113
+msgid "Autopay gateway"
+msgstr "Pago inmediato"
+
+#: src/Gateway/Blue_Media_Gateway.php:442
+msgid "Autopay payments: Cannot redirect to payment because no payment channel selected."
+msgstr "Pagos Autopay: No se puede redirigir al pago porque no se seleccionó ningún canal de pago."
+
+#: src/Gateway/Blue_Media_Gateway.php:461
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:122
+msgid "The code you provided is invalid. Code should be 6 digits."
+msgstr "El código BLIK introducido no es válido. Debe tener 6 dígitos."
+
+#: src/Gateway/Blue_Media_Gateway.php:496
+msgid "Autopay: Payment process started for order ID:"
+msgstr "Autopay: Proceso de pago iniciado para el pedido ID:"
+
+#: src/Gateway/Blue_Media_Gateway.php:713
+msgid "Autopay: BLIK-0 payment process started for order ID:"
+msgstr "Autopay: Proceso de pago BLIK‑0 iniciado para el pedido ID:"
+
+#: src/Gateway/Blue_Media_Gateway.php:972
+msgid "validate_itn_hash - not valid"
+msgstr "validate_itn_hash: no válido"
+
+#: src/Gateway/Blue_Media_Gateway.php:1643
+msgid "Payment method title has been truncated to 80 characters."
+msgstr "El título del método de pago se ha truncado a 80 caracteres."
+
+#: src/Gateway/Blue_Media_Gateway.php:1651
+msgid "Payment method description has been truncated to 500 characters."
+msgstr "La descripción del método de pago se ha truncado a 500 caracteres."
+
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:108
+msgid "Pay with Autopay"
+msgstr "Pagar con Autopay"
+
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:116
+msgid "No payment channel selected."
+msgstr "No se seleccionó ningún canal de pago."
+
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:118
+msgid "Enter the BLIK code."
+msgstr "Introduce el código BLIK."
+
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:120
+msgid "You'll find it in your banking app."
+msgstr "Lo encontrarás en tu aplicación bancaria."
+
+#: src/Plugin.php:150
+msgid "Unpaid order cancelled - time limit reached."
+msgstr "Estado del pedido cambiado de \"Pendiente\" a \"Cancelado\". Se agotó el tiempo de reserva de stock."
+
+#: src/Plugin.php:522
+msgid "The selected currency is not supported by the Autopay payment gateway. The gateway has been disabled"
+msgstr "La moneda seleccionada no es compatible con la pasarela de pago Autopay. La pasarela se ha desactivado."
+
+#: src/Plugin.php:651
+msgid "Autopay BLIK-0: Timed out while waiting for confirmation."
+msgstr "Autopay BLIK‑0: Tiempo de espera agotado al esperar la confirmación."
+
+#: src/Plugin.php:777
+msgid "The block-based payment module will not work with the installed version of Woocommerce. Install at least 8.1.0 version."
+msgstr "El módulo de pagos basado en bloques no funciona con esta versión de WooCommerce. Instala al menos la 8.1.0."
+
+#: src/Utilities/Test_Connection/Async_Request.php:48
+msgid "Action field not exists"
+msgstr "El campo action no existe"
+
+#: src/Utilities/Test_Connection/Async_Request.php:69
+msgid "test_id field not exists"
+msgstr "El campo test_id no existe"
+
+#: src/Utilities/Test_Connection/Async_Request.php:83
+#: some-file.php:123
+msgid "Your store is not ready to accept payments. Please check the logs for more details."
+msgstr "Tu tienda no está lista para aceptar pagos. Consulta los registros para más detalles."
+
+#: src/Utilities/Test_Connection/Async_Request.php:88
+#: some-file.php:123
+msgid "Minor inconsistencies in your shop were detected, though they may not block transactions entirely. Review your integration steps to optimize performance. If you encounter issues, you can share the log file by downloading or copying it."
+msgstr "Se detectaron pequeñas inconsistencias en tu tienda; quizá no bloqueen por completo las transacciones. Revisa la integración para optimizar el rendimiento. Si tienes problemas, comparte el registro descargándolo o copiándolo."
+
+#: src/Utilities/Test_Connection/Async_Request.php:93
+#: some-file.php:123
+msgid "All gateway prerequisites were met, and transactions should proceed smoothly. Keep this success summary so you can reference it if updates are needed."
+msgstr "Todos los requisitos de la pasarela se han cumplido y las transacciones deberían procesarse sin problemas. Guarda este resumen de éxito por si necesitas consultarlo tras futuras actualizaciones."
+
+#: src/Utilities/Test_Connection/Async_Request.php:125
+msgid "Invalid action"
+msgstr "Acción no válida"
+
+#: src/Utilities/Test_Connection/Auditor.php:229
+msgid "Transaction testing"
+msgstr "Prueba de transacción"
+
+#: src/Utilities/Test_Connection/Auditor.php:231
+msgid "Autopay configuration testing"
+msgstr "Prueba de configuración de Autopay"
+
+#: src/Utilities/Test_Connection/Auditor.php:233
+#: src/Utilities/Test_Connection/Auditor.php:243
+#: src/Utilities/Test_Connection/Strings.php:15
+msgid "Server configuration testing"
+msgstr "Prueba de configuración del servidor"
+
+#: src/Utilities/Test_Connection/Auditor.php:235
+msgid "Wordpress configuration testing"
+msgstr "Prueba de configuración de WordPress"
+
+#: src/Utilities/Test_Connection/Auditor.php:254
+#: Auditor.php:xxx
+#, php-format
+msgid "PHP version %s is below the minimum required version 7.4. Please update your PHP installation."
+msgstr "La versión de PHP %s está por debajo del mínimo requerido (7.4). Actualiza tu instalación."
+
+#: src/Utilities/Test_Connection/Auditor.php:262
+#, php-format
+msgid "PHP version %s is higher than 8.4. Some Wordpress configurations may experience compatibility issues."
+msgstr "La versión de PHP %s es superior a 8.4. Algunas configuraciones de WordPress pueden presentar problemas de compatibilidad."
+
+#: src/Utilities/Test_Connection/Auditor.php:288
+#: Auditor.php:xxx
+#, php-format
+msgid "Missing required PHP extensions: %s. Please install them."
+msgstr "Faltan extensiones PHP necesarias: %s. Instálalas."
+
+#: src/Utilities/Test_Connection/Auditor.php:303
+#: Auditor.php:xxx
+msgid "HTTPS is not enabled. Please secure your site with an SSL certificate."
+msgstr "HTTPS no está habilitado. Protege tu sitio con un certificado SSL."
+
+#: src/Utilities/Test_Connection/Auditor.php:317
+#: Auditor.php:xxx
+msgid "WooCommerce log directory is not writable. Please check file permissions."
+msgstr "El directorio de registros de WooCommerce no tiene permisos de escritura. Revisa los permisos."
+
+#: src/Utilities/Test_Connection/Auditor.php:333
+#: Auditor.php:xxx
+msgid "No internet connection detected. Please contact your hosting provider."
+msgstr "No se detectó conexión a Internet. Contacta con tu proveedor de hosting."
+
+#: src/Utilities/Test_Connection/Auditor.php:346
+#: Auditor.php:xxx
+#, php-format
+msgid "Detected unsupported WooCommerce version (%s). We recommend updating to version 8.1 or higher."
+msgstr "Se detectó una versión de WooCommerce no compatible (%s). Actualiza a la 8.1 o superior."
+
+#: src/Utilities/Test_Connection/Auditor.php:351
+#: Auditor.php:xxx
+#, php-format
+msgid "Beta version of WooCommerce (%s) detected. It might not be fully supported."
+msgstr "Se detectó la versión beta de WooCommerce (%s). Puede que no esté totalmente soportada."
+
+#: src/Utilities/Test_Connection/Auditor.php:371
+#: Auditor.php:xxx
+#, php-format
+msgid "Detected unsupported WordPress version (%s). We recommend updating to version 6.0 or higher."
+msgstr "Se detectó una versión de WordPress no compatible (%s). Actualiza a la 6.0 o superior."
+
+#: src/Utilities/Test_Connection/Auditor.php:376
+#, php-format
+msgid "Beta version of WordPress (%s) detected. It might not be fully supported."
+msgstr "Se ha detectado una versión beta de WordPress (%s). Es posible que no esté totalmente soportada."
+
+#: src/Utilities/Test_Connection/Auditor.php:399
+#: Auditor.php:xxx
+msgid "Unable to fetch the latest Autopay plugin version from the WordPress repository."
+msgstr "No se pudo obtener la última versión del plugin Autopay desde el repositorio de WordPress."
+
+#: src/Utilities/Test_Connection/Auditor.php:413
+#: Auditor.php:xxx
+#, php-format
+msgid "An update is available for the Autopay plugin. Current version: %s, latest version: %s."
+msgstr "Hay una actualización disponible para el plugin Autopay. Versión actual: %s, última versión: %s."
+
+#: src/Utilities/Test_Connection/Auditor.php:434
+msgid "Old BlueMedia plugin is active. Please remove it or deactivate it."
+msgstr "El antiguo plugin Blue Media está activo. Desactívalo o elimínalo."
+
+#: src/Utilities/Test_Connection/Auditor.php:457
+#: Auditor.php:xxx
+msgid "Conflicting third-party plugin 'pay-wp' is active. Please deactivate it to avoid conflicts with Autopay."
+msgstr "El plugin de terceros 'pay-wp' está activo y puede causar conflictos con Autopay. Desactívalo."
+
+#: src/Utilities/Test_Connection/Auditor.php:477
+msgid "No configured currencies found"
+msgstr "No se han encontrado divisas configuradas"
+
+#: src/Utilities/Test_Connection/Auditor.php:501
+#: Auditor.php:xxx
+#, php-format
+msgid "ServiceID was not provided for currency: %s"
+msgstr "No se proporcionó ServiceID para la moneda: %s"
+
+#: src/Utilities/Test_Connection/Auditor.php:512
+#: Auditor.php:xxx
+#, php-format
+msgid "An invalid ServiceID was provided for currency: %s"
+msgstr "Se proporcionó un ServiceID no válido para la moneda: %s"
+
+#: src/Utilities/Test_Connection/Auditor.php:523
+#: Auditor.php:xxx
+#, php-format
+msgid "API secret key (Hash) was not provided for currency: %s"
+msgstr "No se proporcionó la clave secreta (hash) para la moneda: %s"
+
+#: src/Utilities/Test_Connection/Auditor.php:544
+#: Auditor.php:xxx
+msgid "Autopay URL cannot be reached. Make sure you have a valid internet connection"
+msgstr "No se puede acceder a la URL de Autopay. Verifica tu conexión a Internet"
+
+#: src/Utilities/Test_Connection/Auditor.php:591
+#: Auditor.php:xxx
+#, php-format
+msgid "Failed to download payment channel list for currency: %s. Check the validity of the provided key (hash) and serviceID"
+msgstr "Error al descargar la lista de canales de pago para la moneda: %s. Comprueba la clave (hash) y el ServiceID"
+
+#: src/Utilities/Test_Connection/Log_Entry.php:67
+#: src/Utilities/Test_Connection/Strings.php:31
+#: Log_Entry static header texts
+msgid "Critical"
+msgstr "Crítico"
+
+#: src/Utilities/Test_Connection/Log_Entry.php:72
+msgid "Warning"
+msgstr "Advertencia"
+
+#: src/Utilities/Test_Connection/Log_Entry.php:77
+msgid "Info"
+msgstr "Información"
+
+#: src/Utilities/Test_Connection/Payment_Status_Controller.php:24
+msgid "Order get failed"
+msgstr "No se pudo obtener el pedido"
+
+#: src/Utilities/Test_Connection/Strings.php:9
+#: Strings.php:xxx
+msgid "Audit in progress"
+msgstr "Auditoría en curso"
+
+#: src/Utilities/Test_Connection/Strings.php:11
+#: src/Utilities/Test_Connection/Strings.php:13
+#: Strings.php:xxx
+msgid "Audit Completed"
+msgstr "Auditoría completada"
+
+#: src/Utilities/Test_Connection/Strings.php:17
+#: Strings.php:xxx
+msgid "Please wait..."
+msgstr "Por favor, espera…"
+
+#: src/Utilities/Test_Connection/Strings.php:19
+#: Strings.php:xxx
+msgid "Critical problems total"
+msgstr "Problemas críticos totales"
+
+#: src/Utilities/Test_Connection/Strings.php:21
+#: Strings.php:xxx
+msgid "Warnings total"
+msgstr "Advertencias totales"
+
+#: src/Utilities/Test_Connection/Strings.php:23
+#: Strings.php:xxx
+msgid "Start"
+msgstr "Iniciar"
+
+#: src/Utilities/Test_Connection/Strings.php:25
+#: Strings.php:xxx
+msgid "Start again"
+msgstr "Iniciar de nuevo"
+
+#: src/Utilities/Test_Connection/Strings.php:27
+#: Strings.php:xxx
+msgid "The test couldn't continue due to server error."
+msgstr "La prueba no pudo continuar por un error del servidor."
+
+#: src/Utilities/Test_Connection/Strings.php:29
+#: Strings.php:xxx
+msgid "A critical error occurred"
+msgstr "Se produjo un error crítico"
+
+#: src/Utilities/Test_Connection/Strings.php:33
+msgid "The testing procedure was stopped by a critical error. Copy the log contents to the clipboard and download the logs to disk. If you don't see the error message or can't download the logs to disk, ask the administrator for the server error log file."
+msgstr "El procedimiento de prueba se detuvo por un error crítico. Copia el registro y descárgalo. Si no ves el mensaje de error o no puedes descargar los registros, solicita al administrador el registro de errores del servidor."
+
+#: templates/blik_0.php:17
+msgid "Enter the BLIK code"
+msgstr "Introduce el código BLIK"
+
+#: templates/blik_0.php:22
+msgid "The code has 6 digits. You'll find it in your banking app."
+msgstr "El código tiene 6 dígitos. Lo encontrarás en tu aplicación bancaria."
+
+#: templates/card.php:94
+#: templates/card.php:116
+#: templates/card.php:130
+#: templates/card.php:136
+#: templates/card.php:140
+msgid "The response format is invalid. Please copy this message and send it to our technical support: "
+msgstr "El formato de la respuesta no es válido. Copia este mensaje y envíalo a nuestro soporte técnico: "
+
+#: templates/card.php:146
+msgid "Invalid response. Code: "
+msgstr "Respuesta no válida. Código: "
+
+#: templates/order_received_url_filter_field.php:17
+msgid "Replace the default order confirmation endpoint address."
+msgstr "Sustituir la URL predeterminada de confirmación de pedido."
+
+#: templates/order_received_url_filter_field.php:21
+msgid "Replace the phrase:"
+msgstr "Reemplazar la frase:"
+
+#: templates/order_received_url_filter_field.php:35
+msgid "To:"
+msgstr "Por:"
+
+#: templates/redirect_to_payment_overlay.php:4
+msgid "In a while you'll be redirected to the payment page screen"
+msgstr "En unos segundos serás redirigido a la pantalla de pago"
+
+#: templates/redirect_to_payment_overlay.php:9
+msgid "Time to redirect:"
+msgstr "Tiempo hasta la redirección:"
+
+#: templates/settings-advanced-sidebar.php:6
+msgid "Detailed documentation of advanced parameters:"
+msgstr "Documentación detallada de los parámetros avanzados:"
+
+#: templates/settings-advanced-sidebar.php:8
+msgid "Show documentation"
+msgstr "Mostrar documentación"
+
+#: templates/settings_css_editor.php:20
+#: templates/settings_field_css_editor.php:18
+msgid "Use this feature carefully. The CSS code you enter may cause unexpected visual changes to your Checkout page."
+msgstr "Usa esta función con precaución. El CSS que introduzcas puede provocar cambios visuales inesperados en la página de pago."
+
+#: templates/settings_css_editor.php:26
+msgid "Save changes"
+msgstr "Guardar cambios"
+
+#: templates/settings_field_channels.php:20
+msgid "The problem occurred while retrieving a channel list"
+msgstr "Se produjo un problema al obtener la lista de canales"
+
+#: templates/settings_field_channels.php:26
+msgid "Show details"
+msgstr "Mostrar detalles"
+
+#: templates/settings_field_channels.php:52
+msgid "Set the order at checkout"
+msgstr "Establece el orden en el checkout"
+
+#: templates/settings_field_channels.php:64
+msgid "Reset to default"
+msgstr "Restablecer valores predeterminados"
+
+#: templates/settings_field_contact.php:32
+msgid "Meet Autopay."
+msgstr "Conoce Autopay."
+
+#: templates/settings_field_contact.php:42
+msgid "Read more about this plugin:"
+msgstr "Más información sobre este plugin:"
+
+#: templates/settings_field_contact.php:48
+msgid "Plugin configuration"
+msgstr "Configuración del plugin Autopay"
+
+#: templates/settings_field_contact.php:49
+msgid "step by step guide"
+msgstr "guía paso a paso"
+
+#: templates/settings_field_contact.php:54
+msgid "Frequently Asked Questions"
+msgstr "Preguntas frecuentes"
+
+#: templates/settings_field_contact.php:63
+msgid "Ask question about this plugin"
+msgstr "Contactar con nosotros"
+
+#: templates/settings_field_currency_remove.php:29
+#: templates/settings_field_currency_remove.php:30
+msgid "Remove currency"
+msgstr "Eliminar moneda"
+
+#: templates/settings_field_currency_remove.php:38
+msgid "Are you sure to remove currency configuration:"
+msgstr "Confirma la eliminación de la configuración de la moneda:"
+
+#: templates/settings_field_currency_remove.php:50
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: templates/settings_field_currency_tabs.php:25
+msgid "Available currencies"
+msgstr "Monedas disponibles"
+
+#: templates/settings_field_description_with_counter.php:37
+msgid "max. 500 characters"
+msgstr "máx. 500 caracteres"
+
+#: templates/settings_field_description_with_counter.php:52
+#: templates/settings_field_title_with_counter.php:49
+msgid "Maximum length exceeded"
+msgstr "Se superó la longitud máxima"
+
+#: templates/settings_field_ga4_status_table.php:44
+msgid "Event name"
+msgstr "Nombre del evento"
+
+#: templates/settings_field_ga4_status_table.php:45
+msgid "Event ID"
+msgstr "ID del evento"
+
+#: templates/settings_field_ga4_status_table.php:46
+msgid "Description"
+msgstr "Descripción"
+
+#: templates/settings_field_ga4_status_table.php:50
+msgid "View product on list"
+msgstr "Producto mostrado en lista"
+
+#: templates/settings_field_ga4_status_table.php:53
+msgid "Triggered for each product that is listed and visible to the customer when browsing the site."
+msgstr "Se dispara por cada producto listado y visible para el cliente al navegar por la web."
+
+#: templates/settings_field_ga4_status_table.php:57
+msgid "View product details"
+msgstr "Ver detalles del producto"
+
+#: templates/settings_field_ga4_status_table.php:60
+msgid "Triggered when a user visits a specific product page. Triggered when the page is displayed/loaded."
+msgstr "Se dispara cuando un usuario visita la página de un producto; se activa al cargar la página."
+
+#: templates/settings_field_ga4_status_table.php:64
+msgid "Click on a product"
+msgstr "Clic en un producto"
+
+#: templates/settings_field_ga4_status_table.php:67
+msgid "Triggered when a user adds a product to the cart."
+msgstr "Se dispara cuando un usuario añade un producto al carrito."
+
+#: templates/settings_field_ga4_status_table.php:71
+msgid "Remove a product from the cart"
+msgstr "Eliminar producto del carrito"
+
+#: templates/settings_field_ga4_status_table.php:74
+msgid "Triggered when a user removes a product from the cart."
+msgstr "Se dispara cuando un usuario elimina un producto del carrito."
+
+#: templates/settings_field_ga4_status_table.php:78
+msgid "Start the checkout process"
+msgstr "Iniciar el proceso de compra"
+
+#: templates/settings_field_ga4_status_table.php:81
+msgid "Triggered when a user proceeds to checkout."
+msgstr "Se dispara cuando un usuario inicia el pago."
+
+#: templates/settings_field_ga4_status_table.php:85
+msgid "Completed order details"
+msgstr "Datos de pedido completados"
+
+#: templates/settings_field_ga4_status_table.php:88
+msgid "Triggered when the user has completed the checkout details."
+msgstr "Se dispara cuando el usuario ha completado los datos del pedido."
+
+#: templates/settings_field_ga4_status_table.php:92
+msgid "Select payment method"
+msgstr "Selección del método de pago"
+
+#: templates/settings_field_ga4_status_table.php:95
+msgid "Triggered when the user has proceeded to the second step of the checkout (selection of payment method)."
+msgstr "Se dispara cuando el usuario llega al segundo paso (selección del método de pago)."
+
+#: templates/settings_field_ga4_status_table.php:99
+msgid "Complete transaction"
+msgstr "Finalizar transacción"
+
+#: templates/settings_field_ga4_status_table.php:102
+msgid "Triggered when the transaction is successfully completed. It is sent on the server side so that the transaction is marked, even if the Customer has not returned to the thank you page."
+msgstr "Se dispara cuando la transacción se completa con éxito. Se envía desde el servidor para marcarla incluso si el cliente no vuelve a la página de agradecimiento."
+
+#: templates/settings_field_import.php:5
+msgid "Import settings from 2.x/3.x version"
+msgstr "Importar ajustes de la versión 2.x/3.x"
+
+#: templates/settings_field_import.php:9
+msgid "Imports Service ID, configuration key and environment setting ( testing / production)"
+msgstr "Importa el Service ID, la clave de configuración y el entorno (pruebas/producción)"
+
+#: templates/settings_field_import.php:17
+msgid "Start import"
+msgstr "Importar"
+
+#: templates/settings_field_status.php:16
+#: templates/settings_field_status.php:29
+msgid "Check the connection"
+msgstr "Comprobar la conexión"
+
+#: templates/settings_field_status.php:36
+msgid "Check transaction"
+msgstr "Verificar transacción"
+
+#: templates/settings_field_test_connection.php:21
+#: audit-settings.php:xxx
+msgid "Connection and transaction validity audit"
+msgstr "Auditoría de conexión y validez de transacción"
+
+#: templates/settings_field_test_connection.php:40
+#: audit-settings.php:xxx
+msgid "Critical problems total: "
+msgstr "Problemas críticos totales: "
+
+#: templates/settings_field_test_connection.php:45
+#: audit-settings.php:xxx
+msgid "Warnings total: "
+msgstr "Advertencias totales: "
+
+#: templates/settings_field_test_connection.php:61
+#: audit-settings.php:xxx
+msgid "Test has been completed. Click \"Download full log\" to download logs to disk."
+msgstr "La prueba ha terminado. Haz clic en «Descargar registro completo» para guardarlo."
+
+#: templates/settings_field_test_connection.php:67
+#: audit-settings.php:xxx
+msgid "An error occurred during finalization: "
+msgstr "Se produjo un error durante la finalización: "
+
+#: templates/settings_field_test_connection.php:75
+#: audit-settings.php:xxx
+msgid "An warning occurred during finalization: "
+msgstr "Se produjo una advertencia durante la finalización: "
+
+#: templates/settings_field_test_connection.php:88
+#: audit-settings.php:xxx
+msgid "Download full log"
+msgstr "Descargar registro completo"
+
+#: templates/settings_field_test_connection.php:93
+#: audit-settings.php:xxx
+msgid "Copy log to clipboard"
+msgstr "Copiar registro al portapapeles"
+
+#: templates/settings_field_title_with_counter.php:32
+msgid "max. 80 characters"
+msgstr "máx. 80 caracteres"
+
+#: templates/settings_ga4_modals.php:7
+msgid "Measurement ID, which you will find in Google Analytics:"
+msgstr "ID de medición (Measurement ID) que encontrarás en Google Analytics:"
+
+#: templates/settings_ga4_modals.php:9
+msgid "1. Log into your Google Analytics dashboard and click on ‘Administrator’ in the bottom left corner."
+msgstr "1. Inicia sesión en tu panel de Google Analytics y haz clic en «Administrador» en la esquina inferior izquierda."
+
+#: templates/settings_ga4_modals.php:11
+msgid "2. In the ‘Collecting and modifying data’ section, click ‘Data streams’."
+msgstr "2. En la sección «Recopilación y modificación de datos», haz clic en «Flujos de datos»."
+
+#: templates/settings_ga4_modals.php:13
+#: templates/settings_ga4_modals.php:30
+#: templates/settings_ga4_modals.php:50
+msgid "3. Click the name of the data stream."
+msgstr "3. Haz clic en el nombre del flujo de datos."
+
+#: templates/settings_ga4_modals.php:15
+msgid "4. Your Measurement ID is in the top right corner (e.g. G-QCX4K9GSPC)."
+msgstr "4. Tu ID de medición está en la esquina superior derecha (p. ej., G-QCX4K9GSPC)."
+
+#: templates/settings_ga4_modals.php:24
+msgid "The Data Stream Identifier you will find in Google Anlytics:"
+msgstr "Identificador del flujo de datos (Stream ID) que encontrarás en Google Analytics:"
+
+#: templates/settings_ga4_modals.php:26
+msgid "1. Log into your Google Analytics dashboard and click ‘Administration’."
+msgstr "1. Inicia sesión en el panel de Google Analytics y haz clic en «Administrador»."
+
+#: templates/settings_ga4_modals.php:28
+#: templates/settings_ga4_modals.php:48
+msgid "2. In the ‘Services’ section, click ‘Data streams’."
+msgstr "2. En la sección «Servicios», haz clic en «Flujos de datos»."
+
+#: templates/settings_ga4_modals.php:32
+msgid "4. Copy the identifier of the data stream from the ‘Stream details’ field."
+msgstr "4. Copia el identificador del flujo de datos del campo «Detalles del flujo»."
+
+#: templates/settings_ga4_modals.php:44
+msgid "Text API key, which you will find in Google Analytics:"
+msgstr "Clave de API de texto que encontrarás en Google Analytics:"
+
+#: templates/settings_ga4_modals.php:46
+msgid "1. Go to ‘Administrator’ in the bottom left corner."
+msgstr "1. Ve a «Administrador» en la esquina inferior izquierda."
+
+#: templates/settings_status.php:20
+msgid "Test connection"
+msgstr "Probar conexión"
+
+#: templates/settings_status.php:27
+msgid "Test transaction"
+msgstr "Transacción de prueba"
+
+#: templates/settings_vas.php:33
+msgid "Oops, something went wrong!"
+msgstr "¡Vaya, algo salió mal!"
+
+#: templates/settings_vas.php:35
+msgid "The list of services for Merchant couldn't be loaded. This may be a temporary problem. Try again in a while. If it still doesn't work,"
+msgstr "No se pudo cargar la lista de servicios para el comerciante. Puede ser un problema temporal. Inténtalo de nuevo más tarde. Si persiste,"
+
+#: templates/settings_vas.php:37
+msgid "let us know."
+msgstr "háznoslo saber."
+
+#: src/Gateway/Blue_Media_Gateway.php:1454
+msgid "Select the payment method you want to use."
+msgstr "Seleccione el método de pago que desea utilizar."
+
+msgid "Appearance"
+msgstr "Apariencia"
+
+#: src/Domain/Service/Settings/Settings_Tabs.php:55
+msgid "Advanced"
+msgstr "Avanzado"
+
+msgid "Title and description have been reset to defaults."
+msgstr "El título y la descripción se han restablecido a los valores predeterminados."

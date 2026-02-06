@@ -8,8 +8,11 @@
 namespace Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol;
 
 use Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\Dto\Request\AbstractRequest;
+use Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\Dto\Response\AbstractResponse;
 use Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\Dto\Response\BaseResponse;
 use Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\Dto\Response\DebugResponse;
+use Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\Dto\Response\StreamResponse;
+use Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\Exception\MisconfigurationException;
 class Service
 {
     const SSL_SCHEME = 'https://';
@@ -44,12 +47,17 @@ class Service
      * An API SECRET generated in the Google Analytics UI
      * @var string
      */
-    protected $apiSecret;
+    protected $apiSecret = null;
     /**
      * The measurement ID associated with a data stream
      * @var string
      */
-    protected $measurementId;
+    protected $measurementId = null;
+    /**
+     * The Firebase App ID associated with a data stream
+     * @var string
+     */
+    protected $firebaseId = null;
     /**
      * The custom ip address of the visitor
      * @var string
@@ -63,24 +71,71 @@ class Service
     /**
      * Client constructor.
      * @param string $apiSecret
-     * @param string $measurementId
+     * @param string|null $measurementId
      */
-    public function __construct(string $apiSecret, string $measurementId)
+    public function __construct(string $apiSecret, ?string $measurementId = null)
     {
         $this->setApiSecret($apiSecret);
-        $this->setMeasurementId($measurementId);
+        if ($measurementId) {
+            @\trigger_error('Creating a measurement service instance with a measurement ID passed to the constructor is deprecated in v0.1.3 and removed in v0.2.0. Use ::setMeasurementId() or ::setFirebaseId() directly, instead.', \E_USER_DEPRECATED);
+            $this->setMeasurementId($measurementId);
+        }
     }
     /**
      * @param AbstractRequest $request
+     * @param bool|null $debug
      * @return BaseResponse
      * @throws Exception\ValidationException
      * @throws Exception\HydrationException
+     * @api
      */
-    public function send(AbstractRequest $request)
+    public function send(AbstractRequest $request, ?bool $debug = \false)
     {
-        $request->validate();
-        $response = $this->getHttpClient()->post($this->getEndpoint(), $request->export(), $this->getOptions());
-        return new BaseResponse($response);
+        return $this->doSend($request, $debug);
+    }
+    /**
+     * @param AbstractRequest $request
+     * @return DebugResponse
+     * @throws Exception\ValidationException
+     * @throws Exception\HydrationException
+     * @api
+     */
+    public function sendDebug(AbstractRequest $request)
+    {
+        return $this->doSend($request, \true);
+    }
+    /**
+     * @param AbstractRequest $request
+     * @return DebugResponse
+     * @throws Exception\ValidationException
+     * @throws Exception\HydrationException
+     * @api
+     */
+    public function sendStream(AbstractRequest $request)
+    {
+        return $this->doSend($request, \false, \true);
+    }
+    /**
+     * @param AbstractRequest $request
+     * @param bool|null $debug
+     * @param bool|null $stream
+     * @return AbstractResponse
+     * @throws Exception\ValidationException
+     * @throws Exception\HydrationException
+     */
+    protected function doSend(AbstractRequest $request, ?bool $debug = \false, ?bool $stream = \false)
+    {
+        $request->validate($this->measurementId ? 'web' : 'firebase');
+        $response = $this->getHttpClient()->post($this->getEndpoint($debug), $request->export(), $this->getOptions());
+        if ($debug) {
+            return new DebugResponse($response);
+        } else {
+            if ($stream) {
+                return new StreamResponse($response);
+            } else {
+                return new BaseResponse($response);
+            }
+        }
     }
     /**
      * Returns Http Client if set or creates a new instance and returns it
@@ -95,10 +150,12 @@ class Service
     }
     /**
      * @param HttpClient $httpClient
+     * @return self
      */
-    public function setHttpClient(HttpClient $httpClient)
+    public function setHttpClient(HttpClient $httpClient) : self
     {
         $this->httpClient = $httpClient;
+        return $this;
     }
     /**
      * Returns prepared endpoint url
@@ -120,10 +177,12 @@ class Service
     }
     /**
      * @param bool $useSsl
+     * @return self
      */
-    public function setUseSsl(bool $useSsl)
+    public function setUseSsl(bool $useSsl) : self
     {
         $this->useSsl = $useSsl;
+        return $this;
     }
     /**
      * @return bool
@@ -134,10 +193,12 @@ class Service
     }
     /**
      * @param bool $useWww
+     * @return self
      */
-    public function setUseWww(bool $useWww)
+    public function setUseWww(bool $useWww) : self
     {
         $this->useWww = $useWww;
+        return $this;
     }
     /**
      * @return string
@@ -148,10 +209,12 @@ class Service
     }
     /**
      * @param string $collectDebugEndpoint
+     * @return self
      */
-    public function setCollectDebugEndpoint(string $collectDebugEndpoint)
+    public function setCollectDebugEndpoint(string $collectDebugEndpoint) : self
     {
         $this->collectDebugEndpoint = $collectDebugEndpoint;
+        return $this;
     }
     /**
      * @return string
@@ -162,18 +225,24 @@ class Service
     }
     /**
      * @param string $collectEndpoint
+     * @return self
      */
-    public function setCollectEndpoint(string $collectEndpoint)
+    public function setCollectEndpoint(string $collectEndpoint) : self
     {
         $this->collectEndpoint = $collectEndpoint;
+        return $this;
     }
     /**
      * Returns query parameters
      * @return array
+     * @throws MisconfigurationException
      */
     public function getQueryParameters() : array
     {
-        $parameters = ['measurement_id' => $this->getMeasurementId(), 'api_secret' => $this->getApiSecret()];
+        $parameters = ['api_secret' => $this->getApiSecret(), 'measurement_id' => $this->getMeasurementId(), 'firebase_app_id' => $this->getFirebaseId()];
+        if ($parameters['firebase_app_id'] && $parameters['measurement_id']) {
+            throw new MisconfigurationException("Cannot specify both 'measurement_id' and 'firebase_app_id'.");
+        }
         $ip = $this->getIpOverride();
         if (!empty($ip)) {
             $parameters['uip'] = $ip;
@@ -181,21 +250,39 @@ class Service
             // https://github.com/dataunlocker/save-analytics-from-content-blockers/issues/25#issuecomment-864392422
             $parameters['_uip'] = $ip;
         }
-        return $parameters;
+        return \array_filter($parameters);
     }
     /**
      * @return string
      */
-    public function getMeasurementId() : string
+    public function getMeasurementId() : ?string
     {
         return $this->measurementId;
     }
     /**
      * @param string $measurementId
+     * @return self
      */
-    public function setMeasurementId(string $measurementId)
+    public function setMeasurementId(string $measurementId) : self
     {
         $this->measurementId = $measurementId;
+        return $this;
+    }
+    /**
+     * @return string|null
+     */
+    public function getFirebaseId() : ?string
+    {
+        return $this->firebaseId;
+    }
+    /**
+     * @param string $firebaseId
+     * @return self
+     */
+    public function setFirebaseId(string $firebaseId) : self
+    {
+        $this->firebaseId = $firebaseId;
+        return $this;
     }
     /**
      * @return string
@@ -206,10 +293,12 @@ class Service
     }
     /**
      * @param string $apiSecret
+     * @return self
      */
-    public function setApiSecret(string $apiSecret)
+    public function setApiSecret(string $apiSecret) : self
     {
         $this->apiSecret = $apiSecret;
+        return $this;
     }
     /**
      * @return string
@@ -220,10 +309,12 @@ class Service
     }
     /**
      * @param string $ipOverride
+     * @return self
      */
-    public function setIpOverride(string $ipOverride)
+    public function setIpOverride(string $ipOverride) : self
     {
         $this->ipOverride = $ipOverride;
+        return $this;
     }
     /**
      * @return array|null
@@ -234,21 +325,11 @@ class Service
     }
     /**
      * @param array|null $options
+     * @return self
      */
-    public function setOptions(?array $options)
+    public function setOptions(?array $options) : self
     {
         $this->options = $options;
-    }
-    /**
-     * @param AbstractRequest $request
-     * @return BaseResponse
-     * @throws Exception\ValidationException
-     * @throws Exception\HydrationException
-     */
-    public function sendDebug(AbstractRequest $request)
-    {
-        $request->validate();
-        $response = $this->getHttpClient()->post($this->getEndpoint(\true), $request->export(), $this->getOptions());
-        return new DebugResponse($response);
+        return $this;
     }
 }

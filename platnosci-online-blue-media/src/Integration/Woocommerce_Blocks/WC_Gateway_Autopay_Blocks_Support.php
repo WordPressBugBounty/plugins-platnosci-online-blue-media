@@ -5,7 +5,8 @@ namespace Ilabs\BM_Woocommerce\Integration\Woocommerce_Blocks;
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
 use Exception;
 use Ilabs\BM_Woocommerce\Controller\Payment_Status_Controller;
-use Ilabs\BM_Woocommerce\Domain\Service\White_Label\Group_Mapper;
+use Ilabs\BM_Woocommerce\Domain\Model\White_Label\v3\Gateway_List_Response_Factory;
+use Ilabs\BM_Woocommerce\Domain\Service\Gateway_List\Gateway_List_Mapper_Block_Checkout;
 use Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway;
 
 /**
@@ -92,24 +93,34 @@ final class WC_Gateway_Autopay_Blocks_Support extends AbstractPaymentMethodType 
 	}
 
 	public function get_payment_method_data(): array {
-		try {
-			$channels = blue_media()
-				->get_blue_media_gateway()
-				->gateway_list( true );
-		} catch ( Exception $exception ) {
-			$channels = [];
+		$is_whitelabel = $this->gateway->is_whitelabel_mode_enabled();
+
+		if ( $is_whitelabel ) {
+			try {
+				$gateway_list_data = blue_media()
+					->get_blue_media_gateway()
+					->gateway_list( true );
+			} catch ( Exception $exception ) {
+				$gateway_list_data = [];
+			}
+
+			$channels                   = ( new Gateway_List_Response_Factory() )->create( $gateway_list_data );
+			$channels_mapped_for_blocks = ( new Gateway_List_Mapper_Block_Checkout( $channels ) )->map_for_blocks();
+		} else {
+			$channels_mapped_for_blocks = [];
 		}
+
 
 		return [
 			'title'                    => $this->gateway->get_title(),
 			'description'              => $this->gateway->get_method_description(),
 			'icon_src'                 => blue_media()->get_plugin_images_url() . "/logo-autopay-banner.svg",
-			'whitelabel'               => $this->gateway->get_option( 'whitelabel' ) === 'yes',
+			'whitelabel'               => $is_whitelabel,
 			'place_order_button_label' => __( 'Pay with Autopay',
 				'bm-woocommerce' ),
 			'supports'                 => array_filter( $this->gateway->supports,
 				[ $this->gateway, 'supports' ] ),
-			'channels'                 => ( new Group_Mapper( $channels ) )->map_for_blocks(),
+			'channels'                 => $channels_mapped_for_blocks,
 			'messages'                 => [
 				'payment_failed'                          => __( 'Payment failed',
 					'bm-woocommerce' ),

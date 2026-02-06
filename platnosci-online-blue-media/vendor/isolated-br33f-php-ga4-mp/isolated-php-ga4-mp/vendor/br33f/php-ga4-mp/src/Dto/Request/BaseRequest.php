@@ -8,8 +8,11 @@
 namespace Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\Dto\Request;
 
 use Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\Dto\Common\EventCollection;
+use Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\Dto\Common\UserData;
+use Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\Dto\Common\UserDataItem;
 use Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\Dto\Common\UserProperties;
 use Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\Dto\Common\UserProperty;
+use Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\Dto\Common\ConsentProperty;
 use Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\Dto\Event\AbstractEvent;
 use Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\Enum\ErrorCode;
 use Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\Exception\ValidationException;
@@ -20,7 +23,12 @@ class BaseRequest extends AbstractRequest
      * Required
      * @var string
      */
-    protected $clientId;
+    protected $clientId = null;
+    /**
+     * App Instance ID.
+     * @var string
+     */
+    protected $appInstanceId = null;
     /**
      * Unique identifier for a user.
      * Not required
@@ -40,11 +48,24 @@ class BaseRequest extends AbstractRequest
      */
     protected $userProperties = null;
     /**
-     * If set true - indicates that events should not be use for personalized ads.
-     * Default false
-     * @var bool
+     * The user data for the measurement.
+     * Not required
+     * @var UserData
      */
-    protected $nonPersonalizedAds = \false;
+    protected $userData = null;
+    /**
+     * If set true - indicates that events should not be use for personalized ads.
+     * Not required
+     * @var ?bool
+     */
+    protected $nonPersonalizedAds = null;
+    /**
+     * Sets the consent settings for the request.
+     * Replaces non_personalized_ads
+     * Not required
+     * @var ConsentProperty
+     */
+    protected $consent = null;
     /**
      * Collection of event items. Maximum 25 events.
      * Required
@@ -58,7 +79,10 @@ class BaseRequest extends AbstractRequest
      */
     public function __construct(?string $clientId = null, $events = null)
     {
-        $this->clientId = $clientId ?? '';
+        if ($clientId !== null) {
+            @\trigger_error('Creating a request by passing a web client ID to the constructor is deprecated in v0.1.3 and removed in v0.2.0. Use ::setClientId() or ::setAppInstanceId() directly, instead.', \E_USER_DEPRECATED);
+            $this->clientId = $clientId;
+        }
         if ($events !== null) {
             if ($events instanceof EventCollection) {
                 $this->events = $events;
@@ -101,6 +125,50 @@ class BaseRequest extends AbstractRequest
         return $this;
     }
     /**
+     * @return ConsentProperty|null
+     */
+    public function getConsent() : ?ConsentProperty
+    {
+        return $this->consent;
+    }
+    /**
+     * @param ConsentProperty|null $consent
+     * @return BaseRequest
+     */
+    public function setConsent(?ConsentProperty $consent) : self
+    {
+        $this->consent = $consent;
+        return $this;
+    }
+    /**
+     * @param UserData $userProperty
+     * @return BaseRequest
+     */
+    public function addUserDataItem(UserDataItem $userDataItem)
+    {
+        if ($this->getUserData() === null) {
+            $this->setUserData(new UserData());
+        }
+        $this->getUserData()->addUserDataItem($userDataItem);
+        return $this;
+    }
+    /**
+     * @return UserProperties|null
+     */
+    public function getUserData() : ?UserData
+    {
+        return $this->userData;
+    }
+    /**
+     * @param UserData|null $userData
+     * @return BaseRequest
+     */
+    public function setUserData(?UserData $userData)
+    {
+        $this->userData = $userData;
+        return $this;
+    }
+    /**
      * @param AbstractEvent $event
      * @return BaseRequest
      */
@@ -130,7 +198,10 @@ class BaseRequest extends AbstractRequest
      */
     public function export() : array
     {
-        $exportBaseRequest = ['client_id' => $this->getClientId(), 'non_personalized_ads' => $this->isNonPersonalizedAds(), 'events' => $this->getEvents()->export()];
+        $exportBaseRequest = \array_filter(['client_id' => $this->getClientId(), 'app_instance_id' => $this->getAppInstanceId(), 'events' => $this->getEvents()->export()]);
+        if ($this->getNonPersonalizedAds() !== null) {
+            $exportBaseRequest['non_personalized_ads'] = $this->isNonPersonalizedAds();
+        }
         if ($this->getUserId() !== null) {
             $exportBaseRequest['user_id'] = $this->getUserId();
         }
@@ -140,12 +211,18 @@ class BaseRequest extends AbstractRequest
         if ($this->getUserProperties() !== null) {
             $exportBaseRequest['user_properties'] = $this->getUserProperties()->export();
         }
+        if ($this->getUserData() !== null) {
+            $exportBaseRequest['user_data'] = $this->getUserData()->export();
+        }
+        if ($this->getConsent() !== null) {
+            $exportBaseRequest['consent'] = $this->getConsent()->export();
+        }
         return $exportBaseRequest;
     }
     /**
      * @return string
      */
-    public function getClientId() : string
+    public function getClientId() : ?string
     {
         return $this->clientId;
     }
@@ -153,15 +230,42 @@ class BaseRequest extends AbstractRequest
      * @param string $clientId
      * @return BaseRequest
      */
-    public function setClientId(string $clientId)
+    public function setClientId(string $clientId) : self
     {
         $this->clientId = $clientId;
+        return $this;
+    }
+    /**
+     * @return string|null
+     */
+    public function getAppInstanceId() : ?string
+    {
+        return $this->appInstanceId;
+    }
+    /**
+     * @param string $appInstanceId
+     * @return BaseRequest
+     */
+    public function setAppInstanceId(string $appInstanceId) : self
+    {
+        $this->appInstanceId = $appInstanceId;
         return $this;
     }
     /**
      * @return bool
      */
     public function isNonPersonalizedAds() : bool
+    {
+        $nonPersonalizedAds = $this->getNonPersonalizedAds();
+        if (!isset($nonPersonalizedAds)) {
+            return \false;
+        }
+        return $this->nonPersonalizedAds;
+    }
+    /**
+     * @return ?bool
+     */
+    public function getNonPersonalizedAds() : ?bool
     {
         return $this->nonPersonalizedAds;
     }
@@ -207,13 +311,20 @@ class BaseRequest extends AbstractRequest
         return $this;
     }
     /**
+     * @param string|null $context Context for request, either 'web' or 'firebase'.
      * @return bool
      * @throws ValidationException
      */
-    public function validate()
+    public function validate(?string $context = 'web')
     {
-        if (empty($this->getClientId())) {
+        if ($context === 'web' && empty($this->getClientId())) {
             throw new ValidationException('Parameter "client_id" is required.', ErrorCode::VALIDATION_CLIENT_ID_REQUIRED, 'client_id');
+        }
+        if ($context === 'firebase' && empty($this->getAppInstanceId())) {
+            throw new ValidationException('Parameter "app_instance_id" is required.', ErrorCode::VALIDATION_APP_INSTANCE_ID_REQUIRED, 'app_instance_id');
+        }
+        if ($this->getClientId() && $this->getAppInstanceId()) {
+            throw new ValidationException('Cannot specify both "client_id" and "app_instance_id".', ErrorCode::VALIDATION_CLIENT_IDENTIFIER_MISCONFIGURED);
         }
         $this->getEvents()->validate();
         return \true;

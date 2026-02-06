@@ -51,6 +51,12 @@ class Async_Request implements Controller_Interface {
 
 
 			$action = sanitize_text_field( $_POST['autopay_action'] );
+			blue_media()->get_woocommerce_logger()->log_debug(
+				sprintf( '[Async_Request] [execute_request] [action: %s] [test_id: %s] [nonce_valid: yes]',
+					$action,
+					isset( $_POST['test_id'] ) ? sanitize_text_field( (string) $_POST['test_id'] ) : ''
+				)
+			);
 
 			switch ( $action ) {
 				case 'new':
@@ -73,6 +79,15 @@ class Async_Request implements Controller_Interface {
 					$auditor    = Auditor::load( $test_id );
 					$log        = $auditor->run();
 					$stage_name = $auditor->get_stageName();
+					blue_media()->get_woocommerce_logger()->log_debug(
+						sprintf( '[Async_Request] [continue] [test_id: %s] [stage_name: %s] [finished: %s] [failed: %s] [warning: %s]',
+							$test_id,
+							$stage_name,
+							$auditor->is_finished() ? '1' : '0',
+							$auditor->is_failed() ? '1' : '0',
+							$auditor->is_warning() ? '1' : '0'
+						)
+					);
 
 
 					if ( $auditor->is_finished() ) {

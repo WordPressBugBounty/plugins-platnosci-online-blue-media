@@ -15,6 +15,12 @@ class Order_Creator {
 		$hash         = $this->generate_random_hash();
 		$product_name = 'autopay_test_product_' . $hash;
 
+		blue_media()->get_woocommerce_logger()->log_debug(
+			sprintf( '[Order_Creator] [create] [Creating test product: %s]',
+				$product_name
+			)
+		);
+
 		$product_id = $this->create_test_product( $product_name );
 
 		if ( ! $product_id ) {
@@ -22,12 +28,24 @@ class Order_Creator {
 				'bm-woocommerce' ) );
 		}
 
+		blue_media()->get_woocommerce_logger()->log_debug(
+			sprintf( '[Order_Creator] [create] [Created test product id: %s]',
+				print_r( $product_id, true )
+			)
+		);
+
 		$order_id = $this->create_test_order( $product_id );
 
 		if ( ! $order_id ) {
 			throw new Exception( __( 'Failed to create order',
 				'bm-woocommerce' ) );
 		}
+
+		blue_media()->get_woocommerce_logger()->log_debug(
+			sprintf( '[Order_Creator] [create] [Created test order id: %s]',
+				print_r( $order_id, true )
+			)
+		);
 
 		return wc_get_order( $order_id );
 	}
@@ -43,6 +61,13 @@ class Order_Creator {
 				'bm-woocommerce' ) );
 		}
 
+		blue_media()->get_woocommerce_logger()->log_debug(
+			sprintf( '[Order_Creator] [remove] [Attempt] [Order id: %s] [autopay_test_order meta: %s]',
+				print_r( $order_id, true ),
+				print_r( $order->get_meta( 'autopay_test_order' ), true )
+			)
+		);
+
 		if ( $order->get_meta( 'autopay_test_order' ) === '1' ) {
 			$items = $order->get_items();
 			foreach ( $items as $item ) {
@@ -56,6 +81,12 @@ class Order_Creator {
 			}
 
 			$order->delete();
+
+			blue_media()->get_woocommerce_logger()->log_debug(
+				sprintf( '[Order_Creator] [remove] [Done] [Order id: %s]',
+					print_r( $order_id, true )
+				)
+			);
 		} else {
 			throw new Exception( __( 'Failed to delete test order',
 				'bm-woocommerce' ) );

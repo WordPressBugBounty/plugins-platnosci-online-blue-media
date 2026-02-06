@@ -70,24 +70,25 @@ class Settings_Manager {
 				$tabs          = ( new Settings_Tabs );
 				$active_tab_id = $tabs->get_active_tab_id();
 				if ( $active_tab_id === $tabs::VAS_TAB_ID ) {
-					add_action( 'woocommerce_settings_checkout',
-						function () {
-							$GLOBALS['hide_save_button'] = true;
-						} );
-					add_action( 'woocommerce_after_settings_checkout',
-						function () {
-							$GLOBALS['hide_save_button'] = false;
-						} );
+					if ( get_locale() === 'pl_PL' ) {
+						add_action( 'woocommerce_settings_checkout',
+							function () {
+								$GLOBALS['hide_save_button'] = true;
+							} );
+						add_action( 'woocommerce_after_settings_checkout',
+							function () {
+								$GLOBALS['hide_save_button'] = false;
+							} );
 
-					$vas_content = ( new Vas() )->get_vas_content();
-					blue_media()->locate_template( 'settings_vas.php',
-						[
-							'vas_content' => $vas_content,
-							'title'       => $tabs->get_active_tab_name(),
-							'subtitle'    => __( 'Use the services of official and verified Autopay partners!',
-								'bm-woocommerce' ),
-						] );
-
+						$vas_content = ( new Vas() )->get_vas_content();
+						blue_media()->locate_template( 'settings_vas.php',
+							[
+								'vas_content' => $vas_content,
+								'title'       => $tabs->get_active_tab_name(),
+								'subtitle'    => __( 'Use the services of official and verified Autopay partners!',
+									'bm-woocommerce' ),
+							] );
+					}
 				}
 			} )
 			->on_wp_init()

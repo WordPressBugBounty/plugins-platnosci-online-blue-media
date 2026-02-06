@@ -4,7 +4,7 @@ namespace Ilabs\BM_Woocommerce\Domain\Service\Custom_Styles;
 
 class Css_Frontend {
 
-	public function include( string $id = null ) {
+	public function include( ?string $id = null ) {
 		$editor = new Css_Editor( $id );
 
 		if ( $editor->is_enabled() ) {

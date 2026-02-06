@@ -8,7 +8,7 @@
 namespace Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\Dto\Request;
 
 use Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\Dto\ExportableInterface;
-use Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\Dto\ValidateInterface;
-abstract class AbstractRequest implements ExportableInterface, ValidateInterface
+use Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\Dto\RequestValidateInterface;
+abstract class AbstractRequest implements ExportableInterface, RequestValidateInterface
 {
 }

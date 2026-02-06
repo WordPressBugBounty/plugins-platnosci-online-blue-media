@@ -4,17 +4,16 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit17a14c80e7ca1ee6d6759b9a66b0b0ca
+class ComposerStaticInit0546f4cff110f5aa4601711b1a0428bb
 {
     public static $files = array (
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
-        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
     );
 
     public static $prefixLengthsPsr4 = array (
-        'I' => 
+        'I' =>
         array (
             'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\Psr\\Http\\Message\\' => 57,
             'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\Psr\\Http\\Client\\' => 56,
@@ -25,24 +24,24 @@ class ComposerStaticInit17a14c80e7ca1ee6d6759b9a66b0b0ca
     );
 
     public static $prefixDirsPsr4 = array (
-        'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\Psr\\Http\\Message\\' => 
+        'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\Psr\\Http\\Message\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-factory/src',
             1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
-        'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\Psr\\Http\\Client\\' => 
+        'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\Psr\\Http\\Client\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-client/src',
         ),
-        'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Psr7\\' => 
+        'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Psr7\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
         ),
-        'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Promise\\' => 
+        'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Promise\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
         ),
-        'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\' => 
+        'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
@@ -158,9 +157,9 @@ class ComposerStaticInit17a14c80e7ca1ee6d6759b9a66b0b0ca
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit17a14c80e7ca1ee6d6759b9a66b0b0ca::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit17a14c80e7ca1ee6d6759b9a66b0b0ca::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit17a14c80e7ca1ee6d6759b9a66b0b0ca::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit0546f4cff110f5aa4601711b1a0428bb::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit0546f4cff110f5aa4601711b1a0428bb::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit0546f4cff110f5aa4601711b1a0428bb::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -48,10 +48,12 @@ class HttpClient
     }
     /**
      * @param Client $client
+     * @return self
      */
-    public function setClient(Client $client)
+    public function setClient(Client $client) : self
     {
         $this->client = $client;
+        return $this;
     }
     /**
      * @param $options

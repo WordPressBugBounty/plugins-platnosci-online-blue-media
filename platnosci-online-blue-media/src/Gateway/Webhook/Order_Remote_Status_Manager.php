@@ -25,9 +25,13 @@ class Order_Remote_Status_Manager {
 
 	const RESULT_NOTCONFIRMED = 'NOTCONFIRMED';
 
+	const PATH_VERSION = '1';
+
 	private $db;
 
 	private $debug_id = 'bm_woocommerce_itn';
+
+	private int $migration_version = 2;
 
 	private bool $status_processing_allowed_in_store = false;
 
@@ -40,14 +44,58 @@ class Order_Remote_Status_Manager {
 	}
 
 
+	private function update_db_schema() {
+		$shop_path_version = (int) get_option( 'autopay_order_remote_status_path' );
+		$need_update       = $shop_path_version < self::PATH_VERSION;
+
+		blue_media()->get_woocommerce_logger( $this->debug_id )->log_debug(
+			sprintf( '[Order_Remote_Status] [update_db_schema] [%s]',
+				print_r( [
+					'shop_path_version'   => $shop_path_version,
+					'plugin_path_version' => self::PATH_VERSION,
+					'need_update'         => $need_update ? 'TRUE' : 'FALSE',
+				], true ),
+			) );
+
+		if ( ! $need_update ) {
+			return;
+		}
+
+		try {
+			$table_name = esc_sql( $this->get_table_name_prefixed() );
+			$this->db->query( "ALTER TABLE {$table_name} MODIFY id BIGINT NOT NULL AUTO_INCREMENT" );
+			$this->db->query( "ALTER TABLE {$table_name} MODIFY order_id BIGINT NOT NULL" );
+			$result = $this->db->last_result;
+		} catch ( Exception $exception ) {
+			blue_media()->get_woocommerce_logger( $this->debug_id )->log_error(
+				sprintf( '[Order_Remote_Status] [update_db_schema] [error] [%s]',
+					print_r( [
+						'message' => $exception->getMessage(),
+					], true ),
+				) );
+
+			return;
+		}
+
+		blue_media()->get_woocommerce_logger( $this->debug_id )->log_debug(
+			sprintf( '[Order_Remote_Status] [update_db_schema] [%s]',
+				print_r( [
+					'result' => $result,
+				], true ),
+			) );
+
+
+		update_option( 'autopay_order_remote_status_path', self::PATH_VERSION );
+	}
+
 	public function install_db_schema() {
 
 		try {
 			$table_name      = esc_sql( $this->get_table_name_prefixed() );
 			$charset_collate = $this->db->get_charset_collate();
 			$sql             = "CREATE TABLE IF NOT EXISTS $table_name (
-                id mediumint(9) NOT NULL AUTO_INCREMENT,
-                order_id mediumint(9) NOT NULL,
+                id BIGINT NOT NULL AUTO_INCREMENT,
+                order_id BIGINT NOT NULL,
                 status varchar(40) NOT NULL,
                 PRIMARY KEY (id),
                 UNIQUE KEY order_id (order_id)
@@ -81,6 +129,8 @@ class Order_Remote_Status_Manager {
 				) );
 
 		}
+
+		$this->update_db_schema();
 
 	}
 

@@ -15,9 +15,9 @@ class Admin_Section_Resources_Client {
 	private const VAS_BASE_URL_PL = 'https://plugins-api.autopay.pl/woocomerce-vas';
 
 	private const VAS_BASE_URL_EN = 'https://plugins-api.autopay.pl/en/woocommerce-vas';
-	private const VAS_BASE_URL_ES = 'https://plugins-api.autopay.pl/es/woocommerce-vas';
-	private const VAS_BASE_URL_IT = 'https://plugins-api.autopay.pl/it/woocommerce-vas';
-	private const VAS_BASE_URL_DE = 'https://plugins-api.autopay.pl/de/woocommerce-vas';
+	private const VAS_BASE_URL_ES = 'https://plugins-api.autopay.pl/es/woocommerce-vas/';
+	private const VAS_BASE_URL_IT = 'https://plugins-api.autopay.pl/it/woocomerce-vas/';
+	private const VAS_BASE_URL_DE = 'https://plugins-api.autopay.pl/de/woocommerce-vas/';
 
 	private const BANNER_URL_PL = 'https://plugins-api.autopay.pl/plugins-baner-woocomerce/';
 

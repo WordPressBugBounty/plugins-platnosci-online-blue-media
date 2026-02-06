@@ -67,13 +67,14 @@ class Complete_Transation_Use_Case extends Abstract_Ga4_Use_Case implements Ga4_
 	}
 
 	public function get_ga4_purchase_event_status(): int {
-		return (int) $this->order->get_meta( 'autopay_purchase_event_status' );
+		return (int) $this->order->get_meta( '_autopay_purchase_event_status' );
 	}
 
 	public function update_ga4_purchase_event_status(
 		int $status
 	) {
-		$this->order->add_meta_data( 'autopay_purchase_event_status', $status );
+		$this->order->add_meta_data( '_autopay_purchase_event_status',
+			$status );
 		$this->order->save();
 	}
 

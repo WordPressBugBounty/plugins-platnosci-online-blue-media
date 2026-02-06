@@ -6,9 +6,11 @@ use Exception;
 use Ilabs\BM_Woocommerce\Domain\Service\Currency\Interfaces\Currency_Interface;
 use Ilabs\BM_Woocommerce\Domain\Service\Currency\Value_Object\CZK;
 use Ilabs\BM_Woocommerce\Domain\Service\Currency\Value_Object\EUR;
+use Ilabs\BM_Woocommerce\Domain\Service\Currency\Value_Object\GBP;
 use Ilabs\BM_Woocommerce\Domain\Service\Currency\Value_Object\HUF;
 use Ilabs\BM_Woocommerce\Domain\Service\Currency\Value_Object\PLN;
 use Ilabs\BM_Woocommerce\Domain\Service\Currency\Value_Object\RON;
+use Ilabs\BM_Woocommerce\Domain\Service\Currency\Value_Object\USD;
 
 class Currency {
 
@@ -108,6 +110,8 @@ class Currency {
 				Currency_Interface::CODE_HUF => new HUF(),
 				Currency_Interface::CODE_CZK => new CZK(),
 				Currency_Interface::CODE_RON => new RON(),
+				Currency_Interface::CODE_USD => new USD(),
+				Currency_Interface::CODE_GBP => new GBP(),
 			];
 		}
 
@@ -172,11 +176,16 @@ class Currency {
 					"" );
 
 			if ( empty( $selected_currencies ) || ! is_array( $selected_currencies ) ) {
+				if ( null === $this->get_shop_currency() ) {
+					return [];
+				}
+
 				self::$selected_currencies[ $this->get_shop_currency()
 				                                 ->get_code() ] = $this->get_shop_currency();
 
 				return self::$selected_currencies;
 			}
+
 
 			foreach ( $selected_currencies as $key ) {
 				$currency = $this->get_currency( $key );
@@ -186,6 +195,28 @@ class Currency {
 
 				self::$selected_currencies[ $currency->get_code() ] = $currency;
 			}
+		}
+
+		// Ensure there is at least one selected currency and the current shop currency (if supported) is present.
+		// This prevents the gateway from disappearing after changing the WooCommerce currency to a supported one (e.g., USD/GBP).
+		$shop_currency = $this->get_shop_currency();
+		$changed       = false;
+
+		// If empty, seed with shop currency (or PLN fallback if ever null).
+		if ( empty( self::$selected_currencies ) && $shop_currency ) {
+			self::$selected_currencies[ $shop_currency->get_code() ] = $shop_currency;
+			$changed = true;
+		}
+
+		// If shop currency is supported but missing, add it to keep gateway active for current store currency.
+		if ( $shop_currency && ! isset( self::$selected_currencies[ $shop_currency->get_code() ] ) ) {
+			self::$selected_currencies[ $shop_currency->get_code() ] = $shop_currency;
+			$changed = true;
+		}
+
+		if ( $changed ) {
+			$codes = array_keys( self::$selected_currencies );
+			blue_media()->update_autopay_option( self::SELECTED_CURRENCIES_OPT_KEY, $codes );
 		}
 
 		return self::$selected_currencies;
@@ -389,15 +420,6 @@ class Currency {
 
 
 	private function handle() {
-
-		if ( isset( $_GET['reset'] ) ) {
-			blue_media()
-				->update_autopay_option( self::SELECTED_CURRENCIES_OPT_KEY,
-					[] );
-
-			return;
-		}
-
 
 		if ( isset( $_POST['autopay_currency_edit'] ) && is_array( $_POST['autopay_currency_edit'] ) ) {
 

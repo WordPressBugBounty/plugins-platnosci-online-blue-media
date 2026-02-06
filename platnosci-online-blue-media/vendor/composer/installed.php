@@ -20,8 +20,8 @@
             'dev_requirement' => false,
         ),
         'isolated-br33f-php-ga4-mp/isolated-php-ga4-mp' => array(
-            'pretty_version' => '0.1.2',
-            'version' => '0.1.2.0',
+            'pretty_version' => '0.1.5',
+            'version' => '0.1.5.0',
             'reference' => null,
             'type' => 'library',
             'install_path' => __DIR__ . '/../isolated-br33f-php-ga4-mp/isolated-php-ga4-mp',
@@ -29,8 +29,8 @@
             'dev_requirement' => false,
         ),
         'isolated-guzzlehttp-guzzle/isolated-guzzle' => array(
-            'pretty_version' => '7.5.1',
-            'version' => '7.5.1.0',
+            'pretty_version' => '7.10.0',
+            'version' => '7.10.0.0',
             'reference' => null,
             'type' => 'library',
             'install_path' => __DIR__ . '/../isolated-guzzlehttp-guzzle/isolated-guzzle',

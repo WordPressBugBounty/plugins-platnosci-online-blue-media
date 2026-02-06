@@ -1,18 +1,35 @@
 *** Autopay Changelog ***
 
-== Changelog ==
+### [4.8.1] 2026-02-02 ###
+- Added support for additional currencies: USD (US Dollar) and GBP (British Pound).
+- Improvements in ITN processing
+- Updated library versions (php-ga4-mp, GuzzleHTTP)
+- Fixed handling of unsupported currencies
+- Fixed in the “Login during checkout” flow
+- Minor fixes and improvements
 
-## [4.7.0] - 2025-08-18
+### [4.8.0] 2026-01-14 ###
+- Translations of the plugin into Spanish, Italian and German have been added.
+- The ability to edit the name and description of payment methods in the administration panel and their presentation on the checkout page has been added.
+- Support for saving and reading the display order of payment methods on the checkout page has been added.
+- The frontend layer has been adjusted to present payment methods according to the configured order on checkout.
+- Paywall v3 – better support for payment option grouping.
+- The ‘Test Connection’ function has been expanded with additional verification of the shop configuration on the customer's side.
 
-### Added
-- **gatewayList/v3** - Added integration with new endpoint
-	Details:
-		Extended configuration parameters
-		Advanced communication with payment gateways
-		Support for more payment options
+### [4.7.1] 2025-11-20 ###
+- Changes to messages for test connection for the new supported version of PHP 8.3
+- Changes to the text of the plugin configuration instructions
+- Changes to the currency verification logic on the website
+- Fix for test connection verification when sandbox mode is enabled for the administrator
+- Fixed an issue with the Autopay plugin working in conjunction with other currency plugins
 
-### Improved
-- ***Test Connection*** - PHP 8.3 integration updated
+### [4.7.0] 2025-08-18 ###
+- Added: gatewayList/v3 Added - integration with new endpoint
+     Details:
+		- Extended configuration parameters
+		- Advanced communication with payment gateways
+		- Support for more payment options
+- Improved: Test Connection - PHP 8.3 integration updated
 
 ## [4.6.4] - 2025-07-28
 

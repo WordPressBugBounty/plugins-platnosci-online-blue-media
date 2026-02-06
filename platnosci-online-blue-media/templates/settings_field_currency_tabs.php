@@ -22,6 +22,7 @@ $hide_add_tab           = isset( $hide_add_tab ) && $hide_add_tab === true;
 	class="<?php echo esc_attr( $field_key ); ?>-tr autopay-comp-text">
 
 	<td class="forminp">
+		<p class="autopay-currencies-text"><?php echo __( 'Available currencies', 'bm-woocommerce' ); ?></p>
 		<nav id="autopay-currencies-menu"
 			 class="nav-tab-wrapper woo-nav-tab-wrapper">
 			<?php $i = 0;

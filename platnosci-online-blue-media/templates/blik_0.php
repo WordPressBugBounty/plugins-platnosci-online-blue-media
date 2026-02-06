@@ -14,7 +14,7 @@ $generic_error_message = __( 'Payment failed.',
 <div class="bm-blik-code-wrapper">
 	<label
 		for="bm-blik-code"><?php
-		_e( 'Podaj kod BLIK',
+		_e( 'Enter the BLIK code.',
 			'bm-woocommerce' ); ?></label>
 	<input id="bluemedia_blik_code" type="text" name="bluemedia_blik_code"
 		   inputmode="numeric" minlength="6" maxlength="6" autocomplete="off">
@@ -107,7 +107,6 @@ $generic_error_message = __( 'Payment failed.',
 				if ($('#bm-gateway-id-509').is(':checked')) {
 					if (false === bm_blik0_payment_in_progress) {
 						bm_blik0_payment_in_progress = true
-						return originalTriggerHandler.apply(this, arguments);
 					}
 				}
 
@@ -162,7 +161,7 @@ $generic_error_message = __( 'Payment failed.',
 
 								return false
 							}
-							blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>', 'error')
+							blueMediaUpdateStatus(<?php echo wp_json_encode( $generic_error_message ); ?>, 'error')
 							return false
 						}
 
@@ -176,7 +175,7 @@ $generic_error_message = __( 'Payment failed.',
 								if (autopayBlik0TimePassed) {
 									let urlObj = new URL(response.order_received_url);
 									urlObj.searchParams.set('blik0_timeout', '1');
-									blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>', 'error')
+									blueMediaUpdateStatus(<?php echo wp_json_encode( $generic_error_message ); ?>, 'error')
 									setTimeout(function () {
 										window.location.href = urlObj.toString();
 									}, 3000)
@@ -192,7 +191,7 @@ $generic_error_message = __( 'Payment failed.',
 
 								return false
 							}
-							blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
+							blueMediaUpdateStatus(<?php echo wp_json_encode( $generic_error_message ); ?> + JSON.stringify(response), 'error')
 							return false
 						}
 
@@ -207,23 +206,23 @@ $generic_error_message = __( 'Payment failed.',
 								return false
 							}
 
-							blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
+							blueMediaUpdateStatus(<?php echo wp_json_encode( $generic_error_message ); ?> + JSON.stringify(response), 'error')
 
 							return false
 
 						}
 					}
-					blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
+					blueMediaUpdateStatus(<?php echo wp_json_encode( $generic_error_message ); ?> + JSON.stringify(response), 'error')
 
 					return false
 				} else {
-					blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
+					blueMediaUpdateStatus(<?php echo wp_json_encode( $generic_error_message ); ?> + JSON.stringify(response), 'error')
 				}
 
 
 			}).fail(function (jqXHR, textStatus, errorThrown) {
 				jQuery('.bluemedia-loader').hide()
-				blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + jqXHR.status, 'error');
+				blueMediaUpdateStatus(<?php echo wp_json_encode( $generic_error_message ); ?> + jqXHR.status, 'error');
 
 				return false
 			});

@@ -13,11 +13,32 @@ class Transaction_Testing_Controller {
 	 */
 	public function execute_request_initialize() {
 		try {
+			blue_media()->get_woocommerce_logger()->log_debug(
+				sprintf( '[Transaction_Testing_Controller] [execute_request_initialize] [START]' )
+			);
+
 			$order_creator = new Order_Creator();
 			$order         = $order_creator->create();
 
+			blue_media()->get_woocommerce_logger()->log_debug(
+				sprintf( '[Transaction_Testing_Controller] [execute_request_initialize] [Order created] [order_id: %s] [status: %s] [total: %s]',
+					$order instanceof WC_Order ? (string) $order->get_id() : 'N/A',
+					$order instanceof WC_Order ? (string) $order->get_status() : 'N/A',
+					$order instanceof WC_Order ? (string) $order->get_total() : 'N/A'
+				)
+			);
+
 			$transaction_test_service = new Transaction_Test();
 			$transaction_test_service->initialize( $order );
+
+			if ( $order instanceof WC_Order ) {
+				blue_media()->get_woocommerce_logger()->log_debug(
+					sprintf( '[Transaction_Testing_Controller] [execute_request_initialize] [After initialize] [order_id: %s] [bm_transaction_init_params meta exists: %s]',
+						(string) $order->get_id(),
+						! empty( $order->get_meta( 'bm_transaction_init_params' ) ) ? 'yes' : 'no'
+					)
+				);
+			}
 
 
 			if ( $order instanceof WC_Order ) {
@@ -69,6 +90,13 @@ class Transaction_Testing_Controller {
 			if ( $order instanceof WC_Order ) {
 				$transaction_test_service = new Transaction_Test();
 				$result                   = $transaction_test_service->verify_itn( $order );
+
+				blue_media()->get_woocommerce_logger()->log_debug(
+					sprintf( '[Transaction_Testing_Controller] [execute_request_verify_itn] [order_id: %s] [verify_itn result: %s]',
+						(string) $order_id,
+						$result ? '1' : '0'
+					)
+				);
 
 				if ( $result ) {
 					( new Order_Creator() )->remove( $order_id );

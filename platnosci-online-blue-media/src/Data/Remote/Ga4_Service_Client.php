@@ -164,10 +164,15 @@ class Ga4_Service_Client {
 		if ( Complete_Transation_Use_Case::PURCHASE_EVENT_ORDER_STATUS_TRIGGERED
 		     === $complete_transaction_use_case->get_ga4_purchase_event_status()
 		) {
-			blue_media()->get_woocommerce_logger()->log_debug(
-				sprintf( '[PURCHASE_EVENT_ORDER_STATUS_TRIGGERED was set. Request cancelled.] [order id: %s]',
-					$complete_transaction_use_case->get_order()->get_id()
-				) );
+			blue_media()
+				->get_woocommerce_logger( 'ga4_serverside' )
+				->log_error(
+					sprintf( '[Ga4_Service_Client purchase_event] [multiple request protection triggered] [%s]',
+						print_r( [
+							'order_id' => $complete_transaction_use_case->get_order()
+							                                            ->get_id(),
+						], true )
+					) );
 
 			return;
 		}
@@ -222,14 +227,14 @@ class Ga4_Service_Client {
 
 		$baseRequest->addEvent( $purchase_event_data );
 
-		blue_media()->get_woocommerce_logger()->log_debug(
+		blue_media()->get_woocommerce_logger('ga4_serverside')->log_debug(
 			sprintf( '[purchase_event] [baseRequest: %s]',
 				print_r( $baseRequest, true )
 			) );
 
 		$result = $ga4Service->send( $baseRequest );
 
-		blue_media()->get_woocommerce_logger()->log_debug(
+		blue_media()->get_woocommerce_logger('ga4_serverside')->log_debug(
 			sprintf( '[purchase_event] [BaseResponse: %s]',
 				print_r( $result, true )
 			) );

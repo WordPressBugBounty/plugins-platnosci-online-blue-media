@@ -15,7 +15,6 @@ Wtyczka płatnicza Autopay oferuje szereg funkcjonalności wspierających sprzed
 	- [Google Pay](https://autopay.pl/rozwiazania/google-pay)
 	- [Apple Pay](https://autopay.pl/rozwiazania/apple-pay)
 	- Płatności ratalne
-	- Płatności cykliczne
 	- Płatności zagraniczne
 - Najpopularniejsze sposoby sprzedaży dla platformy WooCommerce
 - kup jako gość / kup jak zarejestrowany użytkownik
@@ -25,6 +24,8 @@ Wtyczka płatnicza Autopay oferuje szereg funkcjonalności wspierających sprzed
 - płatności odroczone i ratalne
 - natywna integracja z Google Analytics 4 z poziomu wtyczki płatniczej Autopay
 - automatyczna weryfikacja poprawności konfiguracji danych autoryzacyjnych we wtyczce
+- wielojęzyczność – automatyczne dopasowanie do języka sklepu (EN, DE, IT, ES), a w przypadku innych języków – interfejs w języku angielskim
+- możliwość ręcznej zmiany kolejności metod płatności Autopay w panelu WooCommerce metodą drag & drop.
 
 [Zarejestruj swój sklep!](https://autopay.pl/oferta/platnosci-online?utm_campaign=woocommerce&utm_source=woocommerce_description&utm_medium=offer_cta#kalkulator)
 
@@ -32,8 +33,8 @@ Wtyczka płatnicza Autopay oferuje szereg funkcjonalności wspierających sprzed
 
 ### Wymagania do instalacji wtyczki
 
-- WordPress – przetestowane na wersjach od `6.0` do `6.8.2`
-- Wtyczka WooCommerce – przetestowano na wersjach od `7.9.0` do `10.0.4`
+- WordPress – przetestowane na wersjach od `6.0` do `6.9`
+- Wtyczka WooCommerce – przetestowano na wersjach od `8.1` do `10.4.3`
 - PHP w wersji min. `7.4`
 
 ### Pobierz z Wordpress.org
@@ -76,6 +77,9 @@ Metody płatności mogą być wyświetlane na Twoim sklepie na kilka różnych s
 	- **Płatność zatwierdzona** - Płatność rozpoczęta przez płatnika powiodła się. Ty jako sprzedawca otrzymasz za nią środki od Autopay. Ustaw status zamówienia, który odpowiada temu opisowi.
 	- **Płatność zatwierdzona dla koszyka zawierającego tylko produkty wirtualne** - Płatność rozpoczęta przez płatnika powiodła się. Ty jako sprzedawca otrzymasz za nią środki od Autopay. Jest to status dedykowany dla sprzedaży produktów cyfrowych - umożliwiający zlecenie natychmiastowej wysyłki zamówienia do płatnika. Ustaw status zamówienia, który odpowiada temu opisowi.
 	- **Płatność nieudana** - Rozpoczęta przez płatnika płatność nie powiodła się. Ty jako sprzedawca nie otrzymasz środków od Autopay. Ustaw status zamówienia, który odpowiada temu opisowi.
+- **Zmiana kolejności wyświetlania metod płatności** - W panelu administracyjnym wtyczki przejdź do zakładki:  → Ustawienia  Płatności.  
+  Na liście metod płatności dostępnych w sklepie możesz przeciągać (drag & drop) metody Autopay, aby ustawić ich kolejność według własnych preferencji.  
+  Zapisana kolejność będzie widoczna dla klientów podczas składania zamówienia, w sekcji wyboru metody płatności.
 
 ### Analityka
 Wtyczka Autopay umożliwia wysyłanie bezpośrednio do Google Analytics informacji o dokonaniu płatności. Umożliwia to m.in. śledzenie konwersji sprzedażowej w ramach platformy Google Analytics. Komunikacja z Google Analytics jest opcjonalną funkcją wtyczki i nie jest wymagana do poprawnego działania wtyczki.
@@ -175,19 +179,29 @@ Niestety nie ma takiej możliwości. Wtyczka umożliwia jedynie:
 
 Dla wybranej przez Ciebie waluty nie ma dostępnych żadnych metod płatności. Skontaktuj się z nami z wykorzystaniem [tego formularza](https://developers.autopay.pl/kontakt) i poproś zespół Autopay o sprawdzenie konfiguracji Twojego konta.
 
+### Czy wtyczka obsługuje różne języki i jak je skonfigurować?
+
+Tak. Wtyczka Autopay automatycznie dostosowuje się do języka sklepu ustawionego w WordPress/WooCommerce.  
+Dostępne są tłumaczenia w języku angielskim, niemieckim, włoskim i hiszpańskim.  
+Jeśli sklep działa w jednym z tych języków – interfejs wtyczki zostanie wyświetlony w odpowiednim tłumaczeniu i nie wymaga dodatkowej konfiguracji.  
+W przypadku innego języka, interfejs automatycznie przełączy się na język angielski i nie wymaga dodatkowej konfiguracji.
+
+### Jak zmienić kolejność metod płatności Autopay w sklepie?
+
+W panelu WooCommerce, w zakładce ustawień płatności Autopay, użyj funkcji drag & drop, aby przeciągnąć metody w pożądanej kolejności.
 
 ## Zrzuty ekranu
 
 <figure>
   <img
-  src="assets/img/screenshot_1.jpg"
+  src="assets/img/screenshot-1.jpg"
   alt="Widok pól do uzupełnienia">
   <figcaption>Widok pól do uzupełnienia</figcaption>
 </figure>
 
 <figure>
   <img
-  src="assets/img/screenshot_2.jpg"
+  src="assets/img/screenshot-2.jpg"
   alt="Dostępne metody płatności">
   <figcaption>Dostępne metody płatności</figcaption>
 </figure>

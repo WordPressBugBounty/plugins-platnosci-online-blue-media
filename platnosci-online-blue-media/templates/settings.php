@@ -46,6 +46,12 @@ $tab_id   = esc_attr( $tab_id );
 		<?php echo $settings_html ?>
 	</table>
 
+	<style>
+		/* Side-by-side layout for our custom title/description fields on payment settings tab */
+		.section-payment_settings .autopay-title-field,
+		.section-payment_settings .autopay-description-field{box-sizing:border-box}
+	</style>
+
 	<?php do_action( 'autopay_settings_after_table_' . $tab_id ); ?>
 
 

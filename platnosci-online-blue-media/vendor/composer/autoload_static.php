@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticIniteebd8837611a2fbc14b20aae1df81b5f
+class ComposerStaticInit5464fa84b05c54432feb4ff04213da6a
 {
     public static $prefixLengthsPsr4 = array (
         'I' => 
@@ -27,6 +27,7 @@ class ComposerStaticIniteebd8837611a2fbc14b20aae1df81b5f
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Ilabs\\BM_Woocommerce\\Assets\\AssetManager' => __DIR__ . '/../..' . '/src/Assets/AssetManager.php',
         'Ilabs\\BM_Woocommerce\\Controller\\Abstract_Controller' => __DIR__ . '/../..' . '/src/Controller/Abstract_Controller.php',
         'Ilabs\\BM_Woocommerce\\Controller\\Controller_Interface' => __DIR__ . '/../..' . '/src/Controller/Controller_Interface.php',
         'Ilabs\\BM_Woocommerce\\Controller\\Model\\Ajax_Response_Value_Object' => __DIR__ . '/../..' . '/src/Controller/Model/Ajax_Response_Value_Object.php',
@@ -41,19 +42,30 @@ class ComposerStaticIniteebd8837611a2fbc14b20aae1df81b5f
         'Ilabs\\BM_Woocommerce\\Data\\Remote\\Ga4\\Dto\\Payload_DTO' => __DIR__ . '/../..' . '/src/Data/Remote/Ga4/Dto/Payload_DTO.php',
         'Ilabs\\BM_Woocommerce\\Data\\Remote\\Ga4\\Dto\\Payload_DTO_Interface' => __DIR__ . '/../..' . '/src/Data/Remote/Ga4/Dto/Payload_DTO_Interface.php',
         'Ilabs\\BM_Woocommerce\\Data\\Remote\\Ga4_Service_Client' => __DIR__ . '/../..' . '/src/Data/Remote/Ga4_Service_Client.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Model\\PaymentMethod' => __DIR__ . '/../..' . '/src/Domain/Model/PaymentMethod.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Model\\Settings\\Woocomerce_Vas_Value_Object' => __DIR__ . '/../..' . '/src/Domain/Model/Settings/Woocomerce_Vas_Value_Object.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Model\\White_Label\\Config' => __DIR__ . '/../..' . '/src/Domain/Model/White_Label/Config.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Model\\White_Label\\Expandable_Group' => __DIR__ . '/../..' . '/src/Domain/Model/White_Label/Expandable_Group.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Model\\White_Label\\Expandable_Group_Interface' => __DIR__ . '/../..' . '/src/Domain/Model/White_Label/Expandable_Group_Interface.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Model\\White_Label\\Group' => __DIR__ . '/../..' . '/src/Domain/Model/White_Label/Group.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Model\\White_Label\\Item' => __DIR__ . '/../..' . '/src/Domain/Model/White_Label/Item.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Model\\White_Label\\v3\\Currency' => __DIR__ . '/../..' . '/src/Domain/Model/White_Label/v3/Currency.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Model\\White_Label\\v3\\Gateway' => __DIR__ . '/../..' . '/src/Domain/Model/White_Label/v3/Gateway.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Model\\White_Label\\v3\\Gateway_List_Response' => __DIR__ . '/../..' . '/src/Domain/Model/White_Label/v3/Gateway_List_Response.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Model\\White_Label\\v3\\Gateway_List_Response_Factory' => __DIR__ . '/../..' . '/src/Domain/Model/White_Label/v3/Gateway_List_Response_Factory.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Model\\White_Label\\v3\\Group' => __DIR__ . '/../..' . '/src/Domain/Model/White_Label/v3/Group.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Model\\White_Label\\v3\\Mcc' => __DIR__ . '/../..' . '/src/Domain/Model/White_Label/v3/Mcc.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Model\\White_Label\\v3\\View_Model\\View_Model_Group' => __DIR__ . '/../..' . '/src/Domain/Model/White_Label/v3/View_Model/View_Model_Group.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Model\\White_Label\\v3\\View_Model\\View_Model_Group_Factory' => __DIR__ . '/../..' . '/src/Domain/Model/White_Label/v3/View_Model/View_Model_Group_Factory.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Currency\\Currency' => __DIR__ . '/../..' . '/src/Domain/Service/Currency/Currency.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Currency\\Interfaces\\Currency_Interface' => __DIR__ . '/../..' . '/src/Domain/Service/Currency/Interfaces/Currency_Interface.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Currency\\Value_Object\\CZK' => __DIR__ . '/../..' . '/src/Domain/Service/Currency/Value_Object/CZK.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Currency\\Value_Object\\EUR' => __DIR__ . '/../..' . '/src/Domain/Service/Currency/Value_Object/EUR.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Service\\Currency\\Value_Object\\GBP' => __DIR__ . '/../..' . '/src/Domain/Service/Currency/Value_Object/GBP.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Currency\\Value_Object\\HUF' => __DIR__ . '/../..' . '/src/Domain/Service/Currency/Value_Object/HUF.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Currency\\Value_Object\\PLN' => __DIR__ . '/../..' . '/src/Domain/Service/Currency/Value_Object/PLN.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Currency\\Value_Object\\RON' => __DIR__ . '/../..' . '/src/Domain/Service/Currency/Value_Object/RON.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Service\\Currency\\Value_Object\\USD' => __DIR__ . '/../..' . '/src/Domain/Service/Currency/Value_Object/USD.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Custom_Styles\\Css_Editor' => __DIR__ . '/../..' . '/src/Domain/Service/Custom_Styles/Css_Editor.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Custom_Styles\\Css_Frontend' => __DIR__ . '/../..' . '/src/Domain/Service/Custom_Styles/Css_Frontend.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Ga4\\Abstract_Ga4_Use_Case' => __DIR__ . '/../..' . '/src/Domain/Service/Ga4/Abstract_Ga4_Use_Case.php',
@@ -64,6 +76,7 @@ class ComposerStaticIniteebd8837611a2fbc14b20aae1df81b5f
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Ga4\\Init_Checkout_Use_Case' => __DIR__ . '/../..' . '/src/Domain/Service/Ga4/Init_Checkout_Use_Case.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Ga4\\Remove_Product_From_Cart_Use_Case' => __DIR__ . '/../..' . '/src/Domain/Service/Ga4/Remove_Product_From_Cart_Use_Case.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Ga4\\View_Product_On_List_Use_Case' => __DIR__ . '/../..' . '/src/Domain/Service/Ga4/View_Product_On_List_Use_Case.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Service\\Gateway_List\\Gateway_List_Mapper_Block_Checkout' => __DIR__ . '/../..' . '/src/Domain/Service/Gateway_List/Gateway_List_Mapper_Block_Checkout.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Legacy\\Importer' => __DIR__ . '/../..' . '/src/Domain/Service/Legacy/Importer.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Product_Feed\\Product_Feed' => __DIR__ . '/../..' . '/src/Domain/Service/Product_Feed/Product_Feed.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Settings\\Banner' => __DIR__ . '/../..' . '/src/Domain/Service/Settings/Banner.php',
@@ -76,13 +89,13 @@ class ComposerStaticIniteebd8837611a2fbc14b20aae1df81b5f
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Testing\\Order_Creator' => __DIR__ . '/../..' . '/src/Domain/Service/Testing/Order_Creator.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Testing\\Transaction_Test' => __DIR__ . '/../..' . '/src/Domain/Service/Testing/Transaction_Test.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Versioning\\Versioning' => __DIR__ . '/../..' . '/src/Domain/Service/Versioning/Versioning.php',
-        'Ilabs\\BM_Woocommerce\\Domain\\Service\\White_Label\\Group_Mapper' => __DIR__ . '/../..' . '/src/Domain/Service/White_Label/Group_Mapper.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Woocommerce\\Autopay_Order' => __DIR__ . '/../..' . '/src/Domain/Woocommerce/Autopay_Order.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Woocommerce\\Autopay_Order_Factory' => __DIR__ . '/../..' . '/src/Domain/Woocommerce/Autopay_Order_Factory.php',
         'Ilabs\\BM_Woocommerce\\Features' => __DIR__ . '/../..' . '/src/Features.php',
         'Ilabs\\BM_Woocommerce\\Gateway\\Blue_Media_Gateway' => __DIR__ . '/../..' . '/src/Gateway/Blue_Media_Gateway.php',
         'Ilabs\\BM_Woocommerce\\Gateway\\Hooks' => __DIR__ . '/../..' . '/src/Gateway/Hooks.php',
         'Ilabs\\BM_Woocommerce\\Gateway\\Hooks\\Payment_On_Account_Page' => __DIR__ . '/../..' . '/src/Gateway/Hooks/Payment_On_Account_Page.php',
+        'Ilabs\\BM_Woocommerce\\Gateway\\Session_Bridge' => __DIR__ . '/../..' . '/src/Gateway/Session_Bridge.php',
         'Ilabs\\BM_Woocommerce\\Gateway\\Webhook\\Order_Remote_Status_Legacy_Manager' => __DIR__ . '/../..' . '/src/Gateway/Webhook/Order_Remote_Status_Legacy_Manager.php',
         'Ilabs\\BM_Woocommerce\\Gateway\\Webhook\\Order_Remote_Status_Manager' => __DIR__ . '/../..' . '/src/Gateway/Webhook/Order_Remote_Status_Manager.php',
         'Ilabs\\BM_Woocommerce\\Helpers\\Helper' => __DIR__ . '/../..' . '/src/Helpers/Helper.php',
@@ -235,9 +248,9 @@ class ComposerStaticIniteebd8837611a2fbc14b20aae1df81b5f
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticIniteebd8837611a2fbc14b20aae1df81b5f::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticIniteebd8837611a2fbc14b20aae1df81b5f::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticIniteebd8837611a2fbc14b20aae1df81b5f::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit5464fa84b05c54432feb4ff04213da6a::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit5464fa84b05c54432feb4ff04213da6a::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit5464fa84b05c54432feb4ff04213da6a::$classMap;
 
         }, null, ClassLoader::class);
     }

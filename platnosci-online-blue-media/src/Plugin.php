@@ -111,7 +111,9 @@ class Plugin extends Abstract_Ilabs_Plugin {
 	 * @throws Exception
 	 */
 	protected function before_init() {
-		if ( stripos( $_SERVER['REQUEST_URI'], 'wp-json/wc/v3' ) !== false ) {
+		$request_uri = $this->get_request_uri();
+		if ( $request_uri && stripos( $request_uri,
+				'wp-json/wc/v3' ) !== false ) {
 			return;
 		}
 
@@ -156,6 +158,9 @@ class Plugin extends Abstract_Ilabs_Plugin {
 
 		$this->get_file_downloader()->handle();
 
+		add_action( 'wp_enqueue_scripts',
+			[ $this, 'enqueue_frontend_scripts' ] );
+
 	}
 
 	private function init_custom_css() {
@@ -183,7 +188,11 @@ class Plugin extends Abstract_Ilabs_Plugin {
 	}
 
 	public function woocommerce_block_support() {
-		$current_url   = "$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+		$request_uri = $this->get_request_uri();
+		if ( '' === $request_uri ) {
+			return;
+		}
+		$current_url   = $request_uri;
 		$search_phrase = "order-received";
 		if ( strpos( $current_url, $search_phrase ) !== false ) {
 			return;
@@ -239,6 +248,14 @@ class Plugin extends Abstract_Ilabs_Plugin {
 	private function is_itn_request(): bool {
 
 		return isset( $_GET['wc-api'] ) && 'wc_gateway_bluemedia' === $_GET['wc-api'];
+	}
+
+	private function get_request_uri(): string {
+		if ( isset( $_SERVER['REQUEST_URI'] ) ) {
+			return (string) $_SERVER['REQUEST_URI'];
+		}
+
+		return '';
 	}
 
 	/**
@@ -340,7 +357,7 @@ class Plugin extends Abstract_Ilabs_Plugin {
 					);
 
 					wp_enqueue_style( $this->get_plugin_prefix() . '_banner_css',
-						'https://plugins-api.autopay.pl/dokumenty/baner.css'
+						'https://plugins-api.autopay.pl/dokumenty/autopay.css'
 					);
 
 					if ( isset( $_GET['bmtab'] ) && $_GET['bmtab'] === 'vas' ) {
@@ -383,16 +400,44 @@ class Plugin extends Abstract_Ilabs_Plugin {
 				    $mapped_status = substr( $mapped_status, 3 );
 			    }
 
+
+			    blue_media()
+				    ->get_woocommerce_logger( 'ga4_serverside' )
+				    ->log_debug(
+					    sprintf( '[purchase_event on_wc_order_status_changed] [%s]',
+						    print_r( [
+							    'new order status' => $event->get_new_status(),
+							    'mapped status'    => $mapped_status,
+							    'order_id'         => $event->get_order()
+							                                ->get_id(),
+						    ], true )
+					    ) );
+
+
 			    return $event->get_new_status() === $mapped_status;
 		    } )
 		    ->action( function ( Wc_Order_Aware_Interface $order_aware_interface
 		    ) {
+			    blue_media()
+				    ->get_woocommerce_logger( 'ga4_serverside' )
+				    ->log_debug(
+					    sprintf( '[purchase_event create Ga4_Service_Client instance and call purchase_event] [%s]',
+						    print_r( [
+							    'order_id' => $order_aware_interface->get_order()
+							                                        ->get_id(),
+						    ], true )
+					    ) );
+
 			    try {
 				    ( new Ga4_Service_Client() )->purchase_event( new Complete_Transation_Use_Case( $order_aware_interface->get_order() ) );
 			    } catch ( Exception $e ) {
-				    blue_media()->get_woocommerce_logger()->log_error(
-					    sprintf( '[purchase_event exception] [message: %s]',
-						    esc_html( $e->getMessage() )
+				    blue_media()->get_woocommerce_logger('ga4_serverside')->log_error(
+					    sprintf( '[purchase_event exception] [%s]',
+						    print_r( [
+							    'message'  => $e->getMessage(),
+							    'order_id' => $order_aware_interface->get_order()
+							                                        ->get_id(),
+						    ], true )
 					    ) );
 			    }
 		    } )
@@ -506,7 +551,10 @@ class Plugin extends Abstract_Ilabs_Plugin {
 	 * @throws Exception
 	 */
 	public function init() {
-		if ( stripos( $_SERVER['REQUEST_URI'], 'wp-json/wc/v3' ) !== false ) {
+		//Session_Bridge::init();
+		$request_uri = $this->get_request_uri();
+		if ( $request_uri && stripos( $request_uri,
+				'wp-json/wc/v3' ) !== false ) {
 			return;
 		}
 
@@ -558,14 +606,9 @@ class Plugin extends Abstract_Ilabs_Plugin {
 	private function init_payment_gateway() {
 		add_filter( 'woocommerce_payment_gateways',
 			function ( $gateways ) {
-				if ( false === is_admin()
-				     && false === $this->get_currency_manager()
-				                       ->is_currency_selected(
-					                       $this
-						                       ->get_currency_manager()
-						                       ->get_shop_currency()
-						                       ->get_code()
-				                       ) ) {
+				$shop_currency = $this->get_currency_manager()->get_shop_currency();
+
+				if ( false === is_admin() && ( null === $shop_currency || false === $this->get_currency_manager()->is_currency_selected( $shop_currency->get_code() ) ) ) {
 
 					self::$inactive_on_frontend = true;
 
@@ -614,7 +657,7 @@ class Plugin extends Abstract_Ilabs_Plugin {
 
 				blue_media()->get_woocommerce_logger()->log_debug(
 					sprintf( '[return_redirect_handler] [order: %s]',
-						$order
+						$order->get_id()
 					) );
 
 
@@ -696,10 +739,12 @@ class Plugin extends Abstract_Ilabs_Plugin {
 			$currency_tabs = new Currency_Tabs();
 
 			return $currency_tabs->get_active_tab_currency()
-			                     ->get_code();
+			                     ? $currency_tabs->get_active_tab_currency()->get_code()
+			                     : null;
 		}
 
-		return self::get_currency_manager()->get_shop_currency()->get_code();
+		$shop_currency = self::get_currency_manager()->get_shop_currency();
+		return $shop_currency ? $shop_currency->get_code() : null;
 	}
 
 	/**
@@ -832,7 +877,7 @@ class Plugin extends Abstract_Ilabs_Plugin {
 			     ->update_option( $key, $value );
 		} else {
 			$settings = get_option( 'woocommerce_bluemedia_settings' );
-			if ( is_array( $settings ) && ! empty( $settings[ $key ] ) ) {
+			if ( is_array( $settings ) ) {
 				$settings[ $key ] = $value;
 				update_option( 'woocommerce_bluemedia_settings', $settings );
 			}

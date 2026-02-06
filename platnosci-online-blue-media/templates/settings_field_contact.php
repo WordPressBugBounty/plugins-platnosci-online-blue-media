@@ -44,13 +44,13 @@ $data = wp_parse_args( $data, $defaults );
 		<ul>
 			<li>
 				<a target="_blank"
-				   href="https://developers.autopay.pl/online/wtyczki/woocommerce?utm_campaign=help&utm_source=woocommerce_panel&utm_medium=text_link#skonfiguruj-wtyczkę">
+				   href="<?php echo esc_url( __( 'https://developers.autopay.pl/en/online/plugins/woocomerce#692d957630b07', 'bm-woocommerce' ) ); ?>">
 					<?php _e( 'Plugin configuration', 'bm-woocommerce' ); ?>
 				</a>&nbsp;- <?php _e( 'step by step guide', 'bm-woocommerce' ); ?>
 			</li>
 			<li>
 				<a target="_blank"
-				   href="https://developers.autopay.pl/online/wtyczki/woocommerce?utm_campaign=help&utm_source=woocommerce_panel&utm_medium=text_link#najczęściej-zadawane-pytania">
+				   href="<?php echo esc_url( __( 'https://developers.autopay.pl/en/online/plugins/woocomerce#692d957630b13', 'bm-woocommerce' ) ); ?>">
 					<?php _e( 'Frequently Asked Questions',
 						'bm-woocommerce' ); ?>
 				</a>

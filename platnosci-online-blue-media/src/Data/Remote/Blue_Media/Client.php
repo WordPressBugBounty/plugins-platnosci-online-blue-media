@@ -18,15 +18,44 @@ class Client {
 		try {
 			$response = $client->post( $gateway_url,
 				[
-					'headers'     => [
+					'headers' => [
 						'BmHeader' => 'pay-bm-continue-transaction-url',
 					],
 					'form_params' => $data,
-					'verify'      => true,
+					'verify' => true,
 				] );
 
 			//$statusCode   = $response->getStatusCode();
 			return $response->getBody()->getContents();
+		} catch ( Exception $e ) {
+			return "Error: " . $e->getMessage();
+		}
+	}
+
+	public function google_pay_merchant_info(
+		array $data,
+		string $gateway_url
+	) {
+
+
+		$client = new GuzzleHttpClient( [ 'base_uri' => $gateway_url ] );
+
+		try {
+			$response = $client->post( 'webapi/googlePayMerchantInfo',
+				[
+					'headers' => [
+						'Content-Type' => 'application/json',
+						'BmHeader'     => 'pay-bm',
+					],
+					'json'    => $data,
+					'verify'  => false,
+				] );
+
+
+			$responseData = $response->getBody()->getContents();
+
+			return $responseData;
+
 		} catch ( Exception $e ) {
 			return "Error: " . $e->getMessage();
 		}
