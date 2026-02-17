@@ -213,3 +213,14 @@ body.theme-astra .woocommerce .woocommerce-checkout #payment ul.wc_payment_metho
     padding: 5px; }
 
 /* Compatibility with Astra theme - end */
+
+/* Keep checkout order consistent with admin drag-and-drop (DOM order) */
+#payment ul.wc_payment_methods > li.wc_payment_method.payment_method_bluemedia > .payment_box.payment_method_bluemedia .payment_box.payment_method_bacs > .bm-payment-channels-wrapper ul.woocommerce-shipping-methods {
+  grid-template-areas: none !important;
+  grid-template-columns: 1fr !important;
+  grid-template-rows: none !important;
+}
+
+#payment ul.wc_payment_methods > li.wc_payment_method.payment_method_bluemedia > .payment_box.payment_method_bluemedia .payment_box.payment_method_bacs > .bm-payment-channels-wrapper ul.woocommerce-shipping-methods > div {
+  grid-area: auto !important;
+}

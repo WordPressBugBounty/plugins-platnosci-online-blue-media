@@ -339,3 +339,17 @@ body.theme-astra {
     }
 }
 /* Compatibility with Astra theme - end */
+
+/*
+ * Keep classic checkout order consistent with admin drag-and-drop.
+ * We intentionally disable hardcoded grid areas so DOM order wins.
+ */
+#payment ul.wc_payment_methods > li.wc_payment_method.payment_method_bluemedia > .payment_box.payment_method_bluemedia .payment_box.payment_method_bacs > .bm-payment-channels-wrapper ul.woocommerce-shipping-methods {
+    grid-template-areas: none !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: none !important;
+}
+
+#payment ul.wc_payment_methods > li.wc_payment_method.payment_method_bluemedia > .payment_box.payment_method_bluemedia .payment_box.payment_method_bacs > .bm-payment-channels-wrapper ul.woocommerce-shipping-methods > div {
+    grid-area: auto !important;
+}

@@ -1,5 +1,10 @@
 *** Autopay Changelog ***
 
+
+### [4.8.2] 2026-02-17 ###
+- Improved webhook processing logic for better integration with third-party plugins
+- Adding a multilingual readme
+
 ### [4.8.1] 2026-02-02 ###
 - Added support for additional currencies: USD (US Dollar) and GBP (British Pound).
 - Improvements in ITN processing

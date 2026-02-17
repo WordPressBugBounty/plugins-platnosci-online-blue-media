@@ -2,86 +2,90 @@
 Contributors: inspirelabs
 Tags: woocommerce, bluemedia, autopay
 Requires at least: 6.0
-Tested up to: 6.9
-Stable tag: 4.8.1
+Tested up to: 6.9.1
+Stable tag: 4.8.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Autopay to moduł płatności umożliwiający realizację transakcji bezgotówkowych w sklepie opartym na platformie WordPress (WooCommerce).
+Autopay is a payment module that enables cashless transactions in a shop based on the WordPress platform (WooCommerce).
 
 == Description ==
 
-Autopay to moduł płatności umożliwiający realizację transakcji bezgotówkowych w sklepie opartym na platformie WordPress (WooCommerce). Jeżeli jeszcze nie masz wtyczki, możesz ją pobrać [tutaj](https://github.com/bluepayment-plugin/autopay-payments/releases).
+Autopay is a payment module that enables cashless transactions in a shop based on the WordPress platform (WooCommerce). If you do not already have the plugin, you can download it [here](https://github.com/bluepayment-plugin/autopay-payments/releases).
 
-**Wtyczka płatnicza Autopay oferuje szereg funkcjonalności wspierających sprzedaż na Twoim sklepie:**
+**The Autopay payment plugin offers a range of functionalities to support sales on your shop:**
 
-- Najpopularniejsze metody płatności w Polsce i Europie
-  - Przelewy online ([Pay By Link](https://autopay.pl/baza-wiedzy/blog/ecommerce/platnosc-pay-by-link-na-czym-polega-i-co-mozesz-dzieki-niej-zyskac))
-  - Szybkie przelewy bankowe
+- The most popular payment methods in Poland and Europe
+  - Online transfers ([Pay By Link](https://autopay.pl/baza-wiedzy/blog/ecommerce/platnosc-pay-by-link-na-czym-polega-i-co-mozesz-dzieki-niej-zyskac))
+  - Fast bank transfers
   - [BLIK](https://autopay.pl/rozwiazania/blik)
   - Visa Mobile
   - [Google Pay](https://autopay.pl/rozwiazania/google-pay)
   - [Apple Pay](https://autopay.pl/rozwiazania/apple-pay)
-  - Płatności ratalne
-  - Płatności zagraniczne
-- Najpopularniejsze sposoby sprzedaży dla platformy WooCommerce
-- kup jako gość / kup jak zarejestrowany użytkownik
-- checkout krokowy lub checkout blokowy
-- przetwarzanie płatności z przekierowaniem do zewnętrznej strony płatności lub pozostając bezpośrednio na sklepie (wybrane metody: karty, BLIK)
-- wsparcie środowiska testowego (realizacja testowych transakcji w celu poprawnej instalacji i konfiguracji wtyczki)
-- płatności odroczone i ratalne
-- natywna integracja z Google Analytics 4 z poziomu wtyczki płatniczej Autopay
-- automatyczna weryfikacja poprawności konfiguracji danych autoryzacyjnych we wtyczce
-- wielojęzyczność – automatyczne dopasowanie do języka sklepu (EN, DE, IT, ES), a w przypadku innych języków – interfejs w języku angielskim
-- możliwość ręcznej zmiany kolejności metod płatności Autopay w panelu WooCommerce metodą drag & drop
+  - Instalment payments
+  - Recurring payments
+  - International payments
+- The most popular sales methods for the WooCommerce platform
+- buy as a guest / buy as a registered user
+- step checkout or block checkout
+- payment processing with redirection to an external payment page or remaining directly on the shop (selected methods: cards, BLIK)
+- test environment support (implementation of test transactions for correct installation and configuration of the plug-in)
+- deferred and instalment payments
+- native integration into Google Analytics 4 from within the Autopay payment plug-in
+- automatic verification of the correct configuration of authorization data in the plug-in
+- multilingual support – automatic adaptation to the store language (EN,
+  DE, IT, ES); for other languages, the interface is displayed in English
+- ability to manually change the order of Autopay payment methods in the
+  WooCommerce panel using drag & drop
 
-[Zarejestruj swój sklep!](https://autopay.pl/oferta/platnosci-online?utm_campaign=woocommerce&utm_source=woocommerce_description&utm_medium=offer_cta#kalkulator)
+[Register your shop!](https://autopay.pl/oferta/platnosci-online?utm_campaign=woocommerce&utm_source=woocommerce_description&utm_medium=offer_cta#kalkulator)
 
 
-**Wymagania**
+**Requirements for installing the plug-in**
 
-- WordPress – przetestowane na wersjach od 6.0 do 6.9
-- Wtyczka WooCommerce – przetestowano na wersjach od 8.1 do 10.4.3
+- WordPress - tested on versions `6.0` to `6.9.1`
+- WooCommerce plugin - tested on versions `7.9.0` to `10.5.1`
+- PHP version min. `7.4`
 
 == Installation	 ==
 
-Zainstaluj wtyczkę w panelu administracyjnym Wordpress:
+Install the plugin via the WordPress admin panel:
 
-1. Pobierz wtyczkę
-2. Przejdź do zakładki Wtyczki > Dodaj nową a następnie wskaż pobrany plik instalacyjny.
-3. Po zainstalowaniu wtyczki włącz moduł.
-1. Przejdź do zakładki WooCommerce ➝ Ustawienia ➝ Płatności.
-2. Wybierz Autopay, żeby przejść do konfiguracji.
+1. Download the plugin.
+2. Go to the Plugins > Add New tab and then select the downloaded installation file.
+3. After installing the plugin, activate the module.
+4. Go to the WooCommerce ➝ Settings ➝ Payments tab.
+5. Select Autopay to proceed to the configuration.
 
-## Skonfiguruj wtyczkę
-Zaloguj się do panelu i przejdź do zakładki **Płatności** i odnajdź metodę **Autopay**. Wybierz **Konfiguruj**, by rozpocząć konfigurację wtyczki. Lub zaznacz odpowiednią opcję na przełączniku, by **włączyć** / **wyłączyć** działanie wtyczki na sklepie.
+## Configure the plugin
+Log in to the dashboard and go to the **Payments** tab and find the **Autopay** method. Select **Configure** to start configuring the plugin. Or select the appropriate option on the toggle to **enable** / **disable** the operation of the plugin on your shop.
 
-Jeżeli spotkałeś się z jakimś problemem podczas instalacji wtyczki, odwiedź naszą [sekcję FAQ.](https://developers.autopay.pl/online/wtyczki/woocommerce#najcz%C4%99%C5%9Bciej-zadawane-pytania)
+If you encountered a problem while installing the plugin, visit our [FAQ section.](https://developers.autopay.pl/online/wtyczki/woocommerce#najcz%C4%99%C5%9Bciej-zadawane-pytania)
 
-### Uwierzytelnianie
+### Authentication
 
-Zakładka "Uwierzytelnianie" umożliwi Ci wprowadzenie danych dostępowych Twojego konta w Autopay do wtyczki, a także ustalenie, czy płatności Autopay mają działać na środowisku testowym czy produkcyjnym.
-
-1. **Środowisko testowe**
-    - ustawione na **tak** - Służy do przetestowania integracji i konfiguracji wtyczki Autopay na Twoim sklepie. Na środowisku testowym płatnik nie zostanie obciążony za żaden zakup, a Ty nie otrzymasz wpłaty za żadną sprzedaż. Transakcje będą jedynie wirtualne. Pamiętaj, aby nigdy nie wysyłać transakcji za transakcje opłacone w trybie testowym!
-    - ustawione na **nie** - Wtyczka działa na środowisku produkcyjnym. Innymi słowy, transakcje i płatności odbywają się naprawdę. Płatnik zostaje obciążony finansowo za zaku, a sprzedawca otrzymuje środki od Autopay za prowadzoną sprzedaż.
-
-2. **Identyfikator serwisu** - Jest to identyfikator Twojego konta Autopay. Znajdziesz go po zalogowaniu się na swoje konto, wybierz z menu "Ustawienia serwisu" a następnie dla sekcji "Konfiguracja techniczna serwisu" kliknij na guzik "Wybierz". ID serwisu to wartość "Identyfikatora serwisu"
-
-3. **Klucz konfiguracyjny (hash)** - Jest to wartość dedykowana dla Twojej strony na Twoim koncie Autopay. Znajdziesz go po zalogowaniu się na swoje konto, wybierz z menu "**Ustawienia serwisu**", a następnie dla sekcji "Konfiguracja techniczna serwisu" kliknij na guzik "Wybierz". Podpisany jest jako Klucz konfiguracyjny (hash)
-> Środowisko testowe a Identyfikator serwisu i Klucz konfiguracyjny (hash)
-Wartości Identyfikatora serwisu oraz Klucza konfiguracyjnego są różne dla środowiska testowego i produkcyjnego. Jeżeli założyłeś nowe konto Autopay i nie masz jeszcze dostępu do środowiska testowego możesz je uzyskać [wysyłając prośbę o dostęp](https://developers.autopay.pl/kontakt?utm_campaign=help&utm_source=woocommerce_documentation&utm_medium=text_link).
+The ‘Authentication’ tab will allow you to enter your Autopay account credentials into the plugin, as well as determine whether you want Autopay payments to work on a test or production environment.
+1. **Test environment**.
+	- set to **yes** - This is used to test the integration and configuration of the Autopay plugin on your shop. In the test environment, the payer will not be charged for any purchases and you will not receive payment for any sales. Transactions will only be virtual. Remember never to send transactions for transactions paid in test mode!
+	- set to **no** - The plugin runs on a production environment. In other words, transactions and payments are really happening. The payer is financially charged for the purchase and the merchant receives funds from Autopay for the sales made.
+2. **Service ID** - This is the ID of your Autopay account. You will find it when you log into your account, select ‘Service Settings’ from the menu and then for the ‘Service Technical Configuration’ section click on the ‘Select’ button. The service ID is the value of the ‘Service ID’.
+3. **Configuration key (hash)** - This is the value dedicated to your site in your Autopay account. You will find it when you log into your account, select ‘**Site Settings**’ from the menu and then for the ‘Site Technical Configuration’ section click on the ‘Select’ button. It is signed as Configuration key (hash)
+> Test environment a Service identifier and Configuration key (hash)
+The values of the Service ID and Configuration Key are different for the test and production environment. If you have set up a new Autopay account and do not yet have access to the test environment you can obtain it [by sending an access request](https://developers.autopay.pl/kontakt?utm_campaign=help&utm_source=woocommerce_documentation&utm_medium=text_link).
 >
-> Wybierz kategorię weryfikacje, uzupełnij dane, a w treści wiadomości podaj id swojego obecnego serwisu i poproś o utworzenie środowiska testowego dla Twojego sklepu.
-
+> Select the verification category, fill in your details and in the body of the message provide the id of your current service and request the creation of a test environment for your shop.
 
 == Screenshots ==
 
-1. Widok pól do uzupełnienia
-2. Dostępne metody płatności
+1. View of the fields to be completed
+2. Payment methods available
 
 
 == Changelog ==
+
+### 4.8.2 (17 February 2026) ###
+* Improved webhook processing logic for better integration with third-party plugins
+* Adding a multilingual readme
 
 ### 4.8.1 (2 February 2026) ###
 * Added support for additional currencies: USD (US Dollar) and GBP (British Pound).
