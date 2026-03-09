@@ -3,7 +3,27 @@ jQuery(document).ready(function () {
 
   submitCurrencyEdit();
 
-  //var radio = jQuery('#woocommerce_bluemedia_testmode');
+  analytics_fields_logic(jQuery('input[type=radio][name=woocommerce_bluemedia_ga4_purchase_status_based_on_itn]:checked').val());
+
+  jQuery('input[type=radio][name=woocommerce_bluemedia_ga4_purchase_status_based_on_itn]').on('change', function () {
+    analytics_fields_logic(jQuery(this).val());
+  });
+
+  function analytics_fields_logic(ga4_purchase_status_based_on_itn_val) {
+    const ga4_purchase_status_tr_el = jQuery('.woocommerce_bluemedia_ga4_purchase_status-tr');
+
+    switch (ga4_purchase_status_based_on_itn_val) {
+      case 'yes':
+
+        ga4_purchase_status_tr_el.addClass('autopay_disabled')
+
+        break;
+      default:
+        ga4_purchase_status_tr_el.removeClass('autopay_disabled')
+        break;
+    }
+  }
+
 
   function api_fields_logic(radio_val) {
     switch (radio_val) {

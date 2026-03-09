@@ -1179,6 +1179,10 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 						$wc_order->update_meta_data( 'bm_order_itn_status',
 							self::ITN_SUCCESS_STATUS_ID );
 						$wc_order->save_meta_data();
+
+						do_action( sprintf( "bm_order_bm_int_status_%s_processed",
+							self::ITN_SUCCESS_STATUS_ID ),
+							$wc_order );
 					}
 
 					foreach ( $order_pending_to_update as $k => $wc_order ) {

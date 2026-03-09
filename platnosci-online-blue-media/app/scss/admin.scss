@@ -997,12 +997,34 @@ $border-color: #e5e5e5;
 							"client-id table"
 							"api-secret table"
 							"purchase-status table"
+							"purchase-status-based-on-itn table"
 							". table";
 						grid-template-rows: auto;
 						column-gap: 0;
+						align-content: start;
 					}
 
 					tr {
+						&.autopay-ga4-row {
+							.titledesc {
+								padding-top: 10px;
+								padding-bottom: 6px;
+							}
+
+							.forminp {
+								padding-top: 0;
+								padding-bottom: 6px;
+							}
+
+							fieldset {
+								margin: 0;
+							}
+
+							p.description {
+								margin-top: 4px !important;
+							}
+						}
+
 						.titledesc {
 							padding-top: 25px;
 
@@ -1032,6 +1054,12 @@ $border-color: #e5e5e5;
 						&.woocommerce_bluemedia_ga4_purchase_status-tr {
 							@media screen and (min-width: 1250px) {
 								grid-area: purchase-status;
+							}
+						}
+
+						&.woocommerce_bluemedia_ga4_purchase_status_based_on_itn-tr {
+							@media screen and (min-width: 1250px) {
+								grid-area: purchase-status-based-on-itn;
 							}
 						}
 

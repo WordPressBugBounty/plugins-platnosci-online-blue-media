@@ -7,7 +7,7 @@ namespace Composer\Autoload;
 class ComposerStaticInit5464fa84b05c54432feb4ff04213da6a
 {
     public static $prefixLengthsPsr4 = array (
-        'I' => 
+        'I' =>
         array (
             'Isolated\\BlueMedia\\Ilabs\\Ilabs_Plugin\\' => 38,
             'Ilabs\\BM_Woocommerce\\' => 21,
@@ -15,11 +15,11 @@ class ComposerStaticInit5464fa84b05c54432feb4ff04213da6a
     );
 
     public static $prefixDirsPsr4 = array (
-        'Isolated\\BlueMedia\\Ilabs\\Ilabs_Plugin\\' => 
+        'Isolated\\BlueMedia\\Ilabs\\Ilabs_Plugin\\' =>
         array (
             0 => __DIR__ . '/..' . '/isolated-ilabs-plugin/ilabs-plugin/src',
         ),
-        'Ilabs\\BM_Woocommerce\\' => 
+        'Ilabs\\BM_Woocommerce\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
@@ -72,6 +72,7 @@ class ComposerStaticInit5464fa84b05c54432feb4ff04213da6a
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Ga4\\Add_Product_To_Cart_Use_Case' => __DIR__ . '/../..' . '/src/Domain/Service/Ga4/Add_Product_To_Cart_Use_Case.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Ga4\\Click_On_Product_Use_Case' => __DIR__ . '/../..' . '/src/Domain/Service/Ga4/Click_On_Product_Use_Case.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Ga4\\Complete_Transation_Use_Case' => __DIR__ . '/../..' . '/src/Domain/Service/Ga4/Complete_Transation_Use_Case.php',
+        'Ilabs\\BM_Woocommerce\\Domain\\Service\\Ga4\\Ga4_Hooks' => __DIR__ . '/../..' . '/src/Domain/Service/Ga4/Ga4_Hooks.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Ga4\\Ga4_Use_Case_Interface' => __DIR__ . '/../..' . '/src/Domain/Service/Ga4/Ga4_Use_Case_Interface.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Ga4\\Init_Checkout_Use_Case' => __DIR__ . '/../..' . '/src/Domain/Service/Ga4/Init_Checkout_Use_Case.php',
         'Ilabs\\BM_Woocommerce\\Domain\\Service\\Ga4\\Remove_Product_From_Cart_Use_Case' => __DIR__ . '/../..' . '/src/Domain/Service/Ga4/Remove_Product_From_Cart_Use_Case.php',
@@ -99,6 +100,7 @@ class ComposerStaticInit5464fa84b05c54432feb4ff04213da6a
         'Ilabs\\BM_Woocommerce\\Gateway\\Webhook\\Order_Remote_Status_Legacy_Manager' => __DIR__ . '/../..' . '/src/Gateway/Webhook/Order_Remote_Status_Legacy_Manager.php',
         'Ilabs\\BM_Woocommerce\\Gateway\\Webhook\\Order_Remote_Status_Manager' => __DIR__ . '/../..' . '/src/Gateway/Webhook/Order_Remote_Status_Manager.php',
         'Ilabs\\BM_Woocommerce\\Helpers\\Helper' => __DIR__ . '/../..' . '/src/Helpers/Helper.php',
+        'Ilabs\\BM_Woocommerce\\Hooks' => __DIR__ . '/../..' . '/src/Hooks.php',
         'Ilabs\\BM_Woocommerce\\Integration\\Funnel_Builder\\Funnel_Builder_Integration' => __DIR__ . '/../..' . '/src/Integration/Funnel_Builder/Funnel_Builder_Integration.php',
         'Ilabs\\BM_Woocommerce\\Integration\\Woocommerce_Blocks\\WC_Gateway_Autopay_Blocks_Support' => __DIR__ . '/../..' . '/src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php',
         'Ilabs\\BM_Woocommerce\\Plugin' => __DIR__ . '/../..' . '/src/Plugin.php',

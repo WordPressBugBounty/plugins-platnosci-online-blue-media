@@ -1208,3 +1208,11 @@ msgstr "Avanzato"
 
 msgid "Title and description have been reset to defaults."
 msgstr "Il titolo e la descrizione sono stati impostati a valori di default"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:550
+msgid "ITN SUCCESS triggering the event ‘Completion of transaction’ instead of order status"
+msgstr "ITN SUCCESS che attiva l'evento 'Completamento della transazione' invece dello stato dell'ordine"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:554
+msgid "If you select “Yes,” a “purchase” event will be sent immediately once an ITN SUCCESS status message is received for the order."
+msgstr "Se selezioni \"Sì\", un evento di \"acquisto\" verrà inviato immediatamente una volta ricevuto un messaggio di stato ITN SUCCESS per l'ordine."

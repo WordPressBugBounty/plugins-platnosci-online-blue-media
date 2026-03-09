@@ -699,12 +699,23 @@
 	.woocommerce .autopay-settings-section.section-analytics table.form-table > tbody {
 		display: grid;
 		grid-template-columns: 520px auto;
-		grid-template-areas: "tracking-id table" "client-id table" "api-secret table" "purchase-status table" ". table";
+		grid-template-areas: "tracking-id table" "client-id table" "api-secret table" "purchase-status table" "purchase-status-based-on-itn table" ". table";
 		grid-template-rows: auto;
 		-moz-column-gap: 0;
-		column-gap: 0; } }
+		column-gap: 0;
+		align-content: start; } }
 .woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr .titledesc {
 	padding-top: 25px; }
+.woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr.autopay-ga4-row .titledesc {
+	padding-top: 10px;
+	padding-bottom: 6px; }
+.woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr.autopay-ga4-row .forminp {
+	padding-top: 0;
+	padding-bottom: 6px; }
+.woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr.autopay-ga4-row fieldset {
+	margin: 0; }
+.woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr.autopay-ga4-row p.description {
+	margin-top: 4px !important; }
 .woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr .titledesc:first-of-type {
 	padding-top: 20px; }
 @media screen and (min-width: 1250px) {
@@ -719,6 +730,9 @@
 @media screen and (min-width: 1250px) {
 	.woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr.woocommerce_bluemedia_ga4_purchase_status-tr {
 		grid-area: purchase-status; } }
+@media screen and (min-width: 1250px) {
+	.woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr.woocommerce_bluemedia_ga4_purchase_status_based_on_itn-tr {
+		grid-area: purchase-status-based-on-itn; } }
 @media screen and (min-width: 1250px) {
 	.woocommerce .autopay-settings-section.section-analytics table.form-table > tbody tr.woocommerce_bluemedia_wc_payment_statuses_table-tr {
 		grid-area: table; } }
@@ -1543,3 +1557,4 @@ body.woocommerce_page_wc-settings #mainform #autopay-currencies-menu .nav-tab {
 	border-color:#d63638;
 	box-shadow:0 0 0 1px #d63638;
 }
+

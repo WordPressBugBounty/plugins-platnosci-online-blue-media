@@ -11,6 +11,7 @@
  * @var string $status
  * @var WC_Settings_API $wc_settings_api
  * @var array $data
+ * @var array $tr_classes
  * @var bool $visible
  * @var string $bottom_description
  *
@@ -42,11 +43,12 @@ $status_type        = empty( $status_type ) ? 'success' : $status_type;
 $bottom_description = empty( $bottom_description ) ? false : $bottom_description;
 $help_tip           = empty( [ 'help_tip' ] ) ? false : $data['help_tip'];
 $class              = empty( [ 'help_tip' ] ) ? '' : $data['class'];
+$tr_classes         = empty( $tr_classes ) ? [] : $tr_classes;
 
 
 ?>
 <tr valign="top"
-	class="<?php echo esc_attr( $field_key ); ?>-tr <?php echo $class ? esc_attr( $class ) . '-tr' : ''; ?> autopay-comp-radio">
+	class="<?php echo esc_attr( $field_key ); ?>-tr <?php echo $class ? esc_attr( $class ) . '-tr' : ''; ?> autopay-comp-radio <?php esc_attr_e( implode( ' ', $tr_classes ) ) ?>">
 	<th scope="row" class="titledesc">
 		<label
 			for="<?php echo esc_attr( $field_key ); ?>"><?php echo wp_kses_post( $data['title'] ); ?>

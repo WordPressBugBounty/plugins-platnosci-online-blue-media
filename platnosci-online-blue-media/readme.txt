@@ -3,7 +3,7 @@ Contributors: inspirelabs
 Tags: woocommerce, bluemedia, autopay
 Requires at least: 6.0
 Tested up to: 6.9.1
-Stable tag: 4.8.2
+Stable tag: 4.8.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -44,7 +44,7 @@ Autopay is a payment module that enables cashless transactions in a shop based o
 **Requirements for installing the plug-in**
 
 - WordPress - tested on versions `6.0` to `6.9.1`
-- WooCommerce plugin - tested on versions `7.9.0` to `10.5.1`
+- WooCommerce plugin - tested on versions `7.9.0` to `10.5.3`
 - PHP version min. `7.4`
 
 == Installation	 ==
@@ -82,6 +82,9 @@ The values of the Service ID and Configuration Key are different for the test an
 
 
 == Changelog ==
+
+### 4.8.3 (09 March 2026) ###
+* Analytics component - a new optional setting: "ITN SUCCESS triggering the event ‘Completion of transaction’ instead of order status"
 
 ### 4.8.2 (17 February 2026) ###
 * Improved webhook processing logic for better integration with third-party plugins

@@ -57,8 +57,11 @@ class WC_Form_Fields_Integration {
 					if ( isset( $autopay_template_args['on_hook'] ) ) {
 						add_action( $autopay_template_args['on_hook'],
 							function () use ( $return, $key ) {
-								printf("<table class='table-%s'>%s</table>",$key,  $return);
-							}, 10 );
+								printf( "<table class='table-%s'>%s</table>",
+									$key,
+									$return );
+							},
+							10 );
 
 						return '';
 					}
@@ -115,7 +118,7 @@ class WC_Form_Fields_Integration {
 						'bottom_description' => __( 'See how you can run straightforward campaigns with us!',
 								'bm-woocommerce' )
 						                        . ' ' . '<a target="_blank" href="' . esc_url( __( 'https://autopay.eu/products/data/ads',
-									'bm-woocommerce' ) ) . '">'
+								'bm-woocommerce' ) ) . '">'
 						                        . ' ' . __( 'Launch in 5 minutes!',
 								'bm-woocommerce' ) . '</a>',
 
@@ -179,10 +182,10 @@ class WC_Form_Fields_Integration {
 						'bottom_description' => __( 'In order to get access to the sandbox environment contact Autopay using',
 								'bm-woocommerce' )
 						                        . ' ' . '<a target="_blank" href="' . esc_url( __( 'https://developers.autopay.pl/kontakt?utm_campaign=help&utm_source=woocommerce_panel&utm_medium=text_link',
-									'bm-woocommerce' ) ) . '">'
+								'bm-woocommerce' ) ) . '">'
 						                        . ' ' . __( 'this form',
 								'bm-woocommerce' ) . '</a>',
-						'on_hook' => 'autopay_settings_before_table_authentication',
+						'on_hook'            => 'autopay_settings_before_table_authentication',
 
 					],
 				'help_tip'      => __( 'Payments processed using sandbox environment will not affect store’s settlement with Autopay. Sandbox allows stores to verify integration with Autopay and configuration of this plugin.',
@@ -239,10 +242,10 @@ class WC_Form_Fields_Integration {
 				'desc_tip'    => false,
 				'bmtab'       => 'authentication',
 			],
-            // Placeholders to preserve order; configured for PLN below
-            'blik_type_title'                  => [],
-            Settings_Manager::get_currency_option_key( 'blik_type',
-                $current_admin_currency_code ) => [],
+			// Placeholders to preserve order; configured for PLN below
+			'blik_type_title'                  => [],
+			Settings_Manager::get_currency_option_key( 'blik_type',
+				$current_admin_currency_code ) => [],
 
 			Settings_Manager::get_currency_option_key( 'service_id',
 				$current_admin_currency_code ) => [
@@ -345,35 +348,36 @@ class WC_Form_Fields_Integration {
 			],
 		];
 
-        if ( 'PLN' === $current_admin_currency_code ) {
-            // Remove separate title row; we render title within the select field
-            unset( $return['blik_type_title'] );
-            $return[ Settings_Manager::get_currency_option_key( 'blik_type',
-                $current_admin_currency_code ) ] = [
-                'title'            => __( 'BLIK payment type', 'bm-woocommerce' ),
-                'type'             => 'autopay_template',
-                'template'         => 'settings_field_extended_select',
-                'description'      => '',
-                'options'          => [
-                    'with_redirect'           => __( 'redirect payer to BLIK’s website',
-                        'bm-woocommerce' ),
-                    'blik_0_without_redirect' => __( 'enter BLIK code directly on your store',
-                        'bm-woocommerce' ),
-                ],
-                'default'          => 'with_redirect',
-                'bmtab'            => 'authentication',
-                'template_tr_args' =>
-                    [
-                        'test1' => 'val1',
-                        'test2' => 'val2',
-                    ],
-                'template_args'    => [
-                    'tip_url'       => __( 'https://developers.autopay.pl/en/online/plugins/woocomerce#692d97171d07c',
-	                    'bm-woocommerce' ),
-                    'tip_url_label' => __( 'Learn more', 'bm-woocommerce' ),
-                ],
-                'disabled'         => 'no' === $whitelabel_opt_value,
-            ];
+		if ( 'PLN' === $current_admin_currency_code ) {
+			// Remove separate title row; we render title within the select field
+			unset( $return['blik_type_title'] );
+			$return[ Settings_Manager::get_currency_option_key( 'blik_type',
+				$current_admin_currency_code ) ] = [
+				'title'            => __( 'BLIK payment type',
+					'bm-woocommerce' ),
+				'type'             => 'autopay_template',
+				'template'         => 'settings_field_extended_select',
+				'description'      => '',
+				'options'          => [
+					'with_redirect'           => __( 'redirect payer to BLIK’s website',
+						'bm-woocommerce' ),
+					'blik_0_without_redirect' => __( 'enter BLIK code directly on your store',
+						'bm-woocommerce' ),
+				],
+				'default'          => 'with_redirect',
+				'bmtab'            => 'authentication',
+				'template_tr_args' =>
+					[
+						'test1' => 'val1',
+						'test2' => 'val2',
+					],
+				'template_args'    => [
+					'tip_url'       => __( 'https://developers.autopay.pl/en/online/plugins/woocomerce#692d97171d07c',
+						'bm-woocommerce' ),
+					'tip_url_label' => __( 'Learn more', 'bm-woocommerce' ),
+				],
+				'disabled'         => 'no' === $whitelabel_opt_value,
+			];
 
 		} else {
 			unset( $return['blik_type_title'] );
@@ -406,14 +410,16 @@ class WC_Form_Fields_Integration {
 		$return = [
 
 			'payment_method_header' => [
-				'title'       => __( 'Header and description at checkout', 'bm-woocommerce' ),
-				'type'        => 'autopay_template',
-				'template'    => 'settings_field_extended_title',
-				'bmtab'       => 'payment_settings',
+				'title'    => __( 'Header and description at checkout',
+					'bm-woocommerce' ),
+				'type'     => 'autopay_template',
+				'template' => 'settings_field_extended_title',
+				'bmtab'    => 'payment_settings',
 			],
 
 			'payment_method_title' => [
-				'title'         => __( 'Payment method title', 'bm-woocommerce' ),
+				'title'         => __( 'Payment method title',
+					'bm-woocommerce' ),
 				'type'          => 'autopay_template',
 				'template'      => 'settings_field_title_with_counter',
 				'bmtab'         => 'payment_settings',
@@ -423,20 +429,21 @@ class WC_Form_Fields_Integration {
 			],
 
 			'payment_method_description' => [
-				'title'         => __( 'Payment method description', 'bm-woocommerce' ),
+				'title'         => __( 'Payment method description',
+					'bm-woocommerce' ),
 				'type'          => 'autopay_template',
 				'template'      => 'settings_field_description_with_counter',
 				'bmtab'         => 'payment_settings',
 				'template_args' => [
-					'max_length'  => 500,
-					'tip_url'     => __( 'https://developers.autopay.pl/en/online/plugins/woocomerce#692d97171d07c',
+					'max_length'    => 500,
+					'tip_url'       => __( 'https://developers.autopay.pl/en/online/plugins/woocomerce#692d97171d07c',
 						'bm-woocommerce' ),
-					'tip_url_label'=> __( 'where to find?', 'bm-woocommerce' ),
+					'tip_url_label' => __( 'where to find?', 'bm-woocommerce' ),
 				],
 			],
 
 			// Simple divider line under the section
-			'payment_method_divider' => [
+			'payment_method_divider'     => [
 				'type'     => 'autopay_template',
 				'template' => 'settings_field_section_divider',
 				'bmtab'    => 'payment_settings',
@@ -456,30 +463,30 @@ class WC_Form_Fields_Integration {
 					],
 			],
 
-					'custom_button' => [
-			'title'         => __( 'Allowed payment method list',
-				'bm-woocommerce' ),
-			'type'          => 'autopay_template',
-			'description'   => "",
-			'desc_tip'      => false,
-			'default'       => __( 'Import now',
-				'bm-woocommerce' ),
-			                'template'      => 'settings_field_channels',
-			'template_args' => [
-				'channels' => function () use ( $admin_currency_code ) {
-					try {
-						$channels_opt_value = blue_media()
-							->get_blue_media_gateway()
-							->gateway_list( true, $admin_currency_code );
+			'custom_button' => [
+				'title'         => __( 'Allowed payment method list',
+					'bm-woocommerce' ),
+				'type'          => 'autopay_template',
+				'description'   => "",
+				'desc_tip'      => false,
+				'default'       => __( 'Import now',
+					'bm-woocommerce' ),
+				'template'      => 'settings_field_channels',
+				'template_args' => [
+					'channels' => function () use ( $admin_currency_code ) {
+						try {
+							$channels_opt_value = blue_media()
+								->get_blue_media_gateway()
+								->gateway_list( true, $admin_currency_code );
 
-					} catch ( Exception $exception ) {
-						$channels_opt_value = $exception;
-					}
+						} catch ( Exception $exception ) {
+							$channels_opt_value = $exception;
+						}
 
-					return $channels_opt_value;
-				},
+						return $channels_opt_value;
+					},
+				],
 			],
-		],
 		];
 
 
@@ -496,6 +503,7 @@ class WC_Form_Fields_Integration {
 				'type'          => 'autopay_template',
 				'template'      => 'settings_field_extended_text',
 				'bmtab'         => 'analytics',
+				'tr_classes'    => [ 'autopay-ga4-row' ],
 				'template_args' =>
 					[
 						'tip_url'       => '',
@@ -512,6 +520,7 @@ class WC_Form_Fields_Integration {
 				'type'          => 'autopay_template',
 				'template'      => 'settings_field_extended_text',
 				'bmtab'         => 'analytics',
+				'tr_classes'    => [ 'autopay-ga4-row' ],
 				'template_args' =>
 					[
 						'tip_url'       => '',
@@ -527,6 +536,7 @@ class WC_Form_Fields_Integration {
 				'type'          => 'autopay_template',
 				'template'      => 'settings_field_extended_password',
 				'bmtab'         => 'analytics',
+				'tr_classes'    => [ 'autopay-ga4-row' ],
 				'template_args' =>
 					[
 						'tip_url'       => '',
@@ -545,6 +555,25 @@ class WC_Form_Fields_Integration {
 				'template'    => 'settings_field_extended_select',
 				'options'     => wc_get_order_statuses(),
 				'default'     => 'wc-on-hold',
+				'tr_classes'  => [ 'autopay-ga4-row' ],
+			],
+
+			'ga4_purchase_status_based_on_itn' => [
+				'title'       => __( 'ITN SUCCESS triggering the event ‘Completion of transaction’ instead of order status',
+					'bm-woocommerce' ),
+				'label'       => __( '',
+					'bm-woocommerce' ),
+				'description' => __( 'If you select “Yes,” a “purchase” event will be sent immediately once an ITN SUCCESS status message is received for the order.',
+					'bm-woocommerce' ),
+				'type'        => 'autopay_template',
+				'template'    => 'settings_field_extended_radio',
+				'default'     => 'no',
+				'options'     => [
+					'yes' => __( 'Yes', 'bm-woocommerce' ),
+					'no'  => __( 'No', 'bm-woocommerce' ),
+				],
+				'bmtab'       => 'analytics',
+				'tr_classes'  => [ 'autopay-ga4-row' ],
 			],
 
 			'wc_payment_statuses_table' => [
