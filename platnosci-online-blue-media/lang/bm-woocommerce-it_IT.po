@@ -1216,3 +1216,12 @@ msgstr "ITN SUCCESS che attiva l'evento 'Completamento della transazione' invece
 #: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:554
 msgid "If you select “Yes,” a “purchase” event will be sent immediately once an ITN SUCCESS status message is received for the order."
 msgstr "Se selezioni \"Sì\", un evento di \"acquisto\" verrà inviato immediatamente una volta ricevuto un messaggio di stato ITN SUCCESS per l'ordine."
+
+msgid "Please read and accept the"
+msgstr "Si prega di leggere e accettare i"
+
+msgid "Terms & Conditions"
+msgstr "Termini e condizioni"
+
+msgid "Pay with Google Pay"
+msgstr "Paga con Google Pay"

@@ -156,6 +156,7 @@ class Plugin extends Abstract_Ilabs_Plugin {
 
 		$this->get_file_downloader()->handle();
 
+		// Frontend assets (including Google Pay) must be enqueued.
 		add_action( 'wp_enqueue_scripts',
 			[ $this, 'enqueue_frontend_scripts' ] );
 
@@ -277,6 +278,33 @@ class Plugin extends Abstract_Ilabs_Plugin {
 			blue_media()->get_plugin_version(),
 			true );
 
+		$is_checkout_page       = function_exists( 'is_checkout' ) && is_checkout();
+		$is_block_checkout_page = false;
+		$offer_google_pay       = true;
+		if ( $is_checkout_page && function_exists( 'has_block' ) ) {
+			$post = get_post();
+			if ( $post instanceof \WP_Post ) {
+				$is_block_checkout_page = has_block( 'woocommerce/checkout', $post );
+			}
+		}
+		if ( $is_checkout_page && ! $is_block_checkout_page ) {
+			$gateway = blue_media()->get_blue_media_gateway();
+			if ( $gateway instanceof \Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway ) {
+				$offer_google_pay = $gateway->should_offer_google_pay_on_checkout();
+			}
+		}
+
+		// For classic checkout we still load Google Pay scripts globally.
+		// Block checkout receives them from the Blocks integration only when GPAY is eligible.
+		if ( $is_checkout_page && ! $is_block_checkout_page && $offer_google_pay ) {
+			// Google Pay helper (must load before pay.js).
+			wp_enqueue_script( $this->get_plugin_prefix() . '_google_pay_js',
+				$this->get_plugin_js_url() . '/google-pay-atp.js',
+				[ 'jquery' ],
+				blue_media()->get_plugin_version(),
+				true );
+		}
+
 		$ga4_tracking_id = ( new Ga4_Service_Client() )->get_tracking_id();
 
 		if ( $ga4_tracking_id ) {
@@ -309,6 +337,17 @@ class Plugin extends Abstract_Ilabs_Plugin {
 					$this->get_plugin_version()
 				);
 			}
+		}
+
+		// Google Pay API should be in header for classic checkout.
+		if ( $is_checkout_page && ! $is_block_checkout_page && $offer_google_pay ) {
+			wp_enqueue_script(
+				'autopay_google_pay',
+				'https://pay.google.com/gp/p/js/pay.js',
+				[],
+				null,
+				false
+			);
 		}
 	}
 

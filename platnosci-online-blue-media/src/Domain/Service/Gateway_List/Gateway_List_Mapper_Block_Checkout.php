@@ -27,10 +27,21 @@ class Gateway_List_Mapper_Block_Checkout {
 	 */
 	private Gateway_List_Response $gateway_list_response;
 
+	private array $gpay_form_data = [];
 
-	public function __construct( Gateway_List_Response $gateway_list_response
+	/**
+	 * When false, Google Pay (channel 1512) is omitted from the block checkout channel list.
+	 */
+	private bool $offer_google_pay_on_checkout = true;
+
+	public function __construct(
+		Gateway_List_Response $gateway_list_response,
+		array $gpay_form_data = [],
+		bool $offer_google_pay_on_checkout = true
 	) {
-		$this->gateway_list_response = $gateway_list_response;
+		$this->gateway_list_response         = $gateway_list_response;
+		$this->gpay_form_data                = $gpay_form_data;
+		$this->offer_google_pay_on_checkout = $offer_google_pay_on_checkout;
 	}
 
 	private function convert_view_model_group_to_array( View_Model_Group $group
@@ -39,7 +50,10 @@ class Gateway_List_Mapper_Block_Checkout {
 		$items = [];
 
 		foreach ( $group->getGateways() as $item ) {
-			$items[] = $this->convert_gateway_item_to_array( $item );
+			$converted = $this->convert_gateway_item_to_array( $item );
+			if ( null !== $converted ) {
+				$items[] = $converted;
+			}
 		}
 
 
@@ -89,7 +103,12 @@ class Gateway_List_Mapper_Block_Checkout {
 	}
 
 
-	private function convert_gateway_item_to_array( Gateway $gateway ): array {
+	private function convert_gateway_item_to_array( Gateway $gateway ): ?array {
+		if ( Blue_Media_Gateway::GPAY_CHANNEL === $gateway->getGatewayID()
+			&& ! $this->offer_google_pay_on_checkout ) {
+			return null;
+		}
+
 		$data = null;
 		if ( Blue_Media_Gateway::BLIK_0_CHANNEL === $gateway->getGatewayID() ) {
 			$blik0_type = blue_media()
@@ -97,6 +116,13 @@ class Gateway_List_Mapper_Block_Checkout {
 				->get_option( 'blik_type', 'with_redirect' );
 			if ( 'blik_0_without_redirect' === $blik0_type ) {
 				$data['blik0'] = true;
+			}
+		}
+
+		if ( Blue_Media_Gateway::GPAY_CHANNEL === $gateway->getGatewayID() ) {
+
+			if ( ! empty( $this->gpay_form_data ) ) {
+				$data['gpay_form_data'] = $this->gpay_form_data;
 			}
 		}
 

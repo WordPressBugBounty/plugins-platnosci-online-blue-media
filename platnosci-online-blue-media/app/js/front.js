@@ -44,57 +44,115 @@ function addCurrentClass(el) {
   }
 
 
-  if (canContinue) {
-    BmActivateNewOrderButton()
-  } else {
-    BmDeactivateNewOrderButton()
-  }
+  setTimeout(function() {
+    if (isGpaySelected()) {
+      BmDeactivateNewOrderButton()
+    } else if (canContinue) {
+      BmActivateNewOrderButton();
+    } else {
+      BmDeactivateNewOrderButton();
+    }
+  }, 10);
+}
 
+function checkAndUpdateButton() {
+  if (isGpaySelected() && !bm_global_gpay_can_continue) {
+    BmDeactivateNewOrderButton()
+  } else {
+    const placeOrderBtn = document.querySelector('#place_order');
+    if (placeOrderBtn) {
+      const anyPaymentSelected = document.querySelector('input[name="bm-payment-channel"]:checked') ||
+                                  document.querySelector('#bm-gateway-bank-group:checked');
+
+      if (anyPaymentSelected) {
+        const gpayRadio = document.querySelector('#bm-gateway-id-1512');
+        if (!gpayRadio || !gpayRadio.checked) {
+          BmActivateNewOrderButton();
+        }
+      }
+    }
+  }
 }
 
 var bm_global_update_checkout_in_progress = 1;
 var bm_global_timer = null;
+var bm_global_gpay_can_continue = false;
+var bm_checkout_locked_by = '';
 
+function isGpaySelected() {
+  const gpayRadio = document.querySelector('#bm-gateway-id-1512');
+  if (!gpayRadio) return false;
+  if (gpayRadio.checked) return true;
+  const gpayItem = gpayRadio.closest('.bm-payment-channel-item');
+  if (gpayItem && gpayItem.classList.contains('selected')) return true;
+  return false;
+}
 
+function BmHideNewOrderButton() {
+
+  const placeOrderBtn = document.querySelector('#place_order');
+  if (placeOrderBtn) {
+    placeOrderBtn.style.setProperty('display', 'none', 'important');
+    placeOrderBtn.style.setProperty('visibility', 'hidden', 'important');
+    jQuery(placeOrderBtn).prop("disabled", true);
+  }
+}
 
 jQuery(document).ready(function () {
-  jQuery('body').on('update_checkout', function() {
+  checkAndUpdateButton();
+
+  jQuery(document).on('change', 'input[name="bm-payment-channel"]', function() {
+    setTimeout(function() {
+      checkAndUpdateButton();
+    }, 10);
+  });
+
+  jQuery(document).on('change', '#bm-gateway-bank-group', function() {
+    setTimeout(function() {
+      checkAndUpdateButton();
+    }, 10);
+  });
+
+  setInterval(function() {
+    checkAndUpdateButton();
+  }, 100);
+  jQuery('body').on('update_checkout', function () {
     bm_global_update_checkout_in_progress = 1;
     const bm_payment_channel_items = document.querySelectorAll(".bm-payment-channels-wrapper .bm-payment-channel-item > label > input[type='radio']");
     const bm_gateway_bank_group = document.querySelector("#bm-gateway-bank-group");
 
-    if(bm_gateway_bank_group && bm_gateway_bank_group.checked) {
-      const checkUpdateComplete = setInterval(function() {
+    if (bm_gateway_bank_group && bm_gateway_bank_group.checked) {
+      const checkUpdateComplete = setInterval(function () {
         if (bm_global_update_checkout_in_progress === 0) {
           const bm_payment_channel_group_item = document.querySelector(".bm-group-przelew-internetowy .bm-payment-channel-group-item");
           const bm_group_expandable_wrapper = document.querySelector(".bm-group-przelew-internetowy  .bm-group-expandable-wrapper");
 
           if (bm_payment_channel_group_item && bm_group_expandable_wrapper) {
             clearInterval(checkUpdateComplete);
-            BmActivateNewOrderButton();
             bm_payment_channel_group_item.classList.add('bm-selected-group');
             bm_group_expandable_wrapper.classList.add('active');
+            checkAndUpdateButton();
           }
         }
       }, 100);
     }
 
-
     if (bm_payment_channel_items) {
       bm_payment_channel_items.forEach((element) => {
         if (element.checked) {
-          const checkUpdateComplete = setInterval(function() {
+          const checkUpdateComplete = setInterval(function () {
             if (bm_global_update_checkout_in_progress === 0) {
               clearInterval(checkUpdateComplete);
-
-              if (element && element.checked) {
-                BmActivateNewOrderButton();
-              }
+              checkAndUpdateButton();
             }
           }, 100);
         }
       });
     }
+
+    setTimeout(function() {
+      checkAndUpdateButton();
+    }, 50);
   });
 
   if (typeof window.blueMedia !== 'undefined') {
@@ -144,33 +202,37 @@ document.addEventListener('click', function (e) {
   // click on PRZELEW INTERNETOWY
   if (target.hasAttribute('id') && target.getAttribute('id') == 'bm-gateway-bank-group') {
     if (target.checked) {
-      BmActivateNewOrderButton()
       BmSelectGroupedLi()
 
       document.querySelectorAll(".bm-group-expandable-wrapper").forEach((element) => {
         if (element && element.classList) {
           element.classList.add('active');
         }
-
-
       });
 
       document.querySelectorAll(".bm-payment-channel-item > label > input[type='radio']").forEach((element) => {
         if (element.checked) {
-
           let closestItem = element.closest(".bm-payment-channel-item");
-
           if (closestItem && closestItem.classList) {
             closestItem.classList.remove("selected");
           }
-
           element.checked = !element.checked;
         }
-      })
+      });
+
+      setTimeout(function() {
+        checkAndUpdateButton();
+      }, 10);
     }
   } else {
     if (target.hasAttribute('class') && target.getAttribute('class') !== 'bm-payment-channel-group-in-group') {
       BmDeselectGroupedLi()
+    }
+
+    if (target.type === 'radio' && (target.name === 'bm-payment-channel' || target.id === 'bm-gateway-bank-group')) {
+      setTimeout(function() {
+        checkAndUpdateButton();
+      }, 10);
     }
   }
 });
@@ -186,11 +248,24 @@ function isChild(obj, parentObj) {
 }
 
 function BmDeactivateNewOrderButton() {
-  jQuery("#place_order").prop("disabled", true); // Deaktywuj przycisk
+  const placeOrderBtn = document.querySelector('#place_order');
+  if (placeOrderBtn && !placeOrderBtn.disabled) {
+    jQuery(placeOrderBtn).prop('disabled', true);
+  }
 }
 
 function BmActivateNewOrderButton() {
-  jQuery("#place_order").prop("disabled", false); // Deaktywuj przycisk
+  if (isGpaySelected()) {
+    return
+  }
+  const placeOrderBtn = document.querySelector('#place_order');
+  if (placeOrderBtn) {
+    placeOrderBtn.style.setProperty('display', '', 'important');
+    placeOrderBtn.style.setProperty('visibility', '', 'important');
+    placeOrderBtn.style.removeProperty('display');
+    placeOrderBtn.style.removeProperty('visibility');
+    jQuery(placeOrderBtn).show().prop("disabled", false);
+  }
 }
 
 function BmSelectGroupedLi() {

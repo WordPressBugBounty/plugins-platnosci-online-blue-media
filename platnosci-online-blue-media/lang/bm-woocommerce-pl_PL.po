@@ -1247,3 +1247,12 @@ msgstr "Komunikat ITN SUCCESS wyzwalający zdarzenie „Zakończenie transakcji�
 #: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:554
 msgid "If you select “Yes,” a “purchase” event will be sent immediately once an ITN SUCCESS status message is received for the order."
 msgstr "Jeśli wybierzesz „Tak”, zdarzenie „purchase” zostanie wysłane natychmiast po otrzymaniu komunikatu ITN SUCCESS dla zamówienia."
+
+msgid "Please read and accept the"
+msgstr "Proszę przeczytać i zaakceptować"
+
+msgid "Terms & Conditions"
+msgstr "regulamin"
+
+msgid "Pay with Google Pay"
+msgstr "Zapłać z Google Pay"

@@ -55,13 +55,17 @@ class WC_Form_Fields_Integration {
 					$return = ob_get_clean();
 
 					if ( isset( $autopay_template_args['on_hook'] ) ) {
-						add_action( $autopay_template_args['on_hook'],
-							function () use ( $return, $key ) {
-								printf( "<table class='table-%s'>%s</table>",
-									$key,
-									$return );
+						add_action(
+							$autopay_template_args['on_hook'],
+							static function () use ( $return, $key ) {
+								printf(
+									'<table class="%s">%s</table>',
+									esc_attr( 'table-' . $key ),
+									$return
+								);
 							},
-							10 );
+							10
+						);
 
 						return '';
 					}

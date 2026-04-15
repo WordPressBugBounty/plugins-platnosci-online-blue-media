@@ -17,7 +17,7 @@ class Css_Editor {
 	private bool $enabled;
 	private string $id;
 
-	public function __construct( string $id = null ) {
+	public function __construct( ?string $id = null ) {
 		$this->id = $id
 			? blue_media()->add_slug_prefix( $id )
 			: blue_media()->add_slug_prefix( self::ID );

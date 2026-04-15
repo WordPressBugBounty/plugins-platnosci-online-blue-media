@@ -369,6 +369,7 @@ $border-color: #e5e5e5;
 			@media screen and (min-width: 1355px) {
 				display: flex;
 				flex-wrap: wrap;
+				align-items: flex-start;
 			}
 
 			table {
@@ -501,6 +502,7 @@ $border-color: #e5e5e5;
 				&.table-test_connection {
 					@include section-line;
 					margin-bottom: 4px;
+
 					tbody {
 						display: block;
 						margin-left: 25px;

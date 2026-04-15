@@ -146,9 +146,7 @@ abstract class Abstract_Ilabs_Plugin
     {
         return new Woocommerce_Logger($this->get_from_config('slug'));
     }
-    /**
-     * @throws Exception
-     */
+
     public function locate_template(string $template, array $args = [])
     {
         $directory_separator = \DIRECTORY_SEPARATOR;

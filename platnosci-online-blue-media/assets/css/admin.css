@@ -309,7 +309,8 @@
 @media screen and (min-width: 1355px) {
 	.woocommerce .autopay-settings-section.section-authentication {
 		display: flex;
-		flex-wrap: wrap; } }
+		flex-wrap: wrap;
+		align-items: flex-start; } }
 .woocommerce .autopay-settings-section.section-authentication table.table-testmode {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 	clear: both;

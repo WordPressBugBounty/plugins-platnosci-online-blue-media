@@ -3,7 +3,7 @@ Contributors: inspirelabs
 Tags: woocommerce, bluemedia, autopay
 Requires at least: 6.0
 Tested up to: 6.9.1
-Stable tag: 4.8.3
+Stable tag: 4.9.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -82,6 +82,11 @@ The values of the Service ID and Configuration Key are different for the test an
 
 
 == Changelog ==
+
+### 4.9.0 (07 April 2026) ###
+* Google Pay on checkout is aligned with WooCommerce: the method is offered when shoppers must accept terms and conditions using a checkbox (classic checkout settings and block checkout with the Terms block checkbox enabled)
+* Block checkout: payment method list reflects the same Google Pay availability rules as on classic checkout
+* Classic checkout: smoother handling of the place order button in combination with Autopay checkout scripts
 
 ### 4.8.3 (09 March 2026) ###
 * Analytics component - a new optional setting: "ITN SUCCESS triggering the event ‘Completion of transaction’ instead of order status"
