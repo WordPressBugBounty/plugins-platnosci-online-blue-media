@@ -2,8 +2,8 @@
 Contributors: inspirelabs
 Tags: woocommerce, bluemedia, autopay
 Requires at least: 6.0
-Tested up to: 6.9.1
-Stable tag: 4.9.0
+Tested up to: 6.9.4
+Stable tag: 4.9.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -43,8 +43,8 @@ Autopay is a payment module that enables cashless transactions in a shop based o
 
 **Requirements for installing the plug-in**
 
-- WordPress - tested on versions `6.0` to `6.9.1`
-- WooCommerce plugin - tested on versions `7.9.0` to `10.5.3`
+- WordPress - tested on versions `6.0` to `6.9.4`
+- WooCommerce plugin - tested on versions `7.9.0` to `10.7.0`
 - PHP version min. `7.4`
 
 == Installation	 ==
@@ -82,6 +82,9 @@ The values of the Service ID and Configuration Key are different for the test an
 
 
 == Changelog ==
+
+### 4.9.1 (16 April 2026) ###
+* Fixed: the **Payment started** WooCommerce order status (Advanced → Payment statuses) is now applied when the customer begins checkout payment (standard redirect, Google Pay, and BLIK‑0). Previously the order was always set to Pending payment, ignoring this setting.
 
 ### 4.9.0 (07 April 2026) ###
 * Google Pay on checkout is aligned with WooCommerce: the method is offered when shoppers must accept terms and conditions using a checkbox (classic checkout settings and block checkout with the Terms block checkbox enabled)

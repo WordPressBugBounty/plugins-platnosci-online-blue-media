@@ -706,7 +706,8 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			) );
 
 		if ( ! $is_blik_0 && ! $is_gpay ) {
-			$this->update_order_status( $order, 'pending' );
+			$start_status = $this->get_option( 'wc_payment_status_on_bm_pending', 'pending' );
+			$this->update_order_status( $order, $start_status );
 			$order->add_order_note( __( 'Autopay: Payment process started for order ID:',
 					'bm-woocommerce' ) . $order_id );
 		}
@@ -925,7 +926,8 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 			WC()->session->set( 'bm_continue_transaction_start_error', '' );
 
-			$this->update_order_status( $order, 'pending' );
+			$start_status = $this->get_option( 'wc_payment_status_on_bm_pending', 'pending' );
+			$this->update_order_status( $order, $start_status );
 			$order->add_order_note( __( 'Autopay: Google Pay payment process started for order ID:',
 					'bm-woocommerce' ) . $order->get_id() );
 
@@ -1034,7 +1036,8 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 			WC()->session->set( 'bm_continue_transaction_start_error', '' );
 
-			$this->update_order_status( $order, 'pending' );
+			$start_status = $this->get_option( 'wc_payment_status_on_bm_pending', 'pending' );
+			$this->update_order_status( $order, $start_status );
 			$order->add_order_note( __( 'Autopay: BLIK-0 payment process started for order ID:',
 					'bm-woocommerce' ) . $order->get_id() );
 		} catch ( Exception $e ) {

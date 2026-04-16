@@ -1,5 +1,8 @@
 *** Autopay Changelog ***
 
+### [4.9.1] 2026-04-16 ###
+- Fixed: the **Payment started** WooCommerce order status (Advanced → Payment statuses) is now applied when the customer begins checkout payment (standard redirect, Google Pay, and BLIK‑0). Previously the order was always set to Pending payment, ignoring this setting.
+
 ### [4.9.0] 2026-04-07 ###
 - Google Pay on checkout is aligned with WooCommerce: the method is offered when shoppers must accept terms and conditions using a checkbox (classic checkout settings and block checkout with the Terms block checkbox enabled)
 - Block checkout: payment method list reflects the same Google Pay availability rules as on classic checkout
