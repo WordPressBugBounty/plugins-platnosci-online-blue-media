@@ -7,6 +7,7 @@ use Exception;
 use Ilabs\BM_Woocommerce\Controller\Payment_Status_Controller;
 use Ilabs\BM_Woocommerce\Domain\Model\White_Label\v3\Gateway_List_Response_Factory;
 use Ilabs\BM_Woocommerce\Domain\Service\Gateway_List\Gateway_List_Mapper_Block_Checkout;
+use Ilabs\BM_Woocommerce\Domain\Service\Settings\Settings_Manager;
 use Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway;
 
 /**
@@ -116,6 +117,10 @@ final class WC_Gateway_Autopay_Blocks_Support extends
 	}
 
 	public function get_payment_method_data(): array {
+ 		if ( ! $this->gateway instanceof Blue_Media_Gateway ) {
+			return $this->get_payment_method_data_when_gateway_unavailable();
+		}
+
 		$is_whitelabel = $this->gateway->is_whitelabel_mode_enabled();
 
 		if ( $is_whitelabel ) {
@@ -152,37 +157,71 @@ final class WC_Gateway_Autopay_Blocks_Support extends
 		return [
 			'title'                    => $this->gateway->get_title(),
 			'description'              => $this->gateway->get_method_description(),
-			'icon_src'                 => blue_media()->get_plugin_images_url() . "/logo-autopay-banner.svg",
+			'icon_src'                 => $this->gateway->get_checkout_logo_banner_url(),
 			'whitelabel'               => $is_whitelabel,
 			'offer_google_pay_on_checkout' => $this->should_offer_google_pay_for_blocks(),
+			'gpay_type'                => blue_media()
+				->get_blue_media_gateway()
+				->get_option(
+					Settings_Manager::get_currency_option_key( 'gpay_type', get_woocommerce_currency() ),
+					'with_redirect'
+				),
 			'place_order_button_label' => __( 'Pay with Autopay',
 				'bm-woocommerce' ),
 			'supports'                 => array_filter( $this->gateway->supports,
 				[ $this->gateway, 'supports' ] ),
 			'channels'                 => $channels_mapped_for_blocks,
-			'messages'                 => [
-				'payment_failed'                          => __( 'Payment failed',
-					'bm-woocommerce' ),
-				'no_payment_channel_selected'             => __( 'No payment channel selected.',
-					'bm-woocommerce' ),
-				'enter_the_blik_code'                     => __( 'Enter the BLIK code.',
-					'bm-woocommerce' ),
-				'the_code_has_6_digits_note'              => __( "You'll find it in your banking app.",
-					'bm-woocommerce' ),
-				'code_is_invalid_code_should_be_6_digits' => __( 'The code you provided is invalid. Code should be 6 digits.',
-					'bm-woocommerce' ),
-				'accept_terms'                            => __( 'Please read and accept the',
-					'bm-woocommerce' ),
-				'terms_and_conditions'                    => __( 'Terms & Conditions',
-					'bm-woocommerce' ),
-				'pay_with_google_pay'                     => __( 'Pay with Google Pay',
-					'bm-woocommerce' ),
-
-			],
+			'messages'                 => $this->get_payment_method_messages(),
 			'adminAjaxUrl'             => esc_url( admin_url( 'admin-ajax.php' ) ),
 			'nonce'                    => wp_create_nonce( Payment_Status_Controller::NONCE_ACTION ),
 			'environment'              => $this->gateway->resolve_is_test_mode() ? 'sandbox' : 'production',
 			'shopBaseCountryCode'      => WC()->countries->get_base_country(),
+		];
+	}
+
+	/**
+	 * Same keys as {@see get_payment_method_data()} when the gateway instance is missing
+	 * (e.g. race during bootstrap) so Blocks JS never receives a partial shape.
+	 */
+	private function get_payment_method_data_when_gateway_unavailable(): array {
+		$wc = WC();
+
+		return [
+			'title'                        => '',
+			'description'                  => '',
+			'icon_src'                     => blue_media()->get_plugin_images_url() . '/logo-autopay-banner.svg',
+			'whitelabel'                   => false,
+			'offer_google_pay_on_checkout' => false,
+			'place_order_button_label'     => __( 'Pay with Autopay',
+				'bm-woocommerce' ),
+			'supports'                     => [],
+			'channels'                     => [],
+			'messages'                     => $this->get_payment_method_messages(),
+			'adminAjaxUrl'                 => esc_url( admin_url( 'admin-ajax.php' ) ),
+			'nonce'                        => wp_create_nonce( Payment_Status_Controller::NONCE_ACTION ),
+			'environment'                  => 'production',
+			'shopBaseCountryCode'          => ( $wc && $wc->countries ) ? $wc->countries->get_base_country() : '',
+		];
+	}
+
+	private function get_payment_method_messages(): array {
+		return [
+			'payment_failed'                          => __( 'Payment failed',
+				'bm-woocommerce' ),
+			'no_payment_channel_selected'             => __( 'No payment channel selected.',
+				'bm-woocommerce' ),
+			'enter_the_blik_code'                     => __( 'Enter the BLIK code.',
+				'bm-woocommerce' ),
+			'the_code_has_6_digits_note'              => __( "You'll find it in your banking app.",
+				'bm-woocommerce' ),
+			'code_is_invalid_code_should_be_6_digits' => __( 'The code you provided is invalid. Code should be 6 digits.',
+				'bm-woocommerce' ),
+			'accept_terms'                            => __( 'Please read and accept the',
+				'bm-woocommerce' ),
+			'terms_and_conditions'                    => __( 'Terms & Conditions',
+				'bm-woocommerce' ),
+			'pay_with_google_pay'                     => __( 'Pay with Google Pay',
+				'bm-woocommerce' ),
 		];
 	}
 

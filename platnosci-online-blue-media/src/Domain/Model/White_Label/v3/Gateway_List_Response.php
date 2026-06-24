@@ -21,7 +21,7 @@ class Gateway_List_Response {
 	/**
 	 * @var Group[]
 	 */
-	private $gatewayGroups;
+	private $gatewayGroups = [];
 
 	/**
 	 * @var string

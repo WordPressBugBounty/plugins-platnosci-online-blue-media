@@ -1218,3 +1218,31 @@ msgstr "Términos y condiciones"
 
 msgid "Pay with Google Pay"
 msgstr "Pagar con Google Pay"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php
+msgid "Autopay logo on checkout"
+msgstr "Logo de Autopay en la página del pedido"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php
+msgid "Pick the variant that contrasts with your checkout background: dark logo on light pages, light logo on dark pages."
+msgstr "Elija la variante que contraste con el fondo de la página del pedido: logo oscuro sobre fondo claro, logo claro sobre fondo oscuro."
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php
+msgid "Dark logo (light checkout background)"
+msgstr "Logo oscuro (fondo claro de la página del pedido)"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php
+msgid "Light logo (dark checkout background)"
+msgstr "Logo claro (fondo oscuro de la página del pedido)"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:390
+msgid "Google Pay payment type"
+msgstr "Tipo de pago de Google Pay"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:396
+msgid "redirect to Google Pay payment"
+msgstr "redirigir al pago de Google Pay"
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:398
+msgid "pay with Google Pay directly on your store"
+msgstr "pagar con Google Pay directamente en tu tienda"

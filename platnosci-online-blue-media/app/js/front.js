@@ -79,7 +79,15 @@ var bm_global_timer = null;
 var bm_global_gpay_can_continue = false;
 var bm_checkout_locked_by = '';
 
+// Bank selection state preserved across update_checkout AJAX.
+var bm_global_bank_selection_state = { bankGroupChecked: false, selectedChannelId: null };
+
 function isGpaySelected() {
+  // Redirect mode — treat GPay as a regular payment channel
+  if ( typeof autopayGpay === 'undefined' || autopayGpay.gpayType !== 'without_redirect' ) {
+    return false;
+  }
+
   const gpayRadio = document.querySelector('#bm-gateway-id-1512');
   if (!gpayRadio) return false;
   if (gpayRadio.checked) return true;
@@ -118,41 +126,96 @@ jQuery(document).ready(function () {
   }, 100);
   jQuery('body').on('update_checkout', function () {
     bm_global_update_checkout_in_progress = 1;
-    const bm_payment_channel_items = document.querySelectorAll(".bm-payment-channels-wrapper .bm-payment-channel-item > label > input[type='radio']");
-    const bm_gateway_bank_group = document.querySelector("#bm-gateway-bank-group");
 
-    if (bm_gateway_bank_group && bm_gateway_bank_group.checked) {
-      const checkUpdateComplete = setInterval(function () {
-        if (bm_global_update_checkout_in_progress === 0) {
-          const bm_payment_channel_group_item = document.querySelector(".bm-group-przelew-internetowy .bm-payment-channel-group-item");
-          const bm_group_expandable_wrapper = document.querySelector(".bm-group-przelew-internetowy  .bm-group-expandable-wrapper");
+    // Capture selection before WC replaces the payment HTML.
+    (function captureBankSelectionSnapshot() {
+      const bankGroupRadio = document.querySelector('#bm-gateway-bank-group');
+      const checkedChannel = document.querySelector('input[name="bm-payment-channel"]:checked');
 
-          if (bm_payment_channel_group_item && bm_group_expandable_wrapper) {
-            clearInterval(checkUpdateComplete);
-            bm_payment_channel_group_item.classList.add('bm-selected-group');
-            bm_group_expandable_wrapper.classList.add('active');
-            checkAndUpdateButton();
-          }
-        }
-      }, 100);
-    }
-
-    if (bm_payment_channel_items) {
-      bm_payment_channel_items.forEach((element) => {
-        if (element.checked) {
-          const checkUpdateComplete = setInterval(function () {
-            if (bm_global_update_checkout_in_progress === 0) {
-              clearInterval(checkUpdateComplete);
-              checkAndUpdateButton();
-            }
-          }, 100);
-        }
-      });
-    }
+      bm_global_bank_selection_state.bankGroupChecked = !!(bankGroupRadio && bankGroupRadio.checked);
+      bm_global_bank_selection_state.selectedChannelId = checkedChannel ? checkedChannel.id : null;
+    })();
 
     setTimeout(function() {
       checkAndUpdateButton();
     }, 50);
+  });
+
+  // Restore bank selection after WC re-renders the payment HTML.
+  // 'updated_checkout' fires AFTER fragments are injected.
+  jQuery('body').on('updated_checkout', function () {
+    // Reapply 'selected' class to whichever channel WC restored.
+    // WC keeps the radio's `checked` state but not our visual highlight.
+    document.querySelectorAll('input[name="bm-payment-channel"]:checked').forEach(function (radio) {
+      const item = radio.closest('.bm-payment-channel-item');
+      if (item) {
+        item.classList.add('selected');
+      }
+    });
+
+    const state = bm_global_bank_selection_state;
+
+    // Only restore if the bank group was previously selected.
+    if (!state.bankGroupChecked) {
+      return;
+    }
+
+    const bankGroupRadio = document.querySelector('#bm-gateway-bank-group');
+    const expandableWrapper = document.querySelector('.bm-group-expandable-wrapper');
+    const groupItem = document.querySelector('.bm-payment-channel-group-item');
+
+    // Bank group may be absent in the new HTML (e.g. currency switch).
+    if (!bankGroupRadio || !expandableWrapper) {
+      return;
+    }
+
+    bankGroupRadio.checked = true;
+    expandableWrapper.classList.add('active');
+
+    let channelRadioToRestore = null;
+    if (state.selectedChannelId) {
+      const candidate = document.getElementById(state.selectedChannelId);
+      if (candidate && candidate.classList.contains('bm-payment-channel-group-in-group')) {
+        channelRadioToRestore = candidate;
+      }
+    }
+
+    // Highlight the group header only when no specific bank is restored,
+    // to match the visual behaviour of manual selection.
+    if (groupItem && !channelRadioToRestore) {
+      groupItem.classList.add('bm-selected-group');
+    }
+
+    if (channelRadioToRestore) {
+      channelRadioToRestore.checked = true;
+      const channelItem = channelRadioToRestore.closest('.bm-payment-channel-item');
+      if (channelItem) {
+        channelItem.classList.add('selected');
+      }
+    }
+
+    checkAndUpdateButton();
+  });
+
+  // Reset Autopay box state when the customer leaves the gateway,
+  // so coming back starts with a clean state.
+  jQuery(document).on('change', 'input[name="payment_method"]', function () {
+    if (this.value === 'bluemedia') {
+      return;
+    }
+    bm_global_bank_selection_state = { bankGroupChecked: false, selectedChannelId: null };
+    document.querySelectorAll('#bm-gateway-bank-group, input[name="bm-payment-channel"]').forEach(function (radio) {
+      radio.checked = false;
+    });
+    document.querySelectorAll('.bm-group-expandable-wrapper').forEach(function (el) {
+      el.classList.remove('active');
+    });
+    document.querySelectorAll('.bm-payment-channel-group-item').forEach(function (el) {
+      el.classList.remove('bm-selected-group');
+    });
+    document.querySelectorAll('.bm-payment-channel-item.selected').forEach(function (el) {
+      el.classList.remove('selected');
+    });
   });
 
   if (typeof window.blueMedia !== 'undefined') {

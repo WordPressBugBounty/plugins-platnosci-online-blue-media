@@ -20,7 +20,7 @@ trait Conditions
         return $this->get_event_chain();
     }
     protected abstract function get_event_chain() : Event_Chain;
-    public function when(callable $callable_arguments = null) : Event_Chain
+    public function when(?callable $callable_arguments = null) : Event_Chain
     {
         $this->get_event_chain()->add_condition(new When($callable_arguments));
         return $this->get_event_chain();

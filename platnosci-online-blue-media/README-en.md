@@ -36,8 +36,8 @@ The Autopay payment plugin offers a range of functionalities to support sales on
 
 ### Requirements for installing the plug-in
 
-- WordPress - tested on versions `6.0` to `6.9.4`
-- WooCommerce plugin - tested on versions `7.9.0` to `10.7.0`
+- WordPress - tested on versions `6.0` to `7.0`
+- WooCommerce plugin - tested on versions `7.9.0` to `10.8.1`
 - PHP version min. `7.4`
 
 ### Download from wordpress.org

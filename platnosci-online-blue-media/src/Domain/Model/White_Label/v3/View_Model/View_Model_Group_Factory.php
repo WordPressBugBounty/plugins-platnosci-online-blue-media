@@ -4,6 +4,7 @@ namespace Ilabs\BM_Woocommerce\Domain\Model\White_Label\v3\View_Model;
 
 use Ilabs\BM_Woocommerce\Domain\Model\White_Label\v3\Gateway;
 use Ilabs\BM_Woocommerce\Domain\Model\White_Label\v3\Gateway_List_Response;
+use Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway;
 
 class View_Model_Group_Factory {
 
@@ -26,8 +27,12 @@ class View_Model_Group_Factory {
 
 				if ( $groupData->getType() === 'PBL' ) {
 					$viewModelGroup->setToggled( true );
-
-					$viewModelGroup->setIconUrl( blue_media()->get_plugin_images_url() . '/logo-group.svg' );
+					$gateway = blue_media()->get_blue_media_gateway();
+					if ( $gateway instanceof Blue_Media_Gateway ) {
+						$viewModelGroup->setIconUrl( $gateway->get_checkout_group_logo_url() );
+					} else {
+						$viewModelGroup->setIconUrl( blue_media()->get_plugin_images_url() . '/logo-group.svg' );
+					}
 				}
 
 				$groups[ $groupData->getType() ] = $viewModelGroup;

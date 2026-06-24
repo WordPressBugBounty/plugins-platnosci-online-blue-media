@@ -132,9 +132,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		( new Importer() )->handle_import();
 
 		$this->id           = 'bluemedia';
-		$this->icon
-		                    = blue_media()->get_plugin_images_url()
-		                      . '/logo-autopay.svg';
+		$this->icon         = blue_media()->get_plugin_images_url() . '/logo-autopay.svg';
 		$this->has_fields
 		                    = true;
 		$this->method_title = __( 'Autopay Instant payment',
@@ -162,6 +160,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		$this->enabled     = $this->get_option( 'enabled' );
 		$this->testmode    = $this->resolve_is_test_mode();
 
+		$this->icon = $this->get_checkout_logo_url();
 
 		$this->payment_on_account_page = apply_filters( 'autopay_payment_on_account_page',
 			$this->payment_on_account_page );
@@ -448,6 +447,45 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		$this->form_fields = $this->settings_manager->get_form_fields();
 	}
 
+	/**
+	 * SVG used next to the gateway name on classic checkout.
+	 */
+	public function get_checkout_logo_url(): string {
+		$variant = $this->get_checkout_logo_variant();
+		$file    = 'light' === $variant ? 'logo-autopay-light.svg' : 'logo-autopay.svg';
+		$url     = blue_media()->get_plugin_images_url() . '/' . $file;
+
+		return (string) apply_filters( 'autopay_checkout_logo_url', $url, $variant );
+	}
+
+	/**
+	 * SVG for WooCommerce Blocks checkout payment method icon.
+	 */
+	public function get_checkout_logo_banner_url(): string {
+		$variant = $this->get_checkout_logo_variant();
+		$file    = 'light' === $variant ? 'logo-autopay-banner-light.svg' : 'logo-autopay-banner.svg';
+		$url     = blue_media()->get_plugin_images_url() . '/' . $file;
+
+		return (string) apply_filters( 'autopay_checkout_logo_banner_url', $url, $variant );
+	}
+
+	/**
+	 * SVG used by expandable checkout payment method groups (e.g. PBL).
+	 */
+	public function get_checkout_group_logo_url(): string {
+		$variant = $this->get_checkout_logo_variant();
+		$file    = 'light' === $variant ? 'logo-group-light.svg' : 'logo-group.svg';
+		$url     = blue_media()->get_plugin_images_url() . '/' . $file;
+
+		return (string) apply_filters( 'autopay_checkout_group_logo_url', $url, $variant );
+	}
+
+	private function get_checkout_logo_variant(): string {
+		$variant = (string) $this->get_option( 'checkout_logo_variant', 'dark' );
+
+		return in_array( $variant, [ 'dark', 'light' ], true ) ? $variant : 'dark';
+	}
+
 	public function is_whitelabel_mode_enabled(): bool {
 		$currency   = blue_media()->resolve_blue_media_currency_symbol();
 		$option_key = Settings_Manager::get_currency_option_key( 'whitelabel',
@@ -613,7 +651,10 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		}
 
 		$blik0_type = $this->get_option( 'blik_type', 'with_redirect' );
-
+		$gpay_type = $this->get_option(
+			Settings_Manager::get_currency_option_key( 'gpay_type', $order->get_currency() ),
+			'with_redirect'
+		);
 
 		if ( self::BLIK_0_CHANNEL === $payment_channel && 'blik_0_without_redirect' === $blik0_type ) {
 			$blik_code            = (string) $_POST['bluemedia_blik_code'];
@@ -634,7 +675,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 					'status' => 'failure',
 				];
 			}
-		} elseif ( self::GPAY_CHANNEL === $payment_channel ) {
+		} elseif ( self::GPAY_CHANNEL === $payment_channel && 'without_redirect' === $gpay_type ) {
 			if ( ! $this->should_offer_google_pay_on_checkout() ) {
 				wc_add_notice(
 					__( 'Google Pay is unavailable because the store checkout does not require acceptance of the terms and conditions.',
@@ -2211,9 +2252,10 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			$blik_html = $this->get_blik_inline_template();
 		}
 
-		$gpay_html = $this->should_offer_google_pay_on_checkout()
-			? $this->get_gpay_inline_template()
-			: '';
+		$gpay_html = '';
+		if ( $this->should_offer_google_pay_on_checkout() && $this->is_inline_gpay_enabled() ) {
+			$gpay_html = $this->get_gpay_inline_template();
+		}
 
 		foreach ( $groups as $group ) {
 			if ( ! $group instanceof View_Model_Group ) {
@@ -2241,6 +2283,18 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 	private function is_inline_blik_enabled(): bool {
 		return 'blik_0_without_redirect' === $this->get_option( 'blik_type',
 				'with_redirect' );
+	}
+
+	/**
+	 * Checks whether inline Google Pay mode is enabled.
+	 *
+	 * @return bool
+	 */
+	private function is_inline_gpay_enabled(): bool {
+		return 'without_redirect' === $this->get_option(
+			Settings_Manager::get_currency_option_key( 'gpay_type', get_woocommerce_currency() ),
+			'with_redirect'
+		);
 	}
 
 	private function get_blik_inline_template(): string {
@@ -2435,6 +2489,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			}
 			$settings_arr['payment_method_title']       = $defaults_title;
 			$settings_arr['payment_method_description'] = $defaults_desc;
+			$settings_arr['checkout_logo_variant']      = 'dark';
 			update_option( $settings_key, $settings_arr );
 			\WC_Admin_Settings::add_message( __( 'Title and description have been reset to defaults.',
 				'bm-woocommerce' ) );

@@ -2,8 +2,8 @@
 Contributors: inspirelabs
 Tags: woocommerce, bluemedia, autopay
 Requires at least: 6.0
-Tested up to: 6.9.4
-Stable tag: 4.9.1
+Tested up to: 7.0
+Stable tag: 4.9.2
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -40,8 +40,8 @@ Autopay to moduł płatności umożliwiający realizację transakcji bezgotówko
 
 **Wymagania**
 
-- WordPress – przetestowane na wersjach od 6.0 do 6.9.4
-- Wtyczka WooCommerce – przetestowano na wersjach od 8.1 do 10.7.0
+- WordPress – przetestowane na wersjach od 6.0 do 7.0
+- Wtyczka WooCommerce – przetestowano na wersjach od 7.9.0 do 10.8.1
 
 == Installation	 ==
 
@@ -83,10 +83,19 @@ Wartości Identyfikatora serwisu oraz Klucza konfiguracyjnego są różne dla ś
 
 == Changelog ==
 
-### 4.9.1 (16 April 2026) ###
+### 4.9.2 (24.06.2026) ###
+* Dodano: opcję wyboru trybu działania Google Pay — przekierowanie na stronę Google Pay lub płatność bezpośrednio w sklepie
+* Dodano: ustawienia dopasowania logo do kolorystyki checkoutu, w tym wybór wersji jasnej i ciemnej
+* Ulepszono: style interfejsu w ustawieniach wtyczki i na checkoucie (checkboxy, przyciski)
+* Ulepszono: widoczność i dostępność przycisków w stanie focus podczas nawigacji klawiaturą
+* Naprawiono: błąd na stronach z edytorem blokowym, gdy lista metod płatności nie mogła zostać pobrana
+* Naprawiono: wybór banku nie był zachowywany po odświeżeniu strony zamówienia na klasycznym checkoucie
+* Naprawiono: zgodność z PHP 8.4 i 8.5 — wyeliminowano błędy powodujące komunikaty notice w nowszych wersjach PHP
+
+### 4.9.1 (16.04.2026) ###
 * Naprawa: status zamówienia z pola **Płatność rozpoczęta** (Zaawansowane → Statusy płatności) jest teraz ustawiany w momencie rozpoczęcia płatności przez klienta (standardowe przekierowanie, Google Pay oraz BLIK‑0). Wcześniej zamówienie zawsze otrzymywało status „Oczekujące na płatność”, niezależnie od tej konfiguracji.
 
-### 4.9.0 (07 April 2026) ###
+### 4.9.0 (07.04.2026) ###
 * Google Pay na checkoutcie jest zgodny z WooCommerce: metoda jest oferowana, gdy klient musi zaakceptować regulamin za pomocą checkboxa (ustawienia klasycznego checkoutu oraz checkout blokowy z włączoną opcją checkboxa w bloku regulaminu)
 * Checkout blokowy: lista metod płatności uwzględnia te same zasady widoczności Google Pay co przy klasycznym checkoucie
 * Klasyczny checkout: płynniejsza obsługa przycisku składania zamówienia we współpracy ze skryptami checkoutu Autopay

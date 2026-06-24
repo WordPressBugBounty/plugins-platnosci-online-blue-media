@@ -102,25 +102,21 @@ jQuery(document).ready(function () {
 
   const bluemedia_whitelabel_el = jQuery('input[name="woocommerce_bluemedia_whitelabel"]');
   const bluemedia_blik0_el = jQuery('.woocommerce_bluemedia_blik_type-tr');
-  const bluemedia_blik0_title_el = jQuery('.section-woocommerce_bluemedia_blik_type_title');
+  const bluemedia_gpay_el = jQuery('.woocommerce_bluemedia_gpay_type-tr');
 
   function updateDescription() {
     const selectedValue = bluemedia_whitelabel_el.filter(':checked').val();
     const $description = jQuery('.woocommerce_bluemedia_whitelabel-tr').find('.description');
     if (selectedValue === 'no') {
       $description.text(blueMedia.whitelabel_description.no);
-      //bluemedia_blik0_el.hide()
-      //bluemedia_blik0_title_el.hide()
 
-      toggleDisableJqueryElement(bluemedia_blik0_title_el)
-      toggleDisableJqueryElement(bluemedia_blik0_el)
-
+      toggleDisableJqueryElement(bluemedia_blik0_el);
+      toggleDisableJqueryElement(bluemedia_gpay_el);
     } else if (selectedValue === 'yes') {
       $description.text(blueMedia.whitelabel_description.yes);
-      //bluemedia_blik0_el.show()
-      //bluemedia_blik0_title_el.show()
-      toggleDisableJqueryElement(bluemedia_blik0_title_el)
-      toggleDisableJqueryElement(bluemedia_blik0_el)
+
+      toggleDisableJqueryElement(bluemedia_blik0_el);
+      toggleDisableJqueryElement(bluemedia_gpay_el);
     }
   }
 

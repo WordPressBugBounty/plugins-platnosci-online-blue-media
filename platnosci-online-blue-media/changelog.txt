@@ -1,5 +1,14 @@
 *** Autopay Changelog ***
 
+### [4.9.2] 2026-06-24 ###
+- Added: a new setting to choose how Google Pay works — redirect to the Google Pay website or pay directly in your store
+- Added: settings to match the logo to the checkout color scheme, including light and dark versions
+- Improved: interface styles in the plugin settings and on checkout (checkboxes, buttons)
+- Improved: button focus visibility and accessibility during keyboard navigation
+- Fixed: an error on pages using the block editor when the payment method list could not be retrieved
+- Fixed: the selected bank was not preserved after the checkout refreshed on classic checkout
+- Fixed: compatibility with PHP 8.4 and 8.5 — resolved issues causing notices on newer PHP versions
+
 ### [4.9.1] 2026-04-16 ###
 - Fixed: the **Payment started** WooCommerce order status (Advanced → Payment statuses) is now applied when the customer begins checkout payment (standard redirect, Google Pay, and BLIK‑0). Previously the order was always set to Pending payment, ignoring this setting.
 

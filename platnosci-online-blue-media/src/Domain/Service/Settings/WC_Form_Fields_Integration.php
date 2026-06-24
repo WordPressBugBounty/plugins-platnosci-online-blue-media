@@ -246,9 +246,12 @@ class WC_Form_Fields_Integration {
 				'desc_tip'    => false,
 				'bmtab'       => 'authentication',
 			],
-			// Placeholders to preserve order; configured for PLN below
+
+			// Placeholders to preserve order;
 			'blik_type_title'                  => [],
 			Settings_Manager::get_currency_option_key( 'blik_type',
+				$current_admin_currency_code ) => [],
+			Settings_Manager::get_currency_option_key( 'gpay_type',
 				$current_admin_currency_code ) => [],
 
 			Settings_Manager::get_currency_option_key( 'service_id',
@@ -389,6 +392,29 @@ class WC_Form_Fields_Integration {
 					$current_admin_currency_code ) ] );
 		}
 
+		$return[ Settings_Manager::get_currency_option_key( 'gpay_type',
+			$current_admin_currency_code ) ] = [
+			'title'         => __( 'Google Pay payment type',
+				'bm-woocommerce' ),
+			'type'          => 'autopay_template',
+			'template'      => 'settings_field_extended_select',
+			'description'   => '',
+			'options'       => [
+				'with_redirect' => __( 'redirect to Google Pay payment',
+					'bm-woocommerce' ),
+				'without_redirect'   => __( 'pay with Google Pay directly on your store',
+					'bm-woocommerce' ),
+			],
+			'default'       => 'with_redirect',
+			'bmtab'         => 'authentication',
+			'template_args' => [
+				'tip_url'       => __( 'https://developers.autopay.pl/en/online/plugins/woocomerce#692d97171d07c',
+					'bm-woocommerce' ),
+				'tip_url_label' => __( 'Learn more', 'bm-woocommerce' ),
+			],
+			'disabled'      => 'no' === $whitelabel_opt_value,
+		];
+
 		return $return;
 	}
 
@@ -448,6 +474,34 @@ class WC_Form_Fields_Integration {
 
 			// Simple divider line under the section
 			'payment_method_divider'     => [
+				'type'     => 'autopay_template',
+				'template' => 'settings_field_section_divider',
+				'bmtab'    => 'payment_settings',
+			],
+
+			'checkout_logo_variant' => [
+				'title'             => __( 'Autopay logo on checkout',
+					'bm-woocommerce' ),
+				'description'       => __( 'Pick the variant that contrasts with your checkout background: dark logo on light pages, light logo on dark pages.',
+					'bm-woocommerce' ),
+				'type'              => 'autopay_template',
+				'template'          => 'settings_field_extended_select',
+				'default'           => 'dark',
+				'options'           => [
+					'dark'  => __( 'Dark logo (light checkout background)',
+						'bm-woocommerce' ),
+					'light' => __( 'Light logo (dark checkout background)',
+						'bm-woocommerce' ),
+				],
+				'bmtab'             => 'payment_settings',
+				'sanitize_callback' => static function ( $value ) {
+					$value = is_scalar( $value ) ? (string) $value : '';
+
+					return in_array( $value, [ 'dark', 'light' ], true ) ? $value : 'dark';
+				},
+			],
+
+			'checkout_logo_variant_divider' => [
 				'type'     => 'autopay_template',
 				'template' => 'settings_field_section_divider',
 				'bmtab'    => 'payment_settings',
@@ -807,7 +861,6 @@ class WC_Form_Fields_Integration {
 				'template'    => 'settings_field_import',
 				'visible'     => $this->import_feature_is_active(),
 			],
-
 
 			'css_editor' => [
 				'title'         => __( 'Use own CSS styles',

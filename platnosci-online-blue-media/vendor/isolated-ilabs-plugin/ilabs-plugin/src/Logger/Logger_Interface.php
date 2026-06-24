@@ -13,5 +13,5 @@ interface Logger_Interface
      *
      * @return mixed
      */
-    public function error(string $message, array $args = null, string $context = null);
+    public function error(string $message, ?array $args = null, ?string $context = null);
 }

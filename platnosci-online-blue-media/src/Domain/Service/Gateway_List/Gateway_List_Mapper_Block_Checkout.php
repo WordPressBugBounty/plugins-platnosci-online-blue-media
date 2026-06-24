@@ -387,7 +387,7 @@ class Gateway_List_Mapper_Block_Checkout {
 					[],
 					$config_item['name'],
 					sanitize_title( $config_item['name'] ),
-					blue_media()->get_plugin_images_url() . '/logo-group.svg',
+					$this->get_checkout_group_logo_url(),
 					__( 'You will be redirected to the page of the selected bank.',
 						'bm-woocommerce'
 					)
@@ -458,5 +458,14 @@ class Gateway_List_Mapper_Block_Checkout {
 		}
 
 		return $result_arr;
+	}
+
+	private function get_checkout_group_logo_url(): string {
+		$gateway = blue_media()->get_blue_media_gateway();
+		if ( $gateway instanceof Blue_Media_Gateway ) {
+			return $gateway->get_checkout_group_logo_url();
+		}
+
+		return blue_media()->get_plugin_images_url() . '/logo-group.svg';
 	}
 }

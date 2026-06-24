@@ -92,7 +92,7 @@ class Event_Chain
      *
      * @return void
      */
-    private function register_event(Event_Interface $event, array $actions, array $conditions_inside_event = null)
+    private function register_event(Event_Interface $event, array $actions, ?array $conditions_inside_event = null)
     {
         $event->set_actions($actions);
         if ($conditions_inside_event) {
@@ -121,7 +121,7 @@ class Event_Chain
         		}*/
         return new Wc_Session_Cache($key);
     }
-    public function get_wp_options_based_cache($key, int $max_items = null) : Wp_Options_Based_Cache
+    public function get_wp_options_based_cache($key, ?int $max_items = null) : Wp_Options_Based_Cache
     {
         return new Wp_Options_Based_Cache($key, $this->ilabs_plugin, $max_items);
     }

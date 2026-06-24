@@ -142,10 +142,6 @@
 				gpAtp.setTransactionCurrencyCode(responseData.currency || '');
 				gpAtp.setTransactionCountryCode(shopBaseCountryCode);
 
-
-				console.log('gpAtp', gpAtp)
-
-
 				gpAtp.init(function (data) {
 
 					bm_checkout_locked_by = 'gpay';

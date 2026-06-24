@@ -33,8 +33,8 @@ Wtyczka płatnicza Autopay oferuje szereg funkcjonalności wspierających sprzed
 
 ### Wymagania do instalacji wtyczki
 
-- WordPress – przetestowane na wersjach od `6.0` do `6.9.4`
-- Wtyczka WooCommerce – przetestowano na wersjach od `8.1` do `10.7.0`
+- WordPress – przetestowane na wersjach od `6.0` do `7.0`
+- Wtyczka WooCommerce – przetestowano na wersjach od `7.9.0` do `10.8.1`
 - PHP w wersji min. `7.4`
 
 ### Pobierz z Wordpress.org
