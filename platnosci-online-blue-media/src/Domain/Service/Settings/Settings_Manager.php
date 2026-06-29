@@ -11,8 +11,8 @@ class Settings_Manager {
 	private static bool $initiated = false;
 
 	public function get_form_fields() {
-		if ( isset( $_GET['bmtab'] ) ) {
-			return ( new WC_Form_Fields_Integration )->get_fields_by_tab_id( sanitize_text_field( $_GET['bmtab'] ) );
+		if ( isset( $_GET['bmtab'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only admin settings context
+			return ( new WC_Form_Fields_Integration )->get_fields_by_tab_id( sanitize_text_field( wp_unslash( $_GET['bmtab'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 
 		return ( new WC_Form_Fields_Integration )->get_fields_by_tab_id( null );
@@ -37,13 +37,13 @@ class Settings_Manager {
 			->action( function () {
 				$tabs = new Settings_Tabs;
 
-				if ( isset( $_GET['section'] ) && $_GET['section'] === 'bluemedia' ) {
+				if ( isset( $_GET['section'] ) && $_GET['section'] === 'bluemedia' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only admin settings context
 					add_filter( 'woocommerce_get_sections_checkout',
 						function ( $sections ) {
 							return [];
 						},
 						1000 );
-					if ( ! ( isset( $_GET['bmtab'] ) && $_GET['bmtab'] === 'vas' ) ) {
+					if ( ! ( isset( $_GET['bmtab'] ) && $_GET['bmtab'] === 'vas' ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only admin settings context
 						$content = ( new Banner() )->get_banner_content();
 						blue_media()->locate_template( 'settings_banner.php',
 							[ 'content' => $content ] );
@@ -54,7 +54,7 @@ class Settings_Manager {
 			} )
 			->on_wc_before_settings( 'checkout' )
 			->action( function () {
-				if ( isset( $_GET['bmtab'] ) && $_GET['bmtab'] === 'help' ) {
+				if ( isset( $_GET['bmtab'] ) && $_GET['bmtab'] === 'help' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only admin settings context
 					add_action( 'woocommerce_settings_checkout',
 						function () {
 							$GLOBALS['hide_save_button'] = true;
@@ -102,8 +102,8 @@ class Settings_Manager {
 
 				if ( is_a( $current_screen,
 						'WP_Screen' ) && 'woocommerce_page_wc-settings' === $current_screen->id ) {
-					if ( isset( $_GET['tab'] ) && $_GET['tab'] == 'checkout' ) {
-						if ( isset( $_GET['section'] ) && $_GET['section'] == 'bluemedia' ) {
+					if ( isset( $_GET['tab'] ) && $_GET['tab'] == 'checkout' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only admin settings context
+						if ( isset( $_GET['section'] ) && $_GET['section'] == 'bluemedia' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 							blue_media()->locate_template( 'settings_ga4_modals.php' );
 						}
 					}
@@ -115,7 +115,7 @@ class Settings_Manager {
 	}
 
 	private function handle_admin_body() {
-		if ( isset( $_GET['section'] ) && $_GET['section'] === 'bluemedia' ) {
+		if ( isset( $_GET['section'] ) && $_GET['section'] === 'bluemedia' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only admin settings context
 			$active_tab = ( new Settings_Tabs() )->get_active_tab_id();
 
 			add_filter( 'admin_body_class',

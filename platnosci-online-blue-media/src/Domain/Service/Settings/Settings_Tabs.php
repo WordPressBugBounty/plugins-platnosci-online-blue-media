@@ -24,7 +24,8 @@ class Settings_Tabs {
 
 	public function get_active_tab_id(): string {
 		if ( empty( self::$active_tab_id ) ) {
-			$requested_tab = isset( $_GET['bmtab'] ) ? sanitize_text_field( $_GET['bmtab'] ) : self::AUTHENTICATION_TAB_ID;
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only display of active settings tab
+			$requested_tab = isset( $_GET['bmtab'] ) ? sanitize_text_field( wp_unslash( $_GET['bmtab'] ) ) : self::AUTHENTICATION_TAB_ID;
 
 			if ( $requested_tab === self::VAS_TAB_ID && get_locale() !== 'pl_PL' ) {
 				$requested_tab = self::AUTHENTICATION_TAB_ID;

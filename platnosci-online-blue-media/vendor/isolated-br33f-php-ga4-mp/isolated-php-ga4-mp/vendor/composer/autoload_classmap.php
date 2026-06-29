@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Common\\ConsentProperty' => $vendorDir . '/br33f/php-ga4-mp/src/Dto/Common/ConsentProperty.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Br33f\\Ga4\\MeasurementProtocol\\Dto\\Common\\EventCollection' => $vendorDir . '/br33f/php-ga4-mp/src/Dto/Common/EventCollection.php',
@@ -81,10 +82,13 @@ return array(
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Handler\\CurlFactoryInterface' => $vendorDir . '/guzzlehttp/guzzle/src/Handler/CurlFactoryInterface.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Handler\\CurlHandler' => $vendorDir . '/guzzlehttp/guzzle/src/Handler/CurlHandler.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Handler\\CurlMultiHandler' => $vendorDir . '/guzzlehttp/guzzle/src/Handler/CurlMultiHandler.php',
+    'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Handler\\CurlShareHandleState' => $vendorDir . '/guzzlehttp/guzzle/src/Handler/CurlShareHandleState.php',
+    'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Handler\\CurlVersion' => $vendorDir . '/guzzlehttp/guzzle/src/Handler/CurlVersion.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Handler\\EasyHandle' => $vendorDir . '/guzzlehttp/guzzle/src/Handler/EasyHandle.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Handler\\HeaderProcessor' => $vendorDir . '/guzzlehttp/guzzle/src/Handler/HeaderProcessor.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Handler\\MockHandler' => $vendorDir . '/guzzlehttp/guzzle/src/Handler/MockHandler.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Handler\\Proxy' => $vendorDir . '/guzzlehttp/guzzle/src/Handler/Proxy.php',
+    'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Handler\\ProxyEnvironment' => $vendorDir . '/guzzlehttp/guzzle/src/Handler/ProxyEnvironment.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Handler\\StreamHandler' => $vendorDir . '/guzzlehttp/guzzle/src/Handler/StreamHandler.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\MessageFormatter' => $vendorDir . '/guzzlehttp/guzzle/src/MessageFormatter.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\MessageFormatterInterface' => $vendorDir . '/guzzlehttp/guzzle/src/MessageFormatterInterface.php',
@@ -127,6 +131,7 @@ return array(
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Psr7\\Query' => $vendorDir . '/guzzlehttp/psr7/src/Query.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Psr7\\Request' => $vendorDir . '/guzzlehttp/psr7/src/Request.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Psr7\\Response' => $vendorDir . '/guzzlehttp/psr7/src/Response.php',
+    'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Psr7\\Rfc3986' => $vendorDir . '/guzzlehttp/psr7/src/Rfc3986.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Psr7\\Rfc7230' => $vendorDir . '/guzzlehttp/psr7/src/Rfc7230.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Psr7\\ServerRequest' => $vendorDir . '/guzzlehttp/psr7/src/ServerRequest.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Psr7\\Stream' => $vendorDir . '/guzzlehttp/psr7/src/Stream.php',
@@ -142,6 +147,7 @@ return array(
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\RequestOptions' => $vendorDir . '/guzzlehttp/guzzle/src/RequestOptions.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\RetryMiddleware' => $vendorDir . '/guzzlehttp/guzzle/src/RetryMiddleware.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\TransferStats' => $vendorDir . '/guzzlehttp/guzzle/src/TransferStats.php',
+    'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\TransportSharing' => $vendorDir . '/guzzlehttp/guzzle/src/TransportSharing.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\GuzzleHttp\\Utils' => $vendorDir . '/guzzlehttp/guzzle/src/Utils.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Psr\\Http\\Client\\ClientExceptionInterface' => $vendorDir . '/psr/http-client/src/ClientExceptionInterface.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Psr\\Http\\Client\\ClientInterface' => $vendorDir . '/psr/http-client/src/ClientInterface.php',
@@ -160,4 +166,10 @@ return array(
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Psr\\Http\\Message\\UploadedFileInterface' => $vendorDir . '/psr/http-message/src/UploadedFileInterface.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Psr\\Http\\Message\\UriFactoryInterface' => $vendorDir . '/psr/http-factory/src/UriFactoryInterface.php',
     'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Psr\\Http\\Message\\UriInterface' => $vendorDir . '/psr/http-message/src/UriInterface.php',
+    'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Symfony\\Polyfill\\Php80\\Php80' => $vendorDir . '/symfony/polyfill-php80/Php80.php',
+    'Isolated\\Blue_Media\\Isolated_Php_ga4_mp\\Symfony\\Polyfill\\Php80\\PhpToken' => $vendorDir . '/symfony/polyfill-php80/PhpToken.php',
+    'PhpToken' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
+    'Stringable' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
+    'UnhandledMatchError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
+    'ValueError' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
 );

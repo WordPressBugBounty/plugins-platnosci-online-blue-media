@@ -27,7 +27,7 @@ class Payment_Status_Controller extends Abstract_Controller implements Controlle
 			return;
 		}
 
-		$nonce = $_POST['nonce'];
+		$nonce = isset( $_POST['nonce'] ) ? sanitize_text_field( wp_unslash( $_POST['nonce'] ) ) : '';
 
 		if ( ! wp_verify_nonce( $nonce, self::NONCE_ACTION ) ) {
 			blue_media()->get_woocommerce_logger()->log_error(
@@ -41,6 +41,7 @@ class Payment_Status_Controller extends Abstract_Controller implements Controlle
 				WC()->session->get( 'bm_original_order_received_url' ),
 				null
 			);
+			return;
 		}
 
 		if ( '' !== $transaction_start_error ) {

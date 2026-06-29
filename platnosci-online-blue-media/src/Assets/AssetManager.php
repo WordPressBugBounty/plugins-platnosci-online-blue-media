@@ -34,8 +34,8 @@ class AssetManager {
         }
 
         // Only load on Checkout > Autopay section
-        $is_checkout_tab = isset( $_GET['tab'] ) && $_GET['tab'] === 'checkout';
-        $is_autopay_section = isset( $_GET['section'] ) && $_GET['section'] === 'bluemedia';
+        $is_checkout_tab    = isset( $_GET['tab'] ) && $_GET['tab'] === 'checkout'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only admin asset loading context
+        $is_autopay_section = isset( $_GET['section'] ) && $_GET['section'] === 'bluemedia'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
         if ( ! ( $is_checkout_tab && $is_autopay_section ) ) {
             return;

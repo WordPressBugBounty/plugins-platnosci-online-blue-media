@@ -21,7 +21,8 @@ class Currency_Tabs {
 	public function get_active_tab_id(): string {
 		if ( empty( self::$active_tab_id ) ) {
 
-			$active_tab_id = isset( $_GET['cur'] ) ? sanitize_text_field( $_GET['cur'] ) : $this->get_default_tab_id();
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only display of active currency tab
+			$active_tab_id = isset( $_GET['cur'] ) ? sanitize_text_field( wp_unslash( $_GET['cur'] ) ) : $this->get_default_tab_id();
 
 			$sel = $this->currency_manager->get_selected_currencies();
 

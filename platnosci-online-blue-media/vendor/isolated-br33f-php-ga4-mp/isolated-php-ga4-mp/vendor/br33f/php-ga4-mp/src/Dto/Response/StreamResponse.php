@@ -7,8 +7,8 @@
  */
 namespace Isolated\Blue_Media\Isolated_Php_ga4_mp\Br33f\Ga4\MeasurementProtocol\Dto\Response;
 
-use Isolated\Blue_Media\Isolated_Php_ga4_mp\GuzzleHttp\Psr7\Stream;
 use Isolated\Blue_Media\Isolated_Php_ga4_mp\Psr\Http\Message\ResponseInterface;
+use Isolated\Blue_Media\Isolated_Php_ga4_mp\Psr\Http\Message\StreamInterface;
 class StreamResponse extends AbstractResponse
 {
     /**
@@ -16,7 +16,7 @@ class StreamResponse extends AbstractResponse
      */
     protected $statusCode;
     /**
-     * @var Stream
+     * @var StreamInterface
      */
     protected $body;
     /**
@@ -28,17 +28,17 @@ class StreamResponse extends AbstractResponse
         return \json_decode($this->getBody(), \true);
     }
     /**
-     * @return Stream
+     * @return StreamInterface
      */
-    public function getBody() : Stream
+    public function getBody() : StreamInterface
     {
         return $this->body;
     }
     /**
-     * @param Stream $body
+     * @param StreamInterface $body
      * @return StreamResponse
      */
-    public function setBody(Stream $body)
+    public function setBody(StreamInterface $body)
     {
         $this->body = $body;
         return $this;

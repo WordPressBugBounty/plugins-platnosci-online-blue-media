@@ -4,17 +4,19 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInite702efe8ae59f1c3aec8c9477117b92f
+class ComposerStaticInit73217a5e65399e37321aafafb89b9167
 {
     public static $files = array (
-        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
     );
 
     public static $prefixLengthsPsr4 = array (
         'I' =>
         array (
+            'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\Symfony\\Polyfill\\Php80\\' => 63,
             'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\Psr\\Http\\Message\\' => 57,
             'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\Psr\\Http\\Client\\' => 56,
             'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Psr7\\' => 56,
@@ -24,6 +26,10 @@ class ComposerStaticInite702efe8ae59f1c3aec8c9477117b92f
     );
 
     public static $prefixDirsPsr4 = array (
+        'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\Symfony\\Polyfill\\Php80\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
+        ),
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\Psr\\Http\\Message\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-factory/src',
@@ -48,6 +54,7 @@ class ComposerStaticInite702efe8ae59f1c3aec8c9477117b92f
     );
 
     public static $classMap = array (
+        'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\BodySummarizer' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/BodySummarizer.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\BodySummarizerInterface' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/BodySummarizerInterface.php',
@@ -73,10 +80,13 @@ class ComposerStaticInite702efe8ae59f1c3aec8c9477117b92f
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Handler\\CurlFactoryInterface' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Handler/CurlFactoryInterface.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Handler\\CurlHandler' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Handler/CurlHandler.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Handler\\CurlMultiHandler' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Handler/CurlMultiHandler.php',
+        'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Handler\\CurlShareHandleState' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Handler/CurlShareHandleState.php',
+        'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Handler\\CurlVersion' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Handler/CurlVersion.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Handler\\EasyHandle' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Handler/EasyHandle.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Handler\\HeaderProcessor' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Handler/HeaderProcessor.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Handler\\MockHandler' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Handler/MockHandler.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Handler\\Proxy' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Handler/Proxy.php',
+        'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Handler\\ProxyEnvironment' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Handler/ProxyEnvironment.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Handler\\StreamHandler' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Handler/StreamHandler.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\MessageFormatter' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/MessageFormatter.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\MessageFormatterInterface' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/MessageFormatterInterface.php',
@@ -119,6 +129,7 @@ class ComposerStaticInite702efe8ae59f1c3aec8c9477117b92f
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Psr7\\Query' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/Query.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Psr7\\Request' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/Request.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Psr7\\Response' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/Response.php',
+        'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Psr7\\Rfc3986' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/Rfc3986.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Psr7\\Rfc7230' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/Rfc7230.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Psr7\\ServerRequest' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/ServerRequest.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Psr7\\Stream' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/Stream.php',
@@ -134,6 +145,7 @@ class ComposerStaticInite702efe8ae59f1c3aec8c9477117b92f
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\RequestOptions' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/RequestOptions.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\RetryMiddleware' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/RetryMiddleware.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\TransferStats' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/TransferStats.php',
+        'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\TransportSharing' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/TransportSharing.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Utils' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/Utils.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\Psr\\Http\\Client\\ClientExceptionInterface' => __DIR__ . '/..' . '/psr/http-client/src/ClientExceptionInterface.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\Psr\\Http\\Client\\ClientInterface' => __DIR__ . '/..' . '/psr/http-client/src/ClientInterface.php',
@@ -152,14 +164,20 @@ class ComposerStaticInite702efe8ae59f1c3aec8c9477117b92f
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\Psr\\Http\\Message\\UploadedFileInterface' => __DIR__ . '/..' . '/psr/http-message/src/UploadedFileInterface.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\Psr\\Http\\Message\\UriFactoryInterface' => __DIR__ . '/..' . '/psr/http-factory/src/UriFactoryInterface.php',
         'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\Psr\\Http\\Message\\UriInterface' => __DIR__ . '/..' . '/psr/http-message/src/UriInterface.php',
+        'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\Symfony\\Polyfill\\Php80\\Php80' => __DIR__ . '/..' . '/symfony/polyfill-php80/Php80.php',
+        'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\Symfony\\Polyfill\\Php80\\PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/PhpToken.php',
+        'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
+        'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
+        'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
+        'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInite702efe8ae59f1c3aec8c9477117b92f::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInite702efe8ae59f1c3aec8c9477117b92f::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInite702efe8ae59f1c3aec8c9477117b92f::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit73217a5e65399e37321aafafb89b9167::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit73217a5e65399e37321aafafb89b9167::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit73217a5e65399e37321aafafb89b9167::$classMap;
 
         }, null, ClassLoader::class);
     }

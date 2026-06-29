@@ -27,21 +27,19 @@ class Async_Request implements Controller_Interface {
 				return 'bm_woocommerce_audit';
 			} );
 
-			blue_media()->get_woocommerce_logger()->log_debug(
-				sprintf( '[Async_Request] [execute_request] [POST: %s]',
-					print_r( $_POST, true )
-				) );
-
 			if ( ! isset( $_POST['nonce'] ) ) {
 				throw new Exception( __( 'Nonce field not exists',
 					'bm-woocommerce' ) );
 			}
 
-
-			$nonce = sanitize_text_field( $_POST['nonce'] );
+			$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
 			if ( ! wp_verify_nonce( $nonce, self::get_nonce_action() ) ) {
 				throw new Exception( __( 'Verification nonce failed',
 					'bm-woocommerce' ) );
+			}
+
+			if ( ! current_user_can( 'manage_woocommerce' ) ) {
+				throw new Exception( __( 'Insufficient permissions', 'bm-woocommerce' ) );
 			}
 
 			if ( ! isset( $_POST['autopay_action'] ) ) {

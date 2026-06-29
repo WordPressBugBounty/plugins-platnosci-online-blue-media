@@ -1,6 +1,11 @@
 *** Autopay Changelog ***
 
-### [4.9.2] 2026-06-24 ###
+### [4.9.3] 2026-06-29 ###
+* Improved: admin panel typography using locally hosted Open Sans and Roboto Condensed fonts aligned with the new design system.
+* Fixed: GA4 transaction attribution by linking purchase events to the user’s session data.
+* Fixed: test connection endpoint security, and HMAC typing and signature comparison.
+
+### [4.9.2] 2026-06-22 ###
 - Added: a new setting to choose how Google Pay works — redirect to the Google Pay website or pay directly in your store
 - Added: settings to match the logo to the checkout color scheme, including light and dark versions
 - Improved: interface styles in the plugin settings and on checkout (checkboxes, buttons)

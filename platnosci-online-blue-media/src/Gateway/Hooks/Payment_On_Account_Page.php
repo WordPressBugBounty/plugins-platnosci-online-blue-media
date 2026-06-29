@@ -107,14 +107,14 @@ class Payment_On_Account_Page {
 		int $order_id
 	): bool {
 		$secret    = NONCE_KEY . AUTH_KEY;
-		$signature = hash_hmac( 'sha256', $order_id, $secret );
+		$signature = hash_hmac( 'sha256', (string) $order_id, $secret );
 
-		return $test_signature === $signature;
+		return hash_equals( $signature, $test_signature );
 	}
 
 	public static function generate_signature( int $order_id ): string {
 		$secret = NONCE_KEY . AUTH_KEY;
 
-		return hash_hmac( 'sha256', $order_id, $secret );
+		return hash_hmac( 'sha256', (string) $order_id, $secret );
 	}
 }

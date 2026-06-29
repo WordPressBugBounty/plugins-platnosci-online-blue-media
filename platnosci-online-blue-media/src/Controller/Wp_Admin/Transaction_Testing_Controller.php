@@ -30,7 +30,7 @@ class Transaction_Testing_Controller extends Abstract_Controller implements Cont
 					'bm-woocommerce' ) );
 			}
 
-			$nonce = $_POST['nonce'];
+			$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
 
 			if ( ! wp_verify_nonce( $nonce, self::NONCE_ACTION ) ) {
 				throw new Exception( __( 'Verification nonce failed',
@@ -68,7 +68,10 @@ class Transaction_Testing_Controller extends Abstract_Controller implements Cont
 			blue_media()->get_woocommerce_logger()->log_debug(
 				sprintf( '[Connection_Testing_Controller] [execute_request] [Message: %s] [POST: %s] ',
 					$exception->getMessage(),
-					print_r( $_POST, true )
+					json_encode( [
+						'autopay_action' => isset( $_POST['autopay_action'] ) ? sanitize_text_field( wp_unslash( $_POST['autopay_action'] ) ) : 'not_set',
+						'test_id'        => isset( $_POST['test_id'] ) ? sanitize_text_field( wp_unslash( (string) $_POST['test_id'] ) ) : 'not_set',
+					] )
 				) );
 
 			if ( isset( $order ) && $order instanceof WC_Order && isset( $order_creator ) ) {
@@ -100,7 +103,7 @@ class Transaction_Testing_Controller extends Abstract_Controller implements Cont
 					'bm-woocommerce' ) );
 			}
 
-			$nonce    = $_POST['nonce'];
+			$nonce    = sanitize_text_field( wp_unslash( $_POST['nonce'] ) );
 			$order_id = (int) $_POST['order_id'];
 
 			if ( ! wp_verify_nonce( $nonce, self::NONCE_ACTION ) ) {
@@ -136,7 +139,10 @@ class Transaction_Testing_Controller extends Abstract_Controller implements Cont
 			blue_media()->get_woocommerce_logger()->log_debug(
 				sprintf( '[Connection_Testing_Controller] [execute_request] [Message: %s] [POST: %s] ',
 					$exception->getMessage(),
-					print_r( $_POST, true )
+					json_encode( [
+						'autopay_action' => isset( $_POST['autopay_action'] ) ? sanitize_text_field( wp_unslash( $_POST['autopay_action'] ) ) : 'not_set',
+						'test_id'        => isset( $_POST['test_id'] ) ? sanitize_text_field( wp_unslash( (string) $_POST['test_id'] ) ) : 'not_set',
+					] )
 				) );
 
 			if ( isset( $order ) && $order instanceof WC_Order && isset( $order_creator ) ) {

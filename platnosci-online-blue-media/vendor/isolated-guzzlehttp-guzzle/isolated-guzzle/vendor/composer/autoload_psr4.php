@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\Symfony\\Polyfill\\Php80\\' => array($vendorDir . '/symfony/polyfill-php80'),
     'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-factory/src', $vendorDir . '/psr/http-message/src'),
     'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\Psr\\Http\\Client\\' => array($vendorDir . '/psr/http-client/src'),
     'Isolated\\Blue_Media\\Isolated_Guzzlehttp\\GuzzleHttp\\Psr7\\' => array($vendorDir . '/guzzlehttp/psr7/src'),

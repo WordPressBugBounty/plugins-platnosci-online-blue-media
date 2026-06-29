@@ -78,6 +78,36 @@ class Complete_Transation_Use_Case extends Abstract_Ga4_Use_Case implements Ga4_
 		$this->order->save();
 	}
 
+	/**
+	 * Returns the GA4 client_id captured from the _ga cookie at order creation.
+	 *
+	 * @return string|null The client_id, or null if not captured.
+	 */
+	public function get_ga4_client_id_from_order_meta(): ?string {
+		$value = $this->order->get_meta( '_autopay_ga4_client_id' );
+
+		if ( ! is_string( $value ) || '' === $value ) {
+			return null;
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Returns the GA4 session_id captured from the _ga_<id> cookie at order creation.
+	 *
+	 * @return string|null The session_id, or null if not captured.
+	 */
+	public function get_ga4_session_id_from_order_meta(): ?string {
+		$value = $this->order->get_meta( '_autopay_ga4_session_id' );
+
+		if ( ! is_string( $value ) || '' === $value ) {
+			return null;
+		}
+
+		return $value;
+	}
+
 	public function get_order(): WC_Order {
 		return $this->order;
 	}

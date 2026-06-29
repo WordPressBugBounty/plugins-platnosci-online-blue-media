@@ -17,6 +17,7 @@ class Ga4_Hooks {
 
 	public function init() {
 		$this->handle_ga4_events();
+		$this->handle_ga4_cookie_capture();
 
 		if ( ! $this->is_purchase_status_based_on_itn() ) {
 			$this->handle_ga4_serverside_events();
@@ -29,9 +30,181 @@ class Ga4_Hooks {
 
 	}
 
+	/**
+	 * Registers WooCommerce hook to capture GA4 cookies on order creation.
+	 *
+	 * @return void
+	 */
+	private function handle_ga4_cookie_capture() {
+		add_action( 'woocommerce_checkout_order_created', array( $this, 'capture_ga4_cookies_to_order_meta' ) );
+	}
+
+	/**
+	 * Captures GA4 cookies from the request and stores them as order meta.
+	 *
+	 * @param WC_Order $order The newly created order.
+	 * @return void
+	 */
+	public function capture_ga4_cookies_to_order_meta( WC_Order $order ) {
+		try {
+			$client_id  = $this->extract_ga4_client_id_from_cookie();
+			$session_id = $this->extract_ga4_session_id_from_cookie();
+
+			if ( null !== $client_id ) {
+				$order->update_meta_data( '_autopay_ga4_client_id', $client_id );
+			}
+
+			if ( null !== $session_id ) {
+				$order->update_meta_data( '_autopay_ga4_session_id', $session_id );
+			}
+
+			if ( null !== $client_id || null !== $session_id ) {
+				$order->save();
+			}
+
+			blue_media()->get_woocommerce_logger( 'analytics' )->log_debug(
+				sprintf(
+					'[capture_ga4_cookies_to_order_meta] [%s]',
+					print_r( // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
+						array(
+							'order_id'   => $order->get_id(),
+							'client_id'  => $client_id,
+							'session_id' => $session_id,
+						),
+						true
+					)
+				)
+			);
+		} catch ( Exception $e ) {
+			blue_media()->get_woocommerce_logger( 'analytics' )->log_error(
+				sprintf(
+					'[capture_ga4_cookies_to_order_meta] [exception] [%s]',
+					print_r( // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
+						array(
+							'message'  => $e->getMessage(),
+							'order_id' => $order->get_id(),
+						),
+						true
+					)
+				)
+			);
+		}
+	}
+
+	/**
+	 * Extracts the GA4 client_id from the _ga cookie.
+	 *
+	 * @return string|null The client_id, or null if the cookie is missing or malformed.
+	 */
+	private function extract_ga4_client_id_from_cookie(): ?string {
+		if ( ! isset( $_COOKIE['_ga'] ) ) {
+			return null;
+		}
+
+		$raw_value = sanitize_text_field( wp_unslash( $_COOKIE['_ga'] ) );
+		$parts     = explode( '.', $raw_value );
+
+		if ( count( $parts ) < 4 ) {
+			return null;
+		}
+
+		return $parts[2] . '.' . $parts[3];
+	}
+
 	private function is_purchase_status_based_on_itn(): bool {
 		return blue_media()->get_autopay_option( 'ga4_purchase_status_based_on_itn',
 				'no' ) === 'yes';
+	}
+
+	/**
+	 * Extracts the GA4 session_id from the _ga_<MEASUREMENT_ID_SUFFIX> cookie.
+	 *
+	 * @return string|null The session_id, or null if the cookie is missing or malformed.
+	 */
+	private function extract_ga4_session_id_from_cookie(): ?string {
+		$measurement_id = $this->get_configured_measurement_id();
+
+		if ( null === $measurement_id ) {
+			return null;
+		}
+
+		$cookie_name = '_ga_' . substr( $measurement_id, 2 );
+
+		if ( ! isset( $_COOKIE[ $cookie_name ] ) ) {
+			return null;
+		}
+
+		$raw_value = sanitize_text_field( wp_unslash( $_COOKIE[ $cookie_name ] ) );
+
+		if ( 0 === strpos( $raw_value, 'GS2.' ) ) {
+			return $this->parse_session_id_from_gs2( $raw_value );
+		}
+
+		if ( 0 === strpos( $raw_value, 'GS1.' ) ) {
+			return $this->parse_session_id_from_gs1( $raw_value );
+		}
+
+		return null;
+	}
+
+	/**
+	 * Parses session_id from a GS1-format cookie value.
+	 *
+	 * @param string $raw_value The raw cookie value, expected to start with "GS1.".
+	 * @return string|null The session_id, or null if the value is malformed.
+	 */
+	private function parse_session_id_from_gs1( string $raw_value ): ?string {
+		$parts = explode( '.', $raw_value );
+
+		if ( count( $parts ) < 3 ) {
+			return null;
+		}
+
+		return $parts[2];
+	}
+
+	/**
+	 * Returns the configured GA4 Measurement ID, or null if missing or malformed.
+	 *
+	 * @return string|null The Measurement ID, or null if not configured or in an unexpected format.
+	 */
+	private function get_configured_measurement_id(): ?string {
+		$measurement_id = blue_media()->get_autopay_option( 'ga4_tracking_id', '' );
+
+		if ( ! is_string( $measurement_id ) || '' === $measurement_id ) {
+			return null;
+		}
+
+		if ( 0 !== strpos( $measurement_id, 'G-' ) ) {
+			return null;
+		}
+
+		return $measurement_id;
+	}
+
+	/**
+	 * Parses session_id from a GS2-format cookie value.
+	 *
+	 * @param string $raw_value The raw cookie value, expected to start with "GS2.".
+	 * @return string|null The session_id, or null if the value is malformed.
+	 */
+	private function parse_session_id_from_gs2( string $raw_value ): ?string {
+		$parts = explode( '.', $raw_value, 3 );
+
+		if ( count( $parts ) < 3 ) {
+			return null;
+		}
+
+		$payload  = $parts[2];
+		$segments = explode( '$', $payload );
+
+		foreach ( $segments as $segment ) {
+			if ( 0 === strpos( $segment, 's' ) ) {
+				return substr( $segment, 1 );
+			}
+		}
+
+		return null;
 	}
 
 	/**

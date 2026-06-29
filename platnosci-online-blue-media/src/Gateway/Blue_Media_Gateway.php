@@ -191,8 +191,8 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 		if ( isset( $_GET['autopay_express_payment'] ) || isset( $_GET['autopay_payment_on_account_page'] ) ) {
 			blue_media()->get_woocommerce_logger( 'session_debug' )->log_debug(
-				sprintf( '[wc_session - constructor] [%s]',
-					print_r( WC()->session, true ),
+				sprintf( '[wc_session - constructor] [keys: %s]',
+					is_object( WC()->session ) ? implode( ', ', array_keys( (array) WC()->session->get_session_data() ) ) : 'session_unavailable',
 				) );
 
 			if ( is_object( WC()->session ) && ! wp_doing_ajax() ) {
@@ -323,11 +323,10 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		$returned = (string) $wc_order->get_meta( 'autopay_returned_from_payment' );
 
 		blue_media()->get_woocommerce_logger()->log_debug(
-			sprintf( '[can_redirect_to_payment_gateway] [$status = %s] [$returned = %s] [GET: %s] [REQUEST: %s] [Order ID: %s]',
+			sprintf( '[can_redirect_to_payment_gateway] [$status = %s] [$returned = %s] [autopay_express_payment: %s] [Order ID: %s]',
 				print_r( $status, true ),
 				$returned,
-				print_r( $_GET, true ),
-				print_r( $_REQUEST, true ),
+				isset( $_GET['autopay_express_payment'] ) ? sanitize_key( wp_unslash( $_GET['autopay_express_payment'] ) ) : 'not_set', // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only redirect param
 				$order_id ),
 		);
 
@@ -734,8 +733,8 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 
 			blue_media()->get_woocommerce_logger( 'session_debug' )->log_debug(
-				sprintf( '[wc_session - process payment] [%s]',
-					print_r( WC()->session, true ),
+				sprintf( '[wc_session - process payment] [keys: %s]',
+					is_object( WC()->session ) ? implode( ', ', array_keys( (array) WC()->session->get_session_data() ) ) : 'session_unavailable',
 				) );
 		}
 
@@ -885,9 +884,9 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		?string $payment_token = null
 	): ?string {
 		blue_media()->get_woocommerce_logger( 'GooglePay' )->log_debug(
-			sprintf( '[process_gpay_payment] [Order ID: %s] [token: %s]',
-				print_r( $order->get_id(), true ),
-				print_r( $_POST['atp_gpay_payment_token'], true ),
+			sprintf( '[process_gpay_payment] [Order ID: %s] [token_present: %s]',
+				$order->get_id(),
+				isset( $_POST['atp_gpay_payment_token'] ) ? 'yes' : 'no',
 			) );
 
 		WC()->session->set( 'bm_wc_order_id', $order->get_id() );
@@ -903,10 +902,8 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		$payment_token = base64_decode( $payment_token );
 
 		blue_media()->get_woocommerce_logger( 'GooglePay' )->log_debug(
-			sprintf( '[process_gpay_payment] [Order ID: %s] [token before base64: %s]',
-				print_r( $order->get_id(), true ),
-				print_r( $payment_token, true ),
-			) );
+			sprintf( '[process_gpay_payment] [token length: %d bytes]', strlen( $payment_token ) )
+		);
 
 		/*$currency = isset( $_POST['atp_gpay_currency'] ) ? sanitize_text_field( stripslashes( $_POST['atp_gpay_currency'] ) ) : '';
 		if ( empty( $payment_token ) ) {
@@ -945,9 +942,11 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				$this->gateway_url . 'payment',
 			) );
 
+			$params_log         = $params;
+			$params_log['Hash'] = '***';
 			blue_media()->get_woocommerce_logger( 'GooglePay' )->log_debug(
 				sprintf( '[process_gpay_payment] [continue_transaction_request] [params: %s] [result: %s]',
-					print_r( $params, true ),
+					print_r( $params_log, true ),
 					print_r( $result, true ),
 				) );
 
@@ -1060,9 +1059,11 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				$this->gateway_url . 'payment',
 			) );
 
+			$params_log         = $params;
+			$params_log['Hash'] = '***';
 			blue_media()->get_woocommerce_logger()->log_debug(
 				sprintf( '[process_blik_0_payment] [continue_transaction_request] [params: %s] [result: %s]',
-					print_r( $params, true ),
+					print_r( $params_log, true ),
 					print_r( $result, true ),
 				) );
 
@@ -1151,6 +1152,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			}
 
 			try {
+				// phpcs:ignore WordPress.Security.NonceVerification.Missing -- server-to-server ITN webhook from Blue Media, authenticated by HMAC
 				if ( ! empty( $_POST ) ) {
 					$posted                  = wp_unslash( $_POST );
 					$posted_xml              = simplexml_load_string( base64_decode( $posted['transactions'] ) );
@@ -1161,12 +1163,11 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 					$order_pending_to_update = [];
 
 
+					$itn_xml      = base64_decode( $posted['transactions'] ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode
+					$itn_redacted = preg_replace( '/<CustomerEmail>[^<]+<\/CustomerEmail>/', '<CustomerEmail>[REDACTED]</CustomerEmail>', $itn_xml );
 					blue_media()
 						->get_woocommerce_logger( 'bm_woocommerce_itn' )
-						->log_debug(
-							'Transactions from ITN: ' . print_r( base64_decode( $posted['transactions'] ),
-								true ),
-						);
+						->log_debug( 'Transactions from ITN: ' . $itn_redacted );
 
 					if ( preg_match( '/<currency>\s*(.*?)\s*<\/currency>/',
 						base64_decode( $posted['transactions'] )
@@ -1335,8 +1336,9 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 						blue_media()
 							->get_woocommerce_logger( 'bm_woocommerce_itn' )
 							->log_debug(
-								sprintf( '[webhook] [validate_itn_hash - not valid] [fields_itn: %s] [Hash: %s]',
-									print_r( $all_fields_itn, true ),
+								sprintf( '[webhook] [validate_itn_hash - not valid] [fields_itn count: %d, keys: %s] [Hash: %s]',
+									count( $all_fields_itn ),
+									implode( ', ', array_keys( $all_fields_itn ) ),
 									$hash_from_itn,
 								) );
 
@@ -1508,9 +1510,8 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		array_unshift( $all_fields_reponse, $this->service_id );
 
 		blue_media()->get_woocommerce_logger()->log_debug(
-			sprintf( '[generate_response_xml_hash] [$all_fields_reponse %s]',
-				print_r( $all_fields_reponse, true ),
-			) );
+			sprintf( '[generate_response_xml_hash] [fields count: %d]', count( $all_fields_reponse ) )
+		);
 
 		return $this->hash_transaction_parameters( $all_fields_reponse );
 	}
@@ -1684,11 +1685,12 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			'body'    => json_encode( $params ),
 		];
 
+		$params_log         = $params;
+		$params_log['Hash'] = '***';
 		blue_media()->get_woocommerce_logger()->log_debug(
-			sprintf( '[api_get_gateway_list request] [url: %s] [params: %s] [args: %s]',
+			sprintf( '[api_get_gateway_list request] [url: %s] [params: %s]',
 				$url,
-				print_r( $params, true ),
-				print_r( $wp_remote_post_args, true ),
+				print_r( $params_log, true ),
 			) );
 
 

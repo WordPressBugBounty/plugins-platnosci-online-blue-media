@@ -7,7 +7,6 @@ use Isolated\Blue_Media\Isolated_Php_ga4_mp\GuzzleHttp\HandlerStack;
 use Isolated\Blue_Media\Isolated_Php_ga4_mp\GuzzleHttp\Promise as P;
 use Isolated\Blue_Media\Isolated_Php_ga4_mp\GuzzleHttp\Promise\PromiseInterface;
 use Isolated\Blue_Media\Isolated_Php_ga4_mp\GuzzleHttp\TransferStats;
-use Isolated\Blue_Media\Isolated_Php_ga4_mp\GuzzleHttp\Utils;
 use Isolated\Blue_Media\Isolated_Php_ga4_mp\Psr\Http\Message\RequestInterface;
 use Isolated\Blue_Media\Isolated_Php_ga4_mp\Psr\Http\Message\ResponseInterface;
 use Isolated\Blue_Media\Isolated_Php_ga4_mp\Psr\Http\Message\StreamInterface;
@@ -131,7 +130,7 @@ class MockHandler implements \Countable
             if ($value instanceof ResponseInterface || $value instanceof \Throwable || $value instanceof PromiseInterface || \is_callable($value)) {
                 $this->queue[] = $value;
             } else {
-                throw new \TypeError('Expected a Response, Promise, Throwable or callable. Found ' . Utils::describeType($value));
+                throw new \TypeError('Expected a Response, Promise, Throwable or callable. Found ' . \get_debug_type($value));
             }
         }
     }

@@ -186,15 +186,16 @@ class Ga4_Service_Client {
 			$this->get_tracking_id() );
 		$baseRequest = new BaseRequest( $this->get_client_id() );
 
-
-		$client_id_from_cookie = $this->get_user_id();
-		if ( $client_id_from_cookie ) {
-			$baseRequest->setClientId( $client_id_from_cookie );
+		$client_id_from_meta = $complete_transaction_use_case->get_ga4_client_id_from_order_meta();
+		if ( null !== $client_id_from_meta ) {
+			$baseRequest->setClientId( $client_id_from_meta );
 		}
 
 		$purchase_event_data = new PurchaseEvent();
 
 		$purchase_event_data
+			->setTransactionId( (string) $complete_transaction_use_case->get_ga4_payload_dto()
+			                                                           ->get_transaction_id() )
 			->setValue( $complete_transaction_use_case->get_ga4_payload_dto()
 			                                          ->get_value() )
 			->setCurrency( $complete_transaction_use_case->get_ga4_payload_dto()
@@ -203,6 +204,11 @@ class Ga4_Service_Client {
 			                                             ->get_shipping() )
 			->setTax( $complete_transaction_use_case->get_ga4_payload_dto()
 			                                        ->get_tax() );
+		$session_id_from_meta = $complete_transaction_use_case->get_ga4_session_id_from_order_meta();
+		if ( null !== $session_id_from_meta ) {
+			$purchase_event_data->setParamValue( 'session_id', $session_id_from_meta );
+			$purchase_event_data->setParamValue( 'engagement_time_msec', 100 );
+		}
 
 		foreach (
 			$complete_transaction_use_case->get_ga4_payload_dto()

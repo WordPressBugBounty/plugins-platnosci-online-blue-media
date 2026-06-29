@@ -6,8 +6,6 @@ use Isolated\Blue_Media\Isolated_Php_ga4_mp\Psr\Http\Client\NetworkExceptionInte
 use Isolated\Blue_Media\Isolated_Php_ga4_mp\Psr\Http\Message\RequestInterface;
 /**
  * Exception thrown when a connection cannot be established.
- *
- * Note that no response is present for a ConnectException
  */
 class ConnectException extends TransferException implements NetworkExceptionInterface
 {

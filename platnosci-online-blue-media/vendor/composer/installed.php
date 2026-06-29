@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'inspirelabs/bluemedia-woocommerce',
-        'pretty_version' => '1.0.0+no-version-set',
-        'version' => '1.0.0.0',
-        'reference' => null,
+        'pretty_version' => '4.9.3.x-dev',
+        'version' => '4.9.3.9999999-dev',
+        'reference' => 'ac8d2d7eb2bcc84f6c110275bba1928bb40581a4',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,17 +11,17 @@
     ),
     'versions' => array(
         'inspirelabs/bluemedia-woocommerce' => array(
-            'pretty_version' => '1.0.0+no-version-set',
-            'version' => '1.0.0.0',
-            'reference' => null,
+            'pretty_version' => '4.9.3.x-dev',
+            'version' => '4.9.3.9999999-dev',
+            'reference' => 'ac8d2d7eb2bcc84f6c110275bba1928bb40581a4',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'isolated-br33f-php-ga4-mp/isolated-php-ga4-mp' => array(
-            'pretty_version' => '0.1.5',
-            'version' => '0.1.5.0',
+            'pretty_version' => '0.1.6',
+            'version' => '0.1.6.0',
             'reference' => null,
             'type' => 'library',
             'install_path' => __DIR__ . '/../isolated-br33f-php-ga4-mp/isolated-php-ga4-mp',
@@ -29,8 +29,8 @@
             'dev_requirement' => false,
         ),
         'isolated-guzzlehttp-guzzle/isolated-guzzle' => array(
-            'pretty_version' => '7.10.0',
-            'version' => '7.10.0.0',
+            'pretty_version' => '7.12.3',
+            'version' => '7.12.3.0',
             'reference' => null,
             'type' => 'library',
             'install_path' => __DIR__ . '/../isolated-guzzlehttp-guzzle/isolated-guzzle',

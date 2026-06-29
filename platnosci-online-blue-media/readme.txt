@@ -3,7 +3,7 @@ Contributors: inspirelabs
 Tags: woocommerce, bluemedia, autopay
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 4.9.2
+Stable tag: 4.9.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -83,7 +83,12 @@ The values of the Service ID and Configuration Key are different for the test an
 
 == Changelog ==
 
-### 4.9.2 (24 June 2026) ###
+### 4.9.3 (29.06.2026) ###
+* Improved: admin panel typography using locally hosted Open Sans and Roboto Condensed fonts aligned with the new design system.
+* Fixed: GA4 transaction attribution by linking purchase events to the user’s session data.
+* Fixed: test connection endpoint security, and HMAC typing and signature comparison.
+
+### 4.9.2 (22 June 2026) ###
 * Added: a new setting to choose how Google Pay works — redirect to the Google Pay website or pay directly in your store
 * Added: settings to match the logo to the checkout color scheme, including light and dark versions
 * Improved: interface styles in the plugin settings and on checkout (checkboxes, buttons)

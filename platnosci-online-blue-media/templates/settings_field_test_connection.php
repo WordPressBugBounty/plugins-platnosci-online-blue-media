@@ -27,7 +27,9 @@
 
 </tr>
 
-<tr class="status" id="autopay_audit_status">
+<tr class='status'
+    id='autopay_audit_status'
+    style='display: none;'>
 	<td>
 		<span class="in-progress"><span
 				class="icon in-progress" id="autopay_audit_status_icon"></span> <span id="autopay_audit_status_title"></span> <span
@@ -55,13 +57,17 @@
 <tr class="summary" id="autopay_audit_summary">
 	<td>
 		<ul>
-			<li id="autopay_audit_s_s" class="summary-success">
+            <li id='autopay_audit_s_s'
+                class='summary-success'
+                style='display: none;'>
 				<span
 					class="summary-success--title"><span
 						id="autopay_audit_s_s_h"> <?php echo __( 'Test has been completed. Click "Download full log" to download logs to disk.',
 							'bm-woocommerce' ); ?></span></span>
 			</li>
-			<li id="autopay_audit_s_e" class="summary-error">
+            <li id='autopay_audit_s_e'
+                class='summary-error'
+                style='display: none;'>
 				<span
 					class="summary-error--title"> <span
 						id="autopay_audit_s_e_h"><?php echo __( 'An error occurred during finalization: ',
@@ -69,7 +75,9 @@
 						id="autopay_audit_s_e_m"
 						class="summary-error--message"></span></span>
 			</li>
-			<li id="autopay_audit_s_w" class="summary-warning">
+            <li id='autopay_audit_s_w'
+                class='summary-warning'
+                style='display: none;'>
 				<span
 					class="summary-warning--title"> <span
 						id="autopay_audit_s_w_h"><?php echo __( 'An warning occurred during finalization: ',
@@ -84,14 +92,18 @@
 	<td>
 		<ul>
 			<li>
-				<span id="autopay_audit_btn_download"
-					  class="button button--download"><?php echo __( 'Download full log',
-						'bm-woocommerce' ); ?></span>
+				<span id='autopay_audit_btn_download'
+                      class='button button--download'
+                      style='display: none;'>
+                    <?php echo __( 'Download full log', 'bm-woocommerce' ); ?>
+                </span>
 			</li>
 			<li>
-				<span id="autopay_audit_btn_copy"
-					  class="button button--copy"><?php echo __( 'Copy log to clipboard',
-						'bm-woocommerce' ); ?></span>
+				<span id='autopay_audit_btn_copy'
+                      class='button button--copy'
+                      style='display: none;'>
+                    <?php echo __( 'Copy log to clipboard', 'bm-woocommerce' ); ?>
+                </span>
 			</li>
 		</ul>
 	</td>

@@ -3,7 +3,7 @@ Contributors: inspirelabs
 Tags: woocommerce, bluemedia, autopay
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 4.9.2
+Stable tag: 4.9.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -83,7 +83,12 @@ Wartości Identyfikatora serwisu oraz Klucza konfiguracyjnego są różne dla ś
 
 == Changelog ==
 
-### 4.9.2 (24.06.2026) ###
+### 4.9.3 (29.06.2026) ###
+* Ulepszono: typografię panelu administracyjnego z użyciem lokalnych czcionek Open Sans i Roboto Condensed zgodnych z nowym systemem designu.
+* Naprawiono: atrybucję transakcji w GA4 poprzez powiązanie zdarzeń purchase z danymi sesji użytkownika.
+* Naprawiono: zabezpieczenia endpointu testu połączenia oraz typowanie HMAC i porównywanie sygnatur.
+
+### 4.9.2 (22.06.2026) ###
 * Dodano: opcję wyboru trybu działania Google Pay — przekierowanie na stronę Google Pay lub płatność bezpośrednio w sklepie
 * Dodano: ustawienia dopasowania logo do kolorystyki checkoutu, w tym wybór wersji jasnej i ciemnej
 * Ulepszono: style interfejsu w ustawieniach wtyczki i na checkoucie (checkboxy, przyciski)
