@@ -243,7 +243,7 @@ class Order_Remote_Status_Manager {
 				blue_media()
 					->get_woocommerce_logger( $this->debug_id )
 					->log_debug(
-						sprintf( '[Order_Remote_Status] [current_status and status_from_remote are identical. Doing rollback.] [order_id: %s] [return code: RESULT_CONFIRMED]',
+						sprintf( '[Order_Remote_Status] [path: ALREADY_PROCESSED - current_status and status_from_remote are identical. Doing rollback.] [order_id: %s] [return code: RESULT_CONFIRMED]',
 							$order_id ) );
 				$this->db->query( 'ROLLBACK' );
 
@@ -255,7 +255,7 @@ class Order_Remote_Status_Manager {
 				blue_media()
 					->get_woocommerce_logger( $this->debug_id )
 					->log_debug(
-						sprintf( '[Order_Remote_Status] [current_status SUCCESS is unchangeable. Doing rollback] [order_id: %s] [return code: RESULT_CONFIRMED]',
+						sprintf( '[Order_Remote_Status] [path: ALREADY_PROCESSED - current_status SUCCESS is unchangeable. Doing rollback] [order_id: %s] [return code: RESULT_CONFIRMED]',
 							$order_id
 						) );
 				$this->db->query( 'ROLLBACK' );
@@ -270,6 +270,15 @@ class Order_Remote_Status_Manager {
 
 			$this->db->query( 'COMMIT' );
 			$this->set_status_processing_allowed_in_store( true );
+
+			blue_media()
+				->get_woocommerce_logger( $this->debug_id )
+				->log_debug(
+					sprintf( '[Order_Remote_Status] [path: UPDATED - status changed successfully] [order_id: %s] [from: %s] [to: %s] [return code: RESULT_CONFIRMED]',
+						$order_id,
+						(string) $current_status,
+						$status_from_remote
+					) );
 
 		} catch ( Exception $exception ) {
 			$this->set_status_processing_allowed_in_store( false );

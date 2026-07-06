@@ -9,8 +9,10 @@ use Ilabs\BM_Woocommerce\Domain\Model\White_Label\v3\Gateway_List_Response_Facto
 use Ilabs\BM_Woocommerce\Domain\Service\Gateway_List\Gateway_List_Mapper_Block_Checkout;
 use Ilabs\BM_Woocommerce\Domain\Service\Settings\Settings_Manager;
 use Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway;
+use Ilabs\BM_Woocommerce\Helpers\Autopay_Urls;
 
 /**
+ * WooCommerce Blocks integration for the Autopay (Blue Media) gateway.
  *
  * @since 1.0.3
  */
@@ -19,7 +21,7 @@ final class WC_Gateway_Autopay_Blocks_Support extends
 
 	/**
 	 *
-	 * @var Blue_Media_Gateway
+	 * @var Blue_Media_Gateway|null
 	 */
 	private $gateway;
 
@@ -30,11 +32,26 @@ final class WC_Gateway_Autopay_Blocks_Support extends
 
 	/**
 	 *
-	 * @var array
+	 * @var array<string, mixed>
 	 */
 	protected $settings = [];
 
 	public function initialize() {
+		$this->maybe_bootstrap_gateway();
+	}
+
+	/**
+	 * Resolve the WC gateway instance when Blocks bootstrap order differs from {@see initialize()}.
+	 */
+	private function maybe_bootstrap_gateway(): void {
+		if ( $this->gateway ) {
+			return;
+		}
+
+		if ( ! function_exists( 'WC' ) || ! WC()->payment_gateways ) {
+			return;
+		}
+
 		$gateways = WC()->payment_gateways->payment_gateways();
 
 		if ( ! isset( $gateways[ $this->name ] ) ) {
@@ -45,7 +62,7 @@ final class WC_Gateway_Autopay_Blocks_Support extends
 	}
 
 	/**
-	 * @return boolean
+	 * @return bool
 	 */
 	public function is_active(): bool {
 		if ( ! $this->gateway ) {
@@ -56,10 +73,15 @@ final class WC_Gateway_Autopay_Blocks_Support extends
 	}
 
 	/**
-	 * @return array
+	 * Registers `autopay-payments-blocks` and, when the card channel (1500) can appear on whitelabel checkout,
+	 * registers `autopay_card_widget` (same URL as classic) so it loads before the Blocks bundle via script order.
+	 *
+	 * @return array<int, string>
 	 * @throws Exception
 	 */
 	public function get_payment_method_script_handles() {
+		$this->maybe_bootstrap_gateway();
+
 		$script_path         = 'blocks/assets/js/frontend/blocks.js';
 		$script_path_css     = 'blocks/assets/js/frontend/blocks-styles.css';
 		$script_asset_path   = blue_media()->get_plugin_dir() . '/blocks/assets/js/frontend/blocks.asset.php';
@@ -94,6 +116,20 @@ final class WC_Gateway_Autopay_Blocks_Support extends
 			$script_dependencies[] = 'autopay-google-pay-atp';
 		}
 
+		if ( $this->is_autopay_card_widget_needed_for_blocks_checkout() ) {
+			$cards_domain = Autopay_Urls::get_cards_domain(
+				$this->gateway->resolve_is_test_mode()
+			);
+			wp_register_script(
+				'autopay_card_widget',
+				$cards_domain . '/widget-new/widget-communication.min.js',
+				[ 'jquery' ],
+				null,
+				true
+			);
+			$script_dependencies[] = 'autopay_card_widget';
+		}
+
 		wp_register_script(
 			'autopay-payments-blocks',
 			$script_url,
@@ -116,8 +152,15 @@ final class WC_Gateway_Autopay_Blocks_Support extends
 		return [ 'autopay-payments-blocks' ];
 	}
 
+	/**
+	 * Build frontend config payload for the Checkout Block payment method.
+	 *
+	 * @return array<string, mixed>
+	 */
 	public function get_payment_method_data(): array {
- 		if ( ! $this->gateway instanceof Blue_Media_Gateway ) {
+		$this->maybe_bootstrap_gateway();
+
+		if ( ! $this->gateway instanceof Blue_Media_Gateway ) {
 			return $this->get_payment_method_data_when_gateway_unavailable();
 		}
 
@@ -154,6 +197,8 @@ final class WC_Gateway_Autopay_Blocks_Support extends
 			$channels_mapped_for_blocks = [];
 		}
 
+		$card_widget_config = $this->build_card_widget_config_payload();
+
 		return [
 			'title'                    => $this->gateway->get_title(),
 			'description'              => $this->gateway->get_method_description(),
@@ -176,12 +221,15 @@ final class WC_Gateway_Autopay_Blocks_Support extends
 			'nonce'                    => wp_create_nonce( Payment_Status_Controller::NONCE_ACTION ),
 			'environment'              => $this->gateway->resolve_is_test_mode() ? 'sandbox' : 'production',
 			'shopBaseCountryCode'      => WC()->countries->get_base_country(),
+			'card_widget_config'       => $card_widget_config,
 		];
 	}
 
 	/**
 	 * Same keys as {@see get_payment_method_data()} when the gateway instance is missing
 	 * (e.g. race during bootstrap) so Blocks JS never receives a partial shape.
+	 *
+	 * Includes {@see get_payment_method_data()} `card_widget_config` as null.
 	 */
 	private function get_payment_method_data_when_gateway_unavailable(): array {
 		$wc = WC();
@@ -201,9 +249,16 @@ final class WC_Gateway_Autopay_Blocks_Support extends
 			'nonce'                        => wp_create_nonce( Payment_Status_Controller::NONCE_ACTION ),
 			'environment'                  => 'production',
 			'shopBaseCountryCode'          => ( $wc && $wc->countries ) ? $wc->countries->get_base_country() : '',
+			'card_widget_config'           => null,
 		];
 	}
 
+	/**
+	 * Checkout Block messages (BLIK, GPay, card widget, etc.).
+	 *
+	 * Translations are resolved server-side via {@see __()} and the loaded `.mo` file,
+	 * then exposed to React through `MessagesService` (no JS-side `wp_set_script_translations` needed).
+	 */
 	private function get_payment_method_messages(): array {
 		return [
 			'payment_failed'                          => __( 'Payment failed',
@@ -221,6 +276,12 @@ final class WC_Gateway_Autopay_Blocks_Support extends
 			'terms_and_conditions'                    => __( 'Terms & Conditions',
 				'bm-woocommerce' ),
 			'pay_with_google_pay'                     => __( 'Pay with Google Pay',
+				'bm-woocommerce' ),
+			'card_widget_wait_message'                => __( 'Enter your card details in the form above to place the order.',
+				'bm-woocommerce' ),
+			'card_widget_fill_message'                => __( 'Complete the card form before placing the order.',
+				'bm-woocommerce' ),
+			'card_payment_form_title'                 => __( 'Card payment form',
 				'bm-woocommerce' ),
 		];
 	}
@@ -279,5 +340,94 @@ final class WC_Gateway_Autopay_Blocks_Support extends
 		}
 
 		return null;
+	}
+
+	/**
+	 * Whether the card communication script must load before the Blocks bundle (whitelabel + card channel visible).
+	 */
+	private function is_autopay_card_widget_needed_for_blocks_checkout(): bool {
+		if ( ! $this->gateway instanceof Blue_Media_Gateway ) {
+			return false;
+		}
+
+		if ( ! $this->gateway->is_whitelabel_mode_enabled() || ! $this->gateway->is_available() ) {
+			return false;
+		}
+
+		// Prefer the same gateway-list mode used to prepare block channels payload.
+		try {
+			$list_for_blocks = $this->gateway->gateway_list( true );
+		} catch ( Exception $exception ) {
+			$list_for_blocks = [];
+		}
+
+		if ( $this->gateway_list_api_response_contains_card_channel(
+			is_array( $list_for_blocks ) ? $list_for_blocks : []
+		) ) {
+			return true;
+		}
+
+		// Fallback for environments where the non-block request includes extra channels.
+		try {
+			$list_fallback = $this->gateway->gateway_list( false );
+		} catch ( Exception $exception ) {
+			return false;
+		}
+
+		return $this->gateway_list_api_response_contains_card_channel(
+			is_array( $list_fallback ) ? $list_fallback : []
+		);
+	}
+
+	/**
+	 * Detect gateway ID 1500 (cards) inside gatewayList/v3 payload.
+	 *
+	 * @param array<string, mixed> $gateway_list_response Raw API-decoded body.
+	 */
+	private function gateway_list_api_response_contains_card_channel( array $gateway_list_response ): bool {
+		if ( empty( $gateway_list_response['gatewayList'] )
+			|| ! is_array( $gateway_list_response['gatewayList'] ) ) {
+			return false;
+		}
+
+		foreach ( $gateway_list_response['gatewayList'] as $row ) {
+			if ( ! is_array( $row ) ) {
+				continue;
+			}
+
+			if ( Blue_Media_Gateway::CARD_CHANNEL === (int) ( $row['gatewayID'] ?? 0 ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Snapshot for WidgetConnection-style clients (aligned with templates/card_widget.php `card_widget_data`).
+	 *
+	 * Only exposed when the card channel can appear on block checkout. Amount is the cart total at server render
+	 * time; refresh from the cart client-side when totals change before paying.
+	 *
+	 * @return array<string, mixed>|null
+	 */
+	private function build_card_widget_config_payload(): ?array {
+		if ( ! $this->is_autopay_card_widget_needed_for_blocks_checkout() ) {
+			return null;
+		}
+
+		if ( ! $this->gateway instanceof Blue_Media_Gateway ) {
+			return null;
+		}
+
+		$cards_domain = Autopay_Urls::get_cards_domain( $this->gateway->resolve_is_test_mode() );
+
+		return [
+			'cardsDomain' => untrailingslashit( $cards_domain ),
+			'serviceId'   => $this->gateway->get_service_id(),
+			'amount'      => WC()->cart ? (float) WC()->cart->get_total( 'edit' ) : 0.0,
+			'currency'    => get_woocommerce_currency(),
+			'language'    => substr( get_locale(), 0, 2 ),
+		];
 	}
 }

@@ -3,7 +3,7 @@ Contributors: inspirelabs
 Tags: woocommerce, bluemedia, autopay
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 4.9.3
+Stable tag: 5.0.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -82,6 +82,12 @@ The values of the Service ID and Configuration Key are different for the test an
 
 
 == Changelog ==
+
+### 5.0.0 (06.07.2026) ###
+* Added: card payments through the Autopay widget on classic and block checkout.
+* Fixed: PHP Deprecated notice on PHP 8.4+ during GA4 event handling for Google Pay payments.
+* Updated: isolated GA4 Measurement Protocol library to version 0.1.6.
+* Updated: isolated Guzzle dependency to version 7.12.3 to resolve security advisories.
 
 ### 4.9.3 (29.06.2026) ###
 * Improved: admin panel typography using locally hosted Open Sans and Roboto Condensed fonts aligned with the new design system.
