@@ -20,16 +20,11 @@ use Ilabs\BM_Woocommerce\Domain\Woocommerce\Autopay_Order_Factory;
 use Ilabs\BM_Woocommerce\Gateway\Webhook\Order_Remote_Status_Manager;
 use Ilabs\BM_Woocommerce\Helpers\Helper;
 use Ilabs\BM_Woocommerce\Plugin;
-use Ilabs\BM_Woocommerce\Helpers\Autopay_Urls;
 use SimpleXMLElement;
 use WC_Order;
 use WC_Payment_Gateway;
 use Ilabs\BM_Woocommerce\Gateway\Hooks\Payment_On_Account_Page;
 use Ilabs\BM_Woocommerce\Domain\Model\White_Label\Config;
-use Ilabs\BM_Woocommerce\Gateway\Card_Widget\Blue_Media_Hash_Generator;
-use Ilabs\BM_Woocommerce\Gateway\Card_Widget\Card_Widget_Payment_Service;
-use Ilabs\BM_Woocommerce\Gateway\Card_Widget\Card_Widget_Start_Result;
-use Ilabs\BM_Woocommerce\Gateway\Continue_Transaction\Continue_Transaction_Response_Xml_Parser;
 
 class Blue_Media_Gateway extends WC_Payment_Gateway {
 
@@ -120,11 +115,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 	 */
 	private ?string $gpay_inline_template = null;
 	private ?array $gpay_form_data = null;
-
-	/**
-	 * Cached Card Widget inline template.
-	 */
-	private ?string $card_widget_inline_template = null;
 
 	/**
 	 *
@@ -361,37 +351,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 	}
 
 
-	/**
-	 * Allow only HTTPS redirects to the same host as the configured Autopay gateway (mitigates open redirect if meta or XML were tampered with).
-	 *
-	 * @param string $url Absolute URL from continue-transaction or stored order meta.
-	 *
-	 * @return bool
-	 */
-	private function is_trusted_autopay_redirect_url( string $url ): bool {
-		$url = trim( $url );
-		if ( '' === $url ) {
-			return false;
-		}
-
-		$target = wp_parse_url( $url );
-		if ( ! is_array( $target ) || empty( $target['host'] ) ) {
-			return false;
-		}
-
-		$scheme = isset( $target['scheme'] ) ? strtolower( (string) $target['scheme'] ) : '';
-		if ( 'https' !== $scheme ) {
-			return false;
-		}
-
-		$base = wp_parse_url( rtrim( $this->gateway_url, '/' ) . '/' );
-		if ( ! is_array( $base ) || empty( $base['host'] ) ) {
-			return false;
-		}
-
-		return strtolower( (string) $target['host'] ) === strtolower( (string) $base['host'] );
-	}
-
 	private function redirect_to_3ds( int $order_id ) {
 		$wc_order = wc_get_order( $order_id );
 
@@ -408,20 +367,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		);
 
 		if ( ! empty( $_3ds_redirect_url ) ) {
-			$_3ds_redirect_url = (string) $_3ds_redirect_url;
-			if ( ! $this->is_trusted_autopay_redirect_url( $_3ds_redirect_url ) ) {
-				blue_media()->get_woocommerce_logger()->log_error(
-					sprintf(
-						'[redirect_to_3ds] blocked untrusted redirect host for order_id=%d',
-						$order_id
-					)
-				);
-				$wc_order->delete_meta_data( 'bm_3ds_redirect_url' );
-				$wc_order->save_meta_data();
-				wp_safe_redirect( $wc_order->get_checkout_payment_url( true ) );
-				exit;
-			}
-
 			$wc_order->delete_meta_data( 'bm_3ds_redirect_url' );
 			$wc_order->add_meta_data( 'bm_transaction_init_params',
 				[ '3ds' ] );
@@ -449,7 +394,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				$this->express_payment_redirect_url = $this->gateway_url;
 			} else {
 				$this->gateway_url                  = self::GATEWAY_SANDBOX;
-				$this->express_payment_redirect_url = $this->gateway_url . Autopay_Payment_Protocol::HTTP_PAYMENT_PATH;
+				$this->express_payment_redirect_url = $this->gateway_url . 'payment';
 			}
 			$this->gateway_url_not_modified_by_user = self::GATEWAY_SANDBOX;
 			$this->private_key                      = $this->get_option( Settings_Manager::get_currency_option_key( 'test_private_key',
@@ -464,7 +409,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				$this->express_payment_redirect_url = $this->gateway_url;
 			} else {
 				$this->gateway_url                  = self::GATEWAY_PRODUCTION;
-				$this->express_payment_redirect_url = $this->gateway_url . Autopay_Payment_Protocol::HTTP_PAYMENT_PATH;
+				$this->express_payment_redirect_url = $this->gateway_url . 'payment';
 			}
 			$this->gateway_url_not_modified_by_user = self::GATEWAY_PRODUCTION;
 			$this->private_key                      = $this->get_option( Settings_Manager::get_currency_option_key( 'private_key',
@@ -472,49 +417,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			$this->service_id                       = $this->get_option( Settings_Manager::get_currency_option_key( 'service_id',
 				$currency ) );
 		}
-
-		// Surface missing per-currency credentials as warnings so support can identify the
-		// misconfiguration from logs without exposing secrets.
-		if ( empty( $this->private_key ) || empty( $this->service_id ) ) {
-			blue_media()
-				->get_woocommerce_logger( 'bm_woocommerce_itn' )
-				->log_warning(
-					sprintf(
-					/* translators: 1: currency code, 2: testmode flag, 3: private_key empty flag, 4: service_id empty flag */
-						'[setup_variables] empty credentials for currency=%1$s testmode=%2$s private_key_empty=%3$s service_id_empty=%4$s',
-						$currency,
-						$this->testmode ? 'yes' : 'no',
-						empty( $this->private_key ) ? 'yes' : 'no',
-						empty( $this->service_id ) ? 'yes' : 'no'
-					)
-				);
-		}
-	}
-
-	/**
-	 * Read a setting honouring the active multi-currency context.
-	 *
-	 * The currency-postfixed option key (e.g. {@see Settings_Manager::get_currency_option_key()})
-	 * is read first; if it is not set, we fall back to the non-postfixed legacy key. This keeps
-	 * backward compatibility for stores that have not yet configured per-currency values.
-	 *
-	 * @param string $option  Logical option name (without currency postfix).
-	 * @param string $default Default value when neither the currency-aware nor legacy key is set.
-	 *
-	 * @return string
-	 */
-	private function get_currency_aware_option( string $option, string $default = '' ): string {
-		$currency           = blue_media()->resolve_blue_media_currency_symbol();
-		$currency_aware_key = Settings_Manager::get_currency_option_key( $option, $currency );
-
-		if ( $currency_aware_key !== $option ) {
-			$value = (string) $this->get_option( $currency_aware_key, '' );
-			if ( '' !== $value ) {
-				return $value;
-			}
-		}
-
-		return (string) $this->get_option( $option, $default );
 	}
 
 	public function resolve_is_test_mode(): bool {
@@ -725,17 +627,14 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 		if ( 0 === $payment_channel && ! $is_classic_checkout ) {
 			if ( isset( $_POST['autopay_numeric_channel_id'] ) ) {
-				// Block checkout (Store API normalizes some keys to lowercase).
+				//block checkout
 				$payment_channel = (int) sanitize_text_field( wp_unslash( $_POST['autopay_numeric_channel_id'] ) );
-			} elseif ( isset( $_POST['autopay_numeric_channel_Id'] ) ) {
-				$payment_channel = (int) sanitize_text_field( wp_unslash( $_POST['autopay_numeric_channel_Id'] ) );
 			}
 		}
 
 
-		$is_blik_0      = false;
-		$is_gpay        = false;
-		$is_card_widget = false;
+		$is_blik_0 = false;
+		$is_gpay   = false;
 
 
 		if ( 0 === $payment_channel && $this->is_whitelabel_mode_enabled() ) {
@@ -774,118 +673,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				return [
 					'status' => 'failure',
 				];
-			}
-		} elseif ( self::CARD_CHANNEL === $payment_channel ) {
-			if ( $is_classic_checkout ) {
-				try {
-					$_3ds_redirect_url = $this->process_card_widget_payment( $order );
-
-					if ( $_3ds_redirect_url ) {
-						$order->add_meta_data( 'bm_3ds_redirect_url',
-							$_3ds_redirect_url );
-						$order->save_meta_data();
-					}
-
-					$is_card_widget = true;
-					$params         = [
-						'params' => [ 'OrderID' => $order->get_id() ],
-					];
-					WC()->session->set( 'bm_order_payment_params',
-						$params );
-					WC()->session->save_data();
-				} catch ( Exception $exception ) {
-					blue_media()->get_woocommerce_logger()->log_error(
-						sprintf( '[process_card_widget_payment failed] [Order id: %s] [Error: %s]',
-							$order_id,
-							$exception->getMessage(),
-						) );
-
-					$known = [
-						'autopay_card_token_empty',
-						'autopay_card_gateway_error',
-						'autopay_card_invalid_response',
-						'autopay_card_transport_error',
-						'autopay_card_untrusted_redirect',
-					];
-					if ( ! in_array( $exception->getMessage(), $known, true ) ) {
-						wc_add_notice(
-							__( 'Card payment could not be started. Please try again.',
-								'bm-woocommerce' ),
-							'error',
-						);
-					}
-
-					return [
-						'status' => 'failure',
-					];
-				}
-			} else {
-				// Checkout Block: Autopay card uses the same card widget + pretransaction flow as classic (not initial redirect params).
-				$card_token = $this->read_atp_card_payment_token_from_request();
-				if ( '' === $card_token ) {
-					blue_media()->get_woocommerce_logger()->log_error(
-						sprintf( '[process_card_widget_payment failed] [block checkout card token missing] [Order id: %s]',
-							$order_id
-						) );
-
-					wc_add_notice(
-						__( 'Card payment data is missing. Please complete the card form and try again.',
-							'bm-woocommerce' ),
-						'error',
-					);
-
-					return [
-						'status' => 'failure',
-					];
-				}
-
-				try {
-					$_3ds_redirect_url = $this->process_card_widget_payment( $order );
-
-					if ( $_3ds_redirect_url ) {
-						$order->add_meta_data( 'bm_3ds_redirect_url',
-							$_3ds_redirect_url );
-						$order->save_meta_data();
-					}
-
-					$is_card_widget = true;
-					$params         = [
-						'params' => [ 'OrderID' => $order->get_id() ],
-					];
-					WC()->session->set( 'bm_order_payment_params',
-						$params );
-					WC()->session->save_data();
-
-					blue_media()->get_woocommerce_logger()->log_debug(
-						sprintf( '[bm_order_payment_params saved] [block checkout card channel] [Order id: %s]',
-							$order_id
-						) );
-				} catch ( Exception $exception ) {
-					blue_media()->get_woocommerce_logger()->log_error(
-						sprintf( '[process_card_widget_payment failed] [Order id: %s] [Error: %s]',
-							$order_id,
-							$exception->getMessage(),
-						) );
-
-					$known = [
-						'autopay_card_token_empty',
-						'autopay_card_gateway_error',
-						'autopay_card_invalid_response',
-						'autopay_card_transport_error',
-						'autopay_card_untrusted_redirect',
-					];
-					if ( ! in_array( $exception->getMessage(), $known, true ) ) {
-						wc_add_notice(
-							__( 'Card payment could not be started. Please try again.',
-								'bm-woocommerce' ),
-							'error',
-						);
-					}
-
-					return [
-						'status' => 'failure',
-					];
-				}
 			}
 		} elseif ( self::GPAY_CHANNEL === $payment_channel && 'without_redirect' === $gpay_type ) {
 			if ( ! $this->should_offer_google_pay_on_checkout() ) {
@@ -958,8 +745,8 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				print_r( wc_get_order_statuses(), true ),
 			) );
 
-		if ( ! $is_blik_0 && ! $is_gpay && ! $is_card_widget ) {
-			$start_status = $this->get_currency_aware_option( 'wc_payment_status_on_bm_pending', 'pending' );
+		if ( ! $is_blik_0 && ! $is_gpay ) {
+			$start_status = $this->get_option( 'wc_payment_status_on_bm_pending', 'pending' );
 			$this->update_order_status( $order, $start_status );
 			$order->add_order_note( __( 'Autopay: Payment process started for order ID:',
 					'bm-woocommerce' ) . $order_id );
@@ -1070,34 +857,43 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		return strlen( $code ) === 6 && ctype_digit( $code );
 	}
 
-	/**
-	 * Decode XML returned by Autopay continue-transaction / payment endpoints.
-	 *
-	 * @param string $response_xml Raw response body.
-	 *
-	 * @return array<string, string>
-	 */
 	public function decode_continue_transaction_response( $response_xml ) {
-		return Continue_Transaction_Response_Xml_Parser::parse( (string) $response_xml );
+		$xml = simplexml_load_string( $response_xml );
+
+		if ( ! $xml ) {
+			return [];
+		}
+
+		if ( isset( $xml->confirmation ) && (string) $xml->confirmation === 'NOTCONFIRMED' ) {
+			return [
+				'confirmation' => (string) $xml->confirmation,
+				'reason'       => (string) $xml->reason,
+				'hash'         => (string) $xml->hash,
+			];
+		} else {
+			return [
+				'status'      => (string) $xml->status,
+				'redirecturl' => (string) $xml->redirecturl,
+				'hash'        => (string) $xml->hash,
+			];
+		}
 	}
 
 	private function process_gpay_payment(
 		WC_Order $order,
 		?string $payment_token = null
 	): ?string {
-		$gpay_token_raw = isset( $_POST['atp_gpay_payment_token'] ) ? (string) wp_unslash( $_POST['atp_gpay_payment_token'] ) : '';
 		blue_media()->get_woocommerce_logger( 'GooglePay' )->log_debug(
-			sprintf(
-				'[process_gpay_payment] [Order ID: %s] [token_field_len: %d]',
+			sprintf( '[process_gpay_payment] [Order ID: %s] [token_present: %s]',
 				$order->get_id(),
-				strlen( $gpay_token_raw )
+				isset( $_POST['atp_gpay_payment_token'] ) ? 'yes' : 'no',
 			) );
 
 		WC()->session->set( 'bm_wc_order_id', $order->get_id() );
 		WC()->session->save_data();
 
 		if ( ! $payment_token ) {
-			$payment_token = '' !== $gpay_token_raw ? sanitize_text_field( $gpay_token_raw ) : '';
+			$payment_token = isset( $_POST['atp_gpay_payment_token'] ) ? sanitize_text_field( stripslashes( $_POST['atp_gpay_payment_token'] ) ) : '';
 			if ( empty( $payment_token ) ) {
 				throw new Exception( "payment_token is empty" );
 			}
@@ -1106,11 +902,8 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		$payment_token = base64_decode( $payment_token );
 
 		blue_media()->get_woocommerce_logger( 'GooglePay' )->log_debug(
-			sprintf(
-				'[process_gpay_payment] [Order ID: %s] [decoded_token_len: %d]',
-				$order->get_id(),
-				is_string( $payment_token ) ? strlen( $payment_token ) : 0
-			) );
+			sprintf( '[process_gpay_payment] [token length: %d bytes]', strlen( $payment_token ) )
+		);
 
 		/*$currency = isset( $_POST['atp_gpay_currency'] ) ? sanitize_text_field( stripslashes( $_POST['atp_gpay_currency'] ) ) : '';
 		if ( empty( $payment_token ) ) {
@@ -1146,24 +939,19 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 			$result = $this->decode_continue_transaction_response( $client->continue_transaction_request(
 				$params,
-				$this->gateway_url . Autopay_Payment_Protocol::HTTP_PAYMENT_PATH,
+				$this->gateway_url . 'payment',
 			) );
 
-			$params_log = $params;
-			if ( isset( $params_log['PaymentToken'] ) ) {
-				$params_log['PaymentToken'] = '[redacted len=' . strlen( (string) $params_log['PaymentToken'] ) . ']';
-			}
-			if ( isset( $params_log['Hash'] ) ) {
-				$params_log['Hash'] = '[redacted]';
-			}
+			$params_log         = $params;
+			$params_log['Hash'] = '***';
 			blue_media()->get_woocommerce_logger( 'GooglePay' )->log_debug(
 				sprintf( '[process_gpay_payment] [continue_transaction_request] [params: %s] [result: %s]',
 					print_r( $params_log, true ),
 					print_r( $result, true ),
 				) );
 
-			if ( isset( $result[ Autopay_Payment_Protocol::XML_LOCAL_REASON ] ) ) {
-				throw new Exception( $result[ Autopay_Payment_Protocol::XML_LOCAL_REASON ] );
+			if ( isset( $result['reason'] ) ) {
+				throw new Exception( $result['reason'] );
 			}
 
 			if ( empty( $result ) || ! is_array( $result ) ) {
@@ -1172,18 +960,13 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			}
 
 			$redirecturl = null;
-			if ( ! empty( $result[ Autopay_Payment_Protocol::XML_LOCAL_REDIRECT_URL ] ) ) {
-				$redirecturl = $result[ Autopay_Payment_Protocol::XML_LOCAL_REDIRECT_URL ];
-			}
-
-			if ( null !== $redirecturl && '' !== $redirecturl
-				&& ! $this->is_trusted_autopay_redirect_url( (string) $redirecturl ) ) {
-				throw new Exception( 'autopay_untrusted_redirect' );
+			if ( ! empty( $result['redirecturl'] ) ) {
+				$redirecturl = $result['redirecturl'];
 			}
 
 			WC()->session->set( 'bm_continue_transaction_start_error', '' );
 
-			$start_status = $this->get_currency_aware_option( 'wc_payment_status_on_bm_pending', 'pending' );
+			$start_status = $this->get_option( 'wc_payment_status_on_bm_pending', 'pending' );
 			$this->update_order_status( $order, $start_status );
 			$order->add_order_note( __( 'Autopay: Google Pay payment process started for order ID:',
 					'bm-woocommerce' ) . $order->get_id() );
@@ -1200,7 +983,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				__( 'Payment failed.',
 					'bm-woocommerce' ) );
 
-			$new_status = $this->get_currency_aware_option( 'wc_payment_status_on_bm_failure',
+			$new_status = $this->get_option( 'wc_payment_status_on_bm_failure',
 				'failed' );
 			$this->update_order_status( $order,
 				$new_status,
@@ -1210,138 +993,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Read `atp_card_payment_token` from the current request (POST).
-	 *
-	 * Do not use {@see sanitize_text_field()}: it can alter Base64 (+, /, =) and break Hash vs. token.
-	 *
-	 * @return string Trimmed token or empty string.
-	 */
-	private function read_atp_card_payment_token_from_request(): string {
-		return isset( $_POST['atp_card_payment_token'] )
-			? trim( wp_unslash( (string) $_POST['atp_card_payment_token'] ) )
-			: '';
-	}
-
-	/**
-	 * Card widget (GatewayID 1500): read POST token, delegate pretransaction to {@see Card_Widget_Payment_Service}.
-	 *
-	 * @param WC_Order $order Order.
-	 *
-	 * @return string|null Redirect URL from Autopay.
-	 *
-	 * @throws Exception When token is missing or Autopay rejects the start request.
-	 */
-	private function process_card_widget_payment( WC_Order $order ): ?string {
-		blue_media()->get_woocommerce_logger( 'CardWidget' )->log_debug(
-			sprintf(
-				'[process_card_widget_payment] [Order ID: %d]',
-				$order->get_id()
-			),
-		);
-
-		WC()->session->set( 'bm_wc_order_id', $order->get_id() );
-		WC()->session->save_data();
-
-		$payment_token_input = $this->read_atp_card_payment_token_from_request();
-
-		if ( '' === $payment_token_input ) {
-			wc_add_notice(
-				__( 'Card payment data is missing. Please complete the card form and try again.',
-					'bm-woocommerce' ),
-				'error',
-			);
-			throw new Exception( 'autopay_card_token_empty' );
-		}
-
-		$service = new Card_Widget_Payment_Service(
-			new Blue_Media_Hash_Generator( $this ),
-			new Client(),
-			blue_media()->get_woocommerce_logger( 'CardWidget' ),
-		);
-
-		$result = $service->start_pretransaction(
-			$order,
-			$payment_token_input,
-			$this->get_price_for_api_request( $order ),
-			(string) $this->service_id,
-			$this->gateway_url,
-		);
-
-		if ( Card_Widget_Start_Result::TRANSPORT_ERROR === $result->get_type() ) {
-			wc_add_notice(
-				sprintf(
-					/* translators: %s: remote error message. */
-					__( 'Card pretransaction request failed: %s', 'bm-woocommerce' ),
-					$result->get_transport_detail()
-				),
-				'error',
-			);
-			throw new Exception( 'autopay_card_transport_error' );
-		}
-
-		if ( Card_Widget_Start_Result::REJECTED === $result->get_type() ) {
-			$reason = $result->get_gateway_reason();
-			if ( '' !== $reason ) {
-				$reason_safe = substr( wp_strip_all_tags( $reason, true ), 0, 500 );
-				wc_add_notice(
-					sprintf(
-						/* translators: %s: rejection reason from payment gateway. */
-						__( 'Card payment was rejected: %s', 'bm-woocommerce' ),
-						$reason_safe
-					),
-					'error',
-				);
-			} else {
-				wc_add_notice(
-					__( 'Card payment was rejected. Please try again.', 'bm-woocommerce' ),
-					'error',
-				);
-			}
-			throw new Exception( 'autopay_card_gateway_error' );
-		}
-
-		if ( Card_Widget_Start_Result::BAD_RESPONSE === $result->get_type() ) {
-			wc_add_notice(
-				__( 'Card payment could not be started. Please try again.', 'bm-woocommerce' ),
-				'error',
-			);
-			throw new Exception( 'autopay_card_invalid_response' );
-		}
-
-		if ( Card_Widget_Start_Result::SUCCESS !== $result->get_type() ) {
-			throw new Exception( 'autopay_card_invalid_response' );
-		}
-
-		$redirect_out = $result->get_redirect_url();
-		if ( ! $this->is_trusted_autopay_redirect_url( $redirect_out ) ) {
-			blue_media()->get_woocommerce_logger( 'CardWidget' )->log_error(
-				sprintf(
-					'[process_card_widget_payment] untrusted redirect blocked order_id=%d',
-					$order->get_id()
-				)
-			);
-			wc_add_notice(
-				__( 'Card payment could not be started. Please try again.', 'bm-woocommerce' ),
-				'error',
-			);
-			throw new Exception( 'autopay_card_untrusted_redirect' );
-		}
-
-		$order->add_meta_data( 'bm_transaction_init_params', $result->get_params_with_hash() );
-		$order->save_meta_data();
-
-		WC()->session->set( 'bm_continue_transaction_start_error', '' );
-
-		$this->update_order_status( $order, 'pending' );
-		$order->add_order_note(
-			__( 'Autopay: Card payment process started for order ID:', 'bm-woocommerce' )
-			. $order->get_id()
-		);
-
-		return $redirect_out;
 	}
 
 
@@ -1405,7 +1056,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 			$result = $this->decode_continue_transaction_response( $client->continue_transaction_request(
 				$params,
-				$this->gateway_url . Autopay_Payment_Protocol::HTTP_PAYMENT_PATH,
+				$this->gateway_url . 'payment',
 			) );
 
 			$params_log         = $params;
@@ -1416,8 +1067,8 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 					print_r( $result, true ),
 				) );
 
-			if ( isset( $result[ Autopay_Payment_Protocol::XML_LOCAL_REASON ] ) ) {
-				throw new Exception( $result[ Autopay_Payment_Protocol::XML_LOCAL_REASON ] );
+			if ( isset( $result['reason'] ) ) {
+				throw new Exception( $result['reason'] );
 			}
 
 			if ( empty( $result ) || ! is_array( $result ) ) {
@@ -1427,7 +1078,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 			WC()->session->set( 'bm_continue_transaction_start_error', '' );
 
-			$start_status = $this->get_currency_aware_option( 'wc_payment_status_on_bm_pending', 'pending' );
+			$start_status = $this->get_option( 'wc_payment_status_on_bm_pending', 'pending' );
 			$this->update_order_status( $order, $start_status );
 			$order->add_order_note( __( 'Autopay: BLIK-0 payment process started for order ID:',
 					'bm-woocommerce' ) . $order->get_id() );
@@ -1442,7 +1093,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				__( 'Payment failed.',
 					'bm-woocommerce' ) );
 
-			$new_status = $this->get_currency_aware_option( 'wc_payment_status_on_bm_failure',
+			$new_status = $this->get_option( 'wc_payment_status_on_bm_failure',
 				'failed' );
 			$this->update_order_status( $order,
 				$new_status,
@@ -1673,16 +1324,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 						$hash_from_itn );
 
 					if ( ! $is_hash_valid && ! $this->testmode ) {
-						blue_media()
-							->get_woocommerce_logger( 'bm_woocommerce_itn' )
-							->log_warning(
-								sprintf(
-								/* translators: %s: currency code resolved at the time of the fallback. */
-									'[webhook] [validate_itn_hash - production failed, attempting testmode fallback] [currency=%s]',
-									blue_media()->resolve_blue_media_currency_symbol()
-								)
-							);
-
 						$this->testmode = true;
 						$this->setup_variables();
 						$is_hash_valid  = $this->validate_itn_hash( $all_fields_itn,
@@ -1692,34 +1333,19 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 					}
 
 					if ( ! $is_hash_valid ) {
-						$known_order_id = 0;
-						if ( ! empty( $order_success_to_update ) ) {
-							$first_order    = reset( $order_success_to_update );
-							$known_order_id = $first_order instanceof WC_Order ? (int) $first_order->get_id() : 0;
-						} elseif ( ! empty( $order_pending_to_update ) ) {
-							$first_order    = reset( $order_pending_to_update );
-							$known_order_id = $first_order instanceof WC_Order ? (int) $first_order->get_id() : 0;
-						} elseif ( ! empty( $order_failure_to_update ) ) {
-							$first_order    = reset( $order_failure_to_update );
-							$known_order_id = $first_order instanceof WC_Order ? (int) $first_order->get_id() : 0;
-						}
-
 						blue_media()
 							->get_woocommerce_logger( 'bm_woocommerce_itn' )
-							->log_error(
-								sprintf(
-									'[webhook] [validate_itn_hash - not valid] [currency=%s] [order_id=%d] [fields_itn: %s] [Hash: %s]',
-									blue_media()->resolve_blue_media_currency_symbol(),
-									$known_order_id,
-									print_r( $all_fields_itn, true ),
-									$hash_from_itn
-								)
-							);
+							->log_debug(
+								sprintf( '[webhook] [validate_itn_hash - not valid] [fields_itn count: %d, keys: %s] [Hash: %s]',
+									count( $all_fields_itn ),
+									implode( ', ', array_keys( $all_fields_itn ) ),
+									$hash_from_itn,
+								) );
 
 
 						ob_start();
 						header( 'HTTP/1.0 401 Unauthorized' );
-						echo esc_html__( 'validate_itn_hash - not valid',
+						echo __( 'validate_itn_hash - not valid',
 							'bm-woocommerce' );
 						exit;
 					}
@@ -1748,7 +1374,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 							$new_status = $this->get_option( 'wc_payment_status_on_bm_success_virtual',
 								'completed' );
 						} else {
-							$new_status = $this->get_currency_aware_option( 'wc_payment_status_on_bm_success',
+							$new_status = $this->get_option( 'wc_payment_status_on_bm_success',
 								'completed' );
 						}
 
@@ -1788,7 +1414,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 						}
 						$wc_order->add_meta_data( 'autopay_itn_received',
 							'PENDING' );
-						$new_status = $this->get_currency_aware_option( 'wc_payment_status_on_bm_pending',
+						$new_status = $this->get_option( 'wc_payment_status_on_bm_pending',
 							'pending' );
 						blue_media()
 							->get_woocommerce_logger( 'bm_woocommerce_itn' )
@@ -1820,7 +1446,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 						}
 						$wc_order->add_meta_data( 'autopay_itn_received',
 							'FAILURE' );
-						$new_status = $this->get_currency_aware_option( 'wc_payment_status_on_bm_failure',
+						$new_status = $this->get_option( 'wc_payment_status_on_bm_failure',
 							'failed' );
 						blue_media()
 							->get_woocommerce_logger( 'bm_woocommerce_itn' )
@@ -1904,25 +1530,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			$this->service_id );
 		$itn_values_based_hash = $this->hash_transaction_parameters( $transactions_from_itn );
 
-		$is_valid = $hash_from_itn === $itn_values_based_hash;
-
-		// Non-secret diagnostic so support can correlate failures across currencies/test modes
-		// without exposing the private key. The "fingerprint" is a short prefix of the SHA1
-		// of the private key, which is one-way and stable per credential.
-		blue_media()
-			->get_woocommerce_logger( 'bm_woocommerce_itn' )
-			->log_debug(
-				sprintf(
-					'[validate_itn_hash] [valid=%s] [currency=%s] [testmode=%s] [service_id=%s] [private_key_fingerprint=%s]',
-					$is_valid ? 'yes' : 'no',
-					blue_media()->resolve_blue_media_currency_symbol(),
-					$this->testmode ? 'yes' : 'no',
-					(string) $this->service_id,
-					'' !== (string) $this->private_key ? substr( sha1( (string) $this->private_key ), 0, 8 ) : 'empty'
-				)
-			);
-
-		return $is_valid;
+		return $hash_from_itn === $itn_values_based_hash;
 	}
 
 	/**
@@ -2227,9 +1835,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		$group_arr = $this->remove_google_pay_channel_when_terms_disabled( $group_arr );
 		$group_arr = $this->apply_special_gateway_descriptions( $group_arr );
 
-		blue_media()->get_woocommerce_logger('bm_debug_group_arr')->log_debug(
-			sprintf( '$group_arr: %s', print_r($group_arr, true) )
-		);
 
 		$payment_names = [];
 		foreach ( $group_arr as $group ) {
@@ -2653,7 +2258,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		if ( $this->should_offer_google_pay_on_checkout() && $this->is_inline_gpay_enabled() ) {
 			$gpay_html = $this->get_gpay_inline_template();
 		}
-		$card_widget = $this->get_card_widget_inline_template();
 
 		foreach ( $groups as $group ) {
 			if ( ! $group instanceof View_Model_Group ) {
@@ -2671,10 +2275,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 				if ( '' !== $gpay_html && (int) $gateway->getGatewayID() === self::GPAY_CHANNEL ) {
 					$gateway->setDescription( $gpay_html );
-				}
-
-				if ( '' !== $card_widget && (int) $gateway->getGatewayID() === self::CARD_CHANNEL ) {
-					$gateway->setDescription( $card_widget );
 				}
 			}
 		}
@@ -2737,30 +2337,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 
 		return $this->gpay_inline_template;
-	}
-
-	/**
-	 * Return Card Widget inline template.
-	 *
-	 * @return string
-	 */
-	private function get_card_widget_inline_template(): string {
-		if ( null === $this->card_widget_inline_template ) {
-			ob_start();
-			blue_media()->locate_template( 'card_widget.php', [
-				'card_widget_data' => [
-					'service_id'   => $this->service_id,
-					'is_test'      => $this->testmode,
-					'amount'       => WC()->cart ? (float) WC()->cart->get_total( 'edit' ) : 0,
-					'currency'     => get_woocommerce_currency(),
-					'language'     => substr( get_locale(), 0, 2 ),
-					'cards_domain' => Autopay_Urls::get_cards_domain($this->testmode),
-				],
-			] );
-			$this->card_widget_inline_template = (string) ob_get_clean();
-		}
-
-		return $this->card_widget_inline_template;
 	}
 
 	/**

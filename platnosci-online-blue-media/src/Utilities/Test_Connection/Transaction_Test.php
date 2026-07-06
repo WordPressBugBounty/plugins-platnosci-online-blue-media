@@ -4,7 +4,6 @@ namespace Ilabs\BM_Woocommerce\Utilities\Test_Connection;
 
 use Exception;
 use Ilabs\BM_Woocommerce\Data\Remote\Blue_Media\Client;
-use Ilabs\BM_Woocommerce\Gateway\Autopay_Payment_Protocol;
 use WC_Order;
 
 class Transaction_Test {
@@ -15,7 +14,7 @@ class Transaction_Test {
 	public function initialize( WC_Order $order ) {
 		$bm_gateway              = blue_media()->get_blue_media_gateway();
 		$client                  = new Client();
-		$gateway_payment_url      = $bm_gateway->get_gateway_url() . Autopay_Payment_Protocol::HTTP_PAYMENT_PATH;
+		$gateway_payment_url      = $bm_gateway->get_gateway_url() . 'payment';
 
 		blue_media()->get_woocommerce_logger()->log_debug(
 			sprintf( '[Transaction_Test] [initialize] [Order ID: %s] [Gateway payment url: %s] [CustomerEmail: %s]',
@@ -71,8 +70,8 @@ class Transaction_Test {
 			)
 		);
 
-		if ( isset( $result[ Autopay_Payment_Protocol::XML_LOCAL_REASON ] ) ) {
-			throw new Exception( $result[ Autopay_Payment_Protocol::XML_LOCAL_REASON ] );
+		if ( isset( $result['reason'] ) ) {
+			throw new Exception( $result['reason'] );
 		}
 
 		if ( empty( $result ) || ! is_array( $result ) ) {

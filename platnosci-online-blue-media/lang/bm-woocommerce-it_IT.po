@@ -1253,22 +1253,3 @@ msgstr "reindirizza al pagamento Google Pay"
 #: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:398
 msgid "pay with Google Pay directly on your store"
 msgstr "paga con Google Pay direttamente nel tuo negozio"
-
-#: templates/card_widget.php:21
-#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:277
-msgid "Enter your card details in the form above to place the order."
-msgstr "Inserisci i dati della carta nel modulo sopra per effettuare l'ordine."
-
-#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:279
-msgid "Complete the card form before placing the order."
-msgstr "Completa il modulo della carta prima di effettuare l'ordine."
-
-#: templates/card_widget.php:46
-#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:281
-msgid "Card payment form"
-msgstr "Modulo di pagamento con carta"
-
-#: src/Gateway/Blue_Media_Gateway.php:790
-#: src/Gateway/Blue_Media_Gateway.php:1210
-msgid "Card payment data is missing. Please complete the card form and try again."
-msgstr "Mancano i dati del pagamento con carta. Completa il modulo della carta e riprova."

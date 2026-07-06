@@ -27,7 +27,6 @@ use Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway;
 use Ilabs\BM_Woocommerce\Integration\Funnel_Builder\Funnel_Builder_Integration;
 use Ilabs\BM_Woocommerce\Integration\Woocommerce_Blocks\WC_Gateway_Autopay_Blocks_Support;
 use Ilabs\BM_Woocommerce\Utilities\Test_Connection\Strings;
-use Ilabs\BM_Woocommerce\Helpers\Autopay_Urls;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Abstract_Ilabs_Plugin;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Alerts;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Event_Chain\Event\Wc_Add_To_Cart;
@@ -356,41 +355,6 @@ class Plugin extends Abstract_Ilabs_Plugin {
 					$pixel_js_src,
 					[],
 					$this->get_plugin_version()
-				);
-			}
-		}
-
-		// Load checkout payment provider scripts.
-		if ( function_exists( 'is_checkout' ) && is_checkout() ) {
-			$is_block_checkout_page = false;
-			if ( function_exists( 'has_block' ) ) {
-				$post = get_post();
-				if ( $post instanceof \WP_Post ) {
-					$is_block_checkout_page = has_block( 'woocommerce/checkout', $post );
-				}
-			}
-
-			// Google Pay API should be loaded in the header to initialize PaymentsClient.
-			wp_enqueue_script(
-				'autopay_google_pay',
-				'https://pay.google.com/gp/p/js/pay.js',
-				[],
-				null,
-				false
-			);
-
-			$is_test      = 'yes' === $this->get_autopay_option( 'testmode', 'no' );
-			$cards_domain = Autopay_Urls::get_cards_domain( $is_test );
-
-			// Card widget script: classic checkout enqueues here; Checkout Block uses WC_Gateway_Autopay_Blocks_Support
-			// so `autopay_card_widget` is registered as a dependency of `autopay-payments-blocks` and loads first.
-			if ( ! $is_block_checkout_page ) {
-				wp_enqueue_script(
-					'autopay_card_widget',
-					$cards_domain . '/widget-new/widget-communication.min.js',
-					[ 'jquery' ],
-					null,
-					true
 				);
 			}
 		}
