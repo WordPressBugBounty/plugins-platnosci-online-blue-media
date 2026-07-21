@@ -1,9 +1,15 @@
 *** Autopay Changelog ***
 
+### [5.0.0] 2026-07-06 ###
+- Added: card payments through the Autopay widget on classic and block checkout.
+- Fixed: PHP Deprecated notice on PHP 8.4+ during GA4 event handling for Google Pay payments.
+- Updated: isolated GA4 Measurement Protocol library to version 0.1.6.
+- Updated: isolated Guzzle dependency to version 7.12.3 to resolve security advisories.
+
 ### [4.9.3] 2026-06-29 ###
-* Improved: admin panel typography using locally hosted Open Sans and Roboto Condensed fonts aligned with the new design system.
-* Fixed: GA4 transaction attribution by linking purchase events to the user’s session data.
-* Fixed: test connection endpoint security, and HMAC typing and signature comparison.
+- Improved: admin panel typography using locally hosted Open Sans and Roboto Condensed fonts aligned with the new design system.
+- Fixed: GA4 transaction attribution by linking purchase events to the user’s session data.
+- Fixed: test connection endpoint security, and HMAC typing and signature comparison.
 
 ### [4.9.2] 2026-06-22 ###
 - Added: a new setting to choose how Google Pay works — redirect to the Google Pay website or pay directly in your store

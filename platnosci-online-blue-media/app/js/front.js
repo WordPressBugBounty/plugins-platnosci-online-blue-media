@@ -96,6 +96,19 @@ function isGpaySelected() {
   return false;
 }
 
+/**
+ * Gateway 1500 + classic iframe card widget: block "Place order" until the widget reports valid fields.
+ * Set by templates/card_widget.php as window.__bmAutopayCardWidgetValid (true when Autopay iframe is valid).
+ */
+function isAutopayCardWidgetChannelBlockingPlaceOrder() {
+  const pm = document.querySelector('input[name="payment_method"]:checked');
+  const ch = document.querySelector('input[name="bm-payment-channel"]:checked');
+  if (!pm || pm.value !== 'bluemedia' || !ch || String(ch.value) !== '1500') {
+    return false;
+  }
+  return window.__bmAutopayCardWidgetValid !== true;
+}
+
 function BmHideNewOrderButton() {
 
   const placeOrderBtn = document.querySelector('#place_order');
@@ -321,6 +334,10 @@ function BmActivateNewOrderButton() {
   if (isGpaySelected()) {
     return
   }
+  if (isAutopayCardWidgetChannelBlockingPlaceOrder()) {
+    BmDeactivateNewOrderButton();
+    return;
+  }
   const placeOrderBtn = document.querySelector('#place_order');
   if (placeOrderBtn) {
     placeOrderBtn.style.setProperty('display', '', 'important');
@@ -338,3 +355,6 @@ function BmSelectGroupedLi() {
 function BmDeselectGroupedLi() {
   jQuery('.bm-payment-channel-group-item').removeClass('bm-selected-group')
 }
+
+/** Exposed for templates/card_widget.php (strict IIFE); safe no-op if missing. */
+window.checkAndUpdateButton = checkAndUpdateButton;

@@ -6,6 +6,15 @@ use Ilabs\BM_Woocommerce\Controller\Payment_Status_Controller;
 $generic_error_message = __( 'Payment failed.',
 	'bm-woocommerce' );
 
+$bm_blik0_json_flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
+if ( defined( 'JSON_INVALID_UTF8_SUBSTITUTE' ) ) {
+	$bm_blik0_json_flags |= JSON_INVALID_UTF8_SUBSTITUTE;
+}
+$bm_blik0_generic_error_json = wp_json_encode( $generic_error_message, $bm_blik0_json_flags );
+if ( false === $bm_blik0_generic_error_json ) {
+	$bm_blik0_generic_error_json = '"Payment failed."';
+}
+
 ?>
 <div class="bm-blik-overlay">
 	<p><span class="bm-blik-overlay-status" id="bm-blik-overlay-status"></span>
@@ -46,32 +55,23 @@ $generic_error_message = __( 'Payment failed.',
 	var autopayBlik0TimePassed = false;
 	var autopayBlik0TimerRunning = false;
 
-	async function autopayBlik0Countdown() {
+	function autopayBlik0Countdown() {
 		if (autopayBlik0TimePassed || autopayBlik0TimerRunning) {
 			return;
 		}
 		autopayBlik0TimerRunning = true;
-
-		await new Promise(resolve => setTimeout(resolve, 120000));
-
-		autopayBlik0TimePassed = true;
-		autopayBlik0TimerRunning = false;
-
-
-
-	}
-
-
-	function bm_sleep(ms) {
-		return new Promise(resolve => setTimeout(resolve, ms));
+		setTimeout(function () {
+			autopayBlik0TimePassed = true;
+			autopayBlik0TimerRunning = false;
+		}, 120000);
 	}
 
 
 	jQuery(document).ready(function ($) {
-		const originalTriggerHandler = $.fn.triggerHandler;
+		var originalTriggerHandler = $.fn.triggerHandler;
 
-		const $blik0Radio = $('#bm-gateway-id-509');
-		const $bmBLikCode = $('#bluemedia_blik_code');
+		var $blik0Radio = $('#bm-gateway-id-509');
+		var $bmBLikCode = $('#bluemedia_blik_code');
 
 		$bmBLikCode.on('keydown', function (e) {
 			if ($.inArray(e.keyCode, [8, 9, 13, 27, 46, 37, 38, 39, 40]) !== -1) {
@@ -161,7 +161,7 @@ $generic_error_message = __( 'Payment failed.',
 
 								return false
 							}
-							blueMediaUpdateStatus(<?php echo wp_json_encode( $generic_error_message ); ?>, 'error')
+							blueMediaUpdateStatus(<?php echo $bm_blik0_generic_error_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>, 'error')
 							return false
 						}
 
@@ -173,11 +173,12 @@ $generic_error_message = __( 'Payment failed.',
 							) {
 
 								if (autopayBlik0TimePassed) {
-									let urlObj = new URL(response.order_received_url);
-									urlObj.searchParams.set('blik0_timeout', '1');
-									blueMediaUpdateStatus(<?php echo wp_json_encode( $generic_error_message ); ?>, 'error')
+									var baseUrl = response.order_received_url;
+									var sepBlik = baseUrl.indexOf('?') >= 0 ? '&' : '?';
+									var blikTimeoutUrl = baseUrl + sepBlik + 'blik0_timeout=1';
+									blueMediaUpdateStatus(<?php echo $bm_blik0_generic_error_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>, 'error')
 									setTimeout(function () {
-										window.location.href = urlObj.toString();
+										window.location.href = blikTimeoutUrl;
 									}, 3000)
 
 								} else {
@@ -191,7 +192,7 @@ $generic_error_message = __( 'Payment failed.',
 
 								return false
 							}
-							blueMediaUpdateStatus(<?php echo wp_json_encode( $generic_error_message ); ?> + JSON.stringify(response), 'error')
+							blueMediaUpdateStatus(<?php echo $bm_blik0_generic_error_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> + JSON.stringify(response), 'error')
 							return false
 						}
 
@@ -206,23 +207,23 @@ $generic_error_message = __( 'Payment failed.',
 								return false
 							}
 
-							blueMediaUpdateStatus(<?php echo wp_json_encode( $generic_error_message ); ?> + JSON.stringify(response), 'error')
+							blueMediaUpdateStatus(<?php echo $bm_blik0_generic_error_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> + JSON.stringify(response), 'error')
 
 							return false
 
 						}
 					}
-					blueMediaUpdateStatus(<?php echo wp_json_encode( $generic_error_message ); ?> + JSON.stringify(response), 'error')
+					blueMediaUpdateStatus(<?php echo $bm_blik0_generic_error_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> + JSON.stringify(response), 'error')
 
 					return false
 				} else {
-					blueMediaUpdateStatus(<?php echo wp_json_encode( $generic_error_message ); ?> + JSON.stringify(response), 'error')
+					blueMediaUpdateStatus(<?php echo $bm_blik0_generic_error_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> + JSON.stringify(response), 'error')
 				}
 
 
 			}).fail(function (jqXHR, textStatus, errorThrown) {
 				jQuery('.bluemedia-loader').hide()
-				blueMediaUpdateStatus(<?php echo wp_json_encode( $generic_error_message ); ?> + jqXHR.status, 'error');
+				blueMediaUpdateStatus(<?php echo $bm_blik0_generic_error_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> + jqXHR.status, 'error');
 
 				return false
 			});
@@ -235,7 +236,7 @@ $generic_error_message = __( 'Payment failed.',
 			$('.bm-blik-overlay').show();
 
 			//$targetWrapper = $('.bluemedia-success-wrapper');
-			$targetSpan = $('#bm-blik-overlay-status');
+			var $targetSpan = $('#bm-blik-overlay-status');
 
 			if (status === '<?php echo Payment_Status_Response_Value_Object::STATUS_SUCCESS ?>') {
 				$targetSpan.addClass('bm-blik-overlay-status--success').removeClass('bm-blik-overlay-status--process bm-blik-overlay-status--error');

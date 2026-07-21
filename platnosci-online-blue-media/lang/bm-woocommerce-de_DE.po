@@ -627,6 +627,25 @@ msgstr "Gib den BLIK-Code ein."
 msgid "You'll find it in your banking app."
 msgstr "Du findest ihn in deiner Banking-App."
 
+#: templates/card_widget.php:21
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:277
+msgid "Enter your card details in the form above to place the order."
+msgstr "Geben Sie Ihre Kartendaten im Formular oben ein, um die Bestellung aufzugeben."
+
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:279
+msgid "Complete the card form before placing the order."
+msgstr "Füllen Sie das Kartenformular aus, bevor Sie die Bestellung aufgeben."
+
+#: templates/card_widget.php:46
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:281
+msgid "Card payment form"
+msgstr "Karten-Zahlungsformular"
+
+#: src/Gateway/Blue_Media_Gateway.php:790
+#: src/Gateway/Blue_Media_Gateway.php:1210
+msgid "Card payment data is missing. Please complete the card form and try again."
+msgstr "Kartenzahlungsdaten fehlen. Bitte füllen Sie das Kartenformular aus und versuchen Sie es erneut."
+
 #: src/Plugin.php:150
 msgid "Unpaid order cancelled - time limit reached."
 msgstr "Unbezahlte Bestellung storniert – Zeitlimit erreicht."
