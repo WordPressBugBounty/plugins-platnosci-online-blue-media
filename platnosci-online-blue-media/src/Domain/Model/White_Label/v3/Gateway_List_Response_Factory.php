@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Model\White_Label\v3;
 
+defined( 'ABSPATH' ) || exit;
+
 class Gateway_List_Response_Factory {
 
 	public function create(array $data): Gateway_List_Response {

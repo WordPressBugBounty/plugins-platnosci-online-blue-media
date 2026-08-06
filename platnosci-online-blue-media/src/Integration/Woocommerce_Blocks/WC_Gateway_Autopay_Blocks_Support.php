@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Integration\Woocommerce_Blocks;
 
+defined( 'ABSPATH' ) || exit;
+
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
 use Exception;
 use Ilabs\BM_Woocommerce\Controller\Payment_Status_Controller;
@@ -101,7 +103,7 @@ final class WC_Gateway_Autopay_Blocks_Support extends
 				'autopay-google-pay',
 				'https://pay.google.com/gp/p/js/pay.js',
 				[],
-				null,
+				null, // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- External Google Pay CDN script; version is managed by Google and must not be pinned.
 				true,
 			);
 
@@ -124,7 +126,7 @@ final class WC_Gateway_Autopay_Blocks_Support extends
 				'autopay_card_widget',
 				$cards_domain . '/widget-new/widget-communication.min.js',
 				[ 'jquery' ],
-				null,
+				null, // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- External Autopay card widget CDN script; version is managed by the Autopay payment infrastructure.
 				true
 			);
 			$script_dependencies[] = 'autopay_card_widget';
@@ -141,6 +143,8 @@ final class WC_Gateway_Autopay_Blocks_Support extends
 		wp_enqueue_style(
 			'autopay-payments-blocks-css',
 			$script_url_css,
+			[],
+			$script_asset['version'],
 		);
 
 		if ( function_exists( 'wp_set_script_translations' ) ) {
@@ -201,7 +205,7 @@ final class WC_Gateway_Autopay_Blocks_Support extends
 
 		return [
 			'title'                    => $this->gateway->get_title(),
-			'description'              => $this->gateway->get_method_description(),
+			'description'              => $this->gateway->get_description(),
 			'icon_src'                 => $this->gateway->get_checkout_logo_banner_url(),
 			'whitelabel'               => $is_whitelabel,
 			'offer_google_pay_on_checkout' => $this->should_offer_google_pay_for_blocks(),
@@ -212,7 +216,7 @@ final class WC_Gateway_Autopay_Blocks_Support extends
 					'with_redirect'
 				),
 			'place_order_button_label' => __( 'Pay with Autopay',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'supports'                 => array_filter( $this->gateway->supports,
 				[ $this->gateway, 'supports' ] ),
 			'channels'                 => $channels_mapped_for_blocks,
@@ -241,7 +245,7 @@ final class WC_Gateway_Autopay_Blocks_Support extends
 			'whitelabel'                   => false,
 			'offer_google_pay_on_checkout' => false,
 			'place_order_button_label'     => __( 'Pay with Autopay',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'supports'                     => [],
 			'channels'                     => [],
 			'messages'                     => $this->get_payment_method_messages(),
@@ -262,27 +266,27 @@ final class WC_Gateway_Autopay_Blocks_Support extends
 	private function get_payment_method_messages(): array {
 		return [
 			'payment_failed'                          => __( 'Payment failed',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'no_payment_channel_selected'             => __( 'No payment channel selected.',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'enter_the_blik_code'                     => __( 'Enter the BLIK code.',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'the_code_has_6_digits_note'              => __( "You'll find it in your banking app.",
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'code_is_invalid_code_should_be_6_digits' => __( 'The code you provided is invalid. Code should be 6 digits.',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'accept_terms'                            => __( 'Please read and accept the',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'terms_and_conditions'                    => __( 'Terms & Conditions',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'pay_with_google_pay'                     => __( 'Pay with Google Pay',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'card_widget_wait_message'                => __( 'Enter your card details in the form above to place the order.',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'card_widget_fill_message'                => __( 'Complete the card form before placing the order.',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'card_payment_form_title'                 => __( 'Card payment form',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 		];
 	}
 

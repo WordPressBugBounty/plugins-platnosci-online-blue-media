@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Service\Currency\Value_Object;
 
+defined( 'ABSPATH' ) || exit;
+
 use Ilabs\BM_Woocommerce\Domain\Service\Currency\Interfaces\Currency_Interface;
 
 class RON implements Currency_Interface {
@@ -11,7 +13,7 @@ class RON implements Currency_Interface {
 	}
 
 	public function get_name(): string {
-		return __( 'Romanian leu', 'bm-woocommerce' );
+		return __( 'Romanian leu', 'platnosci-online-blue-media' );
 	}
 
 	public function get_symbol(): string {

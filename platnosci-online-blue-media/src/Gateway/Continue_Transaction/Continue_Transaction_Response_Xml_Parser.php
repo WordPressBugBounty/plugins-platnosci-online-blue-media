@@ -10,6 +10,8 @@
 
 namespace Ilabs\BM_Woocommerce\Gateway\Continue_Transaction;
 
+defined( 'ABSPATH' ) || exit;
+
 use Ilabs\BM_Woocommerce\Gateway\Autopay_Payment_Protocol;
 
 /**

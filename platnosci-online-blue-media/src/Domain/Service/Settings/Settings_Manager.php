@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Service\Settings;
 
+defined( 'ABSPATH' ) || exit;
+
 use Exception;
 use Ilabs\BM_Woocommerce\Domain\Service\Custom_Styles\Css_Editor;
 use Ilabs\BM_Woocommerce\Features;
@@ -57,11 +59,11 @@ class Settings_Manager {
 				if ( isset( $_GET['bmtab'] ) && $_GET['bmtab'] === 'help' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only admin settings context
 					add_action( 'woocommerce_settings_checkout',
 						function () {
-							$GLOBALS['hide_save_button'] = true;
+							$GLOBALS['hide_save_button'] = true; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- WooCommerce admin convention for hiding the default save button.
 						} );
 					add_action( 'woocommerce_after_settings_checkout',
 						function () {
-							$GLOBALS['hide_save_button'] = false;
+							$GLOBALS['hide_save_button'] = false; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- WooCommerce admin convention for hiding the default save button.
 						} );
 				}
 			} )
@@ -73,11 +75,11 @@ class Settings_Manager {
 					if ( get_locale() === 'pl_PL' ) {
 						add_action( 'woocommerce_settings_checkout',
 							function () {
-								$GLOBALS['hide_save_button'] = true;
+								$GLOBALS['hide_save_button'] = true; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- WooCommerce admin convention for hiding the default save button.
 							} );
 						add_action( 'woocommerce_after_settings_checkout',
 							function () {
-								$GLOBALS['hide_save_button'] = false;
+								$GLOBALS['hide_save_button'] = false; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- WooCommerce admin convention for hiding the default save button.
 							} );
 
 						$vas_content = ( new Vas() )->get_vas_content();
@@ -86,7 +88,7 @@ class Settings_Manager {
 								'vas_content' => $vas_content,
 								'title'       => $tabs->get_active_tab_name(),
 								'subtitle'    => __( 'Use the services of official and verified Autopay partners!',
-									'bm-woocommerce' ),
+									'platnosci-online-blue-media' ),
 							] );
 					}
 				}
@@ -137,18 +139,18 @@ class Settings_Manager {
 			case Settings_Tabs::AUTHENTICATION_TAB_ID:
 				$section_title    = $tabs->get_active_tab_name();
 				$section_subtitle = __( 'Turn on sandbox mode or accept real payments.',
-					'bm-woocommerce' );
+					'platnosci-online-blue-media' );
 				break;
 
 			case Settings_Tabs::ADVERTISING_SERVICES_TAB_ID:
 				$section_title    = $tabs->get_active_tab_name();
 				$section_subtitle = __( "The Ad services is a comprehensive solution that enables merchants to effectively promote their products directly from the shop's administration panel. The service is fully integrated with WooCommerce which allows the automatic creation of advertising campaigns tailored to the shop's product range, customers' purchase history and analysis of their preferences. This option is available only for stores with a single active currency.",
-					'bm-woocommerce' );
+					'platnosci-online-blue-media' );
 				break;
 			case Settings_Tabs::PAYMENT_SETTINGS_TAB_ID:
 				$section_title    = $tabs->get_active_tab_name();
 				$section_subtitle = __( 'Select the payment methods you wish to use.',
-					'bm-woocommerce' );
+					'platnosci-online-blue-media' );
 				break;
 			case Settings_Tabs::VAS_TAB_ID:
 				$section_title    = '';
@@ -157,17 +159,17 @@ class Settings_Manager {
 			case Settings_Tabs::ANALYTICS_TAB_ID:
 				$section_title    = $tabs->get_active_tab_name();
 				$section_subtitle = __( 'The Autopay plugin allows you to send payment information to Google Analytics. Among other things, this makes it possible to track sales conversions within the Google Analytics platform. Communication with Google Analytics is an optional feature of the plug-in.',
-					'bm-woocommerce' );
+					'platnosci-online-blue-media' );
 				break;
 			case Settings_Tabs::HELP_TAB_ID:
 				$section_title    = $tabs->get_active_tab_name();
 				$section_subtitle = __( 'Need support? Discover the content library that makes installing and configuring Autopay solutions a piece of cake.',
-					'bm-woocommerce' );
+					'platnosci-online-blue-media' );
 				break;
 			case Settings_Tabs::ADVANCED_SETTINGS_TAB_ID:
 				$section_title    = $tabs->get_active_tab_name();
 				$section_subtitle = __( 'Advanced settings intended for developers. When making changes in this section, please refer to the technical specifications to know how it will affect plugin.',
-					'bm-woocommerce' );
+					'platnosci-online-blue-media' );
 				break;
 			default:
 				$section_title    = $tabs->get_active_tab_name();
@@ -176,10 +178,10 @@ class Settings_Manager {
 
 		blue_media()->locate_template( 'settings.php',
 			[
-				'settings_html' => $settings_html,
-				'title'         => $section_title,
-				'subtitle'      => $section_subtitle,
-				'tab_id'        => $active_tab_id,
+				'settings_html'  => $settings_html,
+				'title'          => $section_title,
+				'subtitle'       => $section_subtitle,
+				'autopay_tab_id' => $active_tab_id,
 			] );
 	}
 

@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Gateway\Webhook;
 
+defined( 'ABSPATH' ) || exit;
+
 use Exception;
 use Ilabs\BM_Woocommerce\Domain\Service\Versioning\Versioning;
 use WC_Order;
@@ -26,10 +28,10 @@ class Order_Remote_Status_Legacy_Manager {
 
 		blue_media()->get_woocommerce_logger( self::$debug_id )->log_debug(
 			sprintf( '[get_itn_status_from_order_meta] [%s]',
-				print_r( [
+				wp_json_encode( [
 					'status'   => $status,
 					'order_id' => $order->get_id(),
-				], true ),
+				] ),
 			) );
 
 

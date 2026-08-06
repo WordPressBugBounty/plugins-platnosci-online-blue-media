@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Model\White_Label\v3;
 
+defined( 'ABSPATH' ) || exit;
+
 class Gateway {
 	/**
 	 * @var int
@@ -52,6 +54,14 @@ class Gateway {
 	 * @var string|null
 	 */
 	private $descriptionUrl;
+
+	/**
+	 * Plugin-generated HTML block rendered after the channel <li> item (e.g. Card Widget, BLIK inline, GPay inline).
+	 * Must never contain user input.
+	 *
+	 * @var string|null
+	 */
+	private $inlineHtml;
 
 	/**
 	 * @var string
@@ -171,6 +181,14 @@ class Gateway {
 
 	public function setDescriptionUrl(?string $descriptionUrl): void {
 		$this->descriptionUrl = $descriptionUrl;
+	}
+
+	public function getInlineHtml(): ?string {
+		return $this->inlineHtml;
+	}
+
+	public function setInlineHtml(?string $inlineHtml): void {
+		$this->inlineHtml = $inlineHtml;
 	}
 
 	public function getAvailableFor(): string {

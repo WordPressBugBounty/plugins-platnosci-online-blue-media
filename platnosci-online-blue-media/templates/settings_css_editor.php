@@ -10,20 +10,21 @@ defined( 'ABSPATH' ) || exit;
 ?>
 
 <div class="bm-settings-css-editor">
-	<h3><?php _e( 'Use own CSS styles', 'bm-woocommerce' ) ?></h3>
+	<h3><?php esc_html_e( 'Use own CSS styles', 'platnosci-online-blue-media' ) ?></h3>
 
 	<div>
+		<?php wp_nonce_field( 'autopay_css_editor_nonce', 'autopay_css_editor_nonce_field' ); ?>
 		<?php
 		$editor->display_editor();
 		?>
 
-		<p><?php _e( 'Use this feature carefully. The CSS code you enter may cause unexpected visual changes to your Checkout page.',
-				'bm-woocommerce' ) ?></p>
+		<p><?php esc_html_e( 'Use this feature carefully. The CSS code you enter may cause unexpected visual changes to your Checkout page.',
+				'platnosci-online-blue-media' ) ?></p>
 
 	</div>
 
 	<p class="submit">
-		<input type="submit" value="<?php _e( 'Save changes',
-			'bm-woocommerce' ) ?>" class="button-primary">
+		<input type="submit" value="<?php esc_attr_e( 'Save changes',
+			'platnosci-online-blue-media' ) ?>" class="button-primary">
 	</p>
 </div>

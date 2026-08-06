@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Service\Legacy;
 
+defined( 'ABSPATH' ) || exit;
+
 class Importer {
 
 	const LEGACY_ENV_PRODUCTION = 1;
@@ -25,6 +27,12 @@ class Importer {
 	}
 
 	public function handle_import() {
+		if ( ! isset( $_POST['autopay_import_nonce_field'] )
+		    || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['autopay_import_nonce_field'] ) ), 'autopay_import_nonce' )
+		    || ! current_user_can( 'manage_woocommerce' ) ) {
+			return;
+		}
+
 		if ( isset( $_POST['autopay_import_legacy_settings'] ) && '1' === $_POST['autopay_import_legacy_settings'] ) {
 
 
@@ -36,7 +44,7 @@ class Importer {
 				blue_media()
 					->alerts()
 					->add_notice( __( 'Autopay: No values found for import',
-						'bm-woocommerce' ) );
+						'platnosci-online-blue-media' ) );
 
 				return;
 			}
@@ -59,7 +67,7 @@ class Importer {
 			blue_media()
 				->alerts()
 				->add_notice( __( 'Autopay: Import completed',
-					'bm-woocommerce' ) );
+					'platnosci-online-blue-media' ) );
 		}
 	}
 

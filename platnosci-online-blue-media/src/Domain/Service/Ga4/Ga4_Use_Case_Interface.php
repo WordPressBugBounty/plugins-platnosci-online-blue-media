@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Service\Ga4;
 
+defined( 'ABSPATH' ) || exit;
+
 use Ilabs\BM_Woocommerce\Data\Remote\Ga4\Dto\Payload_DTO;
 
 interface Ga4_Use_Case_Interface {

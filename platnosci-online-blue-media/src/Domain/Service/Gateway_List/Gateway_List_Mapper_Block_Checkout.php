@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Service\Gateway_List;
 
+defined( 'ABSPATH' ) || exit;
+
 use Exception;
 use Ilabs\BM_Woocommerce\Domain\Model\White_Label\Config;
 use Ilabs\BM_Woocommerce\Domain\Model\White_Label\Expandable_Group;
@@ -62,7 +64,7 @@ class Gateway_List_Mapper_Block_Checkout {
 				'label'         => $group->getTitle(),
 				'slug'          => sanitize_title( $group->getTitle() ),
 				'is_expandable' => true,
-				'key'           => 'bm_channnel_group_' . rand( 1, 1000 ),
+				'key'           => 'bm_channnel_group_' . wp_rand( 1, 1000 ),
 				'value'         => 'test',
 				'name'          => 'bm-payment-channel-group',
 				'icon'          => $group->getIconUrl(),
@@ -389,7 +391,7 @@ class Gateway_List_Mapper_Block_Checkout {
 					sanitize_title( $config_item['name'] ),
 					$this->get_checkout_group_logo_url(),
 					__( 'You will be redirected to the page of the selected bank.',
-						'bm-woocommerce'
+						'platnosci-online-blue-media'
 					)
 				);
 

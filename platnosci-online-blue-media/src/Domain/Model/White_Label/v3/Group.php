@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Model\White_Label\v3;
 
+defined( 'ABSPATH' ) || exit;
+
 class Group {
 	/**
 	 * @var string

@@ -10,6 +10,8 @@
 
 namespace Ilabs\BM_Woocommerce\Gateway\Card_Widget;
 
+defined( 'ABSPATH' ) || exit;
+
 use Ilabs\BM_Woocommerce\Data\Remote\Blue_Media\Client;
 use Ilabs\BM_Woocommerce\Gateway\Autopay_Payment_Protocol;
 use Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway;

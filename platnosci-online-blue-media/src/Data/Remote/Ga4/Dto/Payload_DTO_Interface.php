@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Data\Remote\Ga4\Dto;
 
+defined( 'ABSPATH' ) || exit;
+
 interface Payload_DTO_Interface {
 	public function get_value(): ?float;
 	public function get_currency_symbol(): string;

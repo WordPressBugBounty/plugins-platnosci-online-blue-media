@@ -12,5 +12,5 @@ defined( 'ABSPATH' ) || exit;
 ?>
 
 <span <?php post_class( [ 'autopay-badge', 'autopay-badge-' . $type, $class ],
-	null ); ?>><?php esc_html_e( $status ); ?>
+	null ); ?>><?php echo esc_html( $status ); ?>
 </span>

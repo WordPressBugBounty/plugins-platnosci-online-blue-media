@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Utilities\Test_Connection;
 
+defined( 'ABSPATH' ) || exit;
+
 interface Response_Interface {
 
 	const STATUS_CONTINUE = 'continue';

@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Utilities\Test_Connection;
 
+defined( 'ABSPATH' ) || exit;
+
 use Exception;
 use Ilabs\BM_Woocommerce\Domain\Service\Currency\Value_Object\PLN;
 
@@ -98,7 +100,7 @@ class Auditor {
 	}
 
 	public static function create_new(): Auditor {
-		$unique      = md5( microtime() . rand() );
+		$unique      = md5( microtime() . wp_rand() );
 		$id          = substr( $unique, 0, 10 );
 		$obj         = new self( $id );
 		$obj->status = $obj->build_status();
@@ -237,13 +239,13 @@ class Auditor {
 	private function get_stage_name( string $stage_id ): string {
 		$strings = [
 			'transaction'           => __( "Transaction testing",
-				"bm-woocommerce" ),
+				"platnosci-online-blue-media" ),
 			'autopay_configuration' => __( "Autopay configuration testing",
-				"bm-woocommerce" ),
+				"platnosci-online-blue-media" ),
 			'server'                => __( "Server configuration testing",
-				"bm-woocommerce" ),
+				"platnosci-online-blue-media" ),
 			'wordpress'             => __( "Wordpress configuration testing",
-				"bm-woocommerce" ),
+				"platnosci-online-blue-media" ),
 		];
 
 		if ( isset( $strings[ $stage_id ] ) ) {
@@ -251,7 +253,7 @@ class Auditor {
 		}
 
 		return __( "Server configuration testing",
-			"bm-woocommerce" );
+			"platnosci-online-blue-media" );
 	}
 
 
@@ -261,16 +263,18 @@ class Auditor {
 			return new Log_Entry(
 				Log_Entry::LEVEL_CRITICAL,
 				Log_Entry::get_header_critical(),
+				// translators: %s is the detected PHP version number.
 				sprintf( __( "PHP version %s is below the minimum required version 7.4. Please update your PHP installation.",
-					"bm-woocommerce" ),
+					"platnosci-online-blue-media" ),
 					$php_version )
 			);
 		} elseif ( version_compare( $php_version, '8.5', '>=' ) ) {
 			return new Log_Entry(
 				Log_Entry::LEVEL_WARNING,
 				Log_Entry::get_header_warning(),
+				// translators: %s is the detected PHP version number.
 				sprintf( __( "PHP version %s is higher than 8.4. Some Wordpress configurations may experience compatibility issues.",
-					"bm-woocommerce" ),
+					"platnosci-online-blue-media" ),
 					$php_version )
 			);
 		} else {
@@ -295,8 +299,9 @@ class Auditor {
 			return new Log_Entry(
 				Log_Entry::LEVEL_CRITICAL,
 				Log_Entry::get_header_critical(),
+				// translators: %s is a comma-separated list of missing PHP extension names.
 				sprintf( __( "Missing required PHP extensions: %s. Please install them.",
-					"bm-woocommerce" ),
+					"platnosci-online-blue-media" ),
 					implode( ', ',
 						$missing ) ) );
 
@@ -311,7 +316,7 @@ class Auditor {
 				Log_Entry::LEVEL_CRITICAL,
 				Log_Entry::get_header_critical(),
 				__( "HTTPS is not enabled. Please secure your site with an SSL certificate.",
-					"bm-woocommerce" )
+					"platnosci-online-blue-media" )
 			);
 		} else {
 			return null;
@@ -320,12 +325,12 @@ class Auditor {
 
 	private function test_wc_log_writable() {
 		$log_dir = defined( 'WC_LOG_DIR' ) ? WC_LOG_DIR : ( defined( 'WP_CONTENT_DIR' ) ? WP_CONTENT_DIR . '/uploads/wc-logs' : '' );
-		if ( empty( $log_dir ) || ! is_writable( $log_dir ) ) {
+		if ( empty( $log_dir ) || ! is_writable( $log_dir ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_is_writable -- WP_Filesystem_Direct::is_writable() requires full filesystem init for a simple directory permission check; using native PHP here is appropriate.
 			return new Log_Entry(
 				Log_Entry::LEVEL_WARNING,
 				Log_Entry::get_header_warning(),
 				__( "WooCommerce log directory is not writable. Please check file permissions.",
-					"bm-woocommerce" )
+					"platnosci-online-blue-media" )
 			);
 		} else {
 			return null;
@@ -341,7 +346,7 @@ class Auditor {
 				Log_Entry::LEVEL_CRITICAL,
 				Log_Entry::get_header_critical(),
 				__( "No internet connection detected. Please contact your hosting provider.",
-					"bm-woocommerce" )
+					"platnosci-online-blue-media" )
 			);
 		}
 	}
@@ -353,13 +358,15 @@ class Auditor {
 		$version  = WC_VERSION;
 		$warnings = [];
 		if ( version_compare( $version, '8.1', '<' ) ) {
+			// translators: %s is the detected WooCommerce version number.
 			$warnings[] = sprintf( __( "Detected unsupported WooCommerce version (%s). We recommend updating to version 8.1 or higher.",
-				"bm-woocommerce" ),
+				"platnosci-online-blue-media" ),
 				$version );
 		}
 		if ( stripos( $version, 'beta' ) !== false ) {
+			// translators: %s is the detected WooCommerce version number including beta label.
 			$warnings[] = sprintf( __( "Beta version of WooCommerce (%s) detected. It might not be fully supported.",
-				"bm-woocommerce" ),
+				"platnosci-online-blue-media" ),
 				$version );
 		}
 		if ( ! empty( $warnings ) ) {
@@ -378,13 +385,15 @@ class Auditor {
 
 		$warnings = [];
 		if ( version_compare( $wp_version, '6.0', '<' ) ) {
+			// translators: %s is the detected WordPress version number.
 			$warnings[] = sprintf( __( "Detected unsupported WordPress version (%s). We recommend updating to version 6.0 or higher.",
-				"bm-woocommerce" ),
+				"platnosci-online-blue-media" ),
 				$wp_version );
 		}
 		if ( stripos( $wp_version, 'beta' ) !== false ) {
+			// translators: %s is the detected WordPress version number including beta label.
 			$warnings[] = sprintf( __( "Beta version of WordPress (%s) detected. It might not be fully supported.",
-				"bm-woocommerce" ),
+				"platnosci-online-blue-media" ),
 				$wp_version );
 		}
 		if ( ! empty( $warnings ) ) {
@@ -407,7 +416,7 @@ class Auditor {
 				Log_Entry::LEVEL_INFO,
 				Log_Entry::get_header_info(),
 				__( "Unable to fetch the latest Autopay plugin version from the WordPress repository.",
-					"bm-woocommerce" )
+					"platnosci-online-blue-media" )
 			);
 		}
 		$body = wp_remote_retrieve_body( $response );
@@ -420,8 +429,9 @@ class Auditor {
 			return new Log_Entry(
 				Log_Entry::LEVEL_WARNING,
 				Log_Entry::get_header_warning(),
-				sprintf( __( "An update is available for the Autopay plugin. Current version: %s, latest version: %s.",
-					"bm-woocommerce" ),
+				// translators: %1$s is the current installed plugin version, %2$s is the latest available version.
+				sprintf( __( 'An update is available for the Autopay plugin. Current version: %1$s, latest version: %2$s.',
+					'platnosci-online-blue-media' ),
 					$current_version,
 					$latest_version )
 			);
@@ -442,7 +452,7 @@ class Auditor {
 						Log_Entry::LEVEL_CRITICAL,
 						Log_Entry::get_header_warning(),
 						__( "Old BlueMedia plugin is active. Please remove it or deactivate it.",
-							"bm-woocommerce" )
+							"platnosci-online-blue-media" )
 					);
 				} else {
 					return null;
@@ -465,7 +475,7 @@ class Auditor {
 						Log_Entry::LEVEL_CRITICAL,
 						Log_Entry::get_header_critical(),
 						__( "Conflicting third-party plugin 'pay-wp' is active. Please deactivate it to avoid conflicts with Autopay.",
-							"bm-woocommerce" )
+							"platnosci-online-blue-media" )
 					);
 				}
 			}
@@ -485,14 +495,14 @@ class Auditor {
 			return new Log_Entry( Log_Entry::LEVEL_CRITICAL,
 				Log_Entry::get_header_critical(),
 				__( "No configured currencies found",
-					"bm-woocommerce" ) );
+					"platnosci-online-blue-media" ) );
 		}
 
 		$main_currency_code = array_key_first( $active_currencies );
 
 		foreach ( $active_currencies as $currency ) {
 			$currency_manager->reconfigure( $currency->get_code() );
-			$bm_gateway->setup_variables( $currency, true );
+			$bm_gateway->setup_variables( $currency );
 			$service_id = $bm_gateway->get_service_id();
 			$hash       = $bm_gateway->get_private_key();
 
@@ -506,49 +516,52 @@ class Auditor {
 
 			if ( empty( $service_id ) ) {
 				$currency_manager->reconfigure( $currency->get_code() );
-				$bm_gateway->setup_variables( null, true );
+				$bm_gateway->setup_variables( null );
 
 				$level  = $currency->get_code() === $main_currency_code ? Log_Entry::LEVEL_CRITICAL : Log_Entry::LEVEL_WARNING;
 				$header = $currency->get_code() === $main_currency_code ? Log_Entry::get_header_critical() : Log_Entry::get_header_warning();
 
 				return new Log_Entry( $level,
 					$header,
+					// translators: %s is the currency code (e.g. PLN, EUR).
 					sprintf( __( "ServiceID was not provided for currency: %s",
-						"bm-woocommerce" ),
+						"platnosci-online-blue-media" ),
 						$currency->get_code() ) );
 			}
 
 			if ( ! is_numeric( $service_id ) ) {
 				$currency_manager->reconfigure( $currency->get_code() );
-				$bm_gateway->setup_variables( null, true );
+				$bm_gateway->setup_variables( null );
 
 				$level  = $currency->get_code() === $main_currency_code ? Log_Entry::LEVEL_CRITICAL : Log_Entry::LEVEL_WARNING;
 				$header = $currency->get_code() === $main_currency_code ? Log_Entry::get_header_critical() : Log_Entry::get_header_warning();
 
 				return new Log_Entry( $level,
 					$header,
+					// translators: %s is the currency code (e.g. PLN, EUR).
 					sprintf( __( "An invalid ServiceID was provided for currency: %s",
-						"bm-woocommerce" ),
+						"platnosci-online-blue-media" ),
 						$currency->get_code() ) );
 			}
 
 			if ( empty( $hash ) ) {
 				$currency_manager->reconfigure( $currency->get_code() );
-				$bm_gateway->setup_variables( null, true );
+				$bm_gateway->setup_variables( null );
 
 				$level  = $currency->get_code() === $main_currency_code ? Log_Entry::LEVEL_CRITICAL : Log_Entry::LEVEL_WARNING;
 				$header = $currency->get_code() === $main_currency_code ? Log_Entry::get_header_critical() : Log_Entry::get_header_warning();
 
 				return new Log_Entry( $level,
 					$header,
+					// translators: %s is the currency code (e.g. PLN, EUR).
 					sprintf( __( "API secret key (Hash) was not provided for currency: %s",
-						"bm-woocommerce" ),
+						"platnosci-online-blue-media" ),
 						$currency->get_code() ) );
 			}
 		}
 
 		$currency_manager->reconfigure( $currency->get_code() );
-		$bm_gateway->setup_variables( null, true );
+		$bm_gateway->setup_variables( null );
 
 		return null;
 	}
@@ -563,7 +576,7 @@ class Auditor {
 				Log_Entry::LEVEL_CRITICAL,
 				Log_Entry::get_header_critical(),
 				$url . ' ' . __( "Autopay URL cannot be reached. Make sure you have a valid internet connection",
-					"bm-woocommerce" )
+					"platnosci-online-blue-media" )
 			);
 		}
 	}
@@ -576,13 +589,13 @@ class Auditor {
 
 		blue_media()->get_woocommerce_logger()->log_debug(
 			sprintf( '[Auditor] [test_blik_validation] [found active currencies: %s]',
-				print_r( array_keys( $active_currencies ), true ),
+				wp_json_encode( array_keys( $active_currencies ) ),
 
 			) );
 
 		foreach ( $active_currencies as $currency ) {
 			$currency_manager->reconfigure( $currency->get_code() );
-			$bm_gateway->setup_variables( $currency, true );
+			$bm_gateway->setup_variables( $currency );
 
 			try {
 				$channels = $bm_gateway->gateway_list( true,
@@ -590,7 +603,7 @@ class Auditor {
 			} catch ( Exception $e ) {
 				blue_media()->get_woocommerce_logger()->log_debug(
 					sprintf( '[Auditor] [test_blik_validation] [get gateway_list error: %s]',
-						print_r( $e->getMessage(), true ),
+						wp_json_encode( $e->getMessage() ),
 
 					) );
 				$channels = [];
@@ -599,8 +612,9 @@ class Auditor {
 
 			blue_media()->get_woocommerce_logger()->log_debug(
 				sprintf( '[Auditor] [test_blik_validation] [found channels: %s] [for currency: %s]',
+					// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r -- Channel list contains API stdClass objects that may not JSON-encode cleanly; used only in debug logger call.
 					print_r( $channels, true ),
-					print_r( $currency->get_code(), true ),
+					wp_json_encode( $currency->get_code() ),
 
 				) );
 
@@ -609,8 +623,9 @@ class Auditor {
 				return new Log_Entry(
 					Log_Entry::LEVEL_WARNING,
 					Log_Entry::get_header_warning(),
+					// translators: %s is the currency code (e.g. PLN, EUR).
 					sprintf( __( "Failed to download payment channel list for currency: %s. Check the validity of the provided key (hash) and serviceID",
-						"bm-woocommerce" ),
+						"platnosci-online-blue-media" ),
 						$currency->get_code(),
 						true )
 				);
@@ -621,8 +636,7 @@ class Auditor {
 			} else {
 				blue_media()->get_woocommerce_logger()->log_debug(
 					sprintf( '[Auditor] [test_blik_validation] [Transaction test is not available for currency: %s]',
-						print_r( $currency->get_code(),
-							true ),
+						wp_json_encode( $currency->get_code() ),
 					) );
 			}
 		}
@@ -678,7 +692,7 @@ class Auditor {
 
 		blue_media()->get_woocommerce_logger()->log_debug(
 			sprintf( '[Auditor] [test_create_test_order] [ServiceID: %s] [Expected ITN URL: %s]',
-				print_r( $bm_gateway->get_service_id(), true ),
+				wp_json_encode( $bm_gateway->get_service_id() ),
 				$expected_itn_url
 			) );
 
@@ -695,7 +709,7 @@ class Auditor {
 
 			blue_media()->get_woocommerce_logger()->log_debug(
 				sprintf( '[Auditor] [test_create_test_order] [initialize] [Created test order id: %s] [itn_expiry_time: %s] [seconds_to_expiry: %s]',
-					print_r( $order_id, true ),
+					wp_json_encode( $order_id ),
 					(string) $this->itn_expiry_time,
 					(string) ( $this->itn_expiry_time - $current_time )
 				)
@@ -718,7 +732,7 @@ class Auditor {
 
 			blue_media()->get_woocommerce_logger()->log_debug(
 				sprintf( '[Auditor] [test_create_test_order] [verify_itn] [test_order_id: %s] [now: %s] [itn_expiry_time: %s] [seconds_left: %s] [expected_itn_url: %s]',
-					print_r( $order_id, true ),
+					wp_json_encode( $order_id ),
 					(string) time(),
 					(string) $this->itn_expiry_time,
 					(string) max( 0, $this->itn_expiry_time - time() ),
@@ -734,7 +748,7 @@ class Auditor {
 
 					blue_media()->get_woocommerce_logger()->log_debug(
 						sprintf( '[Auditor] [test_create_test_order] [test order removed: %s]',
-							print_r( $order_id, true ),
+							wp_json_encode( $order_id ),
 						) );
 				}
 
@@ -756,7 +770,7 @@ class Auditor {
 			blue_media()->get_woocommerce_logger()->log_debug(
 				sprintf( '[Auditor] [test_create_test_order] [verify_itn] [test_itn_result: %s] [test_order_id: %s]',
 					$test_itn_result ? '1' : '0',
-					print_r( $order_id, true )
+					wp_json_encode( $order_id )
 				)
 			);
 			$this->save();
@@ -788,9 +802,9 @@ class Auditor {
 
 	function ping_url( string $url, int $timeout_seconds = 25 ): bool {
 
-		$connected = @fsockopen( $url, 80 ); //website, port  (try 80 or 443)
+		$connected = @fsockopen( $url, 80 ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fsockopen -- Raw TCP port connectivity test; WordPress HTTP API does not provide equivalent port-level semantics.
 		if ( $connected ) {
-			fclose( $connected );
+			fclose( $connected ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closing socket opened by fsockopen() above; raw TCP requires direct socket management.
 
 			return true;
 		}
@@ -862,7 +876,7 @@ class Auditor {
 		// Raw settings (masked) for full visibility
 		$masked_settings = $this->mask_settings_recursive( $settings );
 		blue_media()->get_woocommerce_logger()->log_debug(
-			sprintf( '[Auditor] [snapshot] Autopay Raw Settings (masked): %s', print_r( $masked_settings, true ) )
+			sprintf( '[Auditor] [snapshot] Autopay Raw Settings (masked): %s', wp_json_encode( $masked_settings ) )
 		);
 	}
 

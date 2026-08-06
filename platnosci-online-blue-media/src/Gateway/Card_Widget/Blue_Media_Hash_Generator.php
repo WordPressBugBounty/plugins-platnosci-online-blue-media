@@ -7,6 +7,8 @@
 
 namespace Ilabs\BM_Woocommerce\Gateway\Card_Widget;
 
+defined( 'ABSPATH' ) || exit;
+
 use Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway;
 
 /**

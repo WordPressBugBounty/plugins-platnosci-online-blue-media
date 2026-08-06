@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Utilities\Test_Connection;
 
+defined( 'ABSPATH' ) || exit;
+
 class Test_Case {
 
 	private string $id;

@@ -37,6 +37,6 @@
             "install-path": "../isolated-ilabs-plugin/ilabs-plugin"
         }
     ],
-    "dev": true,
+    "dev": false,
     "dev-package-names": []
 }

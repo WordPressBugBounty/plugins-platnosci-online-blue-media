@@ -8,20 +8,18 @@ defined( 'ABSPATH' ) || exit;
 /**
  * @var string $settings_html
  * @var string $title
- * @var string $tab_id
+ * @var string $autopay_tab_id
  * * @var string $subtitle
  *
  */
 
-$title    = esc_attr( $title );
-$subtitle = esc_attr( $subtitle );
-$tab_id   = esc_attr( $tab_id );
+$autopay_tab_id = esc_attr( $autopay_tab_id );
 
 
 ?>
 
 
-<div class="autopay-settings-section section-<?php esc_attr_e( $tab_id ); ?>">
+<div class="autopay-settings-section section-<?php echo esc_attr( $autopay_tab_id ); ?>">
 
 	<?php if ( ! empty( $title ) ): ?>
 		<?php
@@ -32,18 +30,18 @@ $tab_id   = esc_attr( $tab_id );
 			] ); ?>
 	<?php endif; ?>
 
-	<?php if ( Settings_Tabs::ADVANCED_SETTINGS_TAB_ID === $tab_id ): ?>
+	<?php if ( Settings_Tabs::ADVANCED_SETTINGS_TAB_ID === $autopay_tab_id ): ?>
 		<div
-			class="autopay-settings-sidebar section-<?php esc_attr_e( $tab_id ); ?>">
+			class="autopay-settings-sidebar section-<?php echo esc_attr( $autopay_tab_id ); ?>">
 			<?php
 			blue_media()->locate_template( 'settings-advanced-sidebar.php' ); ?>
 		</div>
 	<?php endif; ?>
 
-	<?php do_action( 'autopay_settings_before_table_' . $tab_id ); ?>
+	<?php do_action( 'autopay_settings_before_table_' . $autopay_tab_id ); ?>
 
 	<table class="form-table">
-		<?php echo $settings_html ?>
+		<?php echo $settings_html // phpcs:ignore WordPress.Security.EscapeOutput -- WC-generated HTML from generate_settings_html(), esc_html would destroy form markup ?>
 	</table>
 
 	<style>
@@ -52,7 +50,7 @@ $tab_id   = esc_attr( $tab_id );
 		.section-payment_settings .autopay-description-field{box-sizing:border-box}
 	</style>
 
-	<?php do_action( 'autopay_settings_after_table_' . $tab_id ); ?>
+	<?php do_action( 'autopay_settings_after_table_' . $autopay_tab_id ); ?>
 
 
 </div>

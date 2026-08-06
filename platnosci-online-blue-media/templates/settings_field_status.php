@@ -7,14 +7,14 @@ use Ilabs\BM_Woocommerce\Controller\Payment_Status_Controller;
 use Ilabs\BM_Woocommerce\Controller\Wp_Admin\Connection_Testing_Controller;
 use Ilabs\BM_Woocommerce\Controller\Wp_Admin\Transaction_Testing_Controller;
 
-$generic_error_message = __( 'Payment failed.',
-	'bm-woocommerce' );
+$autopay_generic_error_message = __( 'Payment failed.',
+	'platnosci-online-blue-media' );
 ?>
 
 <tr valign="top">
 	<th scope="row"
-		class="titledesc"><?php _e( 'Check the connection',
-			'bm-woocommerce' ) ?></th>
+		class="titledesc"><?php esc_html_e( 'Check the connection',
+			'platnosci-online-blue-media' ) ?></th>
 	<td class="forminp">
 		<fieldset>
 
@@ -26,15 +26,15 @@ $generic_error_message = __( 'Payment failed.',
 
 			<div>
 				<button name="autopay_connection_test_btn"
-						id="autopay_connection_test_btn"><?php _e( 'Check the connection',
-						'bm-woocommerce' ); ?></button>
+						id="autopay_connection_test_btn"><?php esc_html_e( 'Check the connection',
+						'platnosci-online-blue-media' ); ?></button>
 			</div>
 
 
 			<div>
 				<button name="autopay_transaction_test_btn"
-						id="autopay_transaction_test_btn"><?php _e( 'Check transaction',
-						'bm-woocommerce' ); ?></button>
+						id="autopay_transaction_test_btn"><?php esc_html_e( 'Check transaction',
+						'platnosci-online-blue-media' ); ?></button>
 			</div>
 
 		</fieldset>
@@ -85,7 +85,7 @@ $generic_error_message = __( 'Payment failed.',
 
 			var data = {
 				action: "bm_connection_test_action",
-				nonce: "<?php echo wp_create_nonce( Connection_Testing_Controller::NONCE_ACTION ) ?>"
+				nonce: "<?php echo esc_js( wp_create_nonce( Connection_Testing_Controller::NONCE_ACTION ) ) ?>"
 			};
 
 
@@ -98,11 +98,11 @@ $generic_error_message = __( 'Payment failed.',
 					console.log(response.status);
 
 					if (response.hasOwnProperty('status')
-						&& (response.status === '<?php echo Ajax_Response_Value_Object::STATUS_SUCCESS ?>'
-							|| response.status === '<?php echo Ajax_Response_Value_Object::STATUS_ERROR ?>'
+						&& (response.status === '<?php echo esc_js( Ajax_Response_Value_Object::STATUS_SUCCESS ) ?>'
+							|| response.status === '<?php echo esc_js( Ajax_Response_Value_Object::STATUS_ERROR ) ?>'
 						)
 					) {
-						if (response.status === '<?php echo Ajax_Response_Value_Object::STATUS_SUCCESS ?>') {
+						if (response.status === '<?php echo esc_js( Ajax_Response_Value_Object::STATUS_SUCCESS ) ?>') {
 
 							if (response.hasOwnProperty('message')
 
@@ -110,33 +110,33 @@ $generic_error_message = __( 'Payment failed.',
 								blueMediaUpdateStatus(response.message, response.status)
 								return false
 							}
-							blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
+							blueMediaUpdateStatus('<?php echo esc_html( $autopay_generic_error_message ); ?>' + JSON.stringify(response), 'error')
 							return false
 						}
 
-						if (response.status === '<?php echo Ajax_Response_Value_Object::STATUS_ERROR ?>') {
+						if (response.status === '<?php echo esc_js( Ajax_Response_Value_Object::STATUS_ERROR ) ?>') {
 							if (response.hasOwnProperty('message')) {
 								blueMediaUpdateStatus(response.message, response.status)
 								return false
 							}
 
-							blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
+							blueMediaUpdateStatus('<?php echo esc_html( $autopay_generic_error_message ); ?>' + JSON.stringify(response), 'error')
 
 							return false
 
 						}
 					}
-					blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
+					blueMediaUpdateStatus('<?php echo esc_html( $autopay_generic_error_message ); ?>' + JSON.stringify(response), 'error')
 
 					return false
 				} else {
-					blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
+					blueMediaUpdateStatus('<?php echo esc_html( $autopay_generic_error_message ); ?>' + JSON.stringify(response), 'error')
 				}
 
 
 			}).fail(function (jqXHR, textStatus, errorThrown) {
 				jQuery('.bluemedia-loader').hide()
-				blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + jqXHR.status, 'error');
+				blueMediaUpdateStatus('<?php echo esc_html( $autopay_generic_error_message ); ?>' + jqXHR.status, 'error');
 
 				return false
 			});
@@ -150,7 +150,7 @@ $generic_error_message = __( 'Payment failed.',
 
 			var data = {
 				action: "bm_transaction_test_action",
-				nonce: "<?php echo wp_create_nonce( Connection_Testing_Controller::NONCE_ACTION ) ?>"
+				nonce: "<?php echo esc_js( wp_create_nonce( Connection_Testing_Controller::NONCE_ACTION ) ) ?>"
 			};
 
 
@@ -163,11 +163,11 @@ $generic_error_message = __( 'Payment failed.',
 					console.log(response.status);
 
 					if (response.hasOwnProperty('status')
-						&& (response.status === '<?php echo Ajax_Response_Value_Object::STATUS_SUCCESS ?>'
-							|| response.status === '<?php echo Ajax_Response_Value_Object::STATUS_ERROR ?>'
+						&& (response.status === '<?php echo esc_js( Ajax_Response_Value_Object::STATUS_SUCCESS ) ?>'
+							|| response.status === '<?php echo esc_js( Ajax_Response_Value_Object::STATUS_ERROR ) ?>'
 						)
 					) {
-						if (response.status === '<?php echo Ajax_Response_Value_Object::STATUS_SUCCESS ?>') {
+						if (response.status === '<?php echo esc_js( Ajax_Response_Value_Object::STATUS_SUCCESS ) ?>') {
 
 							if (response.hasOwnProperty('message')
 
@@ -177,33 +177,33 @@ $generic_error_message = __( 'Payment failed.',
 								bmTestOrderItnReceived(bm_test_order_id)
 								return false
 							}
-							blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>', 'error')
+							blueMediaUpdateStatus('<?php echo esc_html( $autopay_generic_error_message ); ?>', 'error')
 							return false
 						}
 
-						if (response.status === '<?php echo Ajax_Response_Value_Object::STATUS_ERROR ?>') {
+						if (response.status === '<?php echo esc_js( Ajax_Response_Value_Object::STATUS_ERROR ) ?>') {
 							if (response.hasOwnProperty('message')) {
 								blueMediaUpdateStatus(response.message, response.status)
 								return false
 							}
 
-							blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
+							blueMediaUpdateStatus('<?php echo esc_html( $autopay_generic_error_message ); ?>' + JSON.stringify(response), 'error')
 
 							return false
 
 						}
 					}
-					blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
+					blueMediaUpdateStatus('<?php echo esc_html( $autopay_generic_error_message ); ?>' + JSON.stringify(response), 'error')
 
 					return false
 				} else {
-					blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
+					blueMediaUpdateStatus('<?php echo esc_html( $autopay_generic_error_message ); ?>' + JSON.stringify(response), 'error')
 				}
 
 
 			}).fail(function (jqXHR, textStatus, errorThrown) {
 				jQuery('.bluemedia-loader').hide()
-				blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + jqXHR.status, 'error');
+				blueMediaUpdateStatus('<?php echo esc_html( $autopay_generic_error_message ); ?>' + jqXHR.status, 'error');
 
 				return false
 			});
@@ -219,7 +219,7 @@ $generic_error_message = __( 'Payment failed.',
 			var data = {
 				action: "bm_verify_itn_action",
 				order_id: orderId,
-				nonce: "<?php echo wp_create_nonce( Connection_Testing_Controller::NONCE_ACTION ) ?>"
+				nonce: "<?php echo esc_js( wp_create_nonce( Connection_Testing_Controller::NONCE_ACTION ) ) ?>"
 			};
 
 
@@ -232,11 +232,11 @@ $generic_error_message = __( 'Payment failed.',
 					console.log(response.status);
 
 					if (response.hasOwnProperty('status')
-						&& (response.status === '<?php echo Ajax_Response_Value_Object::STATUS_SUCCESS ?>'
-							|| response.status === '<?php echo Ajax_Response_Value_Object::STATUS_ERROR ?>'
+						&& (response.status === '<?php echo esc_js( Ajax_Response_Value_Object::STATUS_SUCCESS ) ?>'
+							|| response.status === '<?php echo esc_js( Ajax_Response_Value_Object::STATUS_ERROR ) ?>'
 						)
 					) {
-						if (response.status === '<?php echo Ajax_Response_Value_Object::STATUS_SUCCESS ?>') {
+						if (response.status === '<?php echo esc_js( Ajax_Response_Value_Object::STATUS_SUCCESS ) ?>') {
 
 							if (response.hasOwnProperty('message')
 
@@ -245,7 +245,7 @@ $generic_error_message = __( 'Payment failed.',
 									blueMediaUpdateStatus("Odebrano ITN!", response.status)
 								} else {
 									if (10 === bmTestOrderItnReceivedAttempts) {
-										blueMediaUpdateStatus("Nie udało się odebrać komunikatu ITN dla testowego zamówienia:", "<?php echo Ajax_Response_Value_Object::STATUS_ERROR ?>")
+										blueMediaUpdateStatus("Nie udało się odebrać komunikatu ITN dla testowego zamówienia:", "<?php echo esc_js( Ajax_Response_Value_Object::STATUS_ERROR ) ?>")
 										bmTestOrderItnReceivedAttempts = 0;
 										return false
 									}
@@ -257,33 +257,33 @@ $generic_error_message = __( 'Payment failed.',
 
 								return false
 							}
-							blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>', 'error')
+							blueMediaUpdateStatus('<?php echo esc_html( $autopay_generic_error_message ); ?>', 'error')
 							return false
 						}
 
-						if (response.status === '<?php echo Ajax_Response_Value_Object::STATUS_ERROR ?>') {
+						if (response.status === '<?php echo esc_js( Ajax_Response_Value_Object::STATUS_ERROR ) ?>') {
 							if (response.hasOwnProperty('message')) {
 								blueMediaUpdateStatus(response.message, response.status)
 								return false
 							}
 
-							blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
+							blueMediaUpdateStatus('<?php echo esc_html( $autopay_generic_error_message ); ?>' + JSON.stringify(response), 'error')
 
 							return false
 
 						}
 					}
-					blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
+					blueMediaUpdateStatus('<?php echo esc_html( $autopay_generic_error_message ); ?>' + JSON.stringify(response), 'error')
 
 					return false
 				} else {
-					blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + JSON.stringify(response), 'error')
+					blueMediaUpdateStatus('<?php echo esc_html( $autopay_generic_error_message ); ?>' + JSON.stringify(response), 'error')
 				}
 
 
 			}).fail(function (jqXHR, textStatus, errorThrown) {
 				jQuery('.bluemedia-loader').hide()
-				blueMediaUpdateStatus('<?php esc_html_e( $generic_error_message ); ?>' + jqXHR.status, 'error');
+				blueMediaUpdateStatus('<?php echo esc_html( $autopay_generic_error_message ); ?>' + jqXHR.status, 'error');
 
 				return false
 			});
@@ -298,13 +298,13 @@ $generic_error_message = __( 'Payment failed.',
 			//$targetWrapper = $('.bluemedia-success-wrapper');
 			$targetSpan = $('#bm-testing-status');
 
-			if (status === '<?php echo Payment_Status_Response_Value_Object::STATUS_SUCCESS ?>') {
+			if (status === '<?php echo esc_js( Payment_Status_Response_Value_Object::STATUS_SUCCESS ) ?>') {
 				$targetSpan.addClass('bm-testing-status--success').removeClass('bm-testing-status--process bm-testing-status--error');
-			} else if (status === '<?php echo Payment_Status_Response_Value_Object::STATUS_CHECK_DEVICE ?>') {
+			} else if (status === '<?php echo esc_js( Payment_Status_Response_Value_Object::STATUS_CHECK_DEVICE ) ?>') {
 				$targetSpan.addClass('bm-testing-status--process').removeClass('bm-testing-status--success bm-testing-status--error');
-			} else if (status === '<?php echo Payment_Status_Response_Value_Object::STATUS_WAIT ?>') {
+			} else if (status === '<?php echo esc_js( Payment_Status_Response_Value_Object::STATUS_WAIT ) ?>') {
 				$targetSpan.addClass('bm-testing-status--process').removeClass('bm-testing-status--success bm-testing-status--error');
-			} else if (status === '<?php echo Payment_Status_Response_Value_Object::STATUS_ERROR ?>') {
+			} else if (status === '<?php echo esc_js( Payment_Status_Response_Value_Object::STATUS_ERROR ) ?>') {
 				$targetSpan.addClass('bm-testing-status--error').removeClass('bm-testing-status--success bm-testing-status--process');
 			}
 

@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Woocommerce;
 
+defined( 'ABSPATH' ) || exit;
+
 use WC_Order;
 
 class Autopay_Order_Factory {

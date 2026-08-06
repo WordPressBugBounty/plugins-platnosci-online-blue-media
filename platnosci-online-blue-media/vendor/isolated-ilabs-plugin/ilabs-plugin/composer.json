@@ -1,0 +1,14 @@
+{
+    "name": "ilabs\/ilabs-plugin",
+    "authors": [
+        {
+            "name": "iLabs",
+            "email": "biuro@inspirelabs.pl"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Isolated\\BlueMedia\\Ilabs\\Ilabs_Plugin\\": "src\/"
+        }
+    }
+}

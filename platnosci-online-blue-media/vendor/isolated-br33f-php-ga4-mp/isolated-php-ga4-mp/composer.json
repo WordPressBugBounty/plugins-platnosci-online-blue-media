@@ -1,0 +1,8 @@
+{
+    "config": {
+        "autoloader-suffix": "97a2a6905226c85b2ed4f02ffd94bcd3"
+    },
+    "require": {
+        "br33f\/php-ga4-mp": "0.1.6"
+    }
+}

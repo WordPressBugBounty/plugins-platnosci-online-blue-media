@@ -1,4 +1,6 @@
 <?php
+
+defined( 'ABSPATH' ) || exit;
 /**
  * @var array $response_data
  * @var string $environment
@@ -30,7 +32,7 @@
 	<p class="atp-gpay-subtitle">
 		<?php
 		echo esc_html__( 'Pay with Google Pay',
-			'bm-woocommerce' ); ?>
+			'platnosci-online-blue-media' ); ?>
 	</p>
 	<div id="js-pay-button-wrapper"></div>
 	<p id="atp-gpay-terms-error" class="atp-gpay-terms-error"
@@ -38,10 +40,10 @@
 
 		<?php
 		echo esc_html__( 'Please read and accept the',
-			'bm-woocommerce' ); ?>
+			'platnosci-online-blue-media' ); ?>
 		<span class="atp-gpay-terms-error__strong"><?php
 			echo esc_html__( 'Terms & Conditions',
-				'bm-woocommerce' ); ?>
+				'platnosci-online-blue-media' ); ?>
 		</span>
 	</p>
 </div>
@@ -78,8 +80,8 @@
 		}
 
 
-		let environment = "<?php esc_attr_e( $environment )?>";
-		const shopBaseCountryCode = "<?php esc_attr_e( $shopBaseCountryCode )?>";
+		let environment = "<?php echo esc_attr( $environment ); ?>";
+		const shopBaseCountryCode = "<?php echo esc_attr( $shopBaseCountryCode ); ?>";
 
 			function logError(message, meta) {
 				if (!window.console) {

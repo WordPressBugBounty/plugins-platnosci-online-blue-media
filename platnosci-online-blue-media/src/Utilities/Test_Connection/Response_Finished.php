@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Utilities\Test_Connection;
 
+defined( 'ABSPATH' ) || exit;
+
 class Response_Finished extends Abstract_Response {
 
 	protected string $test_id = '';

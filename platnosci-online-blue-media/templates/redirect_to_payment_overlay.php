@@ -1,13 +1,15 @@
 <div class="bm-redirect-overlay">
     <h2>
 		<?php
-		_e( "In a while you'll be redirected to the payment page screen",
-			"bm-woocommerce" ); ?>
+
+defined( 'ABSPATH' ) || exit;
+		esc_html_e( "In a while you'll be redirected to the payment page screen",
+			"platnosci-online-blue-media" ); ?>
     </h2>
 
     <span><?php
-		_e( "Time to redirect:",
-			"bm-woocommerce" ); ?>&nbsp;<span
+		esc_html_e( "Time to redirect:",
+			"platnosci-online-blue-media" ); ?>&nbsp;<span
                 class="bm-redirect-counter"></span></span>
 
 

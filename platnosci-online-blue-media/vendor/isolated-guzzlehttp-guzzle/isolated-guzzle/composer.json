@@ -1,0 +1,8 @@
+{
+    "config": {
+        "autoloader-suffix": "73217a5e65399e37321aafafb89b9167"
+    },
+    "require": {
+        "guzzlehttp\/guzzle": "7.12.3"
+    }
+}

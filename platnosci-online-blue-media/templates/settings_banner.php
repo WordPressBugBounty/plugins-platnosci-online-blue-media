@@ -12,6 +12,6 @@ defined( 'ABSPATH' ) || exit;
 
 <?php if ( ! empty( $content ) ): ?>
 	<div class="bm-settings-banner">
-		<?php echo $content ?>
+		<?php echo wp_kses_post( $content ) ?>
 	</div>
 <?php endif ?>

@@ -1304,6 +1304,7 @@
 }
 .woocommerce .autopay-settings-section.section-help .autopay-comp-contact__content ul li {
   color: #555555;
+  font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
   font-size: 1.2em;
   font-weight: 700;
   line-height: 18.4px;
@@ -1321,6 +1322,7 @@
 }
 .woocommerce .autopay-settings-section.section-help .autopay-comp-contact__content ul li a {
   color: #555555;
+  font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
   font-size: 1.2em;
   font-weight: 700;
   line-height: 18.4px;

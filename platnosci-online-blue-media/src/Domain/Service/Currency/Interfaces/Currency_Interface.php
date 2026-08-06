@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Service\Currency\Interfaces;
 
+defined( 'ABSPATH' ) || exit;
+
 interface Currency_Interface {
 
 	const CODE_PLN = 'PLN';

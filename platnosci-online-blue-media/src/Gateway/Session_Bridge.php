@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Gateway;
 
+defined( 'ABSPATH' ) || exit;
+
 
 class Session_Bridge {
 
@@ -10,7 +12,8 @@ class Session_Bridge {
 			return;
 		}
 
-		$request_key = isset( $_GET['key'] ) ? sanitize_text_field( $_GET['key'] ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only session restore using WooCommerce order key; no state is changed beyond restoring payment session data from order meta.
+		$request_key = isset( $_GET['key'] ) ? sanitize_text_field( wp_unslash( $_GET['key'] ) ) : '';
 
 		if ( empty( $request_key ) ) {
 			return;
@@ -23,14 +26,14 @@ class Session_Bridge {
 			blue_media()->get_woocommerce_logger( 'session_debug' )->log_error(
 				sprintf(
 					'[restore_session_data] Invalid Order Key provided: %s',
-					print_r(
+					wp_json_encode(
 						[
 							'request_key' => $request_key,
 							'ip'          => blue_media()
 								->get_core_helpers()
 								->get_visitor_ip(),
 						]
-						, true )
+					)
 
 				) );
 
@@ -44,11 +47,11 @@ class Session_Bridge {
 			blue_media()->get_woocommerce_logger( 'session_debug' )->log_error(
 				sprintf(
 					'[restore_session_data] Cant find Order with ID: %s',
-					print_r(
+					wp_json_encode(
 						[
 							'order_id' => $detected_order_id,
 						]
-						, true )
+					)
 
 				) );
 
@@ -62,11 +65,11 @@ class Session_Bridge {
 			blue_media()->get_woocommerce_logger( 'session_debug' )->log_error(
 				sprintf(
 					'[restore_session_data] meta bm_order_payment_params is empty: %s',
-					print_r(
+					wp_json_encode(
 						[
 							'order_id' => $detected_order_id,
 						]
-						, true )
+					)
 
 				) );
 
@@ -77,19 +80,25 @@ class Session_Bridge {
 
 
 		WC()->session->set( 'bm_order_payment_params', $meta_params );
-		WC()->session->save_data();
+		self::save();
 
 		blue_media()->get_woocommerce_logger( 'session_debug' )->log_debug(
 			sprintf(
 				'[restore_session_data] Restore: Success! Payment params restored from Order Meta to Session: %s',
-				print_r(
+				wp_json_encode(
 					[
 						'order_id' => $detected_order_id,
 						'data'     => $meta_params,
 					]
-					, true )
+				)
 
 			) );
 
+	}
+
+	public static function save(): void {
+		if ( WC()->session instanceof \WC_Session_Handler ) {
+			WC()->session->save_data();
+		}
 	}
 }

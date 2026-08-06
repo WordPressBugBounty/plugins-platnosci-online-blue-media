@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Service\Settings;
 
+defined( 'ABSPATH' ) || exit;
+
 class Settings_Tabs {
 
 	const AUTHENTICATION_TAB_ID = 'authentication';
@@ -44,23 +46,23 @@ class Settings_Tabs {
 	public function get_available_tabs(): array {
 		$tabs = [
 			self::AUTHENTICATION_TAB_ID    => __( 'Authentication',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			self::ADVERTISING_SERVICES_TAB_ID => __( 'Advertising services',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			self::PAYMENT_SETTINGS_TAB_ID  => __( 'Appearance',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			self::ANALYTICS_TAB_ID         => __( 'Analytics',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			self::VAS_TAB_ID               => __( 'Services for you',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			self::ADVANCED_SETTINGS_TAB_ID => __( 'Advanced',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			self::HELP_TAB_ID              => __( 'Help',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 		];
 
 		if ( get_locale() === 'pl_PL' ) {
-			$tabs[self::VAS_TAB_ID] = __( 'Services for you', 'bm-woocommerce' );
+			$tabs[self::VAS_TAB_ID] = __( 'Services for you', 'platnosci-online-blue-media' );
 		}
 
 		return $tabs;

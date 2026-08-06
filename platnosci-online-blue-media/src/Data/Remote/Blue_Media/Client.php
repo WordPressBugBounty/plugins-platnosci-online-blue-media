@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Data\Remote\Blue_Media;
 
+defined( 'ABSPATH' ) || exit;
+
 use Exception;
 use Ilabs\BM_Woocommerce\Gateway\Autopay_Payment_Protocol;
 use \Isolated\Blue_Media\Isolated_Guzzlehttp\GuzzleHttp\Client as GuzzleHttpClient;

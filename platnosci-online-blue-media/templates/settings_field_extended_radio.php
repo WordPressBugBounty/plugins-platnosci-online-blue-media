@@ -10,15 +10,15 @@
  * @var string $status_type
  * @var string $status
  * @var WC_Settings_API $wc_settings_api
- * @var array $data
- * @var array $tr_classes
+ * @var array $autopay_data
+ * @var array $autopay_tr_classes
  * @var bool $visible
  * @var string $bottom_description
  *
  *
  */
 
-$defaults = [
+$autopay_defaults = [
 	'title'             => '',
 	'disabled'          => false,
 	'class'             => '',
@@ -35,26 +35,26 @@ $defaults = [
 	'help_tip'          => false,
 ];
 
-$data               = wp_parse_args( $data, $defaults );
-$value              = esc_attr( $wc_settings_api->get_option( $key ) );
-$status             = empty( $status ) ? false : $status;
-$status_class       = empty( $status_class ) ? '' : $status_class;
-$status_type        = empty( $status_type ) ? 'success' : $status_type;
-$bottom_description = empty( $bottom_description ) ? false : $bottom_description;
-$help_tip           = empty( [ 'help_tip' ] ) ? false : $data['help_tip'];
-$class              = empty( [ 'help_tip' ] ) ? '' : $data['class'];
-$tr_classes         = empty( $tr_classes ) ? [] : $tr_classes;
+$autopay_data               = wp_parse_args( $autopay_data, $autopay_defaults );
+$autopay_value              = esc_attr( $wc_settings_api->get_option( $key ) );
+$autopay_status             = empty( $status ) ? false : $status;
+$autopay_status_class       = empty( $status_class ) ? '' : $status_class;
+$autopay_status_type        = empty( $status_type ) ? 'success' : $status_type;
+$autopay_bottom_description = empty( $bottom_description ) ? false : $bottom_description;
+$autopay_help_tip           = empty( [ 'help_tip' ] ) ? false : $autopay_data['help_tip'];
+$autopay_class              = empty( [ 'help_tip' ] ) ? '' : $autopay_data['class'];
+$autopay_tr_classes         = empty( $autopay_tr_classes ) ? [] : $autopay_tr_classes;
 
 
 ?>
 <tr valign="top"
-	class="<?php echo esc_attr( $field_key ); ?>-tr <?php echo $class ? esc_attr( $class ) . '-tr' : ''; ?> autopay-comp-radio <?php esc_attr_e( implode( ' ', $tr_classes ) ) ?>">
+	class="<?php echo esc_attr( $field_key ); ?>-tr <?php echo $autopay_class ? esc_attr( $autopay_class ) . '-tr' : ''; ?> autopay-comp-radio <?php echo esc_attr( implode( ' ', $autopay_tr_classes ) ); ?>">
 	<th scope="row" class="titledesc">
 		<label
-			for="<?php echo esc_attr( $field_key ); ?>"><?php echo wp_kses_post( $data['title'] ); ?>
-			<?php if ( $help_tip ): blue_media()->locate_template( 'settings_help-tip.php',
+			for="<?php echo esc_attr( $field_key ); ?>"><?php echo wp_kses_post( $autopay_data['title'] ); ?>
+			<?php if ( $autopay_help_tip ): blue_media()->locate_template( 'settings_help-tip.php',
 				[
-					'helptip' => $help_tip,
+					'helptip' => $autopay_help_tip,
 				] ); endif; ?></label>
 
 		<?php if ( ! empty( $tip_url ) ): ?>
@@ -67,23 +67,23 @@ $tr_classes         = empty( $tr_classes ) ? [] : $tr_classes;
 		<?php endif; ?>
 		<fieldset class="autopay-fieldset">
 			<legend class="screen-reader-text">
-				<span><?php echo wp_kses_post( $data['title'] ); ?></span>
+				<span><?php echo wp_kses_post( $autopay_data['title'] ); ?></span>
 			</legend>
-			<?php foreach ( (array) $data['options'] as $option_key => $option_value ) : ?>
-				<?php if ( is_array( $option_value ) ) : ?>
+			<?php foreach ( (array) $autopay_data['options'] as $autopay_option_key => $autopay_option_value ) : ?>
+				<?php if ( is_array( $autopay_option_value ) ) : ?>
 
 					<optgroup
-						label="<?php echo esc_attr( $option_key ); ?>">
-						<?php foreach ( $option_value as $option_key_inner => $option_value_inner ) : ?>
+						label="<?php echo esc_attr( $autopay_option_key ); ?>">
+						<?php foreach ( $autopay_option_value as $autopay_option_key_inner => $autopay_option_value_inner ) : ?>
 							<label
 								for="<?php echo esc_attr( $field_key ); ?>">
 								<input
 									id="<?php echo esc_attr( $field_key ); ?>"
 									type="radio"
 									name="<?php echo esc_attr( $field_key ); ?>"
-									value="<?php echo esc_attr( $option_key_inner ); ?>" <?php checked( (string) $option_key_inner,
-									esc_attr( $value ) ); ?> />
-								<?php echo esc_html( $option_value_inner ); ?>
+									value="<?php echo esc_attr( $autopay_option_key_inner ); ?>" <?php checked( (string) $autopay_option_key_inner,
+									esc_attr( $autopay_value ) ); ?> />
+								<?php echo esc_html( $autopay_option_value_inner ); ?>
 							</label>
 						<?php endforeach; ?>
 					</optgroup>
@@ -93,37 +93,38 @@ $tr_classes         = empty( $tr_classes ) ? [] : $tr_classes;
 						<input id="<?php echo esc_attr( $field_key ); ?>"
 							   type="radio"
 							   name="<?php echo esc_attr( $field_key ); ?>"
-							   value="<?php echo esc_attr( $option_key ); ?>" <?php checked( (string) $option_key,
-							esc_attr( $value ) ); ?> />
-						<?php echo esc_html( $option_value ); ?>
+							   value="<?php echo esc_attr( $autopay_option_key ); ?>" <?php checked( (string) $autopay_option_key,
+							esc_attr( $autopay_value ) ); ?> />
+						<?php echo esc_html( $autopay_option_value ); ?>
 					</label>
 				<?php endif; ?>
 			<?php endforeach; ?>
-			<?php echo $wc_settings_api->get_description_html( $data ); // WPCS: XSS ok. ?>
+			<?php echo $wc_settings_api->get_description_html( $autopay_data ); // phpcs:ignore WordPress.Security.EscapeOutput -- WC-generated HTML ?>
 		</fieldset>
 	</th>
-	<?php if ( ! empty( $status ) ): ?>
+	<?php if ( ! empty( $autopay_status ) ): ?>
 		<td class="formbadge">
 			<?php
 			blue_media()->locate_template( 'settings_status_badge.php',
 				[
-					'status' => $status,
-					'class'  => $status_class,
-					'type'   => $status_type,
+					'status' => $autopay_status,
+					'class'  => $autopay_status_class,
+					'type'   => $autopay_status_type,
 				] ); ?>
 		</td>
 	<?php endif; ?>
 
 </tr>
 
-<?php if ( $bottom_description ) : ?>
+<?php if ( $autopay_bottom_description ) : ?>
 	<tr class="<?php echo esc_attr( $field_key ); ?>-desc-tr autopay-comp-radio-desc-tr">
 		<span class='p-info'>
 					<td class="formdesc">
-						<?php echo $wc_settings_api->get_description_html( [
+						<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WooCommerce get_description_html() returns already-sanitized HTML; $autopay_bottom_description passed through wp_kses_post below.
+						echo $wc_settings_api->get_description_html( [ // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- WooCommerce API produces safe markup
 							'desc_tip'    => false,
-							'description' => $bottom_description,
-						] ); // WPCS: XSS ok. ?>
+							'description' => wp_kses_post( $autopay_bottom_description ),
+						] ); ?>
 					</td>
 		</span>
 	</tr>

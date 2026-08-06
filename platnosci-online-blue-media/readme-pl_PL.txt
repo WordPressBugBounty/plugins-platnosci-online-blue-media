@@ -3,9 +3,9 @@ Contributors: inspirelabs
 Tags: woocommerce, bluemedia, autopay
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 5.0.0
-License: GPLv3 or later
-License URI: http://www.gnu.org/licenses/gpl-3.0.html
+Stable tag: 5.0.1
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Autopay to moduł płatności umożliwiający realizację transakcji bezgotówkowych w sklepie opartym na platformie WordPress (WooCommerce).
 
@@ -82,6 +82,21 @@ Wartości Identyfikatora serwisu oraz Klucza konfiguracyjnego są różne dla ś
 
 
 == Changelog ==
+
+### 5.0.1 (22.07.2026) ###
+* Naprawiono: luki XSS — wyjście we wszystkich szablonach administracyjnych i polach ustawień zostało poprawnie escapowane przy użyciu `esc_html_e()`, `esc_attr_e()`, `esc_url()` i `wp_kses_post()`.
+* Naprawiono: ochrona CSRF — dodano weryfikację nonce w obsłudze płatności na stronie konta, edytorze CSS i importerze konfiguracji.
+* Naprawiono: sanityzacja danych wejściowych — dodano `wp_unslash()` przed `sanitize_text_field()` we wszystkich miejscach odczytu `$_POST`/`$_GET`; kod BLIK walidowany jako dokładnie 6 cyfr.
+* Naprawiono: bezpieczeństwo narzędzia Test Connection — dodano sprawdzenie `current_user_can('manage_woocommerce')`; poprzednio niezalogowani użytkownicy mogli inicjować testowe transakcje.
+* Naprawiono: podatność open redirect — zastąpiono `wp_redirect()` przez `wp_safe_redirect()` z jawną listą dozwolonych hostów bramki płatności.
+* Naprawiono: zabezpieczenie przed bezpośrednim dostępem do plików PHP — dodano `defined('ABSPATH') || exit` do wszystkich plików źródłowych.
+* Naprawiono: wyjście zapisanego CSS sanityzowane przez `wp_strip_all_tags()`, zapobiegając wydostaniu się przez `</style>` w edytorze CSS.
+* Naprawiono: wyjście dziennika debugowania — zastąpiono `serialize()` i `print_r()` przez `wp_json_encode()`.
+* Naprawiono: polskie tłumaczenia wczytują się poprawnie — bundlowany plik `.mo` jest preferowany, rozwiązuje częściowy polski interfejs pod WordPress 6.7+ z JIT loading.
+* Naprawiono: usunięto nadmiarowe wywołanie `load_plugin_textdomain()` z `compatibility.php`.
+* Naprawiono: punkt wejścia wtyczki przywrócony do `bluemedia-woocommerce.php`; zaktualizowano pipeline CI.
+* Naprawiono: przycisk reset (`bm_reset_order`) na stronie ustawień działa poprawnie.
+* Naprawiono: atrybut class listy metod płatności jest poprawnie escapowany.
 
 ### 5.0.0 (06.07.2026) ###
 * Dodano: płatność kartą przez widget Autopay na klasycznym i blokowym checkoucie.

@@ -7,6 +7,8 @@
 
 namespace Ilabs\BM_Woocommerce\Gateway\Card_Widget;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Generates the Hash field for Autopay payment API requests.
  */

@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce;
 
+defined( 'ABSPATH' ) || exit;
+
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Features_Config_Interface;
 
 class Features implements Features_Config_Interface {

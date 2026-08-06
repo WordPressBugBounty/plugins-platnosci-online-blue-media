@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Utilities\File_System;
 
+defined( 'ABSPATH' ) || exit;
+
 use Exception;
 use Ilabs\BM_Woocommerce\Utilities\Test_Connection\Auditor;
 use ZipArchive;
@@ -37,7 +39,7 @@ class Log_Downloader {
 		header( 'Content-type: application/zip' );
 		header( sprintf( 'Content-Disposition: attachment; filename="%s"',
 			$zip_file_name ) );
-		echo( file_get_contents( $tmp_location ) );
+		echo file_get_contents( $tmp_location ); // phpcs:ignore WordPress.Security.EscapeOutput -- binary ZIP output, Content-type: application/zip header set on line 37
 		exit;
 	}
 
@@ -74,10 +76,16 @@ class Log_Downloader {
 		}
 
 		$current_user = wp_get_current_user();
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce is verified explicitly below via wp_verify_nonce().
 		if ( isset( $_GET['autopay_download_log'] ) && user_can( $current_user,
 				'administrator' ) ) {
+
+			if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ?? '' ) ), 'autopay_download_log' ) ) {
+				return;
+			}
+
 			try {
-				$log_id = sanitize_key( $_GET['autopay_download_log'] );
+				$log_id = sanitize_key( wp_unslash( $_GET['autopay_download_log'] ?? '' ) );
 				Auditor::load( $log_id );
 				Auditor::delete( $log_id );
 				$this->download_logs();
@@ -87,19 +95,16 @@ class Log_Downloader {
 				Auditor::delete( $log_id );
 				blue_media()->get_woocommerce_logger()->log_debug(
 					sprintf( '[Log_Downloader] [handle] [log_id: %s] [error: %s]',
-						print_r( $exception->getMessage(),
-							true ),
-						print_r( $log_id,
-							true ),
+						wp_json_encode( $exception->getMessage() ),
+						wp_json_encode( $log_id ),
 					) );
-			} finally {
-				return;
+				wp_die( esc_html__( 'Log download failed. Please try again.', 'platnosci-online-blue-media' ), '', [ 'response' => 500 ] );
 			}
 		}
 	}
 
 	private function get_random_sanitized_filename(): string {
-		return sanitize_file_name( \substr( \md5( \uniqid( \rand(), \true ) ),
+		return sanitize_file_name( \substr( \md5( \uniqid( (string) wp_rand(), \true ) ),
 			0,
 			10 ) );
 	}

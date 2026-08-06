@@ -2,36 +2,38 @@
 
 namespace Ilabs\BM_Woocommerce\Utilities\Test_Connection;
 
+defined( 'ABSPATH' ) || exit;
+
 class Strings {
 
 	public static function get_strings(): array {
 		return [
 			'auditInProgress'              => __( 'Audit in progress',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'auditCompleted'               => __( 'Audit Completed',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'auditAbortedDueCriticalError' => __( 'Audit Completed',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'serverTest'                   => __( 'Server configuration testing',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'pleaseWait'                   => __( 'Please wait...',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'criticalProblemsTotal'        => __( 'Critical problems total',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'warningsTotal'                => __( 'Warnings total',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'start'                        => __( 'Start',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'startAgain'                   => __( 'Start again',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'criticalAjaxMessage'          => __( 'The test couldn\'t continue due to server error.',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'criticalErrorOccurredMessage' => __( 'A critical error occurred',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'critical'                     => __( 'Critical',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 			'criticalGenericMessage'       => __( 'The testing procedure was stopped by a critical error. Copy the log contents to the clipboard and download the logs to disk. If you don\'t see the error message or can\'t download the logs to disk, ask the administrator for the server error log file.',
-				'bm-woocommerce' ),
+				'platnosci-online-blue-media' ),
 		];
 	}
 }

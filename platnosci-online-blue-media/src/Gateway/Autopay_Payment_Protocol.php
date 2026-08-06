@@ -9,6 +9,8 @@
 
 namespace Ilabs\BM_Woocommerce\Gateway;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Single source of truth for protocol literals (no duplicated magic strings).
  */

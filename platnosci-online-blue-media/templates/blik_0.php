@@ -1,18 +1,20 @@
 <?php
 
+defined( 'ABSPATH' ) || exit;
+
 use Ilabs\BM_Woocommerce\Controller\Model\Payment_Status_Response_Value_Object;
 use Ilabs\BM_Woocommerce\Controller\Payment_Status_Controller;
 
-$generic_error_message = __( 'Payment failed.',
-	'bm-woocommerce' );
+$autopay_generic_error_message = __( 'Payment failed.',
+	'platnosci-online-blue-media' );
 
-$bm_blik0_json_flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
+$autopay_blik0_json_flags = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
 if ( defined( 'JSON_INVALID_UTF8_SUBSTITUTE' ) ) {
-	$bm_blik0_json_flags |= JSON_INVALID_UTF8_SUBSTITUTE;
+	$autopay_blik0_json_flags |= JSON_INVALID_UTF8_SUBSTITUTE;
 }
-$bm_blik0_generic_error_json = wp_json_encode( $generic_error_message, $bm_blik0_json_flags );
-if ( false === $bm_blik0_generic_error_json ) {
-	$bm_blik0_generic_error_json = '"Payment failed."';
+$autopay_blik0_generic_error_json = wp_json_encode( $autopay_generic_error_message, $autopay_blik0_json_flags );
+if ( false === $autopay_blik0_generic_error_json ) {
+	$autopay_blik0_generic_error_json = '"Payment failed."';
 }
 
 ?>
@@ -23,13 +25,13 @@ if ( false === $bm_blik0_generic_error_json ) {
 <div class="bm-blik-code-wrapper">
 	<label
 		for="bm-blik-code"><?php
-		_e( 'Enter the BLIK code.',
-			'bm-woocommerce' ); ?></label>
+		esc_html_e( 'Enter the BLIK code.',
+			'platnosci-online-blue-media' ); ?></label>
 	<input id="bluemedia_blik_code" type="text" name="bluemedia_blik_code"
 		   inputmode="numeric" minlength="6" maxlength="6" autocomplete="off">
 
-	<span><?php _e( 'The code has 6 digits. You\'ll find it in your banking app.',
-			'bm-woocommerce' ); ?></span>
+	<span><?php esc_html_e( 'The code has 6 digits. You\'ll find it in your banking app.',
+			'platnosci-online-blue-media' ); ?></span>
 
 
 	<div class="bluemedia-simple-status-box">
@@ -127,7 +129,7 @@ if ( false === $bm_blik0_generic_error_json ) {
 
 			var data = {
 				action: "bm_payment_get_status_action",
-				nonce: "<?php echo wp_create_nonce( Payment_Status_Controller::NONCE_ACTION ) ?>"
+				nonce: "<?php echo esc_js( wp_create_nonce( Payment_Status_Controller::NONCE_ACTION ) ) ?>"
 			};
 
 
@@ -140,14 +142,14 @@ if ( false === $bm_blik0_generic_error_json ) {
 					console.log(response.status);
 
 					if (response.hasOwnProperty('status')
-						&& (response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_SUCCESS ?>'
-							|| response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_ERROR ?>'
-							|| response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_WAIT ?>'
+						&& (response.status === '<?php echo esc_js( Payment_Status_Response_Value_Object::STATUS_SUCCESS ) ?>'
+							|| response.status === '<?php echo esc_js( Payment_Status_Response_Value_Object::STATUS_ERROR ) ?>'
+							|| response.status === '<?php echo esc_js( Payment_Status_Response_Value_Object::STATUS_WAIT ) ?>'
 							||
-							response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_CHECK_DEVICE ?>'
+							response.status === '<?php echo esc_js( Payment_Status_Response_Value_Object::STATUS_CHECK_DEVICE ) ?>'
 						)
 					) {
-						if (response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_SUCCESS ?>') {
+						if (response.status === '<?php echo esc_js( Payment_Status_Response_Value_Object::STATUS_SUCCESS ) ?>') {
 
 							if (response.hasOwnProperty('message')
 
@@ -161,12 +163,12 @@ if ( false === $bm_blik0_generic_error_json ) {
 
 								return false
 							}
-							blueMediaUpdateStatus(<?php echo $bm_blik0_generic_error_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>, 'error')
+							blueMediaUpdateStatus(<?php echo $autopay_blik0_generic_error_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>, 'error')
 							return false
 						}
 
-						if (response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_WAIT ?>'
-							|| response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_CHECK_DEVICE ?>') {
+						if (response.status === '<?php echo esc_js( Payment_Status_Response_Value_Object::STATUS_WAIT ) ?>'
+							|| response.status === '<?php echo esc_js( Payment_Status_Response_Value_Object::STATUS_CHECK_DEVICE ) ?>') {
 
 							if (response.hasOwnProperty('message')
 
@@ -176,7 +178,7 @@ if ( false === $bm_blik0_generic_error_json ) {
 									var baseUrl = response.order_received_url;
 									var sepBlik = baseUrl.indexOf('?') >= 0 ? '&' : '?';
 									var blikTimeoutUrl = baseUrl + sepBlik + 'blik0_timeout=1';
-									blueMediaUpdateStatus(<?php echo $bm_blik0_generic_error_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>, 'error')
+									blueMediaUpdateStatus(<?php echo $autopay_blik0_generic_error_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>, 'error')
 									setTimeout(function () {
 										window.location.href = blikTimeoutUrl;
 									}, 3000)
@@ -192,12 +194,12 @@ if ( false === $bm_blik0_generic_error_json ) {
 
 								return false
 							}
-							blueMediaUpdateStatus(<?php echo $bm_blik0_generic_error_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> + JSON.stringify(response), 'error')
+							blueMediaUpdateStatus(<?php echo $autopay_blik0_generic_error_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> + JSON.stringify(response), 'error')
 							return false
 						}
 
 
-						if (response.status === '<?php echo Payment_Status_Response_Value_Object::STATUS_ERROR ?>') {
+						if (response.status === '<?php echo esc_js( Payment_Status_Response_Value_Object::STATUS_ERROR ) ?>') {
 							if (response.hasOwnProperty('message')) {
 								blueMediaUpdateStatus(response.message, response.status)
 								setTimeout(function () {
@@ -207,23 +209,23 @@ if ( false === $bm_blik0_generic_error_json ) {
 								return false
 							}
 
-							blueMediaUpdateStatus(<?php echo $bm_blik0_generic_error_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> + JSON.stringify(response), 'error')
+							blueMediaUpdateStatus(<?php echo $autopay_blik0_generic_error_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> + JSON.stringify(response), 'error')
 
 							return false
 
 						}
 					}
-					blueMediaUpdateStatus(<?php echo $bm_blik0_generic_error_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> + JSON.stringify(response), 'error')
+					blueMediaUpdateStatus(<?php echo $autopay_blik0_generic_error_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> + JSON.stringify(response), 'error')
 
 					return false
 				} else {
-					blueMediaUpdateStatus(<?php echo $bm_blik0_generic_error_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> + JSON.stringify(response), 'error')
+					blueMediaUpdateStatus(<?php echo $autopay_blik0_generic_error_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> + JSON.stringify(response), 'error')
 				}
 
 
 			}).fail(function (jqXHR, textStatus, errorThrown) {
 				jQuery('.bluemedia-loader').hide()
-				blueMediaUpdateStatus(<?php echo $bm_blik0_generic_error_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> + jqXHR.status, 'error');
+				blueMediaUpdateStatus(<?php echo $autopay_blik0_generic_error_json; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> + jqXHR.status, 'error');
 
 				return false
 			});
@@ -238,13 +240,13 @@ if ( false === $bm_blik0_generic_error_json ) {
 			//$targetWrapper = $('.bluemedia-success-wrapper');
 			var $targetSpan = $('#bm-blik-overlay-status');
 
-			if (status === '<?php echo Payment_Status_Response_Value_Object::STATUS_SUCCESS ?>') {
+			if (status === '<?php echo esc_js( Payment_Status_Response_Value_Object::STATUS_SUCCESS ) ?>') {
 				$targetSpan.addClass('bm-blik-overlay-status--success').removeClass('bm-blik-overlay-status--process bm-blik-overlay-status--error');
-			} else if (status === '<?php echo Payment_Status_Response_Value_Object::STATUS_CHECK_DEVICE ?>') {
+			} else if (status === '<?php echo esc_js( Payment_Status_Response_Value_Object::STATUS_CHECK_DEVICE ) ?>') {
 				$targetSpan.addClass('bm-blik-overlay-status--process').removeClass('bm-blik-overlay-status--success bm-blik-overlay-status--error');
-			} else if (status === '<?php echo Payment_Status_Response_Value_Object::STATUS_WAIT ?>') {
+			} else if (status === '<?php echo esc_js( Payment_Status_Response_Value_Object::STATUS_WAIT ) ?>') {
 				$targetSpan.addClass('bm-blik-overlay-status--process').removeClass('bm-blik-overlay-status--success bm-blik-overlay-status--error');
-			} else if (status === '<?php echo Payment_Status_Response_Value_Object::STATUS_ERROR ?>') {
+			} else if (status === '<?php echo esc_js( Payment_Status_Response_Value_Object::STATUS_ERROR ) ?>') {
 				$targetSpan.addClass('bm-blik-overlay-status--error').removeClass('bm-blik-overlay-status--success bm-blik-overlay-status--process');
 			}
 

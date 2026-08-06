@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Model\Settings;
 
+defined( 'ABSPATH' ) || exit;
+
 class Woocomerce_Vas_Value_Object {
 
 	const LANGUAGE_CODE_EN = 'en-EN';

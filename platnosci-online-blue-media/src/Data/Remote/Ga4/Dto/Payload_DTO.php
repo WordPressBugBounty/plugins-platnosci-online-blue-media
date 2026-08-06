@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Data\Remote\Ga4\Dto;
 
+defined( 'ABSPATH' ) || exit;
+
 class Payload_DTO implements Payload_DTO_Interface {
 
 	/**

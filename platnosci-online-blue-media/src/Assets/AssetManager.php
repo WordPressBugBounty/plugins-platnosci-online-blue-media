@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Assets;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Manages loading of frontend and admin assets for the payment gateway.
  *

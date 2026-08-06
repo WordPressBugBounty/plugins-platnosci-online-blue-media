@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Data\Remote\Blue_Media;
 
+defined( 'ABSPATH' ) || exit;
+
 use DOMDocument;
 use DOMXPath;
 use Exception;
@@ -64,7 +66,7 @@ class Admin_Section_Resources_Client {
 			return $response->getBody()->getContents();
 
 		} catch ( RequestException $e ) {
-			throw new Exception( 'Request failed: ' . $e->getMessage() );
+			throw new Exception( 'Request failed: ' . $e->getMessage() ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception is thrown, not echoed; escaping belongs to the display layer.
 		}
 	}
 
@@ -103,7 +105,7 @@ class Admin_Section_Resources_Client {
 			return $response->getBody()->getContents();
 
 		} catch ( RequestException $e ) {
-			throw new Exception( 'Request failed: ' . $e->getMessage() );
+			throw new Exception( 'Request failed: ' . $e->getMessage() ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception is thrown, not echoed; escaping belongs to the display layer.
 		}
 	}
 

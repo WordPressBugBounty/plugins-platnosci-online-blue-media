@@ -11,10 +11,10 @@
  *
  * @var string $input_field_type_arg
  * @var WC_Settings_API $wc_settings_api
- * @var array $data
+ * @var array $autopay_data
  */
 
-$defaults = [
+$autopay_defaults = [
 	'title'             => '',
 	'disabled'          => false,
 	'class'             => '',
@@ -26,55 +26,54 @@ $defaults = [
 	'custom_attributes' => [],
 ];
 
-$input_field_type_arg = empty( $input_field_type_arg ) ? 'text' : $input_field_type_arg;
-$tip_placement        = empty( $tip_placement ) ? 'top' : $tip_placement;
-$data                 = wp_parse_args( $data, $defaults );
-$tr_classes           = empty( $tr_classes ) ? [] : $tr_classes;
+$autopay_input_field_type_arg = empty( $input_field_type_arg ) ? 'text' : $input_field_type_arg;
+$autopay_tip_placement        = empty( $tip_placement ) ? 'top' : $tip_placement;
+$autopay_data                 = wp_parse_args( $autopay_data, $autopay_defaults );
+$autopay_tr_classes           = empty( $autopay_tr_classes ) ? [] : $autopay_tr_classes;
 
 ?>
 
 <tr valign="top"
-	class="<?php echo esc_attr( $field_key ); ?>-tr autopay-comp-text <?php esc_attr_e( implode( ' ',
-		$tr_classes ) ) ?>">
+	class="<?php echo esc_attr( $field_key ); ?>-tr autopay-comp-text <?php echo esc_attr( implode( ' ', $autopay_tr_classes ) ); ?>">
 	<th scope="row" class="titledesc">
 		<label
-			for="<?php echo esc_attr( $field_key ); ?>"><?php echo wp_kses_post( $data['title'] ); ?></label>
-		<?php if ( 'top' === $tip_placement && ( ! empty( $tip_url ) || ! empty( $tip_modal_id ) ) ): ?>
+			for="<?php echo esc_attr( $field_key ); ?>"><?php echo wp_kses_post( $autopay_data['title'] ); ?></label>
+		<?php if ( 'top' === $autopay_tip_placement && ( ! empty( $tip_url ) || ! empty( $tip_modal_id ) ) ): ?>
 			<?php
 			blue_media()->locate_template( 'settings_url_tooltip.php',
 				[
 					'url'          => $tip_url,
 					'label'        => $tip_url_label,
 					'tip_modal_id' => ! empty( $tip_modal_id ) ? $tip_modal_id : null,
-					'placement'    => $tip_placement,
+					'placement'    => $autopay_tip_placement,
 				] ); ?>
 		<?php endif; ?>
 	</th>
 	<td class="forminp">
 		<fieldset>
 			<legend class="screen-reader-text">
-				<span><?php echo wp_kses_post( $data['title'] ); ?></span>
+				<span><?php echo wp_kses_post( $autopay_data['title'] ); ?></span>
 			</legend>
 			<input
-				class="input-text regular-input <?php echo esc_attr( $data['class'] ); ?>"
-				type="<?php echo esc_attr( $input_field_type_arg ); ?>"
+				class="input-text regular-input <?php echo esc_attr( $autopay_data['class'] ); ?>"
+				type="<?php echo esc_attr( $autopay_input_field_type_arg ); ?>"
 				name="<?php echo esc_attr( $field_key ); ?>"
 				id="<?php echo esc_attr( $field_key ); ?>"
-				style="<?php echo esc_attr( $data['css'] ); ?>"
+				style="<?php echo esc_attr( $autopay_data['css'] ); ?>"
 				data-origin_value="<?php echo esc_attr( $wc_settings_api->get_option( $key ) ); ?>"
 				value="<?php echo esc_attr( $wc_settings_api->get_option( $key ) ); ?>"
-				placeholder="<?php echo esc_attr( $data['placeholder'] ); ?>" <?php disabled( $data['disabled'],
-				true ); ?> <?php echo $wc_settings_api->get_custom_attribute_html( $data ); // WPCS: XSS ok. ?>
+				placeholder="<?php echo esc_attr( $autopay_data['placeholder'] ); ?>" <?php disabled( $autopay_data['disabled'],
+				true ); ?> <?php echo $wc_settings_api->get_custom_attribute_html( $autopay_data ); // phpcs:ignore WordPress.Security.EscapeOutput -- WC-generated HTML ?>
 			/>
-			<?php echo $wc_settings_api->get_description_html( $data ); // WPCS: XSS ok. ?>
-			<?php if ( 'bottom' === $tip_placement && ( ! empty( $tip_url ) || ! empty( $tip_modal_id ) ) ): ?>
+			<?php echo $wc_settings_api->get_description_html( $autopay_data ); // phpcs:ignore WordPress.Security.EscapeOutput -- WC-generated HTML ?>
+			<?php if ( 'bottom' === $autopay_tip_placement && ( ! empty( $tip_url ) || ! empty( $tip_modal_id ) ) ): ?>
 				<?php
 				blue_media()->locate_template( 'settings_url_tooltip.php',
 					[
 						'url'          => $tip_url,
 						'label'        => $tip_url_label,
 						'tip_modal_id' => ! empty( $tip_modal_id ) ? $tip_modal_id : null,
-						'placement'    => $tip_placement,
+						'placement'    => $autopay_tip_placement,
 					] ); ?>
 			<?php endif; ?>
 		</fieldset>

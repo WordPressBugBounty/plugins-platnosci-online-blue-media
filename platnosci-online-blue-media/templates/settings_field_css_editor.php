@@ -11,12 +11,13 @@ defined( 'ABSPATH' ) || exit;
 
 <tr valign="top" class="autopay-comp-css-editor">
 	<th scope="row"
-		class="titledesc"><?php _e( 'Use own CSS styles',
-			'bm-woocommerce' ) ?></th>
+		class="titledesc"><?php esc_html_e( 'Use own CSS styles',
+			'platnosci-online-blue-media' ) ?></th>
 	<td class="forminp">
 		<fieldset>
-		<p class="warning"><?php _e( 'Use this feature carefully. The CSS code you enter may cause unexpected visual changes to your Checkout page.',
-			'bm-woocommerce' ) ?></p>
+			<?php wp_nonce_field( 'autopay_css_editor_nonce', 'autopay_css_editor_nonce_field' ); ?>
+		<p class="warning"><?php esc_html_e( 'Use this feature carefully. The CSS code you enter may cause unexpected visual changes to your Checkout page.',
+			'platnosci-online-blue-media' ) ?></p>
 			<?php
 			$editor->display_editor();
 			?>

@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Utilities\Test_Connection;
 
+defined( 'ABSPATH' ) || exit;
+
 use Exception;
 use Ilabs\BM_Woocommerce\Gateway\Webhook\Order_Remote_Status_Manager;
 use WC_Order;
@@ -56,7 +58,7 @@ class Transaction_Testing_Controller {
 					Log_Entry::LEVEL_CRITICAL,
 					Log_Entry::get_header_critical(),
 					__( "Order create failed",
-						"bm-woocommerce" )
+						"platnosci-online-blue-media" )
 				);
 			}
 
@@ -66,7 +68,7 @@ class Transaction_Testing_Controller {
 			blue_media()->get_woocommerce_logger()->log_error(
 				sprintf( '[Connection_Testing_Controller] [execute_request] [Error message: %s] [POST: %s] ',
 					$exception->getMessage(),
-					print_r( $_POST, true )
+					wp_json_encode( $_POST ) // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is verified by the parent Async_Request handler before dispatching to this controller.
 				) );
 
 			if ( isset( $order ) && $order instanceof WC_Order && isset( $order_creator ) ) {
@@ -99,7 +101,8 @@ class Transaction_Testing_Controller {
 				);
 
 				if ( $result ) {
-					( new Order_Creator() )->remove( $order_id );
+					$order_creator = new Order_Creator();
+					$order_creator->remove( $order_id );
 				}
 			} else {
 
@@ -107,7 +110,7 @@ class Transaction_Testing_Controller {
 					Log_Entry::LEVEL_CRITICAL,
 					Log_Entry::get_header_critical(),
 					__( "Order create failed",
-						"bm-woocommerce" )
+						"platnosci-online-blue-media" )
 				);
 
 			}
@@ -119,7 +122,7 @@ class Transaction_Testing_Controller {
 			blue_media()->get_woocommerce_logger()->log_debug(
 				sprintf( '[Connection_Testing_Controller] [execute_request_verify_itn] [Message: %s] [POST: %s] ',
 					$exception->getMessage(),
-					print_r( $_POST, true )
+					wp_json_encode( $_POST ) // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce is verified by the parent Async_Request handler before dispatching to this controller.
 				) );
 
 			if ( isset( $order ) && $order instanceof WC_Order && isset( $order_creator ) ) {

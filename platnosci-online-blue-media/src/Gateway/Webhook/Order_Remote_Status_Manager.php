@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Gateway\Webhook;
 
+defined( 'ABSPATH' ) || exit;
+
 use Exception;
 use Ilabs\BM_Woocommerce\Gateway\Webhook\Order_Remote_Status_Legacy_Manager;
 
@@ -50,11 +52,11 @@ class Order_Remote_Status_Manager {
 
 		blue_media()->get_woocommerce_logger( $this->debug_id )->log_debug(
 			sprintf( '[Order_Remote_Status] [update_db_schema] [%s]',
-				print_r( [
+				wp_json_encode( [
 					'shop_path_version'   => $shop_path_version,
 					'plugin_path_version' => self::PATH_VERSION,
 					'need_update'         => $need_update ? 'TRUE' : 'FALSE',
-				], true ),
+				] ),
 			) );
 
 		if ( ! $need_update ) {
@@ -69,9 +71,9 @@ class Order_Remote_Status_Manager {
 		} catch ( Exception $exception ) {
 			blue_media()->get_woocommerce_logger( $this->debug_id )->log_error(
 				sprintf( '[Order_Remote_Status] [update_db_schema] [error] [%s]',
-					print_r( [
+					wp_json_encode( [
 						'message' => $exception->getMessage(),
-					], true ),
+					] ),
 				) );
 
 			return;
@@ -79,9 +81,9 @@ class Order_Remote_Status_Manager {
 
 		blue_media()->get_woocommerce_logger( $this->debug_id )->log_debug(
 			sprintf( '[Order_Remote_Status] [update_db_schema] [%s]',
-				print_r( [
+				wp_json_encode( [
 					'result' => $result,
-				], true ),
+				] ),
 			) );
 
 
@@ -111,10 +113,10 @@ class Order_Remote_Status_Manager {
 
 			blue_media()->get_woocommerce_logger( $this->debug_id )->log_debug(
 				sprintf( '[Order_Remote_Status] [create_table] [%s]',
-					print_r( [
+					wp_json_encode( [
 						'table_name' => $table_name,
 						'result'     => $result,
-					], true ),
+					] ),
 				) );
 
 			blue_media()->update_autopay_option( 'order_remote_schema_installed',
@@ -123,9 +125,9 @@ class Order_Remote_Status_Manager {
 		} catch ( Exception $exception ) {
 			blue_media()->get_woocommerce_logger( $this->debug_id )->log_error(
 				sprintf( '[Order_Remote_Status] [create_table] [error] [%s]',
-					print_r( [
+					wp_json_encode( [
 						'message' => $exception->getMessage(),
-					], true ),
+					] ),
 				) );
 
 		}
@@ -140,10 +142,10 @@ class Order_Remote_Status_Manager {
 	) {
 		blue_media()->get_woocommerce_logger( $this->debug_id )->log_debug(
 			sprintf( '[Order_Remote_Status] [add_order_remote_status] [%s]',
-				print_r( [
+				wp_json_encode( [
 					'order_id'           => $order_id,
 					'status_from_remote' => $status_from_remote,
-				], true ),
+				] ),
 			) );
 
 		try {
@@ -155,9 +157,9 @@ class Order_Remote_Status_Manager {
 
 			blue_media()->get_woocommerce_logger( $this->debug_id )->log_debug(
 				sprintf( '[Order_Remote_Status] [add_order_remote_status] [%s]',
-					print_r( [
+					wp_json_encode( [
 						'result' => $result,
-					], true ),
+					] ),
 				) );
 
 			if ( $this->db->last_error !== '' ) {
@@ -167,11 +169,11 @@ class Order_Remote_Status_Manager {
 		} catch ( Exception $exception ) {
 			blue_media()->get_woocommerce_logger( $this->debug_id )->log_error(
 				sprintf( '[Order_Remote_Status] [add_order_remote_status] [error] [%s]',
-					print_r( [
+					wp_json_encode( [
 						'order_id'           => $order_id,
 						'status_from_remote' => $status_from_remote,
 						'error message'      => $exception->getMessage(),
-					], true ),
+					] ),
 				) );
 		}
 	}
@@ -188,10 +190,10 @@ class Order_Remote_Status_Manager {
 
 			blue_media()->get_woocommerce_logger( $this->debug_id )->log_debug(
 				sprintf( '[Order_Remote_Status] [START TRANSACTION] [%s]',
-					print_r( [
+					wp_json_encode( [
 						'order_id'           => $order_id,
 						'status_from_remote' => $status_from_remote,
-					], true ),
+					] ),
 				) );
 
 			$current_status = $this->db->get_var(
@@ -201,10 +203,10 @@ class Order_Remote_Status_Manager {
 
 			blue_media()->get_woocommerce_logger( $this->debug_id )->log_debug(
 				sprintf( '[Order_Remote_Status] [%s]',
-					print_r( [
+					wp_json_encode( [
 						'order_id'       => $order_id,
 						'current_status' => $current_status,
-					], true ),
+					] ),
 				) );
 
 			if ( $this->db->last_error !== '' ) {
@@ -284,12 +286,12 @@ class Order_Remote_Status_Manager {
 			$this->set_status_processing_allowed_in_store( false );
 			blue_media()->get_woocommerce_logger( $this->debug_id )->log_error(
 				sprintf( '[Order_Remote_Status] [update_order_status] [can\'t update ] [%s]',
-					print_r( [
+					wp_json_encode( [
 						'order_id'                           => $order_id,
 						'status_from_remote'                 => $status_from_remote,
 						'status_processing_allowed_in_store' => $this->status_processing_allowed_in_store ? 'TRUE' : 'FALSE',
 						'error message'                      => $exception->getMessage(),
-					], true ),
+					] ),
 				) );
 
 			$this->db->query( 'ROLLBACK' );
@@ -320,15 +322,15 @@ class Order_Remote_Status_Manager {
 
 			blue_media()->get_woocommerce_logger( $this->debug_id )->log_debug(
 				sprintf( '[Order_Remote_Status] [update_to_db] [%s]',
-					print_r( [
+					wp_json_encode( [
 						'result'             => $result,
 						'order_id'           => $order_id,
 						'status_from_remote' => $status_from_remote,
-					], true ),
+					] ),
 				) );
 
 
-			throw new Exception( $this->db->last_error );
+			throw new Exception( $this->db->last_error ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception is thrown, not echoed; escaping belongs to the display layer.
 		}
 	}
 
@@ -345,10 +347,10 @@ class Order_Remote_Status_Manager {
 
 			blue_media()->get_woocommerce_logger( $this->debug_id )->log_debug(
 				sprintf( '[Order_Remote_Status] [get_order_remote_status] [%s]',
-					print_r( [
+					wp_json_encode( [
 						'result'   => $result,
 						'order_id' => $order_id,
-					], true ),
+					] ),
 				) );
 
 
@@ -364,9 +366,9 @@ class Order_Remote_Status_Manager {
 		} catch ( Exception $exception ) {
 			blue_media()->get_woocommerce_logger( $this->debug_id )->log_error(
 				sprintf( '[Order_Remote_Status] [get_order_remote_status error] [%s]',
-					print_r( [
+					wp_json_encode( [
 						'message' => $exception->getMessage(),
-					], true ),
+					] ),
 				) );
 
 			return null;

@@ -6,13 +6,15 @@ declare( strict_types=1 );
  * Plugin URI: https://wordpress.org/plugins/platnosci-online-blue-media
  * Description: Autopay for Woocommerce
  * Tags: woocommerce, bluemedia, Autopay
- * Version: 5.0.0
+ * Version: 5.0.1
  * Tested up to: 7.0
  * Requires PHP: 7.4
  * Author: Autopay S.A.
- * Author URI: autopay.pl
- * Text Domain: bm-woocommerce
- * Domain Path: /lang/
+ * Author URI: https://autopay.pl
+ * License: GPL-2.0-or-later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain: platnosci-online-blue-media
+ * Domain Path: /languages/
  *
  * Copyright 2026 Autopay S.A.
  *
@@ -45,16 +47,35 @@ if ( blue_media_system_check() ) {
 	require_once __DIR__ . '/vendor/autoload.php';
 	require_once 'dependencies.php';
 
+	/*
+	 * WordPress 6.7+ JIT translation loading always checks WP_LANG_DIR/plugins first.
+	 * If the system language pack there is outdated (missing strings added after its
+	 * release), those strings fall back to English even though the plugin bundles a
+	 * complete .mo. Redirect mofile loading to the bundled file so it takes priority.
+	 */
+	add_filter(
+		'load_textdomain_mofile',
+		static function ( string $mofile, string $domain ): string {
+			if ( 'platnosci-online-blue-media' !== $domain ) {
+				return $mofile;
+			}
+			$bundled_file = __DIR__ . '/languages/' . basename( $mofile );
+			return file_exists( $bundled_file ) ? $bundled_file : $mofile;
+		},
+		10,
+		2
+	);
+
 	function blue_media(): Ilabs\BM_Woocommerce\Plugin {
 		return new Ilabs\BM_Woocommerce\Plugin();
 	}
 
-	$config = [
+	$autopay_config = [
 		'__FILE__'    => __FILE__,
 		'slug'        => 'bm_woocommerce',
-		'lang_dir'    => 'lang',
-		'text_domain' => 'bm-woocommerce',
+		'lang_dir'    => 'languages',
+		'text_domain' => 'platnosci-online-blue-media',
 	];
 
-	blue_media()->execute( $config );
+	blue_media()->execute( $autopay_config );
 }

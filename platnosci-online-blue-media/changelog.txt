@@ -1,5 +1,20 @@
 *** Autopay Changelog ***
 
+### [5.0.1] 2026-08-06 ###
+- Fixed: XSS vulnerabilities — escaped output across all admin templates and settings fields using `esc_html_e()`, `esc_attr_e()`, `esc_url()`, and `wp_kses_post()` instead of unescaped `_e()` / `echo`.
+- Fixed: CSRF protection hardened — nonce verification added to payment-on-account-page handler, CSS editor, and legacy configuration importer.
+- Fixed: input sanitization improved — added `wp_unslash()` before `sanitize_text_field()` across all `$_POST`/`$_GET` reads; BLIK code validated as exactly 6 digits.
+- Fixed: Test Connection security — added `current_user_can('manage_woocommerce')` check; previously unauthenticated users could trigger test transactions.
+- Fixed: open redirect vulnerability — replaced `wp_redirect()` with `wp_safe_redirect()` combined with an explicit allowed-hosts list for the payment gateway domain.
+- Fixed: direct file access guard — added `defined('ABSPATH') || exit` to all PHP source files.
+- Fixed: stored CSS output sanitized via `wp_strip_all_tags()` to prevent `</style>` breakout in the custom CSS editor.
+- Fixed: debug log output — replaced `serialize()` and `print_r()` with `wp_json_encode()` to avoid accidental data exposure in logs.
+- Fixed: Polish translations now load correctly — bundled `.mo` file is prioritised, resolving partial Polish UI under WordPress 6.7+ JIT loading.
+- Fixed: removed redundant `load_plugin_textdomain()` call from `compatibility.php`.
+- Fixed: plugin entry point file reverted to `bluemedia-woocommerce.php`.
+- Fixed: settings page — reset button (`bm_reset_order`) now works correctly.
+- Fixed: payment channels list — class attribute properly escaped.
+
 ### [5.0.0] 2026-07-06 ###
 - Added: card payments through the Autopay widget on classic and block checkout.
 - Fixed: PHP Deprecated notice on PHP 8.4+ during GA4 event handling for Google Pay payments.

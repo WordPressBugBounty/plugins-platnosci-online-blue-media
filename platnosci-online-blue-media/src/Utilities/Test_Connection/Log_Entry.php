@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Utilities\Test_Connection;
 
+defined( 'ABSPATH' ) || exit;
+
 use Exception;
 
 class Log_Entry {
@@ -35,6 +37,7 @@ class Log_Entry {
 			self::LEVEL_INFO,
 			self::LEVEL_WARNING,
 		] ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception is thrown, not echoed; escaping belongs to the display layer.
 			throw new Exception( 'Invalid log level: ' . $level );
 		}
 
@@ -65,16 +68,16 @@ class Log_Entry {
 
 	public static function get_header_critical(): string {
 		return __( 'Critical',
-			'bm-woocommerce' );
+			'platnosci-online-blue-media' );
 	}
 
 	public static function get_header_warning(): string {
 		return __( 'Warning',
-			'bm-woocommerce' );
+			'platnosci-online-blue-media' );
 	}
 
 	public static function get_header_info(): string {
 		return __( 'Info',
-			'bm-woocommerce' );
+			'platnosci-online-blue-media' );
 	}
 }

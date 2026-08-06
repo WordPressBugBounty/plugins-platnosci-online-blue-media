@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Model\White_Label;
 
+defined( 'ABSPATH' ) || exit;
+
 class Item {
 
 	/**

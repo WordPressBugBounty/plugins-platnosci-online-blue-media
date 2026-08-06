@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Model\White_Label;
 
+defined( 'ABSPATH' ) || exit;
+
 class Expandable_Group {
 
 	/**
@@ -58,7 +60,7 @@ class Expandable_Group {
 
 		return [
 			'label'         => $this->name,
-			'key'           => 'bm_channnel_group_' . rand( 1, 1000 ),
+			'key'           => 'bm_channnel_group_' . wp_rand( 1, 1000 ),
 			'value'         => 'test',
 			'name'          => 'bm-payment-channel-group',
 			'icon'          => $this->icon,

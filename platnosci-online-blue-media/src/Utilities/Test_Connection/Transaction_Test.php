@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Utilities\Test_Connection;
 
+defined( 'ABSPATH' ) || exit;
+
 use Exception;
 use Ilabs\BM_Woocommerce\Data\Remote\Blue_Media\Client;
 use Ilabs\BM_Woocommerce\Gateway\Autopay_Payment_Protocol;
@@ -19,9 +21,9 @@ class Transaction_Test {
 
 		blue_media()->get_woocommerce_logger()->log_debug(
 			sprintf( '[Transaction_Test] [initialize] [Order ID: %s] [Gateway payment url: %s] [CustomerEmail: %s]',
-				print_r( $order->get_id(), true ),
+				wp_json_encode( $order->get_id() ),
 				$gateway_payment_url,
-				print_r( $order->get_billing_email(), true )
+				wp_json_encode( $order->get_billing_email() )
 			)
 		);
 
@@ -59,8 +61,8 @@ class Transaction_Test {
 
 		blue_media()->get_woocommerce_logger()->log_debug(
 			sprintf( '[Transaction_Test] [initialize] [params: %s] [result: %s]',
-				print_r( $params, true ),
-				print_r( $result, true ),
+				wp_json_encode( $params ),
+				wp_json_encode( $result ),
 			) );
 
 		blue_media()->get_woocommerce_logger()->log_debug(
@@ -72,12 +74,14 @@ class Transaction_Test {
 		);
 
 		if ( isset( $result[ Autopay_Payment_Protocol::XML_LOCAL_REASON ] ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception is thrown, not echoed; escaping belongs to the display layer.
 			throw new Exception( $result[ Autopay_Payment_Protocol::XML_LOCAL_REASON ] );
 		}
 
 		if ( empty( $result ) || ! is_array( $result ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception is thrown, not echoed; escaping belongs to the display layer.
 			throw new Exception( sprintf( 'Continue transaction response invalid format (%s)',
-				serialize( $result ) ) );
+				wp_json_encode( $result ) ) );
 		}
 	}
 
@@ -85,9 +89,9 @@ class Transaction_Test {
 		blue_media()->get_woocommerce_logger()->log_debug(
 			sprintf( '[Transaction_Test] [verify_itn] [order_id: %s] [autopay_itn_received: %s] [bm_order_itn_status: %s] [autopay_test_order: %s]',
 				$order->get_id(),
-				print_r( $order->get_meta( 'autopay_itn_received' ), true ),
-				print_r( $order->get_meta( 'bm_order_itn_status' ), true ),
-				print_r( $order->get_meta( 'autopay_test_order' ), true ),
+				wp_json_encode( $order->get_meta( 'autopay_itn_received' ) ),
+				wp_json_encode( $order->get_meta( 'bm_order_itn_status' ) ),
+				wp_json_encode( $order->get_meta( 'autopay_test_order' ) ),
 			) );
 		if ( ! empty( $order->get_meta( 'autopay_itn_received' ) ) ) {
 			return true;

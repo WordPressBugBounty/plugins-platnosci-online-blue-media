@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Service\Currency;
 
+defined( 'ABSPATH' ) || exit;
+
 use Exception;
 use Ilabs\BM_Woocommerce\Domain\Service\Currency\Interfaces\Currency_Interface;
 use Ilabs\BM_Woocommerce\Domain\Service\Currency\Value_Object\CZK;
@@ -299,7 +301,8 @@ class Currency {
 
 	private function hooks() {
 
-		if ( isset( $_GET['section'] ) && $_GET['section'] === 'bluemedia' ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only admin routing parameter; no state is changed.
+		if ( isset( $_GET['section'] ) && sanitize_key( wp_unslash( $_GET['section'] ) ) === 'bluemedia' ) {
 			$request_id = $this->generate_unique_request_id();
 			$nonce      = $this->generate_nonce( $request_id );
 
@@ -314,14 +317,14 @@ class Currency {
 			name="autopay_currency_edit[nonce]"
 			value="%s"
 		/>',
-						$nonce );
+						esc_attr( $nonce ) );
 
 					printf( '<input
 			type="hidden"
 			name="autopay_currency_edit[request_id]"
 			value="%s"
 		/>',
-						$request_id );
+						esc_attr( $request_id ) );
 
 					echo '<input
 			type="hidden"
@@ -366,7 +369,7 @@ class Currency {
 
 			blue_media()->get_woocommerce_logger()->log_debug(
 				sprintf( '[Currency] [migrate] [$shop_currency: %s]',
-					print_r( $shop_currency, true ),
+					wp_json_encode( $shop_currency ),
 				) );
 
 			if ( 'PLN' !== $shop_currency->get_code() ) {
@@ -380,14 +383,13 @@ class Currency {
 
 				blue_media()->get_woocommerce_logger()->log_debug(
 					sprintf( '[Currency] [migrate] [migrate_4_5 matched options: %s]',
-						print_r( [
+						wp_json_encode( [
 							'whitelabel'       => $whitelabel,
 							'service_id'       => $service_id,
 							'test_service_id'  => $test_service_id,
 							'private_key'      => $private_key,
 							'test_private_key' => $test_private_key,
-
-						], true ),
+						] ),
 					) );
 
 				blue_media()->update_autopay_option( $this->add_currency_postfix( 'whitelabel',
@@ -421,9 +423,11 @@ class Currency {
 
 	private function handle() {
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Custom nonce is verified via wp_verify_nonce() later in this method; individual fields are sanitized via sanitize_text_field() in get_from_params().
 		if ( isset( $_POST['autopay_currency_edit'] ) && is_array( $_POST['autopay_currency_edit'] ) ) {
 
-			$params = $_POST['autopay_currency_edit'];
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Custom nonce is verified via wp_verify_nonce() later in this method; currency code is validated against an allowlist.
+			$params = wp_unslash( $_POST['autopay_currency_edit'] );
 
 			$nonce         = $this->get_from_params( 'nonce', $params );
 			$request_id    = $this->get_from_params( 'request_id', $params );

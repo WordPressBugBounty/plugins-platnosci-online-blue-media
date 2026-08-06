@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Model\White_Label\v3\View_Model;
 
+defined( 'ABSPATH' ) || exit;
+
 use Ilabs\BM_Woocommerce\Domain\Model\White_Label\v3\Gateway;
 use Ilabs\BM_Woocommerce\Domain\Model\White_Label\v3\Group;
 

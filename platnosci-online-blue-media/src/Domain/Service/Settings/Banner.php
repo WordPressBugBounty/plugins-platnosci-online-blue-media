@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Service\Settings;
 
+defined( 'ABSPATH' ) || exit;
+
 use DOMDocument;
 use DOMXPath;
 use Exception;
@@ -21,7 +23,7 @@ class Banner {
 		} catch ( Exception $exception ) {
 			blue_media()->get_woocommerce_logger()->log_error(
 				sprintf( '[get_banner_content error:] [%s]',
-					print_r( $exception->getMessage(), true )
+					wp_json_encode( $exception->getMessage() )
 				) );
 
 			return '';
@@ -37,7 +39,7 @@ class Banner {
 		} catch ( Exception $exception ) {
 			blue_media()->get_woocommerce_logger()->log_error(
 				sprintf( '[get_banner_url error:] [%s]',
-					print_r( $exception->getMessage(), true )
+					wp_json_encode( $exception->getMessage() )
 				) );
 
 			return '';

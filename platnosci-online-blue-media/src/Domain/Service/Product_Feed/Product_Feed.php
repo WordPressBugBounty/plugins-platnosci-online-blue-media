@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Service\Product_Feed;
 
+defined( 'ABSPATH' ) || exit;
+
 use SimpleXMLElement;
 
 class Product_Feed {
@@ -9,17 +11,20 @@ class Product_Feed {
 	private static ?string $pixel_js_src = null;
 
 	public function init() {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Public product feed endpoint; read-only GET routing parameter.
 		if (
 			isset( $_GET['product_feed'] ) && blue_media()
 				                                  ->get_blue_media_gateway()
 				                                  ->get_option( 'campaign_tracking',
 					                                  'no' ) === 'yes'
 		) {
+			// phpcs:enable WordPress.Security.NonceVerification.Recommended
 			$this->generate_google_product_feed();
 		}
 	}
 
 	function generate_google_product_feed() {
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting -- Suppresses PHP notices that would corrupt XML product feed HTTP response.
 		error_reporting( E_ERROR | E_WARNING | E_PARSE );
 
 		$products = wc_get_products( [ 'status' => 'publish' ] );
@@ -70,7 +75,7 @@ class Product_Feed {
 		}
 
 		header( 'Content-Type: application/xml; charset=utf-8' );
-		echo $rss->asXML();
+		echo $rss->asXML(); // phpcs:ignore WordPress.Security.EscapeOutput -- XML output with Content-Type: application/xml header, SimpleXML escapes data at addChild()
 		exit();
 	}
 

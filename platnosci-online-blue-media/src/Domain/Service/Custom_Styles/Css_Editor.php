@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Service\Custom_Styles;
 
+defined( 'ABSPATH' ) || exit;
+
 use Exception;
 use Ilabs\BM_Woocommerce\Helpers\Helper;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Presentation\Form\Fields\Checkbox;
@@ -41,7 +43,7 @@ class Css_Editor {
 	 */
 	public function display_editor() {
 		$this->display_switcher();
-		echo $this->get_editor( $this->editor_content );
+		echo $this->get_editor( $this->editor_content ); // phpcs:ignore WordPress.Security.EscapeOutput -- plugin-generated HTML from ob_get_clean(), esc_html would destroy markup
 	}
 
 	private function configure_controls() {
@@ -51,7 +53,7 @@ class Css_Editor {
 
 		$checkbox->set_value( $this->read_enabled_option() ? 'yes' : 'no' );
 		$checkbox->set_default( 'no' );
-		$checkbox->set_label( __( 'Feature enabled', 'bm-woocommerce' ) );
+		$checkbox->set_label( __( 'Feature enabled', 'platnosci-online-blue-media' ) );
 		$this->switcher_checkbox = $checkbox;
 
 	}
@@ -61,7 +63,7 @@ class Css_Editor {
 	 */
 	public function display_switcher() {
 		$field = new Field();
-		echo $field->get_html( $this->switcher_checkbox );
+		echo $field->get_html( $this->switcher_checkbox ); // phpcs:ignore WordPress.Security.EscapeOutput -- WC/ilabs Field object returns safe HTML
 	}
 
 	private function get_editor( string $content = '' ): string {
@@ -69,7 +71,11 @@ class Css_Editor {
 		$content = $content === '' ? $this->get_default_css_code() : $content;
 		ob_start();
 
-		echo "<textarea name=\"$id\" id=\"$id\" style=\"width:100%; height:500px;\">" . esc_textarea( $content ) . "</textarea>";
+		printf(
+			'<textarea name="%1$s" id="%1$s" style="width:100%%; height:500px;">%2$s</textarea>',
+			esc_attr( $id ),
+			esc_textarea( $content )
+		);
 		?>
 		<script>
 			jQuery(document).ready(function ($) {
@@ -79,7 +85,7 @@ class Css_Editor {
 					tabSize: 2,
 					mode: 'css',
 				});
-				var editor = wp.codeEditor.initialize($('#<?php echo $id?>'), editorSettings);
+				var editor = wp.codeEditor.initialize($('#<?php echo esc_js( $id )?>'), editorSettings);
 			});
 		</script>
 		<?php
@@ -88,12 +94,17 @@ class Css_Editor {
 	}
 
 	public function handle_save() {
+		if ( ! current_user_can( 'manage_woocommerce' )
+		    || ! isset( $_POST['autopay_css_editor_nonce_field'] )
+		    || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['autopay_css_editor_nonce_field'] ) ), 'autopay_css_editor_nonce' ) ) {
+			return;
+		}
 
 		if ( blue_media()
 			->get_request()
 			->key_exsists( $this->get_editor_content_option_id() ) ) {
 
-			$content = $_POST[ $this->get_editor_content_option_id() ];
+			$content = wp_unslash( $_POST[ $this->get_editor_content_option_id() ] ?? '' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- CSS content; sanitize_text_field() would corrupt valid CSS (strips angle brackets, colons, semicolons). Access is nonce-verified and capability-checked above.
 			$content = $this->normalize_new_lines( $content );
 			Helper::update_gateway_option( $this->get_editor_content_option_id(),
 				$content );
@@ -109,7 +120,7 @@ class Css_Editor {
 			blue_media()
 				->alerts()
 				->add_success( __( 'Changes have been saved.',
-					'bm-woocommerce' ) );
+					'platnosci-online-blue-media' ) );
 		}
 	}
 
@@ -130,7 +141,7 @@ class Css_Editor {
 	}
 
 	private function get_default_css_code(): string {
-		$message = __( "Insert your CSS code here", "bm-woocommerce" );
+		$message = __( "Insert your CSS code here", "platnosci-online-blue-media" );
 
 		return "/*$message*/";
 	}

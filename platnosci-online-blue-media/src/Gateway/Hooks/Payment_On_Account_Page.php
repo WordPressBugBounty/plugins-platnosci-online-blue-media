@@ -2,24 +2,37 @@
 
 namespace Ilabs\BM_Woocommerce\Gateway\Hooks;
 
+defined( 'ABSPATH' ) || exit;
+
+use Ilabs\BM_Woocommerce\Gateway\Session_Bridge;
+
 class Payment_On_Account_Page {
 
 	public function init() {
 
 		add_action( 'wp', function () {
-			if ( is_wc_endpoint_url( 'order-pay' ) ) {
-				$this->payment_on_account_page_stage_1();
+			if ( ! is_wc_endpoint_url( 'order-pay' ) ) {
+				return;
 			}
-		} );
 
-		if ( isset( $_POST['autopay_checkout_on_account_page'] ) ) {
+			$this->payment_on_account_page_stage_1();
+
+			if ( ! isset( $_POST['autopay_checkout_on_account_page'] ) ) {
+				return;
+			}
+
+			$nonce = sanitize_text_field( wp_unslash( $_POST['woocommerce-pay-nonce'] ?? '' ) );
+			if ( ! wp_verify_nonce( $nonce, 'woocommerce-pay' ) ) {
+				return;
+			}
+
 			$this->payment_on_account_page_stage_2();
+		}, 10 );
 
-
-		}
-
-		if ( isset( $_REQUEST['autopay_payment_on_account_page'] )
-		     && '1' === $_REQUEST['autopay_payment_on_account_page'] ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing flag; stage 3 is protected by HMAC signature verification via verify_signature().
+		if ( isset( $_GET['autopay_payment_on_account_page'] )
+		     // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing flag; stage 3 is protected by HMAC signature verification via verify_signature().
+		     && '1' === sanitize_key( wp_unslash( $_GET['autopay_payment_on_account_page'] ) ) ) {
 			$this->payment_on_account_page_stage_3();
 		}
 	}
@@ -44,45 +57,55 @@ class Payment_On_Account_Page {
 			->get_woocommerce_logger()
 			->log_debug( '[payment_on_account_page_stage_3]' );
 
-		if ( ! empty( $_GET['sig'] ) && ! empty( $_GET['order_id'] ) ) {
-			$signature = sanitize_key( $_GET['sig'] );
-			$order_id  = (int) $_GET['order_id'];
-
-			$signature_verified = self::verify_signature( $signature,
-				$order_id );
-
-			blue_media()
-				->get_woocommerce_logger()
-				->log_debug( sprintf( '[payment_on_account_page_stage_3] [OrderId: %s] [Sig: %s] [verified: %s]',
-						$order_id,
-						$signature,
-						$signature_verified ? 'true' : 'false',
-					)
-				);
-
-			$order                  = wc_get_order( $order_id );
-			$order_params_recovered = $order->get_meta( 'bm_order_payment_params' );
-
-			blue_media()
-				->get_woocommerce_logger()
-				->log_debug( sprintf( '[payment_on_account_page_stage_3] [order_params_recovered: %s]',
-						serialize( $order_params_recovered ),
-					)
-				);
-
-			if ( ! is_object( WC()->session ) ) {
-				WC()->initialize_session();
-			}
-
-			WC()->session->set( 'bm_order_payment_params',
-				$order_params_recovered );
-			WC()->session->save_data();
-
-			delete_post_meta( $order_id, 'bm_order_payment_params' );
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- HMAC signature in $_GET['sig'] is verified via verify_signature() before any state change occurs.
+		if ( empty( $_GET['sig'] ) || empty( $_GET['order_id'] ) ) {
+			return;
 		}
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- HMAC signature verified via verify_signature() on the line below before any state changes occur.
+		$signature = sanitize_key( wp_unslash( $_GET['sig'] ?? '' ) );
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- HMAC signature verified via verify_signature() on the line below before any state changes occur.
+		$order_id  = absint( wp_unslash( $_GET['order_id'] ?? '0' ) );
+
+		if ( 64 !== strlen( $signature ) || ! ctype_xdigit( $signature ) ) {
+			return;
+		}
+
+		if ( ! self::verify_signature( $signature, $order_id ) ) {
+			return;
+		}
+
+		$order = wc_get_order( $order_id );
+
+		if ( ! $order instanceof \WC_Order ) {
+			return;
+		}
+
+		$order_params_recovered = $order->get_meta( 'bm_order_payment_params' );
+
+		if ( empty( $order_params_recovered ) ) {
+			return;
+		}
+
+		blue_media()
+			->get_woocommerce_logger()
+			->log_debug( sprintf( '[payment_on_account_page_stage_3] [OrderId: %s] [order_params_recovered: found]',
+					$order_id,
+				)
+			);
+
+		if ( ! is_object( WC()->session ) ) {
+			WC()->initialize_session();
+		}
+
+		WC()->session->set( 'bm_order_payment_params',
+			$order_params_recovered );
+		Session_Bridge::save();
+
+		delete_post_meta( $order_id, 'bm_order_payment_params' );
+
 		add_filter( 'autopay_filter_can_redirect_to_payment_gateway',
-			function ( bool $return ) {
+			static function ( bool $return ): bool {
 				return true;
 			} );
 	}

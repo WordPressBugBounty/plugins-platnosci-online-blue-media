@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce;
 
+defined( 'ABSPATH' ) || exit;
+
 use Ilabs\BM_Woocommerce\Domain\Service\Ga4\Ga4_Hooks;
 
 class Hooks {

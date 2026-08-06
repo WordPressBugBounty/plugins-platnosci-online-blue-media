@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Service\Currency\Value_Object;
 
+defined( 'ABSPATH' ) || exit;
+
 use Ilabs\BM_Woocommerce\Domain\Service\Currency\Interfaces\Currency_Interface;
 
 class PLN implements Currency_Interface {
@@ -11,7 +13,7 @@ class PLN implements Currency_Interface {
 	}
 
 	public function get_name(): string {
-		return __( 'Polish z&#x142;oty', 'bm-woocommerce' );
+		return __( 'Polish z&#x142;oty', 'platnosci-online-blue-media' );
 	}
 
 	public function get_symbol(): string {

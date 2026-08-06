@@ -7,6 +7,8 @@
 
 namespace Ilabs\BM_Woocommerce\Helpers;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Provide Autopay environment URLs.
  */

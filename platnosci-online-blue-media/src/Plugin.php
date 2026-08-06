@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce;
 
+defined( 'ABSPATH' ) || exit;
+
 use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
 use Exception;
 
@@ -130,11 +132,6 @@ class Plugin extends Abstract_Ilabs_Plugin {
 			[ $this, 'woocommerce_block_support' ] );
 
 
-		$lang_dir = $this->get_from_config( 'lang_dir' );
-		load_plugin_textdomain( $this->get_text_domain(),
-			\false,
-			$this->get_plugin_basename() . "/{$lang_dir}/" );
-
 		$this->init_payment_gateway();
 		$this->register_hooks();
 		$this->get_connection_testing_controller()->handle();
@@ -150,7 +147,7 @@ class Plugin extends Abstract_Ilabs_Plugin {
 					if ( $order->has_status( [ 'pending' ] ) ) {
 						$order->update_status( 'cancelled' );
 						$order->add_order_note( __( 'Unpaid order cancelled - time limit reached.',
-							'bm-woocommerce' ) );
+							'platnosci-online-blue-media' ) );
 						$order->save();
 					}
 				}
@@ -251,13 +248,13 @@ class Plugin extends Abstract_Ilabs_Plugin {
 
 
 	private function is_itn_request(): bool {
-
-		return isset( $_GET['wc-api'] ) && 'wc_gateway_bluemedia' === $_GET['wc-api'];
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- ITN detection; read-only routing parameter; no state is changed.
+		return isset( $_GET['wc-api'] ) && 'wc_gateway_bluemedia' === sanitize_key( wp_unslash( $_GET['wc-api'] ) );
 	}
 
 	private function get_request_uri(): string {
 		if ( isset( $_SERVER['REQUEST_URI'] ) ) {
-			return (string) $_SERVER['REQUEST_URI'];
+			return sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) );
 		}
 
 		return '';
@@ -319,7 +316,7 @@ class Plugin extends Abstract_Ilabs_Plugin {
 						'autopay_google_pay',
 						'https://pay.google.com/gp/p/js/pay.js',
 						[],
-						null,
+						null, // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- External Google Pay CDN; version pinning is not possible.
 						false
 					);
 				}
@@ -355,7 +352,8 @@ class Plugin extends Abstract_Ilabs_Plugin {
 					$this->get_plugin_prefix() . '_autopay_pixel',
 					$pixel_js_src,
 					[],
-					$this->get_plugin_version()
+					$this->get_plugin_version(),
+					false
 				);
 			}
 		}
@@ -375,7 +373,7 @@ class Plugin extends Abstract_Ilabs_Plugin {
 				'autopay_google_pay',
 				'https://pay.google.com/gp/p/js/pay.js',
 				[],
-				null,
+				null, // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- External Google Pay CDN; version pinning is not possible.
 				false
 			);
 
@@ -389,7 +387,7 @@ class Plugin extends Abstract_Ilabs_Plugin {
 					'autopay_card_widget',
 					$cards_domain . '/widget-new/widget-communication.min.js',
 					[ 'jquery' ],
-					null,
+					null, // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- External Autopay card widget CDN; version is managed by the Autopay payment infrastructure.
 					true
 				);
 			}
@@ -405,21 +403,23 @@ class Plugin extends Abstract_Ilabs_Plugin {
 
 		if ( is_a( $current_screen,
 				'WP_Screen' ) && 'woocommerce_page_wc-settings' === $current_screen->id ) {
-			if ( isset( $_GET['tab'] ) && $_GET['tab'] == 'checkout' ) {
-				if ( isset( $_GET['section'] ) && $_GET['section'] === 'bluemedia' ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing parameter; no state is changed.
+			if ( isset( $_GET['tab'] ) && sanitize_key( wp_unslash( $_GET['tab'] ) ) === 'checkout' ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing parameter; no state is changed.
+				if ( isset( $_GET['section'] ) && sanitize_key( wp_unslash( $_GET['section'] ) ) === 'bluemedia' ) {
 
 					Css_Editor::enqueue_scripts();
 
 					wp_enqueue_script( $this->get_plugin_prefix() . '_admin_js',
 						$this->get_plugin_js_url() . '/admin.js',
 						[ 'jquery' ],
-						1.1,
+						blue_media()->get_plugin_version(),
 						true );
 
 					wp_enqueue_script( $this->get_plugin_prefix() . '_test_con_js',
 						$this->get_plugin_js_url() . '/testConnection.js',
 						[ 'jquery' ],
-						1.1,
+						blue_media()->get_plugin_version(),
 						true );
 
 					wp_localize_script( $this->get_plugin_prefix() . '_test_con_js',
@@ -439,16 +439,23 @@ class Plugin extends Abstract_Ilabs_Plugin {
 					);
 
 					wp_enqueue_style( $this->get_plugin_prefix() . '_admin_css',
-						$this->get_plugin_css_url() . '/admin.css'
+						$this->get_plugin_css_url() . '/admin.css',
+						[],
+						blue_media()->get_plugin_version()
 					);
 
 					wp_enqueue_style( $this->get_plugin_prefix() . '_banner_css',
-						'https://plugins-api.autopay.pl/dokumenty/autopay.css'
+						'https://plugins-api.autopay.pl/dokumenty/autopay.css',
+						[],
+						null // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- External Autopay banner CSS CDN; version is managed by Autopay infrastructure.
 					);
 
-					if ( isset( $_GET['bmtab'] ) && $_GET['bmtab'] === 'vas' ) {
+					// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing parameter; no state is changed.
+					if ( isset( $_GET['bmtab'] ) && sanitize_key( wp_unslash( $_GET['bmtab'] ) ) === 'vas' ) {
 						wp_enqueue_style( $this->get_plugin_prefix() . '_vas_css',
-							'https://plugins-api.autopay.pl/dokumenty/vas.css'
+							'https://plugins-api.autopay.pl/dokumenty/vas.css',
+							[],
+							null // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- External Autopay VAS CSS CDN; version is managed by Autopay infrastructure.
 						);
 					}
 				}
@@ -457,7 +464,8 @@ class Plugin extends Abstract_Ilabs_Plugin {
 	}
 
 	private function start_output_buffer_on_itn_request() {
-		if ( isset( $_GET['wc-api'] ) && $_GET['wc-api'] === 'wc_gateway_bluemedia' && ! ob_get_level() ) {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- ITN detection; read-only routing parameter; no state is changed.
+		if ( isset( $_GET['wc-api'] ) && sanitize_key( wp_unslash( $_GET['wc-api'] ) ) === 'wc_gateway_bluemedia' && ! ob_get_level() ) {
 
 			ob_start();
 		}
@@ -489,7 +497,7 @@ class Plugin extends Abstract_Ilabs_Plugin {
 			$alerts = new Alerts();
 			$msg    = sprintf(
 				__( 'The selected currency is not supported by the Autopay payment gateway. The gateway has been disabled',
-					'bm-woocommerce' )
+					'platnosci-online-blue-media' )
 			);
 			$alerts->add_error( 'Autopay: ' . $msg );
 
@@ -541,8 +549,10 @@ class Plugin extends Abstract_Ilabs_Plugin {
 				$gateways[]
 					             = 'Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway';
 				$order_key_found = '';
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing parameter used only for debug logging; no state is changed.
 				if ( isset( $_GET['key'] ) ) {
-					$keyValue = $_GET['key'];
+					// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing parameter used only for debug logging; no state is changed.
+					$keyValue = sanitize_text_field( wp_unslash( $_GET['key'] ) );
 					if ( strpos( $keyValue, 'wc_order_' ) === 0 ) {
 						$order_key_found = sprintf( '[%s found in GET]',
 							$keyValue,
@@ -556,11 +566,14 @@ class Plugin extends Abstract_Ilabs_Plugin {
 	}
 
 	public function return_redirect_handler() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing parameter; no state is changed.
 		if ( isset( $_GET['bm_gateway_return'] ) ) {
 			$order = null;
 
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing parameter; no state is changed.
 			if ( isset( $_GET['key'] ) ) {
-				$order_id = wc_get_order_id_by_order_key( (int) $_GET['key'] );
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing parameter; no state is changed.
+				$order_id = wc_get_order_id_by_order_key( sanitize_text_field( wp_unslash( $_GET['key'] ) ) );
 				$order    = wc_get_order( $order_id );
 				if ( $order instanceof WC_Order ) {
 					$init_params = $order->get_meta( 'bm_transaction_init_params' );
@@ -568,8 +581,10 @@ class Plugin extends Abstract_Ilabs_Plugin {
 				}
 			}
 
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing parameter; no state is changed.
 			if ( isset( $_GET['OrderID'] ) ) {
-				$order = wc_get_order( (int) $_GET['OrderID'] );
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing parameter; no state is changed.
+				$order = wc_get_order( absint( wp_unslash( $_GET['OrderID'] ) ) );
 				if ( $order instanceof WC_Order ) {
 					$init_params = $order->get_meta( 'bm_transaction_init_params' );
 					$order       = is_array( $init_params ) ? $order : null;
@@ -599,23 +614,25 @@ class Plugin extends Abstract_Ilabs_Plugin {
 						$finish_url
 					) );
 
-				wp_redirect( $finish_url );
+				wp_safe_redirect( $finish_url );
 				exit;
 			}
 		}
 	}
 
 	public function blik0_timeout_handler() {
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- WooCommerce order key ($_GET['key']) acts as an unguessable per-order token; this URL is generated by the plugin itself during BLIK-0 flow and Autopay redirects back to it. WP nonce cannot be added to Autopay redirect URLs.
 		if ( isset( $_GET['key'] ) && isset( $_GET['blik0_timeout'] )
-		     && '1' === $_GET['blik0_timeout'] ) {
-			$order_id = wc_get_order_id_by_order_key( $_GET['key'] );
+		     && '1' === sanitize_key( wp_unslash( $_GET['blik0_timeout'] ) ) ) {
+			$order_id = wc_get_order_id_by_order_key( sanitize_text_field( wp_unslash( $_GET['key'] ) ) );
+			// phpcs:enable WordPress.Security.NonceVerification.Recommended
 			$order    = wc_get_order( $order_id );
 			if ( $order instanceof WC_Order ) {
 				$this->get_blue_media_gateway()
 				     ->update_order_status( $order,
 					     'failed',
 					     __( 'Autopay BLIK-0: Timed out while waiting for confirmation.',
-						     'bm-woocommerce' ) );
+						     'platnosci-online-blue-media' ) );
 				$order->save();
 			}
 		}
@@ -744,7 +761,7 @@ class Plugin extends Abstract_Ilabs_Plugin {
 				$alerts = new Alerts();
 				$msg    = sprintf(
 					__( 'The block-based payment module will not work with the installed version of Woocommerce. Install at least 8.1.0 version.',
-						'bm-woocommerce' )
+						'platnosci-online-blue-media' )
 				);
 				$alerts->add_error( 'Autopay: ' . $msg );
 			}
@@ -790,11 +807,10 @@ class Plugin extends Abstract_Ilabs_Plugin {
 	public function update_autopay_option( string $key, $value ): void {
 		blue_media()->get_woocommerce_logger()->log_debug(
 			sprintf( '[Plugin] [update_autopay_option] [%s]',
-				print_r( [
+				wp_json_encode( [
 					'key'   => $key,
 					'value' => $value,
-
-				], true ),
+				] ),
 			) );
 		if ( $this->get_blue_media_gateway() ) {
 			$this->get_blue_media_gateway()

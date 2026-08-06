@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Controller;
 
+defined( 'ABSPATH' ) || exit;
+
 use Exception;
 use Ilabs\BM_Woocommerce\Controller\Model\Payment_Status_Response_Value_Object;
 use Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway;
@@ -32,7 +34,7 @@ class Payment_Status_Controller extends Abstract_Controller implements Controlle
 		if ( ! wp_verify_nonce( $nonce, self::NONCE_ACTION ) ) {
 			blue_media()->get_woocommerce_logger()->log_error(
 				sprintf( '[Payment_Status_Controller] [wp_verify_nonce failed]  [order_id: %s]',
-					print_r( $order_id, true )
+					wp_json_encode( $order_id )
 				) );
 
 			$this->send_response(
@@ -47,8 +49,8 @@ class Payment_Status_Controller extends Abstract_Controller implements Controlle
 		if ( '' !== $transaction_start_error ) {
 			blue_media()->get_woocommerce_logger()->log_error(
 				sprintf( '[Payment_Status_Controller] [transaction_start_error: %s]  [order_id: %s]',
-					print_r( $transaction_start_error, true ),
-					print_r( $order_id, true )
+					wp_json_encode( $transaction_start_error ),
+					wp_json_encode( $order_id )
 				) );
 
 			$this->send_response(
@@ -106,6 +108,6 @@ class Payment_Status_Controller extends Abstract_Controller implements Controlle
 	}
 
 	public static function get_generic_err_msg(): string {
-		return __( 'Payment failed', 'bm-woocommerce' );
+		return __( 'Payment failed', 'platnosci-online-blue-media' );
 	}
 }

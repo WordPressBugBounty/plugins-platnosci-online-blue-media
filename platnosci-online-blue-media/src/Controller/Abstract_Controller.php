@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Controller;
 
+defined( 'ABSPATH' ) || exit;
+
 
 use Ilabs\BM_Woocommerce\Controller\Model\Payment_Status_Response_Value_Object;
 
@@ -25,7 +27,7 @@ abstract class Abstract_Controller {
 
 		blue_media()->get_woocommerce_logger()->log_error(
 			sprintf( '[Abstract_Controller] [send_response]  [response: %s]',
-				print_r( $response, true )
+				wp_json_encode( $response->to_array() )
 			) );
 
 		$this->output_response( $response );

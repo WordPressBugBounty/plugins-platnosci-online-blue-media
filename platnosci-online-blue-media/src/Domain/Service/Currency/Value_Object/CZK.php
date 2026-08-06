@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Service\Currency\Value_Object;
 
+defined( 'ABSPATH' ) || exit;
+
 use Ilabs\BM_Woocommerce\Domain\Service\Currency\Interfaces\Currency_Interface;
 
 class CZK implements Currency_Interface {
@@ -11,7 +13,7 @@ class CZK implements Currency_Interface {
 	}
 
 	public function get_name(): string {
-		return __( 'Czech koruna', 'bm-woocommerce' );
+		return __( 'Czech koruna', 'platnosci-online-blue-media' );
 	}
 
 	public function get_symbol(): string {

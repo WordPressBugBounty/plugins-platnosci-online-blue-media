@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Model;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * PaymentMethod value object representing a single payment method with stable identification.
  *

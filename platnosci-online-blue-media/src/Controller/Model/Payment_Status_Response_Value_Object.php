@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Controller\Model;
 
+defined( 'ABSPATH' ) || exit;
+
 use Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway;
 use Ilabs\BM_Woocommerce\Utilities\Test_Connection\Response_Interface;
 
@@ -106,19 +108,19 @@ class Payment_Status_Response_Value_Object implements Response_Interface {
 		switch ( $itn_status_id ) {
 			case Blue_Media_Gateway::ITN_SUCCESS_STATUS_ID:
 				return __( 'Payment successful.',
-					'bm-woocommerce' );
+					'platnosci-online-blue-media' );
 
 			case Blue_Media_Gateway::ITN_PENDING_STATUS_ID:
 				return __( 'Check your device.',
-					'bm-woocommerce' );
+					'platnosci-online-blue-media' );
 
 			case Blue_Media_Gateway::ITN_FAILURE_STATUS_ID:
 				return __( 'Payment failed.',
-					'bm-woocommerce' );
+					'platnosci-online-blue-media' );
 
 			default:
 				return __( 'Waiting for transaction confirmation.',
-					'bm-woocommerce' );
+					'platnosci-online-blue-media' );
 		}
 	}
 }

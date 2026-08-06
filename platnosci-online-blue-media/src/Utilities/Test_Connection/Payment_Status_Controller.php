@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Utilities\Test_Connection;
 
+defined( 'ABSPATH' ) || exit;
+
 use Exception;
 use Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway;
 
@@ -22,7 +24,7 @@ class Payment_Status_Controller {
 				Log_Entry::LEVEL_CRITICAL,
 				Log_Entry::get_header_critical(),
 				__( "Order get failed",
-					"bm-woocommerce" )
+					"platnosci-online-blue-media" )
 			);
 		}
 
@@ -30,8 +32,8 @@ class Payment_Status_Controller {
 		if ( '' !== $transaction_start_error ) {
 			blue_media()->get_woocommerce_logger()->log_error(
 				sprintf( '[Payment_Status_Controller] [transaction_start_error: %s]  [order_id: %s]',
-					print_r( $transaction_start_error, true ),
-					print_r( $order_id, true )
+					wp_json_encode( $transaction_start_error ),
+					wp_json_encode( $order_id )
 				) );
 
 			return new Log_Entry(
@@ -55,6 +57,6 @@ class Payment_Status_Controller {
 	}
 
 	public static function get_generic_err_msg(): string {
-		return __( 'Payment failed', 'bm-woocommerce' );
+		return __( 'Payment failed', 'platnosci-online-blue-media' );
 	}
 }

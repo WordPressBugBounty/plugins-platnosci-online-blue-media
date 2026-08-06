@@ -7,6 +7,8 @@
 
 namespace Ilabs\BM_Woocommerce\Gateway\Card_Widget;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Value object describing success or a classified failure (no exceptions for control flow).
  */

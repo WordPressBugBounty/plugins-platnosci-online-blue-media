@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Gateway;
 
+defined( 'ABSPATH' ) || exit;
+
 use Ilabs\BM_Woocommerce\Gateway\Hooks\Payment_On_Account_Page;
 
 class Hooks {

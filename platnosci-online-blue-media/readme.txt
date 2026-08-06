@@ -3,9 +3,9 @@ Contributors: inspirelabs
 Tags: woocommerce, bluemedia, autopay
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 5.0.0
-License: GPLv3 or later
-License URI: http://www.gnu.org/licenses/gpl-3.0.html
+Stable tag: 5.0.1
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Autopay is a payment module that enables cashless transactions in a shop based on the WordPress platform (WooCommerce).
 
@@ -82,6 +82,21 @@ The values of the Service ID and Configuration Key are different for the test an
 
 
 == Changelog ==
+
+### 5.0.1 (22.07.2026) ###
+* Fixed: XSS vulnerabilities — escaped output across all admin templates and settings fields using `esc_html_e()`, `esc_attr_e()`, `esc_url()`, and `wp_kses_post()` instead of unescaped `_e()` / `echo`.
+* Fixed: CSRF protection hardened — nonce verification added to payment-on-account-page handler, CSS editor, and legacy configuration importer.
+* Fixed: input sanitization improved — added `wp_unslash()` before `sanitize_text_field()` across all `$_POST`/`$_GET` reads; BLIK code validated as exactly 6 digits.
+* Fixed: Test Connection security — added `current_user_can('manage_woocommerce')` check; previously unauthenticated users could trigger test transactions.
+* Fixed: open redirect vulnerability — replaced `wp_redirect()` with `wp_safe_redirect()` combined with an explicit allowed-hosts list for the payment gateway domain.
+* Fixed: direct file access guard — added `defined('ABSPATH') || exit` to all PHP source files.
+* Fixed: stored CSS output sanitized via `wp_strip_all_tags()` to prevent `</style>` breakout in the custom CSS editor.
+* Fixed: debug log output — replaced `serialize()` and `print_r()` with `wp_json_encode()` to avoid accidental data exposure in logs.
+* Fixed: Polish translations now load correctly — bundled `.mo` file is prioritised, resolving partial Polish UI under WordPress 6.7+ JIT loading.
+* Fixed: removed redundant `load_plugin_textdomain()` call from `compatibility.php`.
+* Fixed: plugin entry point file reverted to `bluemedia-woocommerce.php`.
+* Fixed: settings page — reset button (`bm_reset_order`) now works correctly.
+* Fixed: payment channels list — class attribute properly escaped.
 
 ### 5.0.0 (06.07.2026) ###
 * Added: card payments through the Autopay widget on classic and block checkout.

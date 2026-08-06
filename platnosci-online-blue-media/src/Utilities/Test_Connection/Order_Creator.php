@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Utilities\Test_Connection;
 
+defined( 'ABSPATH' ) || exit;
+
 
 use Exception;
 use WC_Product;
@@ -24,26 +26,26 @@ class Order_Creator {
 		$product_id = $this->create_test_product( $product_name );
 
 		if ( ! $product_id ) {
-			throw new Exception( __( 'Failed to create product',
-				'bm-woocommerce' ) );
+			throw new Exception( __( 'Failed to create product', // phpcs:ignore WordPress.Security.EscapeOutput -- static translation string, escaped at output in Async_Request.php
+				'platnosci-online-blue-media' ) );
 		}
 
 		blue_media()->get_woocommerce_logger()->log_debug(
 			sprintf( '[Order_Creator] [create] [Created test product id: %s]',
-				print_r( $product_id, true )
+				wp_json_encode( $product_id )
 			)
 		);
 
 		$order_id = $this->create_test_order( $product_id );
 
 		if ( ! $order_id ) {
-			throw new Exception( __( 'Failed to create order',
-				'bm-woocommerce' ) );
+			throw new Exception( __( 'Failed to create order', // phpcs:ignore WordPress.Security.EscapeOutput -- static translation string, escaped at output in Async_Request.php
+				'platnosci-online-blue-media' ) );
 		}
 
 		blue_media()->get_woocommerce_logger()->log_debug(
 			sprintf( '[Order_Creator] [create] [Created test order id: %s]',
-				print_r( $order_id, true )
+				wp_json_encode( $order_id )
 			)
 		);
 
@@ -57,14 +59,14 @@ class Order_Creator {
 		$order = wc_get_order( $order_id );
 
 		if ( ! $order ) {
-			throw new Exception( __( 'Failed to delete test order',
-				'bm-woocommerce' ) );
+			throw new Exception( __( 'Failed to delete test order', // phpcs:ignore WordPress.Security.EscapeOutput -- static translation string, escaped at output in Async_Request.php
+				'platnosci-online-blue-media' ) );
 		}
 
 		blue_media()->get_woocommerce_logger()->log_debug(
 			sprintf( '[Order_Creator] [remove] [Attempt] [Order id: %s] [autopay_test_order meta: %s]',
-				print_r( $order_id, true ),
-				print_r( $order->get_meta( 'autopay_test_order' ), true )
+				wp_json_encode( $order_id ),
+				wp_json_encode( $order->get_meta( 'autopay_test_order' ) )
 			)
 		);
 
@@ -84,12 +86,12 @@ class Order_Creator {
 
 			blue_media()->get_woocommerce_logger()->log_debug(
 				sprintf( '[Order_Creator] [remove] [Done] [Order id: %s]',
-					print_r( $order_id, true )
+					wp_json_encode( $order_id )
 				)
 			);
 		} else {
-			throw new Exception( __( 'Failed to delete test order',
-				'bm-woocommerce' ) );
+			throw new Exception( __( 'Failed to delete test order', // phpcs:ignore WordPress.Security.EscapeOutput -- static translation string, escaped at output in Async_Request.php
+				'platnosci-online-blue-media' ) );
 		}
 	}
 

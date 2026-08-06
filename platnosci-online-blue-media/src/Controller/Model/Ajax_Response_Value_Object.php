@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Controller\Model;
 
+defined( 'ABSPATH' ) || exit;
+
 class Ajax_Response_Value_Object {
 
 	const STATUS_SUCCESS = 'success';

@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Helpers;
 
+defined( 'ABSPATH' ) || exit;
+
 class Helper {
 
 	const AUTOPAY_OPTIONS_ID = 'woocommerce_bluemedia_settings';

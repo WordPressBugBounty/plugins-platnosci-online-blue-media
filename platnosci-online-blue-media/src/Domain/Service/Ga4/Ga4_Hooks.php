@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Service\Ga4;
 
+defined( 'ABSPATH' ) || exit;
+
 use Exception;
 use Ilabs\BM_Woocommerce\Data\Remote\Ga4_Service_Client;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Event_Chain\Event\Wc_Add_To_Cart;
@@ -335,12 +337,12 @@ class Ga4_Hooks {
 				    ->get_woocommerce_logger( 'analytics' )
 				    ->log_debug(
 					    sprintf( '[handle_ga4_serverside] [purchase_event on_wc_order_status_changed] [%s]',
-						    print_r( [
+						    wp_json_encode( [
 							    'new order status' => $event->get_new_status(),
 							    'mapped status'    => $mapped_status,
 							    'order_id'         => $event->get_order()
 							                                ->get_id(),
-						    ], true )
+						    ] )
 					    ) );
 
 
@@ -352,10 +354,10 @@ class Ga4_Hooks {
 				    ->get_woocommerce_logger( 'analytics' )
 				    ->log_debug(
 					    sprintf( '[handle_ga4_serverside] [purchase_event create Ga4_Service_Client instance and call purchase_event] [%s]',
-						    print_r( [
+						    wp_json_encode( [
 							    'order_id' => $order_aware_interface->get_order()
 							                                        ->get_id(),
-						    ], true )
+						    ] )
 					    ) );
 
 			    try {
@@ -365,11 +367,11 @@ class Ga4_Hooks {
 					    ->get_woocommerce_logger( 'analytics' )
 					    ->log_error(
 						    sprintf( '[handle_ga4_serverside] [purchase_event exception] [%s]',
-							    print_r( [
+							    wp_json_encode( [
 								    'message'  => $e->getMessage(),
 								    'order_id' => $order_aware_interface->get_order()
 								                                        ->get_id(),
-							    ], true )
+							    ] )
 						    ) );
 			    }
 		    } )
@@ -383,9 +385,9 @@ class Ga4_Hooks {
 				->get_woocommerce_logger( 'analytics' )
 				->log_debug(
 					sprintf( '[handle_ga4_serverside_by_itn triggered] [%s]',
-						print_r( [
+						wp_json_encode( [
 							'order_id' => $order->get_id(),
-						], true )
+						] )
 					) );
 
 			( new Ga4_Service_Client() )->purchase_event( new Complete_Transation_Use_Case( $order ) );
@@ -394,11 +396,11 @@ class Ga4_Hooks {
 				->get_woocommerce_logger( 'analytics' )
 				->log_error(
 					sprintf( '[handle_ga4_serverside_by_itn] [purchase_event exception] [%s]',
-						print_r( [
+						wp_json_encode( [
 							'message'  => $e->getMessage(),
 							'order_id' => $order
 								->get_id(),
-						], true )
+						] )
 					) );
 		}
 	}

@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Service\Settings;
 
+defined( 'ABSPATH' ) || exit;
+
 use DOMDocument;
 use DOMXPath;
 use Exception;
@@ -22,7 +24,7 @@ class Vas {
 		} catch ( Exception $exception ) {
 			blue_media()->get_woocommerce_logger()->log_error(
 				sprintf( '[get_vas_content error:] [%s]',
-					print_r( $exception->getMessage(), true )
+					wp_json_encode( $exception->getMessage() )
 				) );
 
 			return '';
@@ -38,7 +40,7 @@ class Vas {
 		} catch ( Exception $exception ) {
 			blue_media()->get_woocommerce_logger()->log_error(
 				sprintf( '[get_vas_url error:] [%s]',
-					print_r( $exception->getMessage(), true )
+					wp_json_encode( $exception->getMessage() )
 				) );
 
 			return '';

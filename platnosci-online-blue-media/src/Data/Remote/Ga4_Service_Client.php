@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Data\Remote;
 
+defined( 'ABSPATH' ) || exit;
+
 use Ilabs\BM_Woocommerce\Data\Remote\Ga4\Dto\Item_DTO;
 use Ilabs\BM_Woocommerce\Domain\Service\Ga4\Add_Product_To_Cart_Use_Case;
 use Ilabs\BM_Woocommerce\Domain\Service\Ga4\Click_On_Product_Use_Case;
@@ -168,10 +170,10 @@ class Ga4_Service_Client {
 				->get_woocommerce_logger( 'analytics' )
 				->log_error(
 					sprintf( '[Ga4_Service_Client purchase_event] [multiple request protection triggered] [%s]',
-						print_r( [
+						wp_json_encode( [
 							'order_id' => $complete_transaction_use_case->get_order()
 							                                            ->get_id(),
-						], true )
+						] )
 					) );
 
 			return;
@@ -235,14 +237,14 @@ class Ga4_Service_Client {
 
 		blue_media()->get_woocommerce_logger('analytics')->log_debug(
 			sprintf( '[purchase_event] [baseRequest: %s]',
-				print_r( $baseRequest, true )
+				wp_json_encode( $baseRequest->export() )
 			) );
 
 		$result = $ga4Service->send( $baseRequest );
 
 		blue_media()->get_woocommerce_logger('analytics')->log_debug(
 			sprintf( '[purchase_event] [BaseResponse: %s]',
-				print_r( $result, true )
+				wp_json_encode( $result )
 			) );
 	}
 
@@ -367,7 +369,7 @@ class Ga4_Service_Client {
 			return null;
 		}
 
-		$from_cookie = $_COOKIE['_ga'];
+		$from_cookie = sanitize_text_field( wp_unslash( $_COOKIE['_ga'] ) );
 		$exploded    = explode( '.', $from_cookie );
 
 		if ( $exploded ) {

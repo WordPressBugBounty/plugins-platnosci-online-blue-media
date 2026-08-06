@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Domain\Service\Versioning;
 
+defined( 'ABSPATH' ) || exit;
+
 use WC_Order;
 
 class Versioning {

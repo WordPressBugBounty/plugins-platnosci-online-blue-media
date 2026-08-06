@@ -22,7 +22,6 @@
         // Reset button logic simplify
         $('#bm-reset-order').on('click', function () {
             $('#bm_payment_methods_order_field').val('');
-            $('#bm_reset_order_field').val('1');
 
             // No visual reordering; list stays as is. Option will be cleared and page reload after submit shows API order.
 
@@ -31,6 +30,7 @@
                 if (!$form.find('input[name="save"]').length) {
                     $form.append('<input type="hidden" name="save" value="Save changes" />');
                 }
+                $form.append('<input type="hidden" name="bm_reset_order" value="1" />');
                 $form.submit();
             }
         });

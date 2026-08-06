@@ -7,11 +7,9 @@ defined( 'ABSPATH' ) || exit;
  *
  */
 
-$helptip = esc_attr( $helptip );
-
 ?>
 
 <span class="woocommerce-help-tip autopay-help-tip"
-	  data-tip="<?php echo $helptip ?>"
-	  aria-label="<?php echo $helptip ?>">
+	  data-tip="<?php echo esc_attr( $helptip ) ?>"
+	  aria-label="<?php echo esc_attr( $helptip ) ?>">
 </span>

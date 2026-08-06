@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Gateway;
 
+defined( 'ABSPATH' ) || exit;
+
 use Exception;
 use Ilabs\BM_Woocommerce\Data\Remote\Blue_Media\Client;
 use Ilabs\BM_Woocommerce\Domain\Model\White_Label\Expandable_Group;
@@ -146,10 +148,10 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		$this->has_fields
 		                    = true;
 		$this->method_title = __( 'Autopay Instant payment',
-			'bm-woocommerce' );
+			'platnosci-online-blue-media' );
 		$this->method_description
 		                    = __( 'Instant payment, BLIK, credit card, Google Pay, Apple Pay',
-			'bm-woocommerce' );
+			'platnosci-online-blue-media' );
 
 		$this->supports = [
 			'products',
@@ -157,16 +159,9 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		$this->init_form_fields();
 		$this->init_settings();
 
-		$this->title = $this->get_option(
-			'payment_method_title',
-			__( 'Autopay gateway', 'bm-woocommerce' ),
-		);
+		$this->title = $this->get_option( 'payment_method_title', '' );
 
-		$this->description = $this->get_option(
-			'payment_method_description',
-			__( 'Instant payment, BLIK, credit card, Google Pay, Apple Pay',
-				'bm-woocommerce' ),
-		);
+		$this->description = $this->get_option( 'payment_method_description', '' );
 		$this->enabled     = $this->get_option( 'enabled' );
 		$this->testmode    = $this->resolve_is_test_mode();
 
@@ -199,6 +194,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		add_action( 'update_option_WPLANG',
 			[ $this, 'clear_gateway_list_cache' ] );
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing parameter; no state is changed.
 		if ( isset( $_GET['autopay_express_payment'] ) || isset( $_GET['autopay_payment_on_account_page'] ) ) {
 			blue_media()->get_woocommerce_logger( 'session_debug' )->log_debug(
 				sprintf( '[wc_session - constructor] [keys: %s]',
@@ -215,7 +211,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 					if ( $this->can_redirect_to_payment_gateway( (int) $params['OrderID'] ) ) {
 						WC()->session->set( 'bm_order_payment_params', null );
-						WC()->session->save_data();
+						Session_Bridge::save();
 						$order = wc_get_order( $params['OrderID'] );
 						$order->delete_meta_data( 'bm_order_payment_params' );
 						$order->save_meta_data();
@@ -224,6 +220,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 							wp_head();
 							$wp_head_html = ob_get_contents();
 							ob_end_clean();
+							// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Output is WordPress-generated wp_head() HTML, stripped of body tag; no user input involved.
 							echo preg_replace( '/<body[^>]*>.*<\/body>/isU',
 								'',
 								$wp_head_html );
@@ -243,17 +240,17 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			 <input type='hidden' name='PlatformVersion'  value='%s' />
 			 <input type='hidden' name='PlatformPluginVersion'  value='%s' />
 			 <input type='hidden' name='Hash'  value='%s' /></form>",
-								$this->express_payment_redirect_url,
-								$params['ServiceID'],
-								$params['OrderID'],
-								$params['Amount'],
-								! empty( $params['GatewayID'] ) ? $params['GatewayID'] : '0',
-								blue_media()->resolve_blue_media_currency_symbol(),
-								$params['CustomerEmail'],
-								$params['PlatformName'],
-								$params['PlatformVersion'],
-								$params['PlatformPluginVersion'],
-								$params['Hash'] );
+								esc_url( $this->express_payment_redirect_url ),
+								esc_attr( $params['ServiceID'] ),
+								esc_attr( $params['OrderID'] ),
+								esc_attr( $params['Amount'] ),
+								esc_attr( ! empty( $params['GatewayID'] ) ? $params['GatewayID'] : '0' ),
+								esc_attr( blue_media()->resolve_blue_media_currency_symbol() ),
+								esc_attr( $params['CustomerEmail'] ),
+								esc_attr( $params['PlatformName'] ),
+								esc_attr( $params['PlatformVersion'] ),
+								esc_attr( $params['PlatformPluginVersion'] ),
+								esc_attr( $params['Hash'] ) );
 						}
 
 						if ( 'yes' === $this->get_option( 'countdown_before_redirection' ) ) {
@@ -266,7 +263,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 						blue_media()->get_woocommerce_logger()->log_debug(
 							sprintf( '[Print payment form and submit by JS] [Params: %s] [url: %s] [is_rest_request: %s]',
 								serialize( $params ),
-								$_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
+								sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ?? '' ) ) . sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) ),
 								defined( 'REST_REQUEST' ) ? 'yes' : 'no',
 							) );
 
@@ -281,12 +278,12 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 						exit;
 					} else {
 						WC()->session->set( 'bm_order_payment_params', null );
-						WC()->session->save_data();
+						Session_Bridge::save();
 
 						blue_media()->get_woocommerce_logger()->log_debug(
 							sprintf( '[Print payment form canceled.] [Params: %s] [url: %s]',
 								serialize( $params ),
-								$_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
+								sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ?? '' ) ) . sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) ),
 							) );
 
 						$this->redirect_to_3ds( $order_id );
@@ -294,13 +291,13 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				} else {
 					blue_media()->get_woocommerce_logger()->log_debug(
 						sprintf( '[Print payment form canceled. bm_order_payment_params not found in WC Session] [url: %s]',
-							$_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
+							sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ?? '' ) ) . sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) ),
 						) );
 				}
 			} else {
 				blue_media()->get_woocommerce_logger()->log_debug(
 					sprintf( '[Print payment form canceled. WC Session not exists] [url: %s]',
-						$_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
+						sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ?? '' ) ) . sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) ),
 					) );
 			}
 		}
@@ -334,12 +331,13 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 		blue_media()->get_woocommerce_logger()->log_debug(
 			sprintf( '[can_redirect_to_payment_gateway] [$status = %s] [$returned = %s] [autopay_express_payment: %s] [Order ID: %s]',
-				print_r( $status, true ),
+				wp_json_encode( $status ),
 				$returned,
 				isset( $_GET['autopay_express_payment'] ) ? sanitize_key( wp_unslash( $_GET['autopay_express_payment'] ) ) : 'not_set', // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only redirect param
 				$order_id ),
 		);
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing parameter; no state is changed.
 		if ( '1' === $returned || ! isset( $_GET['autopay_express_payment'] ) || empty( $status ) ) {
 			$return = false;
 		}
@@ -428,7 +426,15 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 			$wc_order->save_meta_data();
 
-			wp_redirect( $_3ds_redirect_url );
+			add_filter( 'allowed_redirect_hosts', function ( array $hosts ) {
+				$parsed = wp_parse_url( $this->gateway_url );
+				if ( ! empty( $parsed['host'] ) ) {
+					$hosts[] = strtolower( (string) $parsed['host'] );
+				}
+
+				return $hosts;
+			} );
+			wp_safe_redirect( $_3ds_redirect_url );
 			exit;
 		}
 	}
@@ -609,13 +615,16 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				$params ),
 		] );
 
-		$error = '';
+		$result = null;
+		$error  = '';
 		try {
-			$result               = json_decode( $client->google_pay_merchant_info( $params,
+			$result = json_decode( $client->google_pay_merchant_info( $params,
 				$this->gateway_url ),
 				true );
-			$result['cart_total'] = WC()->cart->get_total( 'edit' );
-			$result['currency']   = get_woocommerce_currency();
+			if ( is_array( $result ) ) {
+				$result['cart_total'] = WC()->cart->get_total( 'edit' );
+				$result['currency']   = get_woocommerce_currency();
+			}
 		} catch ( Exception $e ) {
 			$error  = $e->getMessage();
 			$result = null;
@@ -623,12 +632,12 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			blue_media()
 				->get_woocommerce_logger( 'GooglePay' )
 				->log_debug( sprintf( '[webhook] [%s]',
-					print_r( [
+					wp_json_encode( [
 						'params'      => $params,
 						'response'    => $result,
 						'error'       => $error,
 						'gateway_url' => $this->gateway_url,
-					], true ),
+					] ),
 				) );
 
 			return $result;
@@ -664,11 +673,11 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 					sprintf( '[payment_fields] Could not render payment channels. Error: %s',
 						$exception->getMessage() ),
 				);
-				echo __( 'Payment methods are currently unavailable. Please try again later.',
-					'bm-woocommerce' );
+				echo esc_html( __( 'Payment methods are currently unavailable. Please try again later.',
+					'platnosci-online-blue-media' ) );
 			}
-		} else {
-			echo wpautop( wptexturize( $this->description ) );
+		} elseif ( ! empty( $this->description ) ) {
+			echo wp_kses_post( wpautop( wptexturize( $this->description ) ) );
 		}
 
 		do_action( 'autopay_after_payment_field' );
@@ -711,6 +720,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		Versioning::update_autopay_version_in_order( $order );
 
 
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- WC verifies woocommerce-process_checkout nonce before calling process_payment().
 		$is_classic_checkout = false;
 		if ( isset( $_POST['bm_standard_checkout'] ) ) {
 			//classic checkout
@@ -741,7 +751,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		if ( 0 === $payment_channel && $this->is_whitelabel_mode_enabled() ) {
 			if ( $is_classic_checkout ) {//nie pokazuj błędu w module blokowym w opcji z przekierowaniem
 				wc_add_notice( __( 'Autopay payments: Cannot redirect to payment because no payment channel selected.',
-					'bm-woocommerce' ),
+					'platnosci-online-blue-media' ),
 					'error' );
 
 				return [
@@ -757,9 +767,9 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		);
 
 		if ( self::BLIK_0_CHANNEL === $payment_channel && 'blik_0_without_redirect' === $blik0_type ) {
-			$blik_code            = (string) $_POST['bluemedia_blik_code'];
-			$blik_0_block_payment = $_POST['blik_0_block_payment'] && (int) $_POST['blik_0_block_payment'] === 1;
-
+			$blik_code            = sanitize_text_field( wp_unslash( $_POST['bluemedia_blik_code'] ?? '' ) );
+			$blik_0_block_payment = isset( $_POST['blik_0_block_payment'] ) && '1' === sanitize_text_field( wp_unslash( $_POST['blik_0_block_payment'] ) );
+			// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 			if ( $this->is_blik_0_code_valid( $blik_code ) ) {
 				$this->process_blik_0_payment( $order,
@@ -768,7 +778,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				$is_blik_0 = true;
 			} else {
 				wc_add_notice( __( 'The code you provided is invalid. Code should be 6 digits.',
-					'bm-woocommerce' ),
+					'platnosci-online-blue-media' ),
 					'error' );
 
 				return [
@@ -810,7 +820,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 					if ( ! in_array( $exception->getMessage(), $known, true ) ) {
 						wc_add_notice(
 							__( 'Card payment could not be started. Please try again.',
-								'bm-woocommerce' ),
+								'platnosci-online-blue-media' ),
 							'error',
 						);
 					}
@@ -830,7 +840,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 					wc_add_notice(
 						__( 'Card payment data is missing. Please complete the card form and try again.',
-							'bm-woocommerce' ),
+							'platnosci-online-blue-media' ),
 						'error',
 					);
 
@@ -877,7 +887,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 					if ( ! in_array( $exception->getMessage(), $known, true ) ) {
 						wc_add_notice(
 							__( 'Card payment could not be started. Please try again.',
-								'bm-woocommerce' ),
+								'platnosci-online-blue-media' ),
 							'error',
 						);
 					}
@@ -891,7 +901,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			if ( ! $this->should_offer_google_pay_on_checkout() ) {
 				wc_add_notice(
 					__( 'Google Pay is unavailable because the store checkout does not require acceptance of the terms and conditions.',
-						'bm-woocommerce' ),
+						'platnosci-online-blue-media' ),
 					'error',
 				);
 
@@ -914,7 +924,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				];
 				WC()->session->set( 'bm_order_payment_params',
 					$params );
-				WC()->session->save_data();
+				Session_Bridge::save();
 			} catch ( Exception $exception ) {
 				blue_media()->get_woocommerce_logger()->log_debug(
 					sprintf( '[process gpay payment failed] [Order id: %s] [Error: %s]',
@@ -935,7 +945,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				),
 			];
 			WC()->session->set( 'bm_order_payment_params', $params );
-			WC()->session->save_data();
+			Session_Bridge::save();
 			$order->add_meta_data( 'bm_order_payment_params', $params );
 			$order->save_meta_data();
 
@@ -955,14 +965,14 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 		blue_media()->get_woocommerce_logger()->log_debug(
 			sprintf( '[wc_get_order_statuses] [%s]',
-				print_r( wc_get_order_statuses(), true ),
+				wp_json_encode( wc_get_order_statuses() ),
 			) );
 
 		if ( ! $is_blik_0 && ! $is_gpay && ! $is_card_widget ) {
 			$start_status = $this->get_currency_aware_option( 'wc_payment_status_on_bm_pending', 'pending' );
 			$this->update_order_status( $order, $start_status );
 			$order->add_order_note( __( 'Autopay: Payment process started for order ID:',
-					'bm-woocommerce' ) . $order_id );
+					'platnosci-online-blue-media' ) . $order_id );
 		}
 
 		$order_received_url_filtered = $this->resolve_return_url( $order );
@@ -1026,12 +1036,12 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		blue_media()->get_woocommerce_logger()->log_debug(
 			sprintf( '[process_payment] [Order id: %s] [return: %s]',
 				$order_id,
-				print_r( $return, true ),
+				wp_json_encode( $return ),
 			) );
 
 		wc()->session->set( 'store_api_draft_order', 0 );
 		WC()->cart->empty_cart();
-		WC()->session->save_data();
+		Session_Bridge::save();
 
 		return $return;
 	}
@@ -1085,7 +1095,11 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		WC_Order $order,
 		?string $payment_token = null
 	): ?string {
-		$gpay_token_raw = isset( $_POST['atp_gpay_payment_token'] ) ? (string) wp_unslash( $_POST['atp_gpay_payment_token'] ) : '';
+		// phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- GPay token is a JSON/Base64 payload; sanitize_text_field() would corrupt the format. Validated via type check and length limit.
+		$gpay_token_raw = isset( $_POST['atp_gpay_payment_token'] ) && is_string( $_POST['atp_gpay_payment_token'] ) && strlen( $_POST['atp_gpay_payment_token'] ) < 10000
+			? (string) wp_unslash( $_POST['atp_gpay_payment_token'] )
+			: '';
+		// phpcs:enable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 		blue_media()->get_woocommerce_logger( 'GooglePay' )->log_debug(
 			sprintf(
 				'[process_gpay_payment] [Order ID: %s] [token_field_len: %d]',
@@ -1094,10 +1108,10 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			) );
 
 		WC()->session->set( 'bm_wc_order_id', $order->get_id() );
-		WC()->session->save_data();
+		Session_Bridge::save();
 
 		if ( ! $payment_token ) {
-			$payment_token = '' !== $gpay_token_raw ? sanitize_text_field( $gpay_token_raw ) : '';
+			$payment_token = '' !== $gpay_token_raw ? $gpay_token_raw : '';
 			if ( empty( $payment_token ) ) {
 				throw new Exception( "payment_token is empty" );
 			}
@@ -1158,8 +1172,8 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			}
 			blue_media()->get_woocommerce_logger( 'GooglePay' )->log_debug(
 				sprintf( '[process_gpay_payment] [continue_transaction_request] [params: %s] [result: %s]',
-					print_r( $params_log, true ),
-					print_r( $result, true ),
+					wp_json_encode( $params_log ),
+					wp_json_encode( $result ),
 				) );
 
 			if ( isset( $result[ Autopay_Payment_Protocol::XML_LOCAL_REASON ] ) ) {
@@ -1168,7 +1182,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 			if ( empty( $result ) || ! is_array( $result ) ) {
 				throw new Exception( sprintf( 'Continue transaction response invalid format (%s)',
-					serialize( $result ) ) );
+					wp_json_encode( $result ) ) );
 			}
 
 			$redirecturl = null;
@@ -1186,19 +1200,19 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			$start_status = $this->get_currency_aware_option( 'wc_payment_status_on_bm_pending', 'pending' );
 			$this->update_order_status( $order, $start_status );
 			$order->add_order_note( __( 'Autopay: Google Pay payment process started for order ID:',
-					'bm-woocommerce' ) . $order->get_id() );
+					'platnosci-online-blue-media' ) . $order->get_id() );
 
 			return $redirecturl;
 		} catch ( Exception $e ) {
 			blue_media()->get_woocommerce_logger( 'GooglePay' )->log_error(
 				sprintf( '[process_gpay_payment] [continue_transaction_request] [Params: %s] [Error message: %s]',
-					json_encode( $params ),
+					wp_json_encode( $params ),
 					$e->getMessage(),
 				) );
 
 			WC()->session->set( 'bm_continue_transaction_start_error',
 				__( 'Payment failed.',
-					'bm-woocommerce' ) );
+					'platnosci-online-blue-media' ) );
 
 			$new_status = $this->get_currency_aware_option( 'wc_payment_status_on_bm_failure',
 				'failed' );
@@ -1206,7 +1220,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				$new_status,
 				'Autopay Google Pay: paymentStatus FAILURE' );
 			$order->save();
-			WC()->session->save_data();
+			Session_Bridge::save(); // intentional: ensure persistence before error response
 		}
 
 		return null;
@@ -1220,9 +1234,13 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 	 * @return string Trimmed token or empty string.
 	 */
 	private function read_atp_card_payment_token_from_request(): string {
-		return isset( $_POST['atp_card_payment_token'] )
-			? trim( wp_unslash( (string) $_POST['atp_card_payment_token'] ) )
-			: '';
+		// phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- Card token is a Base64/JSON payload; sanitize_text_field() would corrupt the format. WC checkout nonce is verified before reaching this point. Validated via type check and length limit.
+		if ( isset( $_POST['atp_card_payment_token'] ) && is_string( $_POST['atp_card_payment_token'] ) && strlen( $_POST['atp_card_payment_token'] ) < 10000 ) {
+			return trim( wp_unslash( (string) $_POST['atp_card_payment_token'] ) );
+		}
+		// phpcs:enable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+
+		return '';
 	}
 
 	/**
@@ -1250,7 +1268,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		if ( '' === $payment_token_input ) {
 			wc_add_notice(
 				__( 'Card payment data is missing. Please complete the card form and try again.',
-					'bm-woocommerce' ),
+					'platnosci-online-blue-media' ),
 				'error',
 			);
 			throw new Exception( 'autopay_card_token_empty' );
@@ -1274,7 +1292,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			wc_add_notice(
 				sprintf(
 					/* translators: %s: remote error message. */
-					__( 'Card pretransaction request failed: %s', 'bm-woocommerce' ),
+					__( 'Card pretransaction request failed: %s', 'platnosci-online-blue-media' ),
 					$result->get_transport_detail()
 				),
 				'error',
@@ -1289,14 +1307,14 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				wc_add_notice(
 					sprintf(
 						/* translators: %s: rejection reason from payment gateway. */
-						__( 'Card payment was rejected: %s', 'bm-woocommerce' ),
+						__( 'Card payment was rejected: %s', 'platnosci-online-blue-media' ),
 						$reason_safe
 					),
 					'error',
 				);
 			} else {
 				wc_add_notice(
-					__( 'Card payment was rejected. Please try again.', 'bm-woocommerce' ),
+					__( 'Card payment was rejected. Please try again.', 'platnosci-online-blue-media' ),
 					'error',
 				);
 			}
@@ -1305,7 +1323,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 		if ( Card_Widget_Start_Result::BAD_RESPONSE === $result->get_type() ) {
 			wc_add_notice(
-				__( 'Card payment could not be started. Please try again.', 'bm-woocommerce' ),
+				__( 'Card payment could not be started. Please try again.', 'platnosci-online-blue-media' ),
 				'error',
 			);
 			throw new Exception( 'autopay_card_invalid_response' );
@@ -1324,7 +1342,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				)
 			);
 			wc_add_notice(
-				__( 'Card payment could not be started. Please try again.', 'bm-woocommerce' ),
+				__( 'Card payment could not be started. Please try again.', 'platnosci-online-blue-media' ),
 				'error',
 			);
 			throw new Exception( 'autopay_card_untrusted_redirect' );
@@ -1337,7 +1355,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 		$this->update_order_status( $order, 'pending' );
 		$order->add_order_note(
-			__( 'Autopay: Card payment process started for order ID:', 'bm-woocommerce' )
+			__( 'Autopay: Card payment process started for order ID:', 'platnosci-online-blue-media' )
 			. $order->get_id()
 		);
 
@@ -1367,13 +1385,13 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		}
 
 		WC()->session->set( 'bm_wc_order_id', $order->get_id() );
-		WC()->session->save_data();
+		Session_Bridge::save();
 
 
 		blue_media()->get_woocommerce_logger()->log_debug(
 			sprintf( '[process_blik_0_payment] [Order ID: %s] [block_payment: %s]',
-				print_r( $order->get_id(), true ),
-				print_r( $block_payment ? 'true' : 'false', true ),
+				wp_json_encode( $order->get_id() ),
+				$block_payment ? 'true' : 'false',
 			) );
 
 
@@ -1412,8 +1430,8 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			$params_log['Hash'] = '***';
 			blue_media()->get_woocommerce_logger()->log_debug(
 				sprintf( '[process_blik_0_payment] [continue_transaction_request] [params: %s] [result: %s]',
-					print_r( $params_log, true ),
-					print_r( $result, true ),
+					wp_json_encode( $params_log ),
+					wp_json_encode( $result ),
 				) );
 
 			if ( isset( $result[ Autopay_Payment_Protocol::XML_LOCAL_REASON ] ) ) {
@@ -1422,7 +1440,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 			if ( empty( $result ) || ! is_array( $result ) ) {
 				throw new Exception( sprintf( 'Continue transaction response invalid format (%s)',
-					serialize( $result ) ) );
+					wp_json_encode( $result ) ) );
 			}
 
 			WC()->session->set( 'bm_continue_transaction_start_error', '' );
@@ -1430,17 +1448,17 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			$start_status = $this->get_currency_aware_option( 'wc_payment_status_on_bm_pending', 'pending' );
 			$this->update_order_status( $order, $start_status );
 			$order->add_order_note( __( 'Autopay: BLIK-0 payment process started for order ID:',
-					'bm-woocommerce' ) . $order->get_id() );
+					'platnosci-online-blue-media' ) . $order->get_id() );
 		} catch ( Exception $e ) {
 			blue_media()->get_woocommerce_logger()->log_error(
 				sprintf( '[continue_transaction_request] [Params: %s] [Error message: %s]',
-					json_encode( $params ),
+					wp_json_encode( $params ),
 					$e->getMessage(),
 				) );
 
 			WC()->session->set( 'bm_continue_transaction_start_error',
 				__( 'Payment failed.',
-					'bm-woocommerce' ) );
+					'platnosci-online-blue-media' ) );
 
 			$new_status = $this->get_currency_aware_option( 'wc_payment_status_on_bm_failure',
 				'failed' );
@@ -1448,7 +1466,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				$new_status,
 				'Autopay ITN: paymentStatus FAILURE' );
 			$order->save();
-			WC()->session->save_data();
+			Session_Bridge::save(); // intentional: ensure persistence before error response
 		}
 	}
 
@@ -1473,11 +1491,11 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			blue_media()
 				->get_woocommerce_logger( 'schedule_remove_unpaid_orders' )
 				->log_debug( sprintf( '[webhook] [%s]',
-					print_r( [
+					wp_json_encode( [
 						'order_id'                             => $order_id,
 						'old woocommerce_hold_stock_minutes: ' => $woocommerce_hold_stock_minutes_old,
 						'new woocommerce_hold_stock_minutes: ' => $woocommerce_hold_stock_minutes,
-					], true ),
+					] ),
 				) );
 
 			if ( ! wp_next_scheduled( 'bm_cancel_failed_pending_order_after_one_hour',
@@ -1493,6 +1511,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 	 * @return void
 	 */
 	public function webhook() {
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Public hook with bm_ prefix; renaming would break third-party integrations relying on this hook.
 		do_action( 'bm_debugger' );
 
 		add_action( 'woocommerce_api_wc_gateway_bluemedia', function () {
@@ -1501,9 +1520,8 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			}
 
 			try {
-				// phpcs:ignore WordPress.Security.NonceVerification.Missing -- server-to-server ITN webhook from Blue Media, authenticated by HMAC
-				if ( ! empty( $_POST ) ) {
-					$posted                  = wp_unslash( $_POST );
+				if ( ! empty( $_POST ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- ITN webhook from Blue Media payment processor; authentication is via HMAC signature, not WordPress nonce.
+					$posted                  = wp_unslash( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 					$posted_xml              = simplexml_load_string( base64_decode( $posted['transactions'] ) );
 					$all_fields_itn          = [];
 					$all_fields_reponse      = [];
@@ -1527,7 +1545,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 							->get_woocommerce_logger( 'bm_woocommerce_itn' )
 							->log_debug(
 								sprintf( '[webhook] [Transactions from ITN] [currency found: %s]',
-									print_r( $matches[1], true ),
+									wp_json_encode( $matches[1] ),
 								) );
 
 						blue_media()
@@ -1552,6 +1570,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 						$posted_xml->xpath( '/transactionList/transactions/transaction' )
 						as $transaction
 					) {
+						$status_processing_allowed_in_store = false;
 						blue_media()->get_currency_manager()->reconfigure();
 						$this->setup_variables();
 
@@ -1640,12 +1659,12 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 						blue_media()
 							->get_woocommerce_logger( 'bm_woocommerce_itn' )
 							->log_debug( sprintf( '[webhook] [%s]',
-								print_r( [
+								wp_json_encode( [
 									'order_id'                           => $wc_order_id,
 									'ITN status'                         => $bm_order_status,
 									'confirmation_result'                => $confirmation_result,
 									'status_processing_allowed_in_store' => $status_processing_allowed_in_store ? 'yes' : 'no',
-								], true ),
+								] ),
 							) );
 
 
@@ -1711,7 +1730,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 									'[webhook] [validate_itn_hash - not valid] [currency=%s] [order_id=%d] [fields_itn: %s] [Hash: %s]',
 									blue_media()->resolve_blue_media_currency_symbol(),
 									$known_order_id,
-									print_r( $all_fields_itn, true ),
+									wp_json_encode( $all_fields_itn ),
 									$hash_from_itn
 								)
 							);
@@ -1720,7 +1739,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 						ob_start();
 						header( 'HTTP/1.0 401 Unauthorized' );
 						echo esc_html__( 'validate_itn_hash - not valid',
-							'bm-woocommerce' );
+							'platnosci-online-blue-media' );
 						exit;
 					}
 
@@ -1771,6 +1790,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 							self::ITN_SUCCESS_STATUS_ID );
 						$wc_order->save_meta_data();
 
+						// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound -- Dynamic hook name with bm_ prefix; static analysis cannot verify dynamic string construction.
 						do_action( sprintf( "bm_order_bm_int_status_%s_processed",
 							self::ITN_SUCCESS_STATUS_ID ),
 							$wc_order );
@@ -1855,6 +1875,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 								$xml_response,
 							) );
 
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- XML ITN protocol response built via XMLWriter; all values are properly encoded by xmlwriter_text().
 					echo $xml_response;
 
 					exit;//exit with 200
@@ -1864,11 +1885,12 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 					->get_woocommerce_logger( 'bm_woocommerce_itn' )
 					->log_error(
 						sprintf( '[Webhook exception debug] [message: %s] [Post data: %s]',
-							json_encode( $e->getMessage() ),
-							json_encode( $_POST ),
+							wp_json_encode( $e->getMessage() ),
+							// phpcs:ignore WordPress.Security.NonceVerification.Missing -- POST data logged only for debugging; nonce is verified upstream before any state change.
+							wp_json_encode( $_POST ),
 						) );
 
-				die( 'Message: ' . $e->getMessage() . ' Code: ' . $e->getCode() );
+				die( 'Message: ' . esc_html( $e->getMessage() ) . ' Code: ' . esc_html( (string) $e->getCode() ) );
 			}
 		} );
 	}
@@ -2074,7 +2096,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			'headers' => [
 				'content-type' => 'application/json',
 			],
-			'body'    => json_encode( $params ),
+			'body'    => wp_json_encode( $params ),
 		];
 
 		$params_log         = $params;
@@ -2082,7 +2104,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		blue_media()->get_woocommerce_logger()->log_debug(
 			sprintf( '[api_get_gateway_list request] [url: %s] [params: %s]',
 				$url,
-				print_r( $params_log, true ),
+				wp_json_encode( $params_log ),
 			) );
 
 
@@ -2109,9 +2131,10 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			blue_media()->get_woocommerce_logger()->log_error( $message =
 				sprintf( '[gatewayList/v3] [URL: %s] [Error: %s]',
 					$url,
-					print_r( $result_decoded, true ),
+					wp_json_encode( $result_decoded ),
 				) );
 
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception is thrown, not echoed; escaping belongs to the display layer.
 			throw new Exception( $message );
 		}
 
@@ -2120,9 +2143,10 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				blue_media()->get_woocommerce_logger()->log_error( $message =
 					sprintf( '[gatewayList/v3] [URL: %s] [Empty results: %s]',
 						$url,
-						serialize( $result_decoded ),
+						wp_json_encode( $result_decoded ),
 					) );
 
+				// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception is thrown, not echoed; escaping belongs to the display layer.
 				throw new Exception( $message );
 			}
 
@@ -2132,8 +2156,9 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		blue_media()->get_woocommerce_logger()->log_error( $message =
 			sprintf( '[gatewayList/v3] [URL: %s] [Failed decode results: %s]',
 				$url,
-				serialize( $result ),
+				wp_json_encode( $result ),
 			) );
+		// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception is thrown, not echoed; escaping belongs to the display layer.
 		throw new Exception( $message );
 	}
 
@@ -2202,6 +2227,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		global $wpdb;
 
 		// Delete all gateway list cache options
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Direct query required; WC CRUD does not expose bulk-delete-by-pattern for options. DELETE query is write-only; caching is not applicable.
 		$wpdb->query(
 			$wpdb->prepare(
 				"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
@@ -2228,7 +2254,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		$group_arr = $this->apply_special_gateway_descriptions( $group_arr );
 
 		blue_media()->get_woocommerce_logger('bm_debug_group_arr')->log_debug(
-			sprintf( '$group_arr: %s', print_r($group_arr, true) )
+			sprintf( '$group_arr: %s', wp_json_encode( $group_arr ) )
 		);
 
 		$payment_names = [];
@@ -2244,12 +2270,20 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				implode( ', ', $payment_names ),
 				(string) $description_text );
 		}
-		echo wpautop( wptexturize( $description_text ) );
+		echo wp_kses_post( wpautop( wptexturize( $description_text ) ) );
 		echo '</div>';
 		echo '<div class="payment_box payment_method_bacs">';
 		echo '<div class="bm-payment-channels-wrapper">';
-		printf( '<ul id="shipping_method" class="woocommerce-shipping-methods bm-%s">',
-			rand( 0, 1000 ) );
+
+        $channels_list_class = sprintf(
+                'woocommerce-shipping-methods bm-%d',
+                wp_rand( 0, 1000 )
+        );
+
+        printf(
+                '<ul id="shipping_method" class="%s">',
+                esc_attr( $channels_list_class )
+        );
 
 		/**
 		 * @var View_Model_Group[] $group_arr
@@ -2263,9 +2297,9 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			}
 
 			printf( "<div class='bm-group-%s%s' data-slug='%s'><li><ul>",
-				$group_slug,
+				esc_attr( $group_slug ),
 				$expandable_Group ? ' bm-group-expandable' : '',
-				$group_slug );
+				esc_attr( $group_slug ) );
 
 
 			if ( $expandable_Group ) {
@@ -2281,9 +2315,9 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 							</span>
                         </span>
 						</li>',
-					$group->getIconUrl(),
-					$group->getTitle(),
-					$group->getShortDescription(),
+					esc_url( $group->getIconUrl() ),
+					esc_html( $group->getTitle() ),
+					esc_html( $group->getShortDescription() ),
 				);
 
 				echo '<div class="bm-group-expandable-wrapper">';
@@ -2293,28 +2327,39 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			foreach ( $group->getGateways() as $item ) {
 				$special_class = '';
 				if ( $item->getGatewayID() === self::APPLE_PAY_CHANNEL ) {
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Plugin-generated inline script element; not user input.
 					echo Config::get_applepay_check_script();
 					$special_class = 'bm-apple-pay';
 				}
 
-				printf( '<li class="bm-payment-channel-item %s %s">
+				$inline_html = $item->getInlineHtml();
+
+				printf(
+					'<li class="bm-payment-channel-item %s %s">
 							<label class="bm-payment-channel-label" for="bm-gateway-id-%s">
 								<input type="radio" name="bm-payment-channel" onclick="addCurrentClass(this)" data-index="0" id="bm-gateway-id-%s" value="%s" class="%s">
 								<img src="%s" class="bm-payment-channel-method-logo">
 								<p class="bm-payment-channel-method-name">%s</p>
 							</label>
-							<span class="bm-payment-channel-method-desc">%s</span>
-                        </li>',
+							<span class="bm-payment-channel-method-desc">',
 					'',
-					$special_class,
-					$item->getGatewayID(),
-					$item->getGatewayID(),
-					$item->getGatewayID(),
+					esc_attr( $special_class ),
+					esc_attr( $item->getGatewayID() ),
+					esc_attr( $item->getGatewayID() ),
+					esc_attr( $item->getGatewayID() ),
 					$expandable_Group ? 'bm-payment-channel-group-in-group' : '',
-					$item->getIconUrl(),
-					$item->getName(),
-					$item->getDescription(),
+					esc_url( $item->getIconUrl() ),
+					esc_html( $item->getName() ),
 				);
+
+				if ( null !== $inline_html ) {
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Plugin-generated template HTML set via setInlineHtml(); never contains user input.
+					echo $inline_html;
+				} else {
+					echo esc_html( (string) $item->getDescription() );
+				}
+
+				echo '</span></li>';
 			}
 			if ( $expandable_Group ) {
 				echo '</div>';
@@ -2376,7 +2421,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				bm_global_timer = setTimeout(function () {
 
 					if (0 === bm_global_update_checkout_in_progress) {
-						console.log('blueMediaRadioTest bm_global_update_checkout_in_progress ' + bm_global_update_checkout_in_progress)
 						blueMediaRadioTest();
 					}
 				}, BmTimerValue);
@@ -2387,7 +2431,6 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 					bm_global_timer = setTimeout(function () {
 
 						if (0 === bm_global_update_checkout_in_progress) {
-							console.log('click bm_global_update_checkout_in_progress ' + bm_global_update_checkout_in_progress)
 							blueMediaRadioShow();
 						}
 					}, BmTimerValue);
@@ -2666,15 +2709,15 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 				}
 
 				if ( '' !== $blik_html && (int) $gateway->getGatewayID() === self::BLIK_0_CHANNEL ) {
-					$gateway->setDescription( $blik_html );
+					$gateway->setInlineHtml( $blik_html );
 				}
 
 				if ( '' !== $gpay_html && (int) $gateway->getGatewayID() === self::GPAY_CHANNEL ) {
-					$gateway->setDescription( $gpay_html );
+					$gateway->setInlineHtml( $gpay_html );
 				}
 
 				if ( '' !== $card_widget && (int) $gateway->getGatewayID() === self::CARD_CHANNEL ) {
-					$gateway->setDescription( $card_widget );
+					$gateway->setInlineHtml( $card_widget );
 				}
 			}
 		}
@@ -2748,7 +2791,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		if ( null === $this->card_widget_inline_template ) {
 			ob_start();
 			blue_media()->locate_template( 'card_widget.php', [
-				'card_widget_data' => [
+				'autopay_card_widget_data' => [
 					'service_id'   => $this->service_id,
 					'is_test'      => $this->testmode,
 					'amount'       => WC()->cart ? (float) WC()->cart->get_total( 'edit' ) : 0,
@@ -2841,6 +2884,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		int $order
 	): void {
 		if ( ( $a = array_search( $key, array_keys( $array ) ) ) === false ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception is thrown, not echoed; escaping belongs to the display layer.
 			throw new Exception( "The {$key} cannot be found in the given array." );
 		}
 		$p1    = array_splice( $array, $a, 1 );
@@ -2872,6 +2916,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 	}
 
 	public function process_admin_options() {
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- WC verifies woocommerce-settings nonce before calling process_admin_options().
 		// Enforce max lengths for custom fields before saving
 		if ( isset( $_POST[ $this->get_field_key( 'payment_method_title' ) ] ) ) {
 			$title = sanitize_text_field( wp_unslash( $_POST[ $this->get_field_key( 'payment_method_title' ) ] ) );
@@ -2881,7 +2926,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 					80 );
 				$_POST[ $this->get_field_key( 'payment_method_title' ) ] = $title;
 				\WC_Admin_Settings::add_error( __( 'Payment method title has been truncated to 80 characters.',
-					'bm-woocommerce' ) );
+					'platnosci-online-blue-media' ) );
 			}
 		}
 		if ( isset( $_POST[ $this->get_field_key( 'payment_method_description' ) ] ) ) {
@@ -2892,7 +2937,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 					500 );
 				$_POST[ $this->get_field_key( 'payment_method_description' ) ] = $desc;
 				\WC_Admin_Settings::add_error( __( 'Payment method description has been truncated to 500 characters.',
-					'bm-woocommerce' ) );
+					'platnosci-online-blue-media' ) );
 			}
 		}
 
@@ -2900,14 +2945,14 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		$result = parent::process_admin_options();
 
 		// Save custom order of payment methods if present
-		if ( isset( $_POST['bm_reset_order'] ) && '1' === $_POST['bm_reset_order'] ) {
+		if ( isset( $_POST['bm_reset_order'] ) && '1' === sanitize_key( wp_unslash( $_POST['bm_reset_order'] ) ) ) {
 			// Remove custom ordering – revert to default
 			delete_option( 'bm_payment_methods_order' );
 
 			// Also reset custom title & description to defaults
-			$defaults_title = __( 'Autopay gateway', 'bm-woocommerce' );
+			$defaults_title = __( 'Autopay gateway', 'platnosci-online-blue-media' );
 			$defaults_desc  = __( 'Instant payment, BLIK, credit card, Google Pay, Apple Pay',
-				'bm-woocommerce' );
+				'platnosci-online-blue-media' );
 			$settings_key   = $this->get_option_key();
 			$settings_arr   = get_option( $settings_key, [] );
 			if ( ! is_array( $settings_arr ) ) {
@@ -2918,11 +2963,12 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 			$settings_arr['checkout_logo_variant']      = 'dark';
 			update_option( $settings_key, $settings_arr );
 			\WC_Admin_Settings::add_message( __( 'Title and description have been reset to defaults.',
-				'bm-woocommerce' ) );
+				'platnosci-online-blue-media' ) );
 		} elseif ( isset( $_POST['bm_payment_methods_order'] ) ) {
 			$order = sanitize_text_field( wp_unslash( $_POST['bm_payment_methods_order'] ) );
 			update_option( 'bm_payment_methods_order', $order );
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		return $result;
 	}
@@ -2932,6 +2978,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 		// Hide Woo default save button on Payment settings tab; we will render our own row
 		if ( $active_tab_id === \Ilabs\BM_Woocommerce\Domain\Service\Settings\Settings_Tabs::PAYMENT_SETTINGS_TAB_ID ) {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- WooCommerce admin convention for hiding the default save button.
 			$GLOBALS['hide_save_button'] = true;
 		}
 
@@ -2942,14 +2989,17 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 		// Render custom submit row only on Payment settings tab (with flex spacing)
 		if ( $active_tab_id === \Ilabs\BM_Woocommerce\Domain\Service\Settings\Settings_Tabs::PAYMENT_SETTINGS_TAB_ID ) {
 			echo '<p class="submit autopay-submit-row" style="display:flex;justify-content:space-between;align-items:center;text-align:center">';
+			// phpcs:disable WordPress.WP.I18n.TextDomainMismatch -- Intentional reuse of existing WooCommerce translation for 'Save changes'.
 			echo '<button name="save" class="woocommerce-save-button components-button is-primary" type="submit" value="' . esc_attr__( 'Save changes',
 					'woocommerce' ) . '">' . esc_html__( 'Save changes',
 					'woocommerce' ) . '</button>';
+			// phpcs:enable WordPress.WP.I18n.TextDomainMismatch
 			echo '<button type="submit" name="bm_reset_order" value="1" id="bm-reset-order" style="background:none!important;border:0!important;box-shadow:none!important;text-shadow:none!important;padding:0!important;margin-left:8px!important;display:inline-flex!important;align-items:center!important;justify-content:right!important;text-align:center!important;color:#2271b1!important;text-decoration:underline!important">' . esc_html__( 'Reset to default',
-					'bm-woocommerce' ) . '</button>';
+					'platnosci-online-blue-media' ) . '</button>';
 			wp_nonce_field( 'woocommerce-settings' );
 			echo '</p>';
 		} else {
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- WooCommerce admin convention for hiding the default save button.
 			unset( $GLOBALS['hide_save_button'] );
 		}
 	}

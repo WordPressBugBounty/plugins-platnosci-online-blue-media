@@ -2,6 +2,8 @@
 
 namespace Ilabs\BM_Woocommerce\Integration\Funnel_Builder;
 
+defined( 'ABSPATH' ) || exit;
+
 class Funnel_Builder_Integration {
 
 	public function init() {
@@ -16,7 +18,7 @@ class Funnel_Builder_Integration {
 
 			blue_media()->get_woocommerce_logger()->log_debug(
 				sprintf( '[$autopay_express_payment] [%s] ',
-					print_r( $autopay_express_payment, true )
+					wp_json_encode( $autopay_express_payment )
 				) );
 
 			if ( ! $autopay_express_payment ) {
@@ -28,7 +30,7 @@ class Funnel_Builder_Integration {
 				$param_to_add = 'autopay_express_payment';
 			}
 
-			$gets = parse_url( $location );
+			$gets = wp_parse_url( $location );
 			if ( isset( $gets['query'] ) ) {
 				$query_args = [];
 				parse_str( (string) $gets['query'], $query_args );
