@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) || exit;
 
 class Gateway_List_Response_Factory {
 
-	public function create(array $data): Gateway_List_Response {
+	public function create( array $data ): Gateway_List_Response {
 		$response = new Gateway_List_Response();
 
 		$response->setResult($data['result'] ?? '');
@@ -15,20 +15,20 @@ class Gateway_List_Response_Factory {
 		$response->setServiceID($data['serviceID'] ?? '');
 		$response->setMessageID($data['messageID'] ?? '');
 
-		if (!empty($data['gatewayGroups'])) {
+		if ( ! empty($data['gatewayGroups']) ) {
 			$response->setGatewayGroups($this->createGatewayGroups($data['gatewayGroups']));
 		}
 
-		if (!empty($data['gatewayList'])) {
+		if ( ! empty($data['gatewayList']) ) {
 			$response->setGatewayList($this->createGatewayList($data['gatewayList']));
 		}
 
 		return $response;
 	}
 
-	private function createGatewayGroups(array $groupsData): array {
+	private function createGatewayGroups( array $groupsData ): array {
 		$groups = [];
-		foreach ($groupsData as $groupData) {
+		foreach ( $groupsData as $groupData ) {
 			$group = new Group();
 			$group->setType($groupData['type'] ?? '');
 			$group->setTitle($groupData['title'] ?? '');
@@ -41,9 +41,9 @@ class Gateway_List_Response_Factory {
 		return $groups;
 	}
 
-	private function createGatewayList(array $gatewaysData): array {
+	private function createGatewayList( array $gatewaysData ): array {
 		$gateways = [];
-		foreach ($gatewaysData as $gatewayData) {
+		foreach ( $gatewaysData as $gatewayData ) {
 			$gateway = new Gateway();
 			$gateway->setGatewayID($gatewayData['gatewayID'] ?? 0);
 			$gateway->setName($gatewayData['name'] ?? '');
@@ -62,11 +62,11 @@ class Gateway_List_Response_Factory {
             $gateway->setOrder($gatewayData['order'] ?? 0);
             $gateway->setButtonTitle($gatewayData['buttonTitle'] ?? '');
 
-			if (!empty($gatewayData['mcc'])) {
+			if ( ! empty($gatewayData['mcc']) ) {
 				$gateway->setMcc($this->createMcc($gatewayData['mcc']));
 			}
 
-			if (!empty($gatewayData['currencies'])) {
+			if ( ! empty($gatewayData['currencies']) ) {
 				$gateway->setCurrencies($this->createCurrencies($gatewayData['currencies']));
 			}
 
@@ -75,16 +75,16 @@ class Gateway_List_Response_Factory {
 		return $gateways;
 	}
 
-	private function createMcc(array $mccData): Mcc {
+	private function createMcc( array $mccData ): Mcc {
 		$mcc = new Mcc();
 		$mcc->setAllowed($mccData['allowed'] ?? null);
 		$mcc->setDisallowed($mccData['disallowed'] ?? null);
 		return $mcc;
 	}
 
-	private function createCurrencies(array $currenciesData): array {
+	private function createCurrencies( array $currenciesData ): array {
 		$currencies = [];
-		foreach ($currenciesData as $currencyData) {
+		foreach ( $currenciesData as $currencyData ) {
 			$currency = new Currency();
 			$currency->setCurrency($currencyData['currency'] ?? '');
 			$currency->setMinAmount($currencyData['minAmount'] ?? null);

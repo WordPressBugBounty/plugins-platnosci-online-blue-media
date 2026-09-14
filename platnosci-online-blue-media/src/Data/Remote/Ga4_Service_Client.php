@@ -74,13 +74,13 @@ class Ga4_Service_Client {
 		$addToCartEventData = new AddToCartEvent();
 		$addToCartEventData
 			->setValue( $add_product_to_cart_use_case->get_ga4_payload_dto()
-			                                         ->get_value() )
+													->get_value() )
 			->setCurrency( $add_product_to_cart_use_case->get_ga4_payload_dto()
 			                                            ->get_currency_symbol() );
 
 		foreach (
 			$add_product_to_cart_use_case->get_ga4_payload_dto()
-			                             ->get_items() as $item
+										->get_items() as $item
 		) {
 			/**
 			 * @var Item_DTO $item
@@ -104,8 +104,6 @@ class Ga4_Service_Client {
 		$guzzle = $ga4Service->getHttpClient();
 
 		$ga4Service->send( $baseRequest );
-
-
 	}
 
 	/**
@@ -126,17 +124,15 @@ class Ga4_Service_Client {
 
 		$remove_from_cart_event_data = new RemoveFromCartEvent();
 
-
 		$remove_from_cart_event_data
 			->setValue( $remove_product_from_cart_use_case->get_ga4_payload_dto()
-			                                              ->get_value() )
+															->get_value() )
 			->setCurrency( $remove_product_from_cart_use_case->get_ga4_payload_dto()
-			                                                 ->get_currency_symbol() );
-
+															->get_currency_symbol() );
 
 		foreach (
 			$remove_product_from_cart_use_case->get_ga4_payload_dto()
-			                                  ->get_items() as $item
+												->get_items() as $item
 		) {
 			/**
 			 * @var Item_DTO $item
@@ -164,10 +160,10 @@ class Ga4_Service_Client {
 		Complete_Transation_Use_Case $complete_transaction_use_case
 	) {
 		if ( Complete_Transation_Use_Case::PURCHASE_EVENT_ORDER_STATUS_TRIGGERED
-		     === $complete_transaction_use_case->get_ga4_purchase_event_status()
+			=== $complete_transaction_use_case->get_ga4_purchase_event_status()
 		) {
 			blue_media()
-				->get_woocommerce_logger( 'analytics' )
+				->get_woocommerce_logger( 'bm_woocommerce_analytics' )
 				->log_error(
 					sprintf( '[Ga4_Service_Client purchase_event] [multiple request protection triggered] [%s]',
 						wp_json_encode( [
@@ -197,13 +193,13 @@ class Ga4_Service_Client {
 
 		$purchase_event_data
 			->setTransactionId( (string) $complete_transaction_use_case->get_ga4_payload_dto()
-			                                                           ->get_transaction_id() )
+																		->get_transaction_id() )
 			->setValue( $complete_transaction_use_case->get_ga4_payload_dto()
-			                                          ->get_value() )
+														->get_value() )
 			->setCurrency( $complete_transaction_use_case->get_ga4_payload_dto()
-			                                             ->get_currency_symbol() )
+														->get_currency_symbol() )
 			->setShipping( $complete_transaction_use_case->get_ga4_payload_dto()
-			                                             ->get_shipping() )
+														->get_shipping() )
 			->setTax( $complete_transaction_use_case->get_ga4_payload_dto()
 			                                        ->get_tax() );
 		$session_id_from_meta = $complete_transaction_use_case->get_ga4_session_id_from_order_meta();
@@ -214,7 +210,7 @@ class Ga4_Service_Client {
 
 		foreach (
 			$complete_transaction_use_case->get_ga4_payload_dto()
-			                              ->get_items() as $item
+											->get_items() as $item
 		) {
 			/**
 			 * @var Item_DTO $item
@@ -235,14 +231,14 @@ class Ga4_Service_Client {
 
 		$baseRequest->addEvent( $purchase_event_data );
 
-		blue_media()->get_woocommerce_logger('analytics')->log_debug(
+		blue_media()->get_woocommerce_logger('bm_woocommerce_analytics')->log_debug(
 			sprintf( '[purchase_event] [baseRequest: %s]',
 				wp_json_encode( $baseRequest->export() )
 			) );
 
 		$result = $ga4Service->send( $baseRequest );
 
-		blue_media()->get_woocommerce_logger('analytics')->log_debug(
+		blue_media()->get_woocommerce_logger('bm_woocommerce_analytics')->log_debug(
 			sprintf( '[purchase_event] [BaseResponse: %s]',
 				wp_json_encode( $result )
 			) );
@@ -254,15 +250,9 @@ class Ga4_Service_Client {
 		$base_request              = new BaseRequest( $this->get_client_id() );
 		$view_item_list_event_data = new ViewItemListEvent();
 
-		$view_item_list_event_data
-			->setValue( $view_product_on_list_use_case->get_ga4_payload_dto()
-			                                          ->get_value() )
-			->setCurrency( $view_product_on_list_use_case->get_ga4_payload_dto()
-			                                             ->get_currency_symbol() );
-
 		foreach (
 			$view_product_on_list_use_case->get_ga4_payload_dto()
-			                              ->get_items() as $item
+											->get_items() as $item
 		) {
 			/**
 			 * @var Item_DTO $item
@@ -284,7 +274,6 @@ class Ga4_Service_Client {
 		$base_request->addEvent( $view_item_list_event_data );
 
 		return $base_request->export();
-
 	}
 
 	public function view_item_event_export_array(
@@ -294,14 +283,13 @@ class Ga4_Service_Client {
 		$view_item_event_data = new ViewItemEvent();
 
 		$view_item_event_data
-			->setValue( $click_on_product_use_case->get_ga4_payload_dto()
-			                                      ->get_value() )
+			->setValue( (string) ( $click_on_product_use_case->get_ga4_payload_dto()->get_value() ?? '' ) )
 			->setCurrency( $click_on_product_use_case->get_ga4_payload_dto()
-			                                         ->get_currency_symbol() );
+													->get_currency_symbol() );
 
 		foreach (
 			$click_on_product_use_case->get_ga4_payload_dto()
-			                          ->get_items() as $item
+										->get_items() as $item
 		) {
 			/**
 			 * @var Item_DTO $item
@@ -323,7 +311,6 @@ class Ga4_Service_Client {
 		$base_request->addEvent( $view_item_event_data );
 
 		return $base_request->export();
-
 	}
 
 	public function init_checkout_event_export_array(
@@ -334,13 +321,13 @@ class Ga4_Service_Client {
 
 		$init_checkout_event_data
 			->setValue( $init_checkout_use_case->get_ga4_payload_dto()
-			                                   ->get_value() )
+												->get_value() )
 			->setCurrency( $init_checkout_use_case->get_ga4_payload_dto()
-			                                      ->get_currency_symbol() );
+													->get_currency_symbol() );
 
 		foreach (
 			$init_checkout_use_case->get_ga4_payload_dto()
-			                       ->get_items() as $item
+									->get_items() as $item
 		) {
 			/**
 			 * @var Item_DTO $item

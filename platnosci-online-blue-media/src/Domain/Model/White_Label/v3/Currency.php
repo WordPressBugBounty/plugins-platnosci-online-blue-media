@@ -24,7 +24,7 @@ class Currency {
 		return $this->currency;
 	}
 
-	public function setCurrency(string $currency): void {
+	public function setCurrency( string $currency ): void {
 		$this->currency = $currency;
 	}
 
@@ -32,7 +32,7 @@ class Currency {
 		return $this->minAmount;
 	}
 
-	public function setMinAmount(?float $minAmount): void {
+	public function setMinAmount( ?float $minAmount ): void {
 		$this->minAmount = $minAmount;
 	}
 
@@ -40,7 +40,7 @@ class Currency {
 		return $this->maxAmount;
 	}
 
-	public function setMaxAmount(?float $maxAmount): void {
+	public function setMaxAmount( ?float $maxAmount ): void {
 		$this->maxAmount = $maxAmount;
 	}
 }

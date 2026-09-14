@@ -40,7 +40,7 @@ class Complete_Transation_Use_Case extends Abstract_Ga4_Use_Case implements Ga4_
 		$ga4_payload->set_currency( $this->order->get_currency() );
 		$ga4_payload->set_shipping( (float) $this->order->get_shipping_total() );
 		$ga4_payload->set_tax( (float) $this->order->get_shipping_tax() );
-		$ga4_payload->set_transaction_id( $this->order->get_id() );
+		$ga4_payload->set_transaction_id( (string) $this->order->get_id() );
 		$ga4_payload->set_value( $this->order->get_total() );
 
 		$items = Wc_Helpers::get_products_by_order_id( $this->order->get_id() );
@@ -50,12 +50,12 @@ class Complete_Transation_Use_Case extends Abstract_Ga4_Use_Case implements Ga4_
 			$wc_product = wc_get_product( $item['product_id'] );
 			$item_dto   = new Item_DTO();
 			$item_dto->set_name( $item['product_name'] );
-			$item_dto->set_price( (float) $wc_product->get_price( null ) );
+			$item_dto->set_price( (float) $wc_product->get_price( 'view' ) );
 			$item_dto->set_quantity( (int) $item['product_quantity'] );
 			$item_dto->set_variant( (string) $item['variation_id'] );
 			$item_dto->set_category( Wc_Helpers::get_main_category( $wc_product ) );
 			$item_dto->set_brand( '' );
-			$item_dto->set_id( (int) $item['product_id'] );
+			$item_dto->set_id( (string) $item['product_id'] );
 			$items_dto[] = $item_dto;
 		}
 

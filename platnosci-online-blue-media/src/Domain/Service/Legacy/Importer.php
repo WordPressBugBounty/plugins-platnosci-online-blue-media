@@ -12,7 +12,7 @@ class Importer {
 
 	const LEGACY_ENV_UNKNOWN = 3;
 
-	private $legacy_settings = [];
+	private $legacy_settings  = [];
 	private $autopay_settings = [];
 
 	/**
@@ -35,10 +35,8 @@ class Importer {
 
 		if ( isset( $_POST['autopay_import_legacy_settings'] ) && '1' === $_POST['autopay_import_legacy_settings'] ) {
 
-
 			$legacy_hash       = $this->get_legacy_hash_key();
 			$legacy_service_id = $this->get_legacy_service_id();
-
 
 			if ( empty( $legacy_hash ) && empty( $legacy_service_id ) && self::LEGACY_ENV_UNKNOWN === $this->legacy_env ) {
 				blue_media()
@@ -48,7 +46,6 @@ class Importer {
 
 				return;
 			}
-
 
 			if ( self::LEGACY_ENV_PRODUCTION === $this->legacy_env ) {
 				$this->modify_autopay_option( 'testmode', 'no' );

@@ -7,9 +7,6 @@ defined( 'ABSPATH' ) || exit;
 use Exception;
 use Ilabs\BM_Woocommerce\Controller\Model\Payment_Status_Response_Value_Object;
 use Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway;
-use function GuzzleHttp\Psr7\str;
-
-
 class Payment_Status_Controller extends Abstract_Controller implements Controller_Interface {
 
 	const ACTION_NAME = 'payment_get_status';
@@ -19,7 +16,6 @@ class Payment_Status_Controller extends Abstract_Controller implements Controlle
 	public function execute_request() {
 		$order_id                = WC()->session->get( 'bm_wc_order_id' );
 		$transaction_start_error = WC()->session->get( 'bm_continue_transaction_start_error' );
-
 
 		if ( empty( $order_id ) ) {
 			blue_media()->get_woocommerce_logger()->log_error(
@@ -63,7 +59,6 @@ class Payment_Status_Controller extends Abstract_Controller implements Controlle
 
 		$order      = wc_get_order( $order_id );
 		$itn_status = (string) $order->get_meta( 'bm_order_itn_status' );
-
 
 		$continue_transaction_redirect_url = WC()->session->get( 'bm_continue_transaction_redirect_url' );
 

@@ -4,11 +4,6 @@ namespace Ilabs\BM_Woocommerce\Domain\Service\Gateway_List;
 
 defined( 'ABSPATH' ) || exit;
 
-use Exception;
-use Ilabs\BM_Woocommerce\Domain\Model\White_Label\Config;
-use Ilabs\BM_Woocommerce\Domain\Model\White_Label\Expandable_Group;
-use Ilabs\BM_Woocommerce\Domain\Model\White_Label\Group;
-use Ilabs\BM_Woocommerce\Domain\Model\White_Label\Item;
 use Ilabs\BM_Woocommerce\Domain\Model\White_Label\v3\Gateway;
 use Ilabs\BM_Woocommerce\Domain\Model\White_Label\v3\Gateway as View_Model_Gateway;
 use Ilabs\BM_Woocommerce\Domain\Model\White_Label\v3\Gateway_List_Response;
@@ -19,9 +14,11 @@ use Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway;
 class Gateway_List_Mapper_Block_Checkout {
 
 	private const SPLIT_GROUP_SLUGS = [
-		'wallet',   // Apple Pay / Google Pay
-		'bnpl',     // Kup teraz, zapłać później / PayPo
-		'fr',       // Volkswagen / SGB / Other banks
+		'wallet',     // Apple Pay / Google Pay (legacy gatewayList groupType).
+		'apple_pay',  // Apple Pay (gatewayList groupType APPLE_PAY).
+		'google_pay', // Google Pay (gatewayList groupType GOOGLE_PAY).
+		'bnpl',       // Kup teraz, zapłać później / PayPo.
+		'fr',         // Volkswagen / SGB / Other banks.
 	];
 
 	/**
@@ -41,13 +38,12 @@ class Gateway_List_Mapper_Block_Checkout {
 		array $gpay_form_data = [],
 		bool $offer_google_pay_on_checkout = true
 	) {
-		$this->gateway_list_response         = $gateway_list_response;
-		$this->gpay_form_data                = $gpay_form_data;
+		$this->gateway_list_response        = $gateway_list_response;
+		$this->gpay_form_data               = $gpay_form_data;
 		$this->offer_google_pay_on_checkout = $offer_google_pay_on_checkout;
 	}
 
-	private function convert_view_model_group_to_array( View_Model_Group $group
-	): array {
+	private function convert_view_model_group_to_array( View_Model_Group $group ): array {
 
 		$items = [];
 
@@ -57,7 +53,6 @@ class Gateway_List_Mapper_Block_Checkout {
 				$items[] = $converted;
 			}
 		}
-
 
 		if ( $group->isToggled() ) {
 			return [
@@ -79,7 +74,6 @@ class Gateway_List_Mapper_Block_Checkout {
 			'items'         => $items,
 		];
 
-
 		/**
 		 * return [
 		 * 'label'         => $this->name,
@@ -92,16 +86,14 @@ class Gateway_List_Mapper_Block_Checkout {
 		 * ];
 		 */
 
-
 		/*
-	 * return [
+		* return [
 				'name'          => $this->name,
 				'slug'          => $this->slug,
 				'is_expandable' => false,
 				'items'         => $items,
 			];
-	 */
-
+		*/
 	}
 
 
@@ -141,9 +133,8 @@ class Gateway_List_Mapper_Block_Checkout {
 			'data'              => $data,
 		];
 
-
 		/*
-* return [
+		* return [
 		'label'             => $this->name,
 		'key'               => 'bm_channnel_' . $this->id,
 		'value'             => $this->id,
@@ -154,8 +145,8 @@ class Gateway_List_Mapper_Block_Checkout {
 		'description'       => (string) $this->description,
 		'block_description' => (string) $this->block_description,
 		'data'              => $this->data,
-	];
-*/
+		];
+		*/
 
 		/**
 		 * 'data'       => [
@@ -368,99 +359,6 @@ class Gateway_List_Mapper_Block_Checkout {
 		return 'gateway-' . (int) $gateway->getGatewayID();
 	}
 
-
-	/**
-	 * @return array
-	 * @throws Exception
-	 */
-	public function map_for_blocks_old(): array {
-		$groups_from_config = ( new Config() )->get_config();
-
-		$ids_from_config           = ( new Config() )->get_ids();
-		$unknown_raw_channels      = [];
-		$result                    = [];
-		$unspecified_ids_group_key = [];
-
-
-		foreach ( $groups_from_config as $config_item ) {
-			$instance_created = false;
-			if ( $config_item['ids'] === Config::UNSPECIFIED_IDS ) {
-				$group = new Expandable_Group(
-					[],
-					$config_item['name'],
-					sanitize_title( $config_item['name'] ),
-					$this->get_checkout_group_logo_url(),
-					__( 'You will be redirected to the page of the selected bank.',
-						'platnosci-online-blue-media'
-					)
-				);
-
-				$result[]                  = $group;
-				$unspecified_ids_group_key = array_keys( $result )[ count( $result ) - 1 ];
-			} else {
-				foreach ( $this->gateway_list_response as $raw_channel ) {
-					if ( ! is_object( $raw_channel ) || ! $this->check_amount_range( $raw_channel ) ) {
-						continue;
-					}
-					if ( in_array( $raw_channel->gatewayID,
-						$config_item['ids'] ) ) {
-						if ( ! $instance_created ) {
-							$group            = new Group( [],
-								$raw_channel->name,
-								sanitize_title( $raw_channel->name ) );
-							$instance_created = true;
-						}
-
-						$extra_class  = $config_item['extra_class'] ?? null;
-						$extra_script = $config_item['extra_script'] ?? null;
-
-						$group->push_item( ( new Item( $raw_channel->name,
-							$raw_channel->gatewayID,
-							$raw_channel->iconUrl, $extra_class,
-							$extra_script,
-							null,
-							$config_item['block_description'] ?? null,
-							$config_item['data'] ?? null
-
-						) ) );
-					} elseif ( ! in_array( $raw_channel->gatewayID,
-						$ids_from_config ) ) {
-						$unknown_raw_channels[ $raw_channel->gatewayID ] = $raw_channel;
-					}
-				}
-				if ( $instance_created ) {
-					$result[] = $group;
-				}
-			}
-
-		}
-
-		if ( ! empty( $unspecified_ids_group_key ) ) {
-			foreach ( $unknown_raw_channels as $raw_channel ) {
-				$result[ $unspecified_ids_group_key ]->push_item( ( new Item( $raw_channel->name,
-					$raw_channel->gatewayID,
-					$raw_channel->iconUrl,
-					null,
-					null,
-					null,
-					null ) ) );
-
-			}
-		}
-
-		$result_arr = [];
-
-		foreach ( $result as $group ) {
-			if ( $group instanceof Expandable_Group ) {
-				$result_arr[] = $group->to_array();
-			} else {
-				$result_arr = array_merge( $result_arr,
-					$group->to_array()['items'] );
-			}
-		}
-
-		return $result_arr;
-	}
 
 	private function get_checkout_group_logo_url(): string {
 		$gateway = blue_media()->get_blue_media_gateway();

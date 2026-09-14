@@ -211,13 +211,13 @@ final class Card_Widget_Payment_Service {
 		$customer_ip = trim( (string) blue_media()->get_core_helpers()->get_visitor_ip() );
 
 		$params = [
-			Autopay_Payment_Protocol::FIELD_SERVICE_ID      => $service_id,
-			Autopay_Payment_Protocol::FIELD_ORDER_ID        => $order->get_id(),
-			Autopay_Payment_Protocol::FIELD_AMOUNT          => $amount_string,
-			Autopay_Payment_Protocol::FIELD_DESCRIPTION     => (string) $order->get_id(),
-			Autopay_Payment_Protocol::FIELD_GATEWAY_ID      => Blue_Media_Gateway::CARD_CHANNEL,
-			Autopay_Payment_Protocol::FIELD_CURRENCY        => $order->get_currency(),
-			Autopay_Payment_Protocol::FIELD_CUSTOMER_EMAIL  => $order->get_billing_email(),
+			Autopay_Payment_Protocol::FIELD_SERVICE_ID     => $service_id,
+			Autopay_Payment_Protocol::FIELD_ORDER_ID       => $order->get_id(),
+			Autopay_Payment_Protocol::FIELD_AMOUNT         => $amount_string,
+			Autopay_Payment_Protocol::FIELD_DESCRIPTION    => (string) $order->get_id(),
+			Autopay_Payment_Protocol::FIELD_GATEWAY_ID     => Blue_Media_Gateway::CARD_CHANNEL,
+			Autopay_Payment_Protocol::FIELD_CURRENCY       => $order->get_currency(),
+			Autopay_Payment_Protocol::FIELD_CUSTOMER_EMAIL => $order->get_billing_email(),
 		];
 
 		if ( '' !== $customer_ip ) {
@@ -241,20 +241,16 @@ final class Card_Widget_Payment_Service {
 	 * @return void
 	 */
 	private function log_masked_request( int $order_id, string $gateway_base_url, array $params_with_hash ): void {
-		$for_log = $params_with_hash;
-		$for_log[ Autopay_Payment_Protocol::FIELD_HASH ] = Autopay_Payment_Protocol::LOG_PLACEHOLDER_MASKED_HASH;
-		$for_log[ Autopay_Payment_Protocol::FIELD_PAYMENT_TOKEN ] = Autopay_Payment_Protocol::LOG_PAYMENT_TOKEN_LENGTH_LABEL
-			. Autopay_Payment_Protocol::LOG_KEY_VALUE_SEPARATOR
-			. strlen( (string) $params_with_hash[ Autopay_Payment_Protocol::FIELD_PAYMENT_TOKEN ] );
-
 		$this->logger->log_debug(
 			sprintf(
-				'%s [%s] order_id=%d payment_endpoint=%s params=%s',
+				'%s [%s] order_id=%d payment_endpoint=%s gateway_id=%s token_%s=%d',
 				Autopay_Payment_Protocol::LOG_SOURCE_PREFIX_CARD_WIDGET,
 				Autopay_Payment_Protocol::LOG_EVENT_REQUEST,
 				$order_id,
 				$gateway_base_url . Autopay_Payment_Protocol::HTTP_PAYMENT_PATH,
-				wp_json_encode( $for_log, Autopay_Payment_Protocol::JSON_ENCODE_FLAGS_LOG )
+				$params_with_hash[ Autopay_Payment_Protocol::FIELD_GATEWAY_ID ] ?? '',
+				Autopay_Payment_Protocol::LOG_PAYMENT_TOKEN_LENGTH_LABEL,
+				strlen( (string) ( $params_with_hash[ Autopay_Payment_Protocol::FIELD_PAYMENT_TOKEN ] ?? '' ) )
 			)
 		);
 	}
@@ -262,7 +258,7 @@ final class Card_Widget_Payment_Service {
 	/**
 	 * Log parsed XML summary.
 	 *
-	 * @param int               $order_id Order ID.
+	 * @param int                   $order_id Order ID.
 	 * @param array<string, string> $parsed Parsed fields.
 	 *
 	 * @return void
@@ -275,11 +271,10 @@ final class Card_Widget_Payment_Service {
 
 		$this->logger->log_debug(
 			sprintf(
-				'%s [%s] order_id=%d keys=%s redirecturl_len=%d status=%s confirmation=%s reason_snip=%s full=%s',
+				'%s [%s] order_id=%d redirecturl_len=%d status=%s confirmation=%s reason_snip=%s',
 				Autopay_Payment_Protocol::LOG_SOURCE_PREFIX_CARD_WIDGET,
 				Autopay_Payment_Protocol::LOG_EVENT_PARSED,
 				$order_id,
-				implode( ',', array_keys( $parsed ) ),
 				isset( $parsed[ $redirect_key ] ) ? strlen( (string) $parsed[ $redirect_key ] ) : 0,
 				$parsed[ $status_key ] ?? '',
 				$parsed[ $confirm_key ] ?? '',
@@ -289,8 +284,7 @@ final class Card_Widget_Payment_Service {
 						0,
 						Autopay_Payment_Protocol::LOG_PARSED_REASON_SNIPPET_MAX_BYTES
 					)
-					: '',
-				wp_json_encode( $parsed, Autopay_Payment_Protocol::JSON_ENCODE_FLAGS_LOG )
+					: ''
 			)
 		);
 	}

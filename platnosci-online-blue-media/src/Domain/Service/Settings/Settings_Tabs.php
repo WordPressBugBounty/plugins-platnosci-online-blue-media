@@ -45,24 +45,24 @@ class Settings_Tabs {
 
 	public function get_available_tabs(): array {
 		$tabs = [
-			self::AUTHENTICATION_TAB_ID    => __( 'Authentication',
+			self::AUTHENTICATION_TAB_ID       => __( 'Authentication',
 				'platnosci-online-blue-media' ),
 			self::ADVERTISING_SERVICES_TAB_ID => __( 'Advertising services',
 				'platnosci-online-blue-media' ),
-			self::PAYMENT_SETTINGS_TAB_ID  => __( 'Appearance',
+			self::PAYMENT_SETTINGS_TAB_ID     => __( 'Appearance',
 				'platnosci-online-blue-media' ),
-			self::ANALYTICS_TAB_ID         => __( 'Analytics',
+			self::ANALYTICS_TAB_ID            => __( 'Analytics',
 				'platnosci-online-blue-media' ),
-			self::VAS_TAB_ID               => __( 'Services for you',
+			self::VAS_TAB_ID                  => __( 'Services for you',
 				'platnosci-online-blue-media' ),
-			self::ADVANCED_SETTINGS_TAB_ID => __( 'Advanced',
+			self::ADVANCED_SETTINGS_TAB_ID    => __( 'Advanced',
 				'platnosci-online-blue-media' ),
-			self::HELP_TAB_ID              => __( 'Help',
+			self::HELP_TAB_ID                 => __( 'Help',
 				'platnosci-online-blue-media' ),
 		];
 
 		if ( get_locale() === 'pl_PL' ) {
-			$tabs[self::VAS_TAB_ID] = __( 'Services for you', 'platnosci-online-blue-media' );
+			$tabs[ self::VAS_TAB_ID ] = __( 'Services for you', 'platnosci-online-blue-media' );
 		}
 
 		return $tabs;
@@ -85,5 +85,4 @@ class Settings_Tabs {
 
 		return $tab_ids;
 	}
-
 }

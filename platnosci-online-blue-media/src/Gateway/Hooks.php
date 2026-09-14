@@ -12,4 +12,3 @@ class Hooks {
 		( new Payment_On_Account_Page() )->init();
 	}
 }
-

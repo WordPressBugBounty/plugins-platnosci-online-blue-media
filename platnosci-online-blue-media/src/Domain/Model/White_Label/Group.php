@@ -98,6 +98,4 @@ class Group {
 		$items[]     = $item;
 		$this->items = $items;
 	}
-
-
 }

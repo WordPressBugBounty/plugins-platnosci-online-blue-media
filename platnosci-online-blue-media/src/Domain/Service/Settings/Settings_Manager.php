@@ -14,10 +14,10 @@ class Settings_Manager {
 
 	public function get_form_fields() {
 		if ( isset( $_GET['bmtab'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only admin settings context
-			return ( new WC_Form_Fields_Integration )->get_fields_by_tab_id( sanitize_text_field( wp_unslash( $_GET['bmtab'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			return ( new WC_Form_Fields_Integration() )->get_fields_by_tab_id( sanitize_text_field( wp_unslash( $_GET['bmtab'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}
 
-		return ( new WC_Form_Fields_Integration )->get_fields_by_tab_id( null );
+		return ( new WC_Form_Fields_Integration() )->get_fields_by_tab_id( null );
 	}
 
 	/**
@@ -37,7 +37,7 @@ class Settings_Manager {
 		$settings
 			->on_wc_before_settings( 'checkout' )
 			->action( function () {
-				$tabs = new Settings_Tabs;
+				$tabs = new Settings_Tabs();
 
 				if ( isset( $_GET['section'] ) && $_GET['section'] === 'bluemedia' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only admin settings context
 					add_filter( 'woocommerce_get_sections_checkout',
@@ -69,7 +69,7 @@ class Settings_Manager {
 			} )
 			->on_wc_before_settings( 'checkout' )
 			->action( function () {
-				$tabs          = ( new Settings_Tabs );
+				$tabs          = ( new Settings_Tabs() );
 				$active_tab_id = $tabs->get_active_tab_id();
 				if ( $active_tab_id === $tabs::VAS_TAB_ID ) {
 					if ( get_locale() === 'pl_PL' ) {
@@ -127,13 +127,11 @@ class Settings_Manager {
 					return $classes;
 				} );
 		}
-
 	}
 
 	public function render_settings( string $settings_html ) {
-		$tabs          = ( new Settings_Tabs );
+		$tabs          = ( new Settings_Tabs() );
 		$active_tab_id = $tabs->get_active_tab_id();
-
 
 		switch ( $active_tab_id ) {
 			case Settings_Tabs::AUTHENTICATION_TAB_ID:

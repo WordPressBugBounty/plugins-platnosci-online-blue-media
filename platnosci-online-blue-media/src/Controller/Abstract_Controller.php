@@ -15,7 +15,6 @@ abstract class Abstract_Controller {
 		string $message,
 		?string $order_received_url,
 		?string $continue_transaction_redirect_url
-
 	) {
 		$response = new Payment_Status_Response_Value_Object(
 			$status,
@@ -23,7 +22,6 @@ abstract class Abstract_Controller {
 			$order_received_url,
 			$continue_transaction_redirect_url
 		);
-
 
 		blue_media()->get_woocommerce_logger()->log_error(
 			sprintf( '[Abstract_Controller] [send_response]  [response: %s]',
@@ -44,8 +42,7 @@ abstract class Abstract_Controller {
 		return 'wp_ajax_bm_' . $action_name . '_action';
 	}
 
-	protected function build_full_action_name_nopriv( string $action_name
-	): string {
+	protected function build_full_action_name_nopriv( string $action_name ): string {
 		return 'wp_ajax_nopriv_bm_' . $action_name . '_action';
 	}
 

@@ -25,7 +25,6 @@ class WC_Form_Fields_Integration {
 					$custom_attributes     = $data['custom_attributes'] ?? [];
 					$tr_classes            = $data['tr_classes'] ?? [];
 
-
 					if ( ! empty( $data['required'] ) && true === $data['required'] ) {
 						$custom_attributes         = array_merge( $custom_attributes,
 							[ 'required' => '' ] );
@@ -43,16 +42,15 @@ class WC_Form_Fields_Integration {
 
 					blue_media()->locate_template( "$template.php",
 						$autopay_template_args + [
-							'key'               => $key,
-							'field_key'         => $wc_settings_api->get_field_key( $key ),
-							'wc_settings_api'   => $wc_settings_api,
-							'autopay_data'      => $data,
-							'visible'           => $visible,
-							'custom_attributes' => $custom_attributes,
+							'key'                => $key,
+							'field_key'          => $wc_settings_api->get_field_key( $key ),
+							'wc_settings_api'    => $wc_settings_api,
+							'autopay_data'       => $data,
+							'visible'            => $visible,
+							'custom_attributes'  => $custom_attributes,
 							'autopay_tr_classes' => $tr_classes,
-							'active_tab'        => ( new Settings_Tabs() )->get_active_tab_id(),
+							'active_tab'         => ( new Settings_Tabs() )->get_active_tab_id(),
 						] );
-
 
 					$return = ob_get_clean();
 
@@ -137,7 +135,7 @@ class WC_Form_Fields_Integration {
 	public function get_authentication_fields(): array {
 		$currency_tabs               = new Currency_Tabs();
 		$current_admin_currency_code = $currency_tabs->get_active_tab_currency()
-		                                             ->get_code();
+													->get_code();
 
 		$testmode_opt_value = blue_media()
 			->get_blue_media_gateway()
@@ -149,10 +147,9 @@ class WC_Form_Fields_Integration {
 				$current_admin_currency_code ),
 				'no' );
 
-
 		$return = [
 
-			'test_connection' => [
+			'test_connection'                  => [
 				'title'         => __( 'Test Connection',
 					'platnosci-online-blue-media' ),
 				'description'   => __( 'Expected format: G-XXXXXXX',
@@ -167,7 +164,7 @@ class WC_Form_Fields_Integration {
 					],
 			],
 
-			'testmode' => [
+			'testmode'                         => [
 				'title'         => __( 'Use in sandbox mode',
 					'platnosci-online-blue-media' ),
 				'label'         => __( 'Enable Sandbox mode',
@@ -199,7 +196,7 @@ class WC_Form_Fields_Integration {
 				'bmtab'         => 'authentication',
 			],
 
-			'currency_tabs' => [
+			'currency_tabs'                    => [
 				'title'         => '',
 				'description'   => '',
 				'type'          => 'autopay_template',
@@ -212,11 +209,11 @@ class WC_Form_Fields_Integration {
 					],
 			],
 
-			'whitelabel_title' => [
-				'title' => __( 'Select mode of displaying payment methods',
+			'whitelabel_title'                 => [
+				'title'         => __( 'Select mode of displaying payment methods',
 					'platnosci-online-blue-media' ),
 
-				'description' => '',
+				'description'   => '',
 
 				'type'          => 'autopay_template',
 				'template'      => 'settings_field_extended_title',
@@ -232,21 +229,21 @@ class WC_Form_Fields_Integration {
 
 			Settings_Manager::get_currency_option_key( 'whitelabel',
 				$current_admin_currency_code ) => [
-				'title'       => '',
-				'type'        => 'autopay_template',
-				'template'    => 'settings_field_extended_radio',
-				'default'     => 'no',
-				'class'       => 'woocommerce_bluemedia_whitelabel',
-				'options'     => [
-					'no'  => __( 'Redirect to Autopay’s hosted payment page',
-						'platnosci-online-blue-media' ),
-					'yes' => __( 'Display each payment method separately',
-						'platnosci-online-blue-media' ),
+					'title'       => '',
+					'type'        => 'autopay_template',
+					'template'    => 'settings_field_extended_radio',
+					'default'     => 'no',
+					'class'       => 'woocommerce_bluemedia_whitelabel',
+					'options'     => [
+						'no'  => __( 'Redirect to Autopay’s hosted payment page',
+							'platnosci-online-blue-media' ),
+						'yes' => __( 'Display each payment method separately',
+							'platnosci-online-blue-media' ),
+					],
+					'description' => self::get_whitelabel_description()[ $whitelabel_opt_value ],
+					'desc_tip'    => false,
+					'bmtab'       => 'authentication',
 				],
-				'description' => self::get_whitelabel_description()[ $whitelabel_opt_value ],
-				'desc_tip'    => false,
-				'bmtab'       => 'authentication',
-			],
 
 			// Placeholders to preserve order;
 			'blik_type_title'                  => [],
@@ -257,92 +254,92 @@ class WC_Form_Fields_Integration {
 
 			Settings_Manager::get_currency_option_key( 'service_id',
 				$current_admin_currency_code ) => [
-				'title'         => __( 'Service identifier',
-					'platnosci-online-blue-media' ),
-				'description'   => __( 'Consists of numbers only. Is unique for each store.',
-					'platnosci-online-blue-media' ),
-				'type'          => 'autopay_template',
-				'bmtab'         => 'authentication',
-				'desc_tip'      => false,
-				'template'      => 'settings_field_extended_text',
-				'template_args' =>
-					[
-						'tip_url'              => __( 'https://developers.autopay.pl/en/online/portal-autopay-en',
-							'platnosci-online-blue-media' ),
-						'tip_url_label'        => __( 'where to find?',
-							'platnosci-online-blue-media' ),
-						'input_field_type_arg' => 'number',
-					],
-				'required'      => ! ( 'yes' === $testmode_opt_value ),
-				'class'         => 'woocommerce_bluemedia_service_id_i',
-				'tr_classes'    => [ 'woocommerce_bluemedia_service_id-tr' ],
-			],
+					'title'         => __( 'Service identifier',
+						'platnosci-online-blue-media' ),
+					'description'   => __( 'Consists of numbers only. Is unique for each store.',
+						'platnosci-online-blue-media' ),
+					'type'          => 'autopay_template',
+					'bmtab'         => 'authentication',
+					'desc_tip'      => false,
+					'template'      => 'settings_field_extended_text',
+					'template_args' =>
+						[
+							'tip_url'              => __( 'https://developers.autopay.pl/en/online/portal-autopay-en',
+								'platnosci-online-blue-media' ),
+							'tip_url_label'        => __( 'where to find?',
+								'platnosci-online-blue-media' ),
+							'input_field_type_arg' => 'number',
+						],
+					'required'      => ! ( 'yes' === $testmode_opt_value ),
+					'class'         => 'woocommerce_bluemedia_service_id_i',
+					'tr_classes'    => [ 'woocommerce_bluemedia_service_id-tr' ],
+				],
 
 			Settings_Manager::get_currency_option_key( 'private_key',
 				$current_admin_currency_code ) => [
-				'title'         => __( 'Configuration key (hash)',
-					'platnosci-online-blue-media' ),
-				'description'   => __( 'Key containing numbers and lowercase letters to verify communication. Do not share it with anyone.',
-					'platnosci-online-blue-media' ),
-				'type'          => 'autopay_template',
-				'bmtab'         => 'authentication',
-				'desc_tip'      => false,
-				'template'      => 'settings_field_extended_password',
-				'template_args' =>
-					[
-						'tip_url'       => __( 'https://developers.autopay.pl/en/online/portal-autopay-en',
-							'platnosci-online-blue-media' ),
-						'tip_url_label' => __( 'where to find?',
-							'platnosci-online-blue-media' ),
-					],
-				'required'      => ! ( 'yes' === $testmode_opt_value ),
-				'class'         => 'woocommerce_bluemedia_private_key_i',
-				'tr_classes'    => [ 'woocommerce_bluemedia_private_key-tr' ],
-			],
+					'title'         => __( 'Configuration key (hash)',
+						'platnosci-online-blue-media' ),
+					'description'   => __( 'Key containing numbers and lowercase letters to verify communication. Do not share it with anyone.',
+						'platnosci-online-blue-media' ),
+					'type'          => 'autopay_template',
+					'bmtab'         => 'authentication',
+					'desc_tip'      => false,
+					'template'      => 'settings_field_extended_password',
+					'template_args' =>
+						[
+							'tip_url'       => __( 'https://developers.autopay.pl/en/online/portal-autopay-en',
+								'platnosci-online-blue-media' ),
+							'tip_url_label' => __( 'where to find?',
+								'platnosci-online-blue-media' ),
+						],
+					'required'      => ! ( 'yes' === $testmode_opt_value ),
+					'class'         => 'woocommerce_bluemedia_private_key_i',
+					'tr_classes'    => [ 'woocommerce_bluemedia_private_key-tr' ],
+				],
 
 			Settings_Manager::get_currency_option_key( 'test_service_id',
 				$current_admin_currency_code ) => [
-				'title'         => __( 'Test service identifier',
-					'platnosci-online-blue-media' ),
-				'description'   => __( 'Consists of numbers only. Is unique for each store.',
-					'platnosci-online-blue-media' ),
-				'type'          => 'autopay_template',
-				'bmtab'         => 'authentication',
-				'template'      => 'settings_field_extended_text',
-				'template_args' =>
-					[
-						'tip_url'              => __( 'https://developers.autopay.pl/en/online/portal-autopay-en',
-							'platnosci-online-blue-media' ),
-						'tip_url_label'        => __( 'where to find?',
-							'platnosci-online-blue-media' ),
-						'input_field_type_arg' => 'number',
-					],
-				'required'      => 'yes' === $testmode_opt_value,
-				'class'         => 'woocommerce_bluemedia_test_service_id_i',
-				'tr_classes'    => [ 'woocommerce_bluemedia_test_service_id-tr' ],
-			],
+					'title'         => __( 'Test service identifier',
+						'platnosci-online-blue-media' ),
+					'description'   => __( 'Consists of numbers only. Is unique for each store.',
+						'platnosci-online-blue-media' ),
+					'type'          => 'autopay_template',
+					'bmtab'         => 'authentication',
+					'template'      => 'settings_field_extended_text',
+					'template_args' =>
+						[
+							'tip_url'              => __( 'https://developers.autopay.pl/en/online/portal-autopay-en',
+								'platnosci-online-blue-media' ),
+							'tip_url_label'        => __( 'where to find?',
+								'platnosci-online-blue-media' ),
+							'input_field_type_arg' => 'number',
+						],
+					'required'      => 'yes' === $testmode_opt_value,
+					'class'         => 'woocommerce_bluemedia_test_service_id_i',
+					'tr_classes'    => [ 'woocommerce_bluemedia_test_service_id-tr' ],
+				],
 			Settings_Manager::get_currency_option_key( 'test_private_key',
 				$current_admin_currency_code ) => [
-				'title'         => __( 'Test configuration key (hash)',
-					'platnosci-online-blue-media' ),
-				'description'   => __( 'Key containing numbers and lowercase letters to verify communication. Do not share it with anyone.',
-					'platnosci-online-blue-media' ),
-				'type'          => 'autopay_template',
-				'bmtab'         => 'authentication',
-				'template'      => 'settings_field_extended_password',
-				'template_args' =>
-					[
-						'tip_url'       => __( 'https://developers.autopay.pl/en/online/portal-autopay-en',
-							'platnosci-online-blue-media' ),
-						'tip_url_label' => __( 'where to find?',
-							'platnosci-online-blue-media' ),
-					],
-				'required'      => 'yes' === $testmode_opt_value,
-				'class'         => 'woocommerce_bluemedia_test_private_key_i',
-				'tr_classes'    => [ 'woocommerce_bluemedia_test_private_key-tr' ],
-			],
+					'title'         => __( 'Test configuration key (hash)',
+						'platnosci-online-blue-media' ),
+					'description'   => __( 'Key containing numbers and lowercase letters to verify communication. Do not share it with anyone.',
+						'platnosci-online-blue-media' ),
+					'type'          => 'autopay_template',
+					'bmtab'         => 'authentication',
+					'template'      => 'settings_field_extended_password',
+					'template_args' =>
+						[
+							'tip_url'       => __( 'https://developers.autopay.pl/en/online/portal-autopay-en',
+								'platnosci-online-blue-media' ),
+							'tip_url_label' => __( 'where to find?',
+								'platnosci-online-blue-media' ),
+						],
+					'required'      => 'yes' === $testmode_opt_value,
+					'class'         => 'woocommerce_bluemedia_test_private_key_i',
+					'tr_classes'    => [ 'woocommerce_bluemedia_test_private_key-tr' ],
+				],
 
-			'remove_currency' => [
+			'remove_currency'                  => [
 				'title'         => '',
 				'description'   => '',
 				'type'          => 'autopay_template',
@@ -361,31 +358,31 @@ class WC_Form_Fields_Integration {
 			unset( $return['blik_type_title'] );
 			$return[ Settings_Manager::get_currency_option_key( 'blik_type',
 				$current_admin_currency_code ) ] = [
-				'title'            => __( 'BLIK payment type',
-					'platnosci-online-blue-media' ),
-				'type'             => 'autopay_template',
-				'template'         => 'settings_field_extended_select',
-				'description'      => '',
-				'options'          => [
-					'with_redirect'           => __( 'redirect payer to BLIK’s website',
+					'title'            => __( 'BLIK payment type',
 						'platnosci-online-blue-media' ),
-					'blik_0_without_redirect' => __( 'enter BLIK code directly on your store',
-						'platnosci-online-blue-media' ),
-				],
-				'default'          => 'with_redirect',
-				'bmtab'            => 'authentication',
-				'template_tr_args' =>
-					[
-						'test1' => 'val1',
-						'test2' => 'val2',
+					'type'             => 'autopay_template',
+					'template'         => 'settings_field_extended_select',
+					'description'      => '',
+					'options'          => [
+						'with_redirect'           => __( 'redirect payer to BLIK’s website',
+							'platnosci-online-blue-media' ),
+						'blik_0_without_redirect' => __( 'enter BLIK code directly on your store',
+							'platnosci-online-blue-media' ),
 					],
-				'template_args'    => [
-					'tip_url'       => __( 'https://developers.autopay.pl/en/online/plugins/woocomerce#692d97171d07c',
-						'platnosci-online-blue-media' ),
-					'tip_url_label' => __( 'Learn more', 'platnosci-online-blue-media' ),
-				],
-				'disabled'         => 'no' === $whitelabel_opt_value,
-			];
+					'default'          => 'with_redirect',
+					'bmtab'            => 'authentication',
+					'template_tr_args' =>
+						[
+							'test1' => 'val1',
+							'test2' => 'val2',
+						],
+					'template_args'    => [
+						'tip_url'       => __( 'https://developers.autopay.pl/en/online/plugins/woocomerce#692d97171d07c',
+							'platnosci-online-blue-media' ),
+						'tip_url_label' => __( 'Learn more', 'platnosci-online-blue-media' ),
+					],
+					'disabled'         => 'no' === $whitelabel_opt_value,
+				];
 
 		} else {
 			unset( $return['blik_type_title'] );
@@ -395,26 +392,26 @@ class WC_Form_Fields_Integration {
 
 		$return[ Settings_Manager::get_currency_option_key( 'gpay_type',
 			$current_admin_currency_code ) ] = [
-			'title'         => __( 'Google Pay payment type',
-				'platnosci-online-blue-media' ),
-			'type'          => 'autopay_template',
-			'template'      => 'settings_field_extended_select',
-			'description'   => '',
-			'options'       => [
-				'with_redirect' => __( 'redirect to Google Pay payment',
+				'title'         => __( 'Google Pay payment type',
 					'platnosci-online-blue-media' ),
-				'without_redirect'   => __( 'pay with Google Pay directly on your store',
-					'platnosci-online-blue-media' ),
-			],
-			'default'       => 'with_redirect',
-			'bmtab'         => 'authentication',
-			'template_args' => [
-				'tip_url'       => __( 'https://developers.autopay.pl/en/online/plugins/woocomerce#692d97171d07c',
-					'platnosci-online-blue-media' ),
-				'tip_url_label' => __( 'Learn more', 'platnosci-online-blue-media' ),
-			],
-			'disabled'      => 'no' === $whitelabel_opt_value,
-		];
+				'type'          => 'autopay_template',
+				'template'      => 'settings_field_extended_select',
+				'description'   => '',
+				'options'       => [
+					'with_redirect'    => __( 'redirect to Google Pay payment',
+						'platnosci-online-blue-media' ),
+					'without_redirect' => __( 'pay with Google Pay directly on your store',
+						'platnosci-online-blue-media' ),
+				],
+				'default'       => 'with_redirect',
+				'bmtab'         => 'authentication',
+				'template_args' => [
+					'tip_url'       => __( 'https://developers.autopay.pl/en/online/plugins/woocomerce#692d97171d07c',
+						'platnosci-online-blue-media' ),
+					'tip_url_label' => __( 'Learn more', 'platnosci-online-blue-media' ),
+				],
+				'disabled'      => 'no' === $whitelabel_opt_value,
+			];
 
 		return $return;
 	}
@@ -435,12 +432,11 @@ class WC_Form_Fields_Integration {
 	public function get_payment_settings_fields(): array {
 		$currency_tabs       = new Currency_Tabs();
 		$admin_currency_code = $currency_tabs->get_active_tab_currency()
-		                                     ->get_code();
-
+											->get_code();
 
 		$return = [
 
-			'payment_method_header' => [
+			'payment_method_header'         => [
 				'title'    => __( 'Header and description at checkout',
 					'platnosci-online-blue-media' ),
 				'type'     => 'autopay_template',
@@ -448,7 +444,7 @@ class WC_Form_Fields_Integration {
 				'bmtab'    => 'payment_settings',
 			],
 
-			'payment_method_title' => [
+			'payment_method_title'          => [
 				'title'         => __( 'Payment method title',
 					'platnosci-online-blue-media' ),
 				'type'          => 'autopay_template',
@@ -459,7 +455,7 @@ class WC_Form_Fields_Integration {
 				],
 			],
 
-			'payment_method_description' => [
+			'payment_method_description'    => [
 				'title'         => __( 'Payment method description',
 					'platnosci-online-blue-media' ),
 				'type'          => 'autopay_template',
@@ -474,13 +470,13 @@ class WC_Form_Fields_Integration {
 			],
 
 			// Simple divider line under the section
-			'payment_method_divider'     => [
+			'payment_method_divider'        => [
 				'type'     => 'autopay_template',
 				'template' => 'settings_field_section_divider',
 				'bmtab'    => 'payment_settings',
 			],
 
-			'checkout_logo_variant' => [
+			'checkout_logo_variant'         => [
 				'title'             => __( 'Autopay logo on checkout',
 					'platnosci-online-blue-media' ),
 				'description'       => __( 'Pick the variant that contrasts with your checkout background: dark logo on light pages, light logo on dark pages.',
@@ -508,7 +504,7 @@ class WC_Form_Fields_Integration {
 				'bmtab'    => 'payment_settings',
 			],
 
-			'currency_tabs' => [
+			'currency_tabs'                 => [
 				'title'         => '',
 				'description'   => '',
 				'type'          => 'autopay_template',
@@ -522,11 +518,11 @@ class WC_Form_Fields_Integration {
 					],
 			],
 
-			'custom_button' => [
+			'custom_button'                 => [
 				'title'         => __( 'Allowed payment method list',
 					'platnosci-online-blue-media' ),
 				'type'          => 'autopay_template',
-				'description'   => "",
+				'description'   => '',
 				'desc_tip'      => false,
 				'default'       => __( 'Import now',
 					'platnosci-online-blue-media' ),
@@ -548,13 +544,12 @@ class WC_Form_Fields_Integration {
 			],
 		];
 
-
 		return $return;
 	}
 
 	public function get_analytics_fields(): array {
 		return [
-			'ga4_tracking_id' => [
+			'ga4_tracking_id'                  => [
 				'title'         => __( 'Measurement identifier',
 					'platnosci-online-blue-media' ),
 				'description'   => __( 'Expected format: G-XXXXXXX',
@@ -571,7 +566,7 @@ class WC_Form_Fields_Integration {
 						'tip_modal_id'  => 'ga4_tracking_id_target',
 					],
 			],
-			'ga4_client_id'   => [
+			'ga4_client_id'                    => [
 				'title'         => __( 'Stream ID',
 					'platnosci-online-blue-media' ),
 				'description'   => __( 'The identifier is in numeric format.',
@@ -588,7 +583,7 @@ class WC_Form_Fields_Integration {
 						'tip_modal_id'  => 'ga4_client_id_target',
 					],
 			],
-			'ga4_api_secret'  => [
+			'ga4_api_secret'                   => [
 				'title'         => __( 'Google Analytics API secret',
 					'platnosci-online-blue-media' ),
 				'description'   => '',
@@ -605,7 +600,7 @@ class WC_Form_Fields_Integration {
 					],
 			],
 
-			'ga4_purchase_status' => [
+			'ga4_purchase_status'              => [
 				'title'       => __( 'Order status triggering the event ‘Completion of transaction’',
 					'platnosci-online-blue-media' ),
 				'description' => '',
@@ -633,15 +628,14 @@ class WC_Form_Fields_Integration {
 				'tr_classes'  => [ 'autopay-ga4-row' ],
 			],
 
-			'wc_payment_statuses_table' => [
-				'title' => __( 'Once connected with this plugin, Google Analytics will start registering the following events:',
+			'wc_payment_statuses_table'        => [
+				'title'         => __( 'Once connected with this plugin, Google Analytics will start registering the following events:',
 					'platnosci-online-blue-media' ),
 
 				'type'          => 'autopay_template',
 				'template'      => 'settings_field_ga4_status_table',
 				'template_args' =>
-					[
-					],
+					[],
 				'bmtab'         => 'analytics',
 			],
 
@@ -658,16 +652,15 @@ class WC_Form_Fields_Integration {
 				'bmtab'    => 'help',
 			],
 		];
-
 	}
 
 	public function get_advanced_settings_fields(): array {
 		$fields = [
 			'wc_payment_statuses'                     => [
-				'title' => __( 'Payment statuses',
+				'title'         => __( 'Payment statuses',
 					'platnosci-online-blue-media' ),
 
-				'description' => __( 'Choose how your order statuses will change depending on the status payment has in Autopay.',
+				'description'   => __( 'Choose how your order statuses will change depending on the status payment has in Autopay.',
 					'platnosci-online-blue-media' ),
 
 				'type'          => 'autopay_template',
@@ -721,7 +714,6 @@ class WC_Form_Fields_Integration {
 				'default'     => 'wc-failed',
 				'bmtab'       => 'payment_settings',
 			],
-
 
 			'debug_mode'                              => [
 				'title'    => __( 'Debug mode',
@@ -790,7 +782,7 @@ class WC_Form_Fields_Integration {
 				'bmtab'    => 'advanced_settings',
 			],
 
-			'gateway_url' => [
+			'gateway_url'                             => [
 				'title'       => __( 'Alternative transaction start production URL',
 					'platnosci-online-blue-media' ),
 				'description' => '',
@@ -799,7 +791,7 @@ class WC_Form_Fields_Integration {
 				'bmtab'       => 'help',
 			],
 
-			'test_gateway_url' => [
+			'test_gateway_url'                        => [
 				'title'       => __( 'Alternative transaction start test URL',
 					'platnosci-online-blue-media' ),
 				'description' => '',
@@ -808,7 +800,7 @@ class WC_Form_Fields_Integration {
 				'bmtab'       => 'help',
 			],
 
-			'order_received_url_filter' => [
+			'order_received_url_filter'               => [
 				'title'         => '',
 				'description'   => '',
 				'type'          => 'autopay_template',
@@ -827,25 +819,25 @@ class WC_Form_Fields_Integration {
 					],
 			],
 
-			'order_received_url_filter_to' => [
+			'order_received_url_filter_to'            => [
 				'title'       => '',
 				'description' => '',
 				'type'        => 'autopay_template',
 				'template'    => null,
 			],
 
-			'order_received_url_filter_from' => [
+			'order_received_url_filter_from'          => [
 				'title'       => '',
 				'description' => '',
 				'type'        => 'autopay_template',
 				'template'    => null,
 			],
 
-			'custom_button' => [
+			'custom_button'                           => [
 				'title'       => __( 'Import settings from legacy plugin',
 					'platnosci-online-blue-media' ),
 				'type'        => 'autopay_template',
-				'description' => "",
+				'description' => '',
 				'desc_tip'    => false,
 				'default'     => __( 'Import now',
 					'platnosci-online-blue-media' ),
@@ -853,11 +845,11 @@ class WC_Form_Fields_Integration {
 				'visible'     => $this->import_feature_is_active(),
 			],
 
-			'css_editor' => [
+			'css_editor'                              => [
 				'title'         => __( 'Use own CSS styles',
 					'platnosci-online-blue-media' ),
 				'type'          => 'autopay_template',
-				'description'   => "",
+				'description'   => '',
 				'desc_tip'      => false,
 				'default'       => '',
 				'template'      => 'settings_field_css_editor',
@@ -868,7 +860,6 @@ class WC_Form_Fields_Integration {
 		];
 
 		return $fields;
-
 	}
 
 

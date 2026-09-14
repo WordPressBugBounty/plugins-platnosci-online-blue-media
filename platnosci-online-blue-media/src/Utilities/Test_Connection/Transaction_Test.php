@@ -15,9 +15,9 @@ class Transaction_Test {
 	 * @throws Exception
 	 */
 	public function initialize( WC_Order $order ) {
-		$bm_gateway              = blue_media()->get_blue_media_gateway();
-		$client                  = new Client();
-		$gateway_payment_url      = $bm_gateway->get_gateway_url() . Autopay_Payment_Protocol::HTTP_PAYMENT_PATH;
+		$bm_gateway          = blue_media()->get_blue_media_gateway();
+		$client              = new Client();
+		$gateway_payment_url = $bm_gateway->get_gateway_url() . Autopay_Payment_Protocol::HTTP_PAYMENT_PATH;
 
 		blue_media()->get_woocommerce_logger()->log_debug(
 			sprintf( '[Transaction_Test] [initialize] [Order ID: %s] [Gateway payment url: %s] [CustomerEmail: %s]',
@@ -27,16 +27,16 @@ class Transaction_Test {
 			)
 		);
 
-		$params                  = [
-			'ServiceID'         => $bm_gateway->get_service_id(),
-			'OrderID'           => $order->get_id(),
-			'Amount'            => '10.00',
-			'Description'       => (string) $order->get_id(),
-			'GatewayID'         => $bm_gateway::BLIK_0_CHANNEL,
-			'Currency'          => 'PLN',
-			'CustomerEmail'     => $order->get_billing_email(),
-			'CustomerIP'        => '127.0.0.1',
-			'Title'             => (string) $order->get_id(),
+		$params = [
+			'ServiceID'     => $bm_gateway->get_service_id(),
+			'OrderID'       => $order->get_id(),
+			'Amount'        => '10.00',
+			'Description'   => (string) $order->get_id(),
+			'GatewayID'     => $bm_gateway::BLIK_0_CHANNEL,
+			'Currency'      => 'PLN',
+			'CustomerEmail' => $order->get_billing_email(),
+			'CustomerIP'    => '127.0.0.1',
+			'Title'         => (string) $order->get_id(),
 		];
 
 		$params = array_merge( $params, [
@@ -49,7 +49,6 @@ class Transaction_Test {
 				$params['Hash']
 			)
 		);
-
 
 		$order->update_meta_data( 'bm_transaction_init_params', $params );
 		$order->save_meta_data();

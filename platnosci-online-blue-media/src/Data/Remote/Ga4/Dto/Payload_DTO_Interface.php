@@ -11,6 +11,4 @@ interface Payload_DTO_Interface {
 	public function get_shipping(): ?float;
 	public function get_tax(): ?float;
 	public function get_transaction_id(): ?string;
-
-
 }

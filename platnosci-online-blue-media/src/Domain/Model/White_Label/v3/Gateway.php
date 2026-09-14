@@ -107,7 +107,7 @@ class Gateway {
 		return $this->gatewayID;
 	}
 
-	public function setGatewayID(int $gatewayID): void {
+	public function setGatewayID( int $gatewayID ): void {
 		$this->gatewayID = $gatewayID;
 	}
 
@@ -115,7 +115,7 @@ class Gateway {
 		return $this->name;
 	}
 
-	public function setName(string $name): void {
+	public function setName( string $name ): void {
 		$this->name = $name;
 	}
 
@@ -123,7 +123,7 @@ class Gateway {
 		return $this->groupType;
 	}
 
-	public function setGroupType(?string $groupType): void {
+	public function setGroupType( ?string $groupType ): void {
 		$this->groupType = $groupType;
 	}
 
@@ -131,7 +131,7 @@ class Gateway {
 		return $this->bankName;
 	}
 
-	public function setBankName(?string $bankName): void {
+	public function setBankName( ?string $bankName ): void {
 		$this->bankName = $bankName;
 	}
 
@@ -139,7 +139,7 @@ class Gateway {
 		return $this->iconUrl;
 	}
 
-	public function setIconUrl(?string $iconUrl): void {
+	public function setIconUrl( ?string $iconUrl ): void {
 		$this->iconUrl = $iconUrl;
 	}
 
@@ -147,7 +147,7 @@ class Gateway {
 		return $this->state;
 	}
 
-	public function setState(string $state): void {
+	public function setState( string $state ): void {
 		$this->state = $state;
 	}
 
@@ -155,7 +155,7 @@ class Gateway {
 		return $this->stateDate;
 	}
 
-	public function setStateDate(?string $stateDate): void {
+	public function setStateDate( ?string $stateDate ): void {
 		$this->stateDate = $stateDate;
 	}
 
@@ -163,7 +163,7 @@ class Gateway {
 		return $this->shortDescription;
 	}
 
-	public function setShortDescription(?string $shortDescription): void {
+	public function setShortDescription( ?string $shortDescription ): void {
 		$this->shortDescription = $shortDescription;
 	}
 
@@ -171,7 +171,7 @@ class Gateway {
 		return $this->description;
 	}
 
-	public function setDescription(?string $description): void {
+	public function setDescription( ?string $description ): void {
 		$this->description = $description;
 	}
 
@@ -179,7 +179,7 @@ class Gateway {
 		return $this->descriptionUrl;
 	}
 
-	public function setDescriptionUrl(?string $descriptionUrl): void {
+	public function setDescriptionUrl( ?string $descriptionUrl ): void {
 		$this->descriptionUrl = $descriptionUrl;
 	}
 
@@ -187,7 +187,7 @@ class Gateway {
 		return $this->inlineHtml;
 	}
 
-	public function setInlineHtml(?string $inlineHtml): void {
+	public function setInlineHtml( ?string $inlineHtml ): void {
 		$this->inlineHtml = $inlineHtml;
 	}
 
@@ -195,7 +195,7 @@ class Gateway {
 		return $this->availableFor;
 	}
 
-	public function setAvailableFor(string $availableFor): void {
+	public function setAvailableFor( string $availableFor ): void {
 		$this->availableFor = $availableFor;
 	}
 
@@ -203,7 +203,7 @@ class Gateway {
 		return $this->requiredParams;
 	}
 
-	public function setRequiredParams(?array $requiredParams): void {
+	public function setRequiredParams( ?array $requiredParams ): void {
 		$this->requiredParams = $requiredParams;
 	}
 
@@ -211,7 +211,7 @@ class Gateway {
 		return $this->mcc;
 	}
 
-	public function setMcc(?Mcc $mcc): void {
+	public function setMcc( ?Mcc $mcc ): void {
 		$this->mcc = $mcc;
 	}
 
@@ -219,7 +219,7 @@ class Gateway {
         return $this->inBalanceAllowed;
     }
 
-    public function setInBalanceAllowed(?bool $inBalanceAllowed): void {
+    public function setInBalanceAllowed( ?bool $inBalanceAllowed ): void {
         $this->inBalanceAllowed = $inBalanceAllowed;
     }
 
@@ -227,7 +227,7 @@ class Gateway {
         return $this->minValidityTime;
     }
 
-    public function setMinValidityTime(?int $minValidityTime): void {
+    public function setMinValidityTime( ?int $minValidityTime ): void {
         $this->minValidityTime = $minValidityTime;
     }
 
@@ -235,7 +235,7 @@ class Gateway {
         return $this->order;
     }
 
-    public function setOrder(int $order): void {
+    public function setOrder( int $order ): void {
         $this->order = $order;
     }
 
@@ -249,7 +249,7 @@ class Gateway {
     /**
      * @param Currency[] $currencies
      */
-    public function setCurrencies(array $currencies): void {
+    public function setCurrencies( array $currencies ): void {
         $this->currencies = $currencies;
     }
 
@@ -257,7 +257,7 @@ class Gateway {
         return $this->buttonTitle;
     }
 
-    public function setButtonTitle(string $buttonTitle): void {
+    public function setButtonTitle( string $buttonTitle ): void {
         $this->buttonTitle = $buttonTitle;
     }
 }

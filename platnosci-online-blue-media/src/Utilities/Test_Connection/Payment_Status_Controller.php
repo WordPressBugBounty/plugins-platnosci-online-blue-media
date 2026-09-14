@@ -14,7 +14,6 @@ class Payment_Status_Controller {
 		$order_id                = WC()->session->get( 'bm_wc_order_id' );
 		$transaction_start_error = WC()->session->get( 'bm_continue_transaction_start_error' );
 
-
 		if ( empty( $order_id ) ) {
 			blue_media()->get_woocommerce_logger()->log_error(
 				sprintf( '[Payment_Status_Controller] [order_id is empty]'
@@ -23,11 +22,10 @@ class Payment_Status_Controller {
 			return new Log_Entry(
 				Log_Entry::LEVEL_CRITICAL,
 				Log_Entry::get_header_critical(),
-				__( "Order get failed",
-					"platnosci-online-blue-media" )
+				__( 'Order get failed',
+					'platnosci-online-blue-media' )
 			);
 		}
-
 
 		if ( '' !== $transaction_start_error ) {
 			blue_media()->get_woocommerce_logger()->log_error(
@@ -53,7 +51,6 @@ class Payment_Status_Controller {
 		}
 
 		return $itn_status;
-
 	}
 
 	public static function get_generic_err_msg(): string {

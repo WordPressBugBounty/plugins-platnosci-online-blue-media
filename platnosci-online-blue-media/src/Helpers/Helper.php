@@ -13,7 +13,7 @@ class Helper {
 	}
 
 	public static function format_gateway_url( string $url ): string {
-		return rtrim( $url, "/" ) . '/';
+		return rtrim( $url, '/' ) . '/';
 	}
 
 	public static function get_gateway_options() {

@@ -30,12 +30,12 @@ class Init_Checkout_Use_Case extends Abstract_Ga4_Use_Case implements Ga4_Use_Ca
 		foreach ( $products as $wc_product ) {
 			$dto = new Item_DTO();
 			$dto->set_name( $wc_product->get_name() );
-			$dto->set_price( (float) $wc_product->get_price( null ) );
-			$dto->set_quantity( (int) $wc_product->get_stock_quantity( null ) );
+			$dto->set_price( (float) $wc_product->get_price( 'view' ) );
+			$dto->set_quantity( (int) $wc_product->get_stock_quantity() );
 			$dto->set_variant( '' );
 			$dto->set_category( Wc_Helpers::get_main_category( $wc_product ) );
 			$dto->set_brand( '' );
-			$dto->set_id( $wc_product->get_id() );
+			$dto->set_id( (string) $wc_product->get_id() );
 			$items_dto[] = $dto;
 		}
 
@@ -58,6 +58,4 @@ class Init_Checkout_Use_Case extends Abstract_Ga4_Use_Case implements Ga4_Use_Ca
 	public function get_event_name(): string {
 		return 'begin_checkout';
 	}
-
-
 }

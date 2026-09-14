@@ -9,7 +9,7 @@ class Response_Continue extends Abstract_Response {
 	protected string $stage_name = '';
 
 	protected string $wc_log_url = '';
-	protected string $test_id = '';
+	protected string $test_id    = '';
 
 	/**
 	 * @var Log_Entry[]

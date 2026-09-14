@@ -23,13 +23,12 @@ class Log_Downloader {
 		$tmp_file     = tmpfile();
 		$tmp_location = stream_get_meta_data( $tmp_file )['uri'];
 
-		$zip = new ZipArchive;
+		$zip = new ZipArchive();
 		$res = $zip->open( $tmp_location, ZipArchive::CREATE );
 		if ( $res === true ) {
 			foreach ( $logs_content as $file_name => $content ) {
 				$zip->addFromString( $file_name, $content );
 			}
-
 
 			$zip->close();
 		} else {
@@ -62,7 +61,6 @@ class Log_Downloader {
 		foreach ( $files as $k => $log ) {
 			$result[ 'log_' . $k . '.txt' ] = file_get_contents( $log );
 		}
-
 
 		return $result;
 	}

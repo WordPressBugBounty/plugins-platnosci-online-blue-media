@@ -14,10 +14,10 @@ defined( 'ABSPATH' ) || exit;
  */
 final class Card_Widget_Start_Result {
 
-	public const SUCCESS          = 'success';
-	public const REJECTED         = 'rejected';
-	public const BAD_RESPONSE     = 'bad_response';
-	public const TRANSPORT_ERROR  = 'transport_error';
+	public const SUCCESS         = 'success';
+	public const REJECTED        = 'rejected';
+	public const BAD_RESPONSE    = 'bad_response';
+	public const TRANSPORT_ERROR = 'transport_error';
 
 	/**
 	 * One of the TYPE_* constants.

@@ -28,7 +28,8 @@ class Config {
 				],
 			],
 
-			/*[
+			/*
+			[
 				'name'       => __( 'Card Payment', 'platnosci-online-blue-media' ),
 				'position'   => 1,
 				'ids'        => [ 1500 ],
@@ -43,14 +44,13 @@ class Config {
 				'block_description' => __( 'We will redirect you to the website of our partner Autopay, where you will provide your card details',
 					'platnosci-online-blue-media' ),
 
-
 			],
 			[
 				'name'     => __( 'Online bank transfer', 'platnosci-online-blue-media' ),
 				'position' => 2,
 				'ids'      => self::UNSPECIFIED_IDS,
 			],
-			//[ 'name' => 'Płatność Kartą One Clik', 'position' => 1, 'ids' => [ 1503 ], ],
+			// [ 'name' => 'Płatność Kartą One Clik', 'position' => 1, 'ids' => [ 1503 ], ],
 			[
 				'name'              => __( 'VisaMobile', 'platnosci-online-blue-media' ),
 				'position'          => 3,
@@ -81,7 +81,7 @@ class Config {
 					'platnosci-online-blue-media' ),
 			],
 
-			//[ 'name' => 'Wirtualny portfel', 'position' => 4, 'ids' => [ 778 ], ],
+			// [ 'name' => 'Wirtualny portfel', 'position' => 4, 'ids' => [ 778 ], ],
 			[
 				'name'              => __( 'Alior installments',
 					'platnosci-online-blue-media' ),
@@ -115,7 +115,7 @@ class Config {
 				'block_description' => __( 'Buy now and pay within 30 days',
 					'platnosci-online-blue-media' ),
 			],
-			//[ 'name' => 'Hub ratalny', 'position' => 10, 'ids' => [ 702 ], ],
+			// [ 'name' => 'Hub ratalny', 'position' => 10, 'ids' => [ 702 ], ],
 		];
 	}
 

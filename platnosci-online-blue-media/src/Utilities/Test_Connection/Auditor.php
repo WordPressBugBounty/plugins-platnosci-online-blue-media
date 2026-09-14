@@ -11,15 +11,15 @@ class Auditor {
 
 	private string $id;
 	private array $status;
-	private array $log = [];
-	private array $data = [];
-	private ?string $stage_name = null;
-	private bool $finished = false;
-	private bool $failed = false;
-	private bool $warning = false;
+	private array $log           = [];
+	private array $data          = [];
+	private ?string $stage_name  = null;
+	private bool $finished       = false;
+	private bool $failed         = false;
+	private bool $warning        = false;
 	private int $itn_expiry_time = 0;
-	private bool $zip_not_found = false;
-	private array $result = [];
+	private bool $zip_not_found  = false;
+	private array $result        = [];
 
 
 	/**
@@ -144,7 +144,6 @@ class Auditor {
 		if ( $status ) {
 			delete_transient( 'autopay_audit_' . $id );
 		}
-
 	}
 
 	public function get_id(): string {
@@ -224,12 +223,10 @@ class Auditor {
 				},
 			],
 			'transaction'           => [
-				'blik_validation'   => function ( Auditor $auditor
-				) {
+				'blik_validation'   => function ( Auditor $auditor ) {
 					return $auditor->test_blik_validation();
 				},
-				'create_test_order' => function ( Auditor $auditor
-				) {
+				'create_test_order' => function ( Auditor $auditor ) {
 					return $auditor->test_create_test_order();
 				},
 			],
@@ -238,22 +235,22 @@ class Auditor {
 
 	private function get_stage_name( string $stage_id ): string {
 		$strings = [
-			'transaction'           => __( "Transaction testing",
-				"platnosci-online-blue-media" ),
-			'autopay_configuration' => __( "Autopay configuration testing",
-				"platnosci-online-blue-media" ),
-			'server'                => __( "Server configuration testing",
-				"platnosci-online-blue-media" ),
-			'wordpress'             => __( "Wordpress configuration testing",
-				"platnosci-online-blue-media" ),
+			'transaction'           => __( 'Transaction testing',
+				'platnosci-online-blue-media' ),
+			'autopay_configuration' => __( 'Autopay configuration testing',
+				'platnosci-online-blue-media' ),
+			'server'                => __( 'Server configuration testing',
+				'platnosci-online-blue-media' ),
+			'wordpress'             => __( 'Wordpress configuration testing',
+				'platnosci-online-blue-media' ),
 		];
 
 		if ( isset( $strings[ $stage_id ] ) ) {
 			return $strings[ $stage_id ];
 		}
 
-		return __( "Server configuration testing",
-			"platnosci-online-blue-media" );
+		return __( 'Server configuration testing',
+			'platnosci-online-blue-media' );
 	}
 
 
@@ -264,8 +261,8 @@ class Auditor {
 				Log_Entry::LEVEL_CRITICAL,
 				Log_Entry::get_header_critical(),
 				// translators: %s is the detected PHP version number.
-				sprintf( __( "PHP version %s is below the minimum required version 7.4. Please update your PHP installation.",
-					"platnosci-online-blue-media" ),
+				sprintf( __( 'PHP version %s is below the minimum required version 7.4. Please update your PHP installation.',
+					'platnosci-online-blue-media' ),
 					$php_version )
 			);
 		} elseif ( version_compare( $php_version, '8.5', '>=' ) ) {
@@ -273,8 +270,8 @@ class Auditor {
 				Log_Entry::LEVEL_WARNING,
 				Log_Entry::get_header_warning(),
 				// translators: %s is the detected PHP version number.
-				sprintf( __( "PHP version %s is higher than 8.4. Some Wordpress configurations may experience compatibility issues.",
-					"platnosci-online-blue-media" ),
+				sprintf( __( 'PHP version %s is higher than 8.4. Some WordPress configurations may experience compatibility issues.',
+					'platnosci-online-blue-media' ),
 					$php_version )
 			);
 		} else {
@@ -300,8 +297,8 @@ class Auditor {
 				Log_Entry::LEVEL_CRITICAL,
 				Log_Entry::get_header_critical(),
 				// translators: %s is a comma-separated list of missing PHP extension names.
-				sprintf( __( "Missing required PHP extensions: %s. Please install them.",
-					"platnosci-online-blue-media" ),
+				sprintf( __( 'Missing required PHP extensions: %s. Please install them.',
+					'platnosci-online-blue-media' ),
 					implode( ', ',
 						$missing ) ) );
 
@@ -315,8 +312,8 @@ class Auditor {
 			return new Log_Entry(
 				Log_Entry::LEVEL_CRITICAL,
 				Log_Entry::get_header_critical(),
-				__( "HTTPS is not enabled. Please secure your site with an SSL certificate.",
-					"platnosci-online-blue-media" )
+				__( 'HTTPS is not enabled. Please secure your site with an SSL certificate.',
+					'platnosci-online-blue-media' )
 			);
 		} else {
 			return null;
@@ -329,8 +326,8 @@ class Auditor {
 			return new Log_Entry(
 				Log_Entry::LEVEL_WARNING,
 				Log_Entry::get_header_warning(),
-				__( "WooCommerce log directory is not writable. Please check file permissions.",
-					"platnosci-online-blue-media" )
+				__( 'WooCommerce log directory is not writable. Please check file permissions.',
+					'platnosci-online-blue-media' )
 			);
 		} else {
 			return null;
@@ -345,8 +342,8 @@ class Auditor {
 			return new Log_Entry(
 				Log_Entry::LEVEL_CRITICAL,
 				Log_Entry::get_header_critical(),
-				__( "No internet connection detected. Please contact your hosting provider.",
-					"platnosci-online-blue-media" )
+				__( 'No internet connection detected. Please contact your hosting provider.',
+					'platnosci-online-blue-media' )
 			);
 		}
 	}
@@ -359,21 +356,21 @@ class Auditor {
 		$warnings = [];
 		if ( version_compare( $version, '8.1', '<' ) ) {
 			// translators: %s is the detected WooCommerce version number.
-			$warnings[] = sprintf( __( "Detected unsupported WooCommerce version (%s). We recommend updating to version 8.1 or higher.",
-				"platnosci-online-blue-media" ),
+			$warnings[] = sprintf( __( 'Detected unsupported WooCommerce version (%s). We recommend updating to version 8.1 or higher.',
+				'platnosci-online-blue-media' ),
 				$version );
 		}
 		if ( stripos( $version, 'beta' ) !== false ) {
 			// translators: %s is the detected WooCommerce version number including beta label.
-			$warnings[] = sprintf( __( "Beta version of WooCommerce (%s) detected. It might not be fully supported.",
-				"platnosci-online-blue-media" ),
+			$warnings[] = sprintf( __( 'Beta version of WooCommerce (%s) detected. It might not be fully supported.',
+				'platnosci-online-blue-media' ),
 				$version );
 		}
 		if ( ! empty( $warnings ) ) {
 			return new Log_Entry(
 				Log_Entry::LEVEL_WARNING,
 				Log_Entry::get_header_warning(),
-				implode( " ", $warnings )
+				implode( ' ', $warnings )
 			);
 		} else {
 			return null;
@@ -386,21 +383,21 @@ class Auditor {
 		$warnings = [];
 		if ( version_compare( $wp_version, '6.0', '<' ) ) {
 			// translators: %s is the detected WordPress version number.
-			$warnings[] = sprintf( __( "Detected unsupported WordPress version (%s). We recommend updating to version 6.0 or higher.",
-				"platnosci-online-blue-media" ),
+			$warnings[] = sprintf( __( 'Detected unsupported WordPress version (%s). We recommend updating to version 6.0 or higher.',
+				'platnosci-online-blue-media' ),
 				$wp_version );
 		}
 		if ( stripos( $wp_version, 'beta' ) !== false ) {
 			// translators: %s is the detected WordPress version number including beta label.
-			$warnings[] = sprintf( __( "Beta version of WordPress (%s) detected. It might not be fully supported.",
-				"platnosci-online-blue-media" ),
+			$warnings[] = sprintf( __( 'Beta version of WordPress (%s) detected. It might not be fully supported.',
+				'platnosci-online-blue-media' ),
 				$wp_version );
 		}
 		if ( ! empty( $warnings ) ) {
 			return new Log_Entry(
 				Log_Entry::LEVEL_WARNING,
 				Log_Entry::get_header_warning(),
-				implode( " ", $warnings )
+				implode( ' ', $warnings )
 			);
 		} else {
 			return null;
@@ -415,8 +412,8 @@ class Auditor {
 			return new Log_Entry(
 				Log_Entry::LEVEL_INFO,
 				Log_Entry::get_header_info(),
-				__( "Unable to fetch the latest Autopay plugin version from the WordPress repository.",
-					"platnosci-online-blue-media" )
+				__( 'Unable to fetch the latest Autopay plugin version from the WordPress repository.',
+					'platnosci-online-blue-media' )
 			);
 		}
 		$body = wp_remote_retrieve_body( $response );
@@ -451,8 +448,8 @@ class Auditor {
 					return new Log_Entry(
 						Log_Entry::LEVEL_CRITICAL,
 						Log_Entry::get_header_warning(),
-						__( "Old BlueMedia plugin is active. Please remove it or deactivate it.",
-							"platnosci-online-blue-media" )
+						__( 'Old BlueMedia plugin is active. Please remove it or deactivate it.',
+							'platnosci-online-blue-media' )
 					);
 				} else {
 					return null;
@@ -475,7 +472,7 @@ class Auditor {
 						Log_Entry::LEVEL_CRITICAL,
 						Log_Entry::get_header_critical(),
 						__( "Conflicting third-party plugin 'pay-wp' is active. Please deactivate it to avoid conflicts with Autopay.",
-							"platnosci-online-blue-media" )
+							'platnosci-online-blue-media' )
 					);
 				}
 			}
@@ -494,8 +491,8 @@ class Auditor {
 		if ( empty( $active_currencies ) ) {
 			return new Log_Entry( Log_Entry::LEVEL_CRITICAL,
 				Log_Entry::get_header_critical(),
-				__( "No configured currencies found",
-					"platnosci-online-blue-media" ) );
+				__( 'No configured currencies found',
+					'platnosci-online-blue-media' ) );
 		}
 
 		$main_currency_code = array_key_first( $active_currencies );
@@ -505,7 +502,6 @@ class Auditor {
 			$bm_gateway->setup_variables( $currency );
 			$service_id = $bm_gateway->get_service_id();
 			$hash       = $bm_gateway->get_private_key();
-
 
 			blue_media()->get_woocommerce_logger()->log_debug(
 				sprintf( '[Auditor] [test_credentials] [currency: %s] [shop currency: %s] [service_id: %s]',
@@ -524,8 +520,8 @@ class Auditor {
 				return new Log_Entry( $level,
 					$header,
 					// translators: %s is the currency code (e.g. PLN, EUR).
-					sprintf( __( "ServiceID was not provided for currency: %s",
-						"platnosci-online-blue-media" ),
+					sprintf( __( 'ServiceID was not provided for currency: %s',
+						'platnosci-online-blue-media' ),
 						$currency->get_code() ) );
 			}
 
@@ -539,8 +535,8 @@ class Auditor {
 				return new Log_Entry( $level,
 					$header,
 					// translators: %s is the currency code (e.g. PLN, EUR).
-					sprintf( __( "An invalid ServiceID was provided for currency: %s",
-						"platnosci-online-blue-media" ),
+					sprintf( __( 'An invalid ServiceID was provided for currency: %s',
+						'platnosci-online-blue-media' ),
 						$currency->get_code() ) );
 			}
 
@@ -554,8 +550,8 @@ class Auditor {
 				return new Log_Entry( $level,
 					$header,
 					// translators: %s is the currency code (e.g. PLN, EUR).
-					sprintf( __( "API secret key (Hash) was not provided for currency: %s",
-						"platnosci-online-blue-media" ),
+					sprintf( __( 'API secret key (Hash) was not provided for currency: %s',
+						'platnosci-online-blue-media' ),
 						$currency->get_code() ) );
 			}
 		}
@@ -575,8 +571,8 @@ class Auditor {
 			return new Log_Entry(
 				Log_Entry::LEVEL_CRITICAL,
 				Log_Entry::get_header_critical(),
-				$url . ' ' . __( "Autopay URL cannot be reached. Make sure you have a valid internet connection",
-					"platnosci-online-blue-media" )
+				$url . ' ' . __( 'Autopay URL cannot be reached. Make sure you have a valid internet connection',
+					'platnosci-online-blue-media' )
 			);
 		}
 	}
@@ -618,14 +614,13 @@ class Auditor {
 
 				) );
 
-
 			if ( empty( $channels ) ) {
 				return new Log_Entry(
 					Log_Entry::LEVEL_WARNING,
 					Log_Entry::get_header_warning(),
 					// translators: %s is the currency code (e.g. PLN, EUR).
-					sprintf( __( "Failed to download payment channel list for currency: %s. Check the validity of the provided key (hash) and serviceID",
-						"platnosci-online-blue-media" ),
+					sprintf( __( 'Failed to download payment channel list for currency: %s. Check the validity of the provided key (hash) and serviceID',
+						'platnosci-online-blue-media' ),
 						$currency->get_code(),
 						true )
 				);
@@ -650,10 +645,8 @@ class Auditor {
 				sprintf( '[Auditor] [test_blik_validation] [Transaction test is not available for your currency configuration]'
 				) );
 
-
 			return null;
 		}
-
 
 		$this->data['blik0found'] = false;
 		foreach ( $pln_channels as $channel ) {
@@ -683,7 +676,6 @@ class Auditor {
 		$pln              = ( new PLN() );
 		$currency_manager->reconfigure( $pln->get_code() );
 		$bm_gateway->setup_variables( $pln );
-
 
 		$expected_itn_url = add_query_arg(
 			[ 'wc-api' => 'wc_gateway_bluemedia' ],
@@ -764,7 +756,6 @@ class Auditor {
 				return null;
 			}
 
-
 			$test_itn_result               = $transaction_testing_controller->execute_request_verify_itn( $order_id );
 			$this->data['test_itn_result'] = $test_itn_result ? 1 : 0;
 			blue_media()->get_woocommerce_logger()->log_debug(
@@ -781,7 +772,6 @@ class Auditor {
 		}
 
 		return 'locked';
-
 	}
 
 	public function get_status(): array {
@@ -841,12 +831,12 @@ class Auditor {
 
 		$per_currency_lines = [];
 		foreach ( $active_currencies as $currency ) {
-			$code = $currency->get_code();
-			$lc   = strtolower( $code );
-			$prod_service = $this->mask_id( $settings[ 'service_id_' . $lc ] ?? ( $settings['service_id'] ?? '' ) );
-			$prod_hash    = $this->mask_secret( $settings[ 'private_key_' . $lc ] ?? ( $settings['private_key'] ?? '' ) );
-			$test_service = $this->mask_id( $settings[ 'test_service_id_' . $lc ] ?? ( $settings['test_service_id'] ?? '' ) );
-			$test_hash    = $this->mask_secret( $settings[ 'test_private_key_' . $lc ] ?? ( $settings['test_private_key'] ?? '' ) );
+			$code                 = $currency->get_code();
+			$lc                   = strtolower( $code );
+			$prod_service         = $this->mask_id( $settings[ 'service_id_' . $lc ] ?? ( $settings['service_id'] ?? '' ) );
+			$prod_hash            = $this->mask_secret( $settings[ 'private_key_' . $lc ] ?? ( $settings['private_key'] ?? '' ) );
+			$test_service         = $this->mask_id( $settings[ 'test_service_id_' . $lc ] ?? ( $settings['test_service_id'] ?? '' ) );
+			$test_hash            = $this->mask_secret( $settings[ 'test_private_key_' . $lc ] ?? ( $settings['test_private_key'] ?? '' ) );
 			$per_currency_lines[] = sprintf( '%s: prod{service_id=%s, hash=%s} test{service_id=%s, hash=%s}',
 				$code,
 				$prod_service,
@@ -933,12 +923,12 @@ class Auditor {
 			}
 			$lk = strtolower( (string) $key );
 			if ( strpos( $lk, 'hash' ) !== false
-			     || strpos( $lk, 'secret' ) !== false
-			     || ( strpos( $lk, 'key' ) !== false && strpos( $lk, 'whitelabel' ) === false )
-			     || strpos( $lk, 'token' ) !== false
-			     || strpos( $lk, 'password' ) !== false ) {
+				|| strpos( $lk, 'secret' ) !== false
+				|| ( strpos( $lk, 'key' ) !== false && strpos( $lk, 'whitelabel' ) === false )
+				|| strpos( $lk, 'token' ) !== false
+				|| strpos( $lk, 'password' ) !== false ) {
 				$masked[ $key ] = $this->mask_secret( (string) $value );
-			} else if ( strpos( $lk, 'service_id' ) !== false ) {
+			} elseif ( strpos( $lk, 'service_id' ) !== false ) {
 				$masked[ $key ] = $this->mask_id( (string) $value );
 			} else {
 				$masked[ $key ] = $value;

@@ -2,8 +2,9 @@
 Contributors: inspirelabs
 Tags: woocommerce, bluemedia, autopay
 Requires at least: 6.0
+Requires PHP: 7.4
 Tested up to: 7.0
-Stable tag: 5.0.1
+Stable tag: 5.0.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -82,6 +83,21 @@ Wartości Identyfikatora serwisu oraz Klucza konfiguracyjnego są różne dla ś
 
 
 == Changelog ==
+
+### 5.0.2 (14.09.2026) ###
+* Naprawiono: zadeklarowano zgodność z High-Performance Order Storage (HPOS); odczyt/zapis meta zamówienia w całej wtyczce przełączony na bezpieczne dla HPOS API meta zamówienia.
+* Naprawiono: selektor kanałów płatności na stronie "Zapłać za zamówienie" (order-pay) — wcześniej wyświetlał się tam sam opis zamiast listy metod płatności.
+* Naprawiono: płatność BLIK-0 na stronie order-pay przekierowuje teraz na stronę potwierdzenia zamówienia po rozpoczęciu płatności, zamiast przeładowywać stronę order-pay.
+* Naprawiono: ponowna próba płatności (Google Pay, BLIK z przekierowaniem lub domyślny kanał) na stronie order-pay po nieudanej wcześniejszej próbie poprawnie przekierowuje teraz ponownie do bramki płatności, zamiast kończyć się cicho niepowodzeniem z nieopłaconym zamówieniem.
+* Naprawiono: lista metod płatności na stronie order-pay mogła pozostać trwale ukryta z powodu błędu synchronizacji z własnym skryptem WooCommerce; lista wyświetla się teraz zawsze poprawnie.
+* Naprawiono: zapytanie do API listy bramek było wykonywane przy każdym załadowaniu strony; teraz wywoływane jest tylko tam, gdzie faktycznie potrzebne, poprawiono też filtrowanie kanałów na stronie order-pay.
+* Naprawiono: pozycję grupy portfeli Apple Pay / Google Pay i wewnętrzną konfigurację grup, przywróconą po wcześniejszym podziale typu grupy portfeli.
+* Naprawiono: zapis ponownej próby płatności dla zamówienia już śledzonego wewnętrznie nie kończy się już cichym błędem — teraz aktualizuje istniejący rekord statusu zamiast próbować zduplikować wpis w bazie danych.
+* Naprawiono: sprawdzanie minimalnej wersji PHP poprawnie wymusza teraz PHP 7.4 (rzeczywisty wymóg wtyczki); wcześniej sprawdzanie wymuszało tylko PHP 7.2, pozwalając na uruchomienie wtyczki — z potencjalnymi błędami — na nieobsługiwanych wersjach PHP.
+* Naprawiono: unieważnianie cache listy bramek (wywoływane przy zmianie języka witryny) czyści teraz również cache obiektowy WordPressa, zapobiegając serwowaniu nieaktualnych danych kanałów płatności na hostingach z trwałym cache'em obiektowym (Redis/Memcached).
+* Bezpieczeństwo: dane osobowe klienta (imię i nazwisko, e-mail, telefon, adres IP, numer konta bankowego) są teraz usuwane z logów debugowania ITN przed zapisem na dysk.
+* Ulepszono: przekierowanie płatności ekspresowej wykrywane jest teraz automatycznie z meta zamówienia, gdy brak parametru w adresie URL, co zwiększa niezawodność przekierowania do bramki.
+* Naprawiono: kilka wewnętrznych błędów diagnostyki/logowania znalezionych podczas wewnętrznego refaktoru klasy bramki (brak wyświetlania tytułu grupy kanałów płatności, błąd krytyczny przy zamówieniu zawierającym wyłącznie produkty wirtualne, nieprawidłowe typy danych zdarzeń GA4 oraz problem zgodności z PHP 7.4 dotyczący właściwości typowanych).
 
 ### 5.0.1 (22.07.2026) ###
 * Naprawiono: luki XSS — wyjście we wszystkich szablonach administracyjnych i polach ustawień zostało poprawnie escapowane przy użyciu `esc_html_e()`, `esc_attr_e()`, `esc_url()` i `wp_kses_post()`.

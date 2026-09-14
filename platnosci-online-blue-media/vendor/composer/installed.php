@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'inspirelabs/bluemedia-woocommerce',
-        'pretty_version' => 'v5.0.1',
-        'version' => '5.0.1.0',
-        'reference' => '25425bf79bd9dd60d92d9ba05c909e449f259123',
+        'pretty_version' => 'v5.0.2',
+        'version' => '5.0.2.0',
+        'reference' => 'ba8b74ba2ca7085e003e6da71e4b47fa30c708d7',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'inspirelabs/bluemedia-woocommerce' => array(
-            'pretty_version' => 'v5.0.1',
-            'version' => '5.0.1.0',
-            'reference' => '25425bf79bd9dd60d92d9ba05c909e449f259123',
+            'pretty_version' => 'v5.0.2',
+            'version' => '5.0.2.0',
+            'reference' => 'ba8b74ba2ca7085e003e6da71e4b47fa30c708d7',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

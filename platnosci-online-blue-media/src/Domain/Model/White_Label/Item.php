@@ -48,8 +48,8 @@ class Item {
 
 
 	/**
-	 * @param string $name
-	 * @param string $id
+	 * @param string      $name
+	 * @param string      $id
 	 * @param string|null $icon
 	 * @param string|null $extra_class
 	 * @param string|null $script
@@ -65,7 +65,6 @@ class Item {
 		?string $description,
 		?string $block_description,
 		?array $data = null
-
 	) {
 		$this->name              = $name;
 		$this->id                = $id;
@@ -167,7 +166,7 @@ class Item {
 	 * @return string
 	 */
 	public function get_description(): string {
-		return $this->description ?: "";
+		return $this->description ?: '';
 	}
 
 	/**

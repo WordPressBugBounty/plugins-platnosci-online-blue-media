@@ -73,7 +73,7 @@ class Expandable_Group {
 	 * @return string
 	 */
 	public function get_title(): string {
-		return $this->title;
+		return $this->name;
 	}
 
 	/**
@@ -116,6 +116,4 @@ class Expandable_Group {
 		$items[]     = $item;
 		$this->items = $items;
 	}
-
-
 }

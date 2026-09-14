@@ -2,8 +2,11 @@
 Contributors: inspirelabs
 Tags: woocommerce, bluemedia, autopay
 Requires at least: 6.0
-Tested up to: 7.0
-Stable tag: 5.0.1
+Requires PHP: 7.4
+Tested up to: 7.1
+WC requires at least: 7.9
+WC tested up to: 11.0
+Stable tag: 5.0.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -82,6 +85,21 @@ The values of the Service ID and Configuration Key are different for the test an
 
 
 == Changelog ==
+
+### 5.0.2 (14.09.2026) ###
+* Fixed: High-Performance Order Storage (HPOS) compatibility declared; order meta reads/writes across the plugin switched to the HPOS-safe order meta API.
+* Fixed: payment channel selector on the "Pay for order" (order-pay) page — it previously rendered as a plain description instead of the actual list of payment channels.
+* Fixed: BLIK-0 payment on the order-pay page now redirects to the order-received page after payment is started, instead of reloading the order-pay page.
+* Fixed: retrying a payment (Google Pay, BLIK with redirect, or the default channel) on the order-pay page after a previous attempt now correctly redirects to the payment gateway again, instead of silently failing with the order left unpaid.
+* Fixed: payment channel list on the order-pay page could stay permanently hidden due to a timing issue with WooCommerce's own checkout script; the channel list now always displays.
+* Fixed: gateway list API was being called on every page load; it is now only called where actually needed, and channel filtering on the order-pay page was corrected.
+* Fixed: Apple Pay / Google Pay wallet group position and internal group configuration, restored after an earlier wallet group-type split.
+* Fixed: recording a retry payment attempt for an order that was already tracked internally no longer fails silently — it now updates the existing status record instead of attempting a duplicate database insert.
+* Fixed: the minimum PHP version check now correctly enforces PHP 7.4 (the plugin's actual requirement); previously the check only enforced PHP 7.2, allowing the plugin to run — and potentially fail — on unsupported PHP versions.
+* Fixed: gateway list cache invalidation (triggered by a site language change) now also clears the WordPress object cache, preventing stale payment channel data from being served on hosts using persistent object caching (Redis/Memcached).
+* Security: customer personal data (name, email, phone, IP address, bank account number) is now redacted from ITN debug logs before being written to disk.
+* Improved: express payment redirect now auto-detects from order meta when the URL parameter is absent, improving reliability of the redirect-to-gateway flow.
+* Fixed: several internal diagnostics/logging bugs found during an internal refactor of the gateway class (a payment channel group title not displaying, a fatal error when an order contained virtual products only, incorrect GA4 event data types, and a PHP 7.4 compatibility issue with typed properties).
 
 ### 5.0.1 (22.07.2026) ###
 * Fixed: XSS vulnerabilities — escaped output across all admin templates and settings fields using `esc_html_e()`, `esc_attr_e()`, `esc_url()`, and `wp_kses_post()` instead of unescaped `_e()` / `echo`.

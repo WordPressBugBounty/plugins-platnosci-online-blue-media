@@ -31,7 +31,6 @@ class Log_Entry {
 		$level  = sanitize_text_field( $level );
 		$header = sanitize_text_field( $header );
 
-
 		if ( ! in_array( $level, [
 			self::LEVEL_CRITICAL,
 			self::LEVEL_INFO,

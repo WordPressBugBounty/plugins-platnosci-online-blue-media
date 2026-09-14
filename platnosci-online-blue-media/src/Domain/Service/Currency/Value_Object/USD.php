@@ -24,6 +24,3 @@ class USD implements Currency_Interface {
 		return 'usd';
 	}
 }
-
-
-

@@ -24,7 +24,7 @@ class Add_Product_To_Cart_Use_Case extends Abstract_Ga4_Use_Case implements Ga4_
 
 	/**
 	 * @param WC_Product $product
-	 * @param int $quantity
+	 * @param int        $quantity
 	 */
 	public function __construct( WC_Product $product, int $quantity ) {
 		$this->product  = $product;

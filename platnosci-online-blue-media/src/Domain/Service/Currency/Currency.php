@@ -21,14 +21,13 @@ class Currency {
 	private static ?Currency_Interface $shop_currency = null;
 
 	private static array $supported_currencies = [];
-	private static array $selected_currencies = [];
+	private static array $selected_currencies  = [];
 
 
 	public function init() {
 		$this->hooks();
 		$this->handle();
 		$this->migrate();
-
 	}
 
 	public function get_currency_by_el_id(
@@ -140,7 +139,6 @@ class Currency {
 			blue_media()->update_autopay_option( self::SELECTED_CURRENCIES_OPT_KEY,
 				$result );
 
-
 			self::$selected_currencies = $selected_currencies;
 		}
 	}
@@ -175,7 +173,7 @@ class Currency {
 		if ( empty( self::$selected_currencies ) ) {
 			$selected_currencies = blue_media()
 				->get_autopay_option( self::SELECTED_CURRENCIES_OPT_KEY,
-					"" );
+					'' );
 
 			if ( empty( $selected_currencies ) || ! is_array( $selected_currencies ) ) {
 				if ( null === $this->get_shop_currency() ) {
@@ -183,11 +181,10 @@ class Currency {
 				}
 
 				self::$selected_currencies[ $this->get_shop_currency()
-				                                 ->get_code() ] = $this->get_shop_currency();
+												->get_code() ] = $this->get_shop_currency();
 
 				return self::$selected_currencies;
 			}
-
 
 			foreach ( $selected_currencies as $key ) {
 				$currency = $this->get_currency( $key );
@@ -253,8 +250,7 @@ class Currency {
 		return $result;
 	}
 
-	public function reconfigure( ?string $currency_code = null
-	): ?Currency_Interface {
+	public function reconfigure( ?string $currency_code = null ): ?Currency_Interface {
 		$old = self::$shop_currency ? self::$shop_currency->get_code() : '';
 
 		if ( $currency_code ) {
@@ -309,7 +305,7 @@ class Currency {
 			add_filter( 'woocommerce_before_settings_checkout',
 				function () use ( $request_id, $nonce ) {
 					printf( '<form method="post" id="autopay_form_currency" action="%s" enctype="multipart/form-data">',
-						esc_attr( admin_url( "admin.php?page=wc-settings&tab=checkout&section=bluemedia&bmtab=authentication",
+						esc_attr( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=bluemedia&bmtab=authentication',
 						) ) );
 
 					printf( '<input
@@ -337,7 +333,6 @@ class Currency {
 					echo '</form>';
 				} );
 		}
-
 	}
 
 	private function generate_nonce( string $unique_id ): string {
@@ -412,12 +407,9 @@ class Currency {
 					$shop_currency->get_code() ),
 					$test_private_key );
 
-
 			}
 			blue_media()->update_autopay_option( 'migrate_4_5', '1' );
 		}
-
-
 	}
 
 
@@ -471,7 +463,6 @@ class Currency {
 				$this->handle_remove( $currency_code );
 			}
 		}
-
 	}
 
 	private function get_from_params(
@@ -487,8 +478,5 @@ class Currency {
 
 	private function handle_remove( string $currency_code ) {
 		$this->remove_currency_from_db( $currency_code );
-
-
 	}
-
 }

@@ -36,9 +36,9 @@ class Ajax_Response_Value_Object {
 		string $message,
 		string $content
 	) {
-		$this->status       = $status;
-		$this->message      = $message;
-		$this->content      = $content;
+		$this->status  = $status;
+		$this->message = $message;
+		$this->content = $content;
 	}
 
 
@@ -67,9 +67,9 @@ class Ajax_Response_Value_Object {
 
 	public function to_array(): array {
 		return [
-			'status'       => $this->status,
-			'message'      => $this->message,
-			'content'      => $this->content,
+			'status'  => $this->status,
+			'message' => $this->message,
+			'content' => $this->content,
 		];
 	}
 }

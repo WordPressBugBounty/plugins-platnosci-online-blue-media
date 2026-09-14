@@ -21,7 +21,7 @@ class Async_Request implements Controller_Interface {
 	 */
 	public function execute_request() {
 		try {
-			error_reporting( E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting -- Isolated async request handler for test connection; error reporting adjusted to capture test output without debug notices.
+			error_reporting( E_ALL & ~E_NOTICE & ~E_WARNING & ~E_DEPRECATED ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting,PluginCheck.CodeAnalysis.PHPErrorReporting.DirectErrorReportingCall -- Isolated async request handler for test connection; error reporting adjusted to capture test output without debug notices.
 			set_transient( 'autopay_debug_enabled', 'on', 3000 );
 
 			add_filter( 'autopay_log_id', function ( $id ) {
@@ -48,7 +48,6 @@ class Async_Request implements Controller_Interface {
 					'platnosci-online-blue-media' ) );
 			}
 
-
 			$action = sanitize_text_field( wp_unslash( $_POST['autopay_action'] ?? '' ) );
 			blue_media()->get_woocommerce_logger()->log_debug(
 				sprintf( '[Async_Request] [execute_request] [action: %s] [test_id: %s] [nonce_valid: yes]',
@@ -59,7 +58,6 @@ class Async_Request implements Controller_Interface {
 
 			switch ( $action ) {
 				case 'new':
-
 					$auditor = Auditor::create_new();
 					$test_id = $auditor->get_id();
 
@@ -69,7 +67,6 @@ class Async_Request implements Controller_Interface {
 					break;
 
 				case 'continue':
-
 					if ( ! isset( $_POST['test_id'] ) ) {
 						throw new Exception( __( 'test_id field not exists',
 							'platnosci-online-blue-media' ) );
@@ -87,7 +84,6 @@ class Async_Request implements Controller_Interface {
 							$auditor->is_warning() ? '1' : '0'
 						)
 					);
-
 
 					if ( $auditor->is_finished() ) {
 						$response = new Response_Finished( $test_id,
@@ -118,7 +114,6 @@ class Async_Request implements Controller_Interface {
 
 						$response->set_wc_log_url( $logs_url );
 
-
 					} else {
 						if ( $auditor->is_zip_not_found() ) {
 							$logs_url = '';
@@ -135,7 +130,6 @@ class Async_Request implements Controller_Interface {
 					break;
 
 				default:
-
 					throw new Exception( __( 'Invalid action',
 						'platnosci-online-blue-media' ) );
 			}
@@ -147,7 +141,6 @@ class Async_Request implements Controller_Interface {
 						// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r -- Auditor is a complex object that cannot be safely JSON-encoded; used only in debug logger call.
 						print_r( $auditor, true )
 					) );
-
 
 			$response_arr = $response->to_array();
 			blue_media()
@@ -175,24 +168,23 @@ class Async_Request implements Controller_Interface {
 			] );
 			exit;
 		}
-
 	}
 
 	public function get_logs_url( string $test_id ) {
-		/*blue_media()
-			->get_woocommerce_logger( 'testing' )
+		/*
+		blue_media()
+			->get_woocommerce_logger( 'bm_woocommerce_testing' )
 			->log_debug(
 				sprintf( '[Connection_Testing_Controller] [logs %s] ',
 					print_r( $logs, true )
 				) );*/
 
 		$site_url = get_site_url();
-		//$download_url = $site_url . '?' + i_plugin_download=' . $random_md5;
+		// $download_url = $site_url . '?' + i_plugin_download=' . $random_md5;
 		$download_url = add_query_arg( [ 'autopay_download_log' => $test_id ],
 			$site_url );
 
 		return wp_nonce_url( $download_url, 'autopay_download_log' );
-
 	}
 
 	private function output_response(

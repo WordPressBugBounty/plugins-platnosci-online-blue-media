@@ -41,7 +41,6 @@ class View_Model_Group_Factory {
 			}
 		}
 
-
 		if ( $gateway_list_response->getGatewayList() ) {
 			foreach ( $gateway_list_response->getGatewayList() as $gateway ) {
 				if ( $filter_for_cart ) {
@@ -79,7 +78,6 @@ class View_Model_Group_Factory {
 			$group->setGateways( $gateways );
 		}
 
-
 		// Sort groups by order
 		usort( $groups, function ( View_Model_Group $a, View_Model_Group $b ) {
 			return $a->getOrder() <=> $b->getOrder();
@@ -94,9 +92,25 @@ class View_Model_Group_Factory {
 			return true;
 		}
 
-		$woocommerce_currency = get_woocommerce_currency();
 		$woocommerce_cart     = WC()->cart;
-		$cart_total           = (float) $woocommerce_cart->get_total( false );
+		$woocommerce_currency = get_woocommerce_currency();
+		$cart_total           = null;
+
+		if ( ! $woocommerce_cart->is_empty() ) {
+			$cart_total = (float) $woocommerce_cart->get_total( false );
+		} else {
+			$order_id = absint( get_query_var( 'order-pay' ) );
+			if ( $order_id ) {
+				$order = wc_get_order( $order_id );
+				if ( $order instanceof \WC_Order ) {
+					$cart_total = (float) $order->get_total();
+				}
+			}
+		}
+
+		if ( null === $cart_total ) {
+			return true;
+		}
 
 		foreach ( $gateway_obj->getCurrencies() as $currency_info ) {
 
@@ -104,7 +118,6 @@ class View_Model_Group_Factory {
 
 				$min_amount = $currency_info->getMinAmount();
 				$max_amount = $currency_info->getMaxAmount();
-
 
 				if ( $min_amount ) {
 					if ( $cart_total < $min_amount ) {

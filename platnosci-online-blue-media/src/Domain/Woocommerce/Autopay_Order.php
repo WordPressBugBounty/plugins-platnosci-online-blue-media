@@ -32,5 +32,4 @@ class Autopay_Order extends WC_Order {
 
 		return true;
 	}
-
 }

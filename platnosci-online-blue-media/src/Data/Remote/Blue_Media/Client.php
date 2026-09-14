@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) || exit;
 
 use Exception;
 use Ilabs\BM_Woocommerce\Gateway\Autopay_Payment_Protocol;
-use \Isolated\Blue_Media\Isolated_Guzzlehttp\GuzzleHttp\Client as GuzzleHttpClient;
+use Isolated\Blue_Media\Isolated_Guzzlehttp\GuzzleHttp\Client as GuzzleHttpClient;
 
 class Client {
 
@@ -21,14 +21,14 @@ class Client {
 		try {
 			$response = $client->post( $gateway_url,
 				[
-					'headers' => [
+					'headers'     => [
 						'BmHeader' => Autopay_Payment_Protocol::HTTP_HEADER_BM_CONTINUE_TRANSACTION,
 					],
 					'form_params' => $data,
-					'verify' => true,
+					'verify'      => true,
 				] );
 
-			//$statusCode   = $response->getStatusCode();
+			// $statusCode   = $response->getStatusCode();
 			return $response->getBody()->getContents();
 		} catch ( Exception $e ) {
 			return Autopay_Payment_Protocol::HTTP_TRANSPORT_ERROR_LEADER . $e->getMessage();
@@ -39,7 +39,6 @@ class Client {
 		array $data,
 		string $gateway_url
 	) {
-
 
 		$client = new GuzzleHttpClient( [ 'base_uri' => $gateway_url ] );
 
@@ -53,7 +52,6 @@ class Client {
 					'json'    => $data,
 					'verify'  => false,
 				] );
-
 
 			$responseData = $response->getBody()->getContents();
 

@@ -15,7 +15,7 @@ class AssetManager {
     private string $plugin_base_file;
 
     public function __construct( string $plugin_version, string $plugin_base_file ) {
-        $this->plugin_version = $plugin_version;
+        $this->plugin_version   = $plugin_version;
         $this->plugin_base_file = $plugin_base_file;
     }
 

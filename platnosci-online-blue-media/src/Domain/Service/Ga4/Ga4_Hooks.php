@@ -29,7 +29,6 @@ class Ga4_Hooks {
 				10,
 				1 );
 		}
-
 	}
 
 	/**
@@ -64,7 +63,7 @@ class Ga4_Hooks {
 				$order->save();
 			}
 
-			blue_media()->get_woocommerce_logger( 'analytics' )->log_debug(
+			blue_media()->get_woocommerce_logger( 'bm_woocommerce_analytics' )->log_debug(
 				sprintf(
 					'[capture_ga4_cookies_to_order_meta] [%s]',
 					print_r( // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
@@ -78,7 +77,7 @@ class Ga4_Hooks {
 				)
 			);
 		} catch ( Exception $e ) {
-			blue_media()->get_woocommerce_logger( 'analytics' )->log_error(
+			blue_media()->get_woocommerce_logger( 'bm_woocommerce_analytics' )->log_error(
 				sprintf(
 					'[capture_ga4_cookies_to_order_meta] [exception] [%s]',
 					print_r( // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
@@ -220,8 +219,8 @@ class Ga4_Hooks {
 
 		$ga4_Service_Client = new Ga4_Service_Client();
 		if ( ! $ga4_Service_Client->get_tracking_id()
-		     || ! $ga4_Service_Client->get_client_id()
-		     || ! $ga4_Service_Client->get_api_secret() ) {
+			|| ! $ga4_Service_Client->get_client_id()
+			|| ! $ga4_Service_Client->get_api_secret() ) {
 			return;
 		}
 
@@ -239,27 +238,27 @@ class Ga4_Hooks {
 			->when_is_shop()
 			->action( function (
 				Wc_Product_Aware_Interface $product_aware_interface
-			) use ( $ga4_list_items_dto_queue
+			) use (
+                $ga4_list_items_dto_queue
 			) {
-				//view_item_list
+				// view_item_list
 				$ga4_list_items_dto_queue->push(
 					( new View_Product_On_List_Use_Case( $product_aware_interface->get_product() ) )->create_dto() );
-
 			} )
 			->on_wc_before_single_product()
 			->action( function (
 				Wc_Product_Aware_Interface $product_aware_interface
 			) use ( $ga4_task_queue ) {
-				//view_item
+				// view_item
 				$ga4_task_queue->push(
-					( new Ga4_Service_Client )->view_item_event_export_array(
+					( new Ga4_Service_Client() )->view_item_event_export_array(
 						( new Click_On_Product_Use_Case( $product_aware_interface->get_product() ) )
 					) );
 			} )
 			->on_wc_add_to_cart()
 			->action( function ( Wc_Add_To_Cart $event ) use ( $ga4_task_queue
 			) {
-				//add_to_cart
+				// add_to_cart
 				( new Ga4_Service_Client() )->add_to_cart_event( new Add_Product_To_Cart_Use_Case( $event->get_product(),
 					$event->get_quantity() ) );
 			} )
@@ -267,19 +266,18 @@ class Ga4_Hooks {
 			->action( function ( Wc_Remove_Cart_Item $event ) use (
 				$ga4_task_queue
 			) {
-				//remove_from_cart
+				// remove_from_cart
 				( new Ga4_Service_Client() )->remove_from_cart_event( new Remove_Product_From_Cart_Use_Case
 				( $event->get_product(), $event->get_quantity() ) );
 			} )
 			->on_wc_checkout_page()
 			->when_is_not_ajax()
-			->action( function ( Wc_Cart_Aware_Interface $cart_aware_interface
-			) use ( $ga4_task_queue ) {
-				//begin_checkout
+			->action( function ( Wc_Cart_Aware_Interface $cart_aware_interface ) use ( $ga4_task_queue ) {
+				// begin_checkout
 				if ( $cart_aware_interface->get_cart()
-				                          ->get_cart_contents_count() > 0 ) {
+											->get_cart_contents_count() > 0 ) {
 					$ga4_task_queue->push(
-						( new Ga4_Service_Client )->init_checkout_event_export_array(
+						( new Ga4_Service_Client() )->init_checkout_event_export_array(
 							( new Init_Checkout_Use_Case( $cart_aware_interface->get_cart() ) )
 						) );
 				}
@@ -304,7 +302,6 @@ class Ga4_Hooks {
 					echo "<script>var blue_media_ga4_tasks = '" . wp_json_encode( $ga4_task_queue->get() ) . "'</script>";
 					$ga4_task_queue->clear();
 				}
-
 			} )->execute();
 	}
 
@@ -316,8 +313,8 @@ class Ga4_Hooks {
 	private function handle_ga4_serverside_events() {
 		$ga4_Service_Client = new Ga4_Service_Client();
 		if ( ! $ga4_Service_Client->get_tracking_id()
-		     || ! $ga4_Service_Client->get_client_id()
-		     || ! $ga4_Service_Client->get_api_secret() ) {
+			|| ! $ga4_Service_Client->get_client_id()
+			|| ! $ga4_Service_Client->get_api_secret() ) {
 			return;
 		}
 
@@ -326,15 +323,14 @@ class Ga4_Hooks {
 		$ga4->on_wc_order_status_changed()
 		    ->when( function ( Wc_Order_Status_Changed $event ) {
 			    $mapped_status = blue_media()->get_blue_media_gateway()
-			                                 ->get_option( 'ga4_purchase_status',
-				                                 'wc-on-hold' );
+											->get_option( 'ga4_purchase_status',
+												'wc-on-hold' );
 			    if ( substr( $mapped_status, 0, 3 ) === 'wc-' ) {
 				    $mapped_status = substr( $mapped_status, 3 );
 			    }
 
-
 			    blue_media()
-				    ->get_woocommerce_logger( 'analytics' )
+				    ->get_woocommerce_logger( 'bm_woocommerce_analytics' )
 				    ->log_debug(
 					    sprintf( '[handle_ga4_serverside] [purchase_event on_wc_order_status_changed] [%s]',
 						    wp_json_encode( [
@@ -345,13 +341,11 @@ class Ga4_Hooks {
 						    ] )
 					    ) );
 
-
 			    return $event->get_new_status() === $mapped_status;
 		    } )
-		    ->action( function ( Wc_Order_Aware_Interface $order_aware_interface
-		    ) {
+		    ->action( function ( Wc_Order_Aware_Interface $order_aware_interface ) {
 			    blue_media()
-				    ->get_woocommerce_logger( 'analytics' )
+				    ->get_woocommerce_logger( 'bm_woocommerce_analytics' )
 				    ->log_debug(
 					    sprintf( '[handle_ga4_serverside] [purchase_event create Ga4_Service_Client instance and call purchase_event] [%s]',
 						    wp_json_encode( [
@@ -364,7 +358,7 @@ class Ga4_Hooks {
 				    ( new Ga4_Service_Client() )->purchase_event( new Complete_Transation_Use_Case( $order_aware_interface->get_order() ) );
 			    } catch ( Exception $e ) {
 				    blue_media()
-					    ->get_woocommerce_logger( 'analytics' )
+					    ->get_woocommerce_logger( 'bm_woocommerce_analytics' )
 					    ->log_error(
 						    sprintf( '[handle_ga4_serverside] [purchase_event exception] [%s]',
 							    wp_json_encode( [
@@ -382,7 +376,7 @@ class Ga4_Hooks {
 		try {
 
 			blue_media()
-				->get_woocommerce_logger( 'analytics' )
+				->get_woocommerce_logger( 'bm_woocommerce_analytics' )
 				->log_debug(
 					sprintf( '[handle_ga4_serverside_by_itn triggered] [%s]',
 						wp_json_encode( [
@@ -393,7 +387,7 @@ class Ga4_Hooks {
 			( new Ga4_Service_Client() )->purchase_event( new Complete_Transation_Use_Case( $order ) );
 		} catch ( Exception $e ) {
 			blue_media()
-				->get_woocommerce_logger( 'analytics' )
+				->get_woocommerce_logger( 'bm_woocommerce_analytics' )
 				->log_error(
 					sprintf( '[handle_ga4_serverside_by_itn] [purchase_event exception] [%s]',
 						wp_json_encode( [

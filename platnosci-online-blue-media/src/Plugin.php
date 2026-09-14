@@ -329,7 +329,7 @@ class Plugin extends Abstract_Ilabs_Plugin {
 			wp_enqueue_script( $this->get_plugin_prefix() . '_ga4',
 				"https://www.googletagmanager.com/gtag/js?id=$ga4_tracking_id",
 				[],
-				1.1,
+				'1.1',
 				true );
 
 
@@ -509,6 +509,7 @@ class Plugin extends Abstract_Ilabs_Plugin {
 		             . 'wp-admin/includes/class-wp-filesystem-direct.php';
 
 
+		add_action( 'template_redirect', [ $this, 'express_payment_gateway_init' ], 1 );
 		add_action( 'template_redirect', [ $this, 'return_redirect_handler' ] );
 		add_action( 'template_redirect', [ $this, 'blik0_timeout_handler' ] );
 
@@ -563,6 +564,65 @@ class Plugin extends Abstract_Ilabs_Plugin {
 				return $gateways;
 			}
 		);
+	}
+
+	/**
+	 * Detect and trigger the Autopay express-payment redirect on template_redirect,
+	 * before any HTML output. Works without autopay_express_payment URL param —
+	 * uses order meta to determine redirect intent.
+	 *
+	 * @return void
+	 */
+	public function express_payment_gateway_init(): void {
+		if ( wp_doing_ajax() || is_admin() ) {
+			return;
+		}
+
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+		$has_express_param = isset( $_GET['autopay_express_payment'] );
+
+		if ( ! $has_express_param ) {
+			$order_id = isset( $_GET['order_id'] ) ? absint( wp_unslash( $_GET['order_id'] ) ) : 0;
+
+			if ( ! $order_id && isset( $_GET['key'] ) ) {
+				$order_id = function_exists( 'wc_get_order_id_by_order_key' )
+					? (int) wc_get_order_id_by_order_key( sanitize_text_field( wp_unslash( $_GET['key'] ) ) )
+					: 0;
+			}
+
+			if ( ! $order_id ) {
+				return;
+			}
+
+			$order = function_exists( 'wc_get_order' ) ? wc_get_order( $order_id ) : false;
+
+			if ( ! $order instanceof WC_Order ) {
+				return;
+			}
+
+			if ( 'bluemedia' !== $order->get_payment_method() ) {
+				return;
+			}
+
+			$meta = $order->get_meta( 'bm_order_payment_params', true );
+
+			if ( empty( $meta ) || ! isset( $meta['params'] ) ) {
+				return;
+			}
+
+			if ( '1' === (string) $order->get_meta( 'autopay_returned_from_payment', true ) ) {
+				return;
+			}
+
+			$_GET['autopay_express_payment'] = '1';
+		}
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+
+		if ( ! function_exists( 'WC' ) || ! is_object( WC()->payment_gateways() ) ) {
+			return;
+		}
+
+		WC()->payment_gateways()->get_available_payment_gateways();
 	}
 
 	public function return_redirect_handler() {

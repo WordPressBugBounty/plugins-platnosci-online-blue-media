@@ -74,7 +74,7 @@ class Vas {
 			'woocommerce_panel',
 			'woocommerce_panel',
 			'vas_tab',
-			(string) get_bloginfo( "language" ),
+			(string) get_bloginfo( 'language' ),
 			null,
 			null
 		);

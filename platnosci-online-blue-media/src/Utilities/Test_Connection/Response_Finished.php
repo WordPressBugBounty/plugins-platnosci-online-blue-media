@@ -6,7 +6,7 @@ defined( 'ABSPATH' ) || exit;
 
 class Response_Finished extends Abstract_Response {
 
-	protected string $test_id = '';
+	protected string $test_id    = '';
 	protected string $stage_name = '';
 	protected string $wc_log_url = '';
 
@@ -63,7 +63,6 @@ class Response_Finished extends Abstract_Response {
 			if ( $v instanceof Log_Entry ) {
 				$log[] = $v->to_array();
 			}
-
 		}
 
 		return [

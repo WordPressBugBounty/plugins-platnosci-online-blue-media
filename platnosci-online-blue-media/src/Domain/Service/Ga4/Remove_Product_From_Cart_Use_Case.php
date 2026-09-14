@@ -10,7 +10,7 @@ use Ilabs\BM_Woocommerce\Data\Remote\Ga4\Dto\Payload_DTO;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Common\Wc_Helpers;
 use WC_Product;
 
-class Remove_Product_From_Cart_Use_Case extends Abstract_Ga4_Use_Case implements Ga4_Use_Case_Interface{
+class Remove_Product_From_Cart_Use_Case extends Abstract_Ga4_Use_Case implements Ga4_Use_Case_Interface {
 
 	/**
 	 * @var WC_Product
@@ -24,10 +24,10 @@ class Remove_Product_From_Cart_Use_Case extends Abstract_Ga4_Use_Case implements
 
 	/**
 	 * @param WC_Product $product
-	 * @param int $quantity
+	 * @param int        $quantity
 	 */
-	public function __construct( WC_Product $product,  int $quantity ) {
-		$this->product = $product;
+	public function __construct( WC_Product $product, int $quantity ) {
+		$this->product  = $product;
 		$this->quantity = $quantity;
 	}
 

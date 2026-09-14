@@ -86,7 +86,6 @@ class Order_Remote_Status_Manager {
 				] ),
 			) );
 
-
 		update_option( 'autopay_order_remote_status_path', self::PATH_VERSION );
 	}
 
@@ -133,7 +132,6 @@ class Order_Remote_Status_Manager {
 		}
 
 		$this->update_db_schema();
-
 	}
 
 	public function add_order_remote_status(
@@ -149,10 +147,14 @@ class Order_Remote_Status_Manager {
 			) );
 
 		try {
-			$result = $this->db->insert(
-				$this->get_table_name_prefixed(),
-				[ 'order_id' => $order_id, 'status' => $status_from_remote ],
-				[ '%d', '%s' ]
+			$table_name = esc_sql( $this->get_table_name_prefixed() );
+			$result     = $this->db->query(
+				$this->db->prepare(
+					"INSERT INTO `{$table_name}` (order_id, status) VALUES (%d, %s) ON DUPLICATE KEY UPDATE status = %s",
+					$order_id,
+					$status_from_remote,
+					$status_from_remote
+				)
 			);
 
 			blue_media()->get_woocommerce_logger( $this->debug_id )->log_debug(
@@ -165,7 +167,6 @@ class Order_Remote_Status_Manager {
 			if ( $this->db->last_error !== '' ) {
 				throw new Exception( $this->db->last_error );
 			}
-
 		} catch ( Exception $exception ) {
 			blue_media()->get_woocommerce_logger( $this->debug_id )->log_error(
 				sprintf( '[Order_Remote_Status] [add_order_remote_status] [error] [%s]',
@@ -199,7 +200,6 @@ class Order_Remote_Status_Manager {
 			$current_status = $this->db->get_var(
 				$this->db->prepare( "SELECT status FROM $table_name WHERE order_id = %d FOR UPDATE",
 					$order_id ) );
-
 
 			blue_media()->get_woocommerce_logger( $this->debug_id )->log_debug(
 				sprintf( '[Order_Remote_Status] [%s]',
@@ -236,9 +236,7 @@ class Order_Remote_Status_Manager {
 
 					return self::RESULT_CONFIRMED;
 				}
-
 			}
-
 
 			if ( $current_status === $status_from_remote ) {
 				$this->set_status_processing_allowed_in_store( false );
@@ -287,10 +285,10 @@ class Order_Remote_Status_Manager {
 			blue_media()->get_woocommerce_logger( $this->debug_id )->log_error(
 				sprintf( '[Order_Remote_Status] [update_order_status] [can\'t update ] [%s]',
 					wp_json_encode( [
-						'order_id'                           => $order_id,
-						'status_from_remote'                 => $status_from_remote,
+						'order_id'           => $order_id,
+						'status_from_remote' => $status_from_remote,
 						'status_processing_allowed_in_store' => $this->status_processing_allowed_in_store ? 'TRUE' : 'FALSE',
-						'error message'                      => $exception->getMessage(),
+						'error message'      => $exception->getMessage(),
 					] ),
 				) );
 
@@ -301,7 +299,6 @@ class Order_Remote_Status_Manager {
 		}
 
 		return self::RESULT_CONFIRMED;
-
 	}
 
 
@@ -329,14 +326,12 @@ class Order_Remote_Status_Manager {
 					] ),
 				) );
 
-
 			throw new Exception( $this->db->last_error ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped -- Exception is thrown, not echoed; escaping belongs to the display layer.
 		}
 	}
 
 	public function get_order_remote_status( $order_id ): ?string {
 		$table_name = $this->get_table_name_prefixed();
-
 
 		try {
 
@@ -353,7 +348,6 @@ class Order_Remote_Status_Manager {
 					] ),
 				) );
 
-
 			if ( $this->db->last_error !== '' ) {
 				throw new Exception( $this->db->last_error );
 			}
@@ -361,8 +355,6 @@ class Order_Remote_Status_Manager {
 			if ( ! is_string( $result ) ) {
 				return null;
 			}
-
-
 		} catch ( Exception $exception ) {
 			blue_media()->get_woocommerce_logger( $this->debug_id )->log_error(
 				sprintf( '[Order_Remote_Status] [get_order_remote_status error] [%s]',
@@ -374,7 +366,6 @@ class Order_Remote_Status_Manager {
 			return null;
 
 		}
-
 
 		return $result;
 	}
@@ -397,7 +388,8 @@ class Order_Remote_Status_Manager {
 		bool $status_processing_allowed_in_store
 	): void {
 
-		/*blue_media()->get_woocommerce_logger( $this->debug_id )->log_debug(
+		/*
+		blue_media()->get_woocommerce_logger( $this->debug_id )->log_debug(
 			sprintf( '[Order_Remote_Status] [status_processing_allowed_in_store flag is now %s for order_id: %s]',
 				$status_processing_allowed_in_store ? 'TRUE' : 'FALSE',
 				$order_id ),
@@ -405,6 +397,4 @@ class Order_Remote_Status_Manager {
 
 		$this->status_processing_allowed_in_store = $status_processing_allowed_in_store;
 	}
-
-
 }

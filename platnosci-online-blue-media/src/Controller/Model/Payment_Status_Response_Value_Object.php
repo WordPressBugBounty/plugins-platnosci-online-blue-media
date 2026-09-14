@@ -41,8 +41,8 @@ class Payment_Status_Response_Value_Object implements Response_Interface {
 
 
 	/**
-	 * @param string $status
-	 * @param string $message
+	 * @param string      $status
+	 * @param string      $message
 	 * @param string|null $order_received_url
 	 * @param string|null $continue_transaction_redirect_url
 	 */
@@ -103,8 +103,7 @@ class Payment_Status_Response_Value_Object implements Response_Interface {
 		];
 	}
 
-	public static function get_message_by_itn_status_id( string $itn_status_id
-	): string {
+	public static function get_message_by_itn_status_id( string $itn_status_id ): string {
 		switch ( $itn_status_id ) {
 			case Blue_Media_Gateway::ITN_SUCCESS_STATUS_ID:
 				return __( 'Payment successful.',

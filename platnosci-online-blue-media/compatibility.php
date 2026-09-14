@@ -27,10 +27,10 @@ function blue_media_system_check(): bool {
 		return false;
 	}
 
-	if ( PHP_VERSION_ID < 70200 ) {
+	if ( PHP_VERSION_ID < 70400 ) {
 		add_action( 'admin_notices', function () {
 			echo "<div class='notice notice-error error'><p><strong style='color: red;'>Autopay: ";
-			esc_html_e( "PHP version is older than 7.2 so this plugin will not work. Please contact your host and ask them to upgrade.",
+			esc_html_e( "PHP version is older than 7.4 so this plugin will not work. Please contact your host and ask them to upgrade.",
 				"platnosci-online-blue-media" );
 			echo "</strong></p></div>";
 		} );

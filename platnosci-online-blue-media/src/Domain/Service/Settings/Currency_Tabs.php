@@ -56,7 +56,7 @@ class Currency_Tabs {
 			if ( $k === $active_tab_code ) {
 				return $i;
 			}
-			$i ++;
+			++$i;
 		}
 
 		return 0;
@@ -73,8 +73,6 @@ class Currency_Tabs {
 				$this->get_active_tab_id(),
 				$default_code );
 		}
-
-
 
 		return self::$active_tab_currency;
 	}

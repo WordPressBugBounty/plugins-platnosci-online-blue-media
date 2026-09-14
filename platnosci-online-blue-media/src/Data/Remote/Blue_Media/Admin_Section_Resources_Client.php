@@ -8,9 +8,9 @@ use DOMDocument;
 use DOMXPath;
 use Exception;
 use Ilabs\BM_Woocommerce\Domain\Model\Settings\Woocomerce_Vas_Value_Object;
-use \Isolated\Blue_Media\Isolated_Guzzlehttp\GuzzleHttp\Client as GuzzleHttpClient;
+use Isolated\Blue_Media\Isolated_Guzzlehttp\GuzzleHttp\Client as GuzzleHttpClient;
 use Isolated\Blue_Media\Isolated_Guzzlehttp\GuzzleHttp\Exception\GuzzleException;
-use \Isolated\Blue_Media\Isolated_Guzzlehttp\GuzzleHttp\Exception\RequestException;
+use Isolated\Blue_Media\Isolated_Guzzlehttp\GuzzleHttp\Exception\RequestException;
 
 class Admin_Section_Resources_Client {
 
@@ -39,8 +39,7 @@ class Admin_Section_Resources_Client {
 	 * @throws GuzzleException
 	 * @throws Exception
 	 */
-	public function get_vas( Woocomerce_Vas_Value_Object $vas_value_object
-	): string {
+	public function get_vas( Woocomerce_Vas_Value_Object $vas_value_object ): string {
 		$base_url = $this->resolve_vas_url( $vas_value_object->get_language_code() );
 
 		$query_params = [
@@ -74,8 +73,7 @@ class Admin_Section_Resources_Client {
 	 * @throws GuzzleException
 	 * @throws Exception
 	 */
-	public function get_banner( Woocomerce_Vas_Value_Object $vas_value_object
-	): string {
+	public function get_banner( Woocomerce_Vas_Value_Object $vas_value_object ): string {
 		$base_url = $this->resolve_banner_url( $vas_value_object->get_language_code() );
 
 		$query_params = [
@@ -98,7 +96,7 @@ class Admin_Section_Resources_Client {
 
 		try {
 			$response = $this->client->request( 'GET', $base_url, [
-				'query' => $query_params,
+				'query'   => $query_params,
 				'timeout' => 5,
 			] );
 

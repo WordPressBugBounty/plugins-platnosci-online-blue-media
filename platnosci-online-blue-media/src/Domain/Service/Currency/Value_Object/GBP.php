@@ -24,6 +24,3 @@ class GBP implements Currency_Interface {
 		return 'gbp';
 	}
 }
-
-
-

@@ -4,7 +4,7 @@ namespace Ilabs\BM_Woocommerce\Data\Remote\Ga4\Dto;
 
 defined( 'ABSPATH' ) || exit;
 
-class Item_DTO implements Ga4_Dto_Interface{
+class Item_DTO implements Ga4_Dto_Interface {
 	/**
 	 * @var string
 	 */

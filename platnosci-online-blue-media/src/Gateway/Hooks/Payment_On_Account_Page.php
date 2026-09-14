@@ -32,13 +32,12 @@ class Payment_On_Account_Page {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing flag; stage 3 is protected by HMAC signature verification via verify_signature().
 		if ( isset( $_GET['autopay_payment_on_account_page'] )
 		     // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only routing flag; stage 3 is protected by HMAC signature verification via verify_signature().
-		     && '1' === sanitize_key( wp_unslash( $_GET['autopay_payment_on_account_page'] ) ) ) {
+			&& '1' === sanitize_key( wp_unslash( $_GET['autopay_payment_on_account_page'] ) ) ) {
 			$this->payment_on_account_page_stage_3();
 		}
 	}
 
 	private function payment_on_account_page() {
-
 	}
 
 	private function payment_on_account_page_stage_2() {
@@ -65,7 +64,7 @@ class Payment_On_Account_Page {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- HMAC signature verified via verify_signature() on the line below before any state changes occur.
 		$signature = sanitize_key( wp_unslash( $_GET['sig'] ?? '' ) );
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- HMAC signature verified via verify_signature() on the line below before any state changes occur.
-		$order_id  = absint( wp_unslash( $_GET['order_id'] ?? '0' ) );
+		$order_id = absint( wp_unslash( $_GET['order_id'] ?? '0' ) );
 
 		if ( 64 !== strlen( $signature ) || ! ctype_xdigit( $signature ) ) {
 			return;
@@ -102,7 +101,8 @@ class Payment_On_Account_Page {
 			$order_params_recovered );
 		Session_Bridge::save();
 
-		delete_post_meta( $order_id, 'bm_order_payment_params' );
+		$order->delete_meta_data( 'bm_order_payment_params' );
+		$order->save_meta_data();
 
 		add_filter( 'autopay_filter_can_redirect_to_payment_gateway',
 			static function ( bool $return ): bool {
@@ -114,11 +114,6 @@ class Payment_On_Account_Page {
 		blue_media()
 			->get_woocommerce_logger()
 			->log_debug( '[payment_on_account_page_stage_1]' );
-
-		add_filter( 'autopay_filter_option_whitelabel',
-			function ( string $whitelabel ) {
-				return 'no';
-			} );
 
 		add_action( 'autopay_after_payment_field', function () {
 			echo "<input type='hidden' name='autopay_checkout_on_account_page'  value='1' />";

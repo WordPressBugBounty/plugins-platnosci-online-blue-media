@@ -10,7 +10,7 @@ class Test_Case {
 	private string $name;
 	private string $stage;
 
-	private string $result; //critical, warning, info
+	private string $result; // critical, warning, info
 
 
 	/**
@@ -19,7 +19,6 @@ class Test_Case {
 	protected array $log = [];
 
 	public function execute() {
-
 	}
 
 

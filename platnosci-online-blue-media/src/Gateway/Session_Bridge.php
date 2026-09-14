@@ -19,23 +19,11 @@ class Session_Bridge {
 			return;
 		}
 
-
 		$detected_order_id = wc_get_order_id_by_order_key( $request_key );
 
 		if ( ! $detected_order_id ) {
-			blue_media()->get_woocommerce_logger( 'session_debug' )->log_error(
-				sprintf(
-					'[restore_session_data] Invalid Order Key provided: %s',
-					wp_json_encode(
-						[
-							'request_key' => $request_key,
-							'ip'          => blue_media()
-								->get_core_helpers()
-								->get_visitor_ip(),
-						]
-					)
-
-				) );
+			blue_media()->get_woocommerce_logger( 'bm_woocommerce_session_debug' )->log_error(
+				'[restore_session_data] Invalid Order Key provided' );
 
 			return;
 		}
@@ -44,7 +32,7 @@ class Session_Bridge {
 
 		if ( ! $order ) {
 
-			blue_media()->get_woocommerce_logger( 'session_debug' )->log_error(
+			blue_media()->get_woocommerce_logger( 'bm_woocommerce_session_debug' )->log_error(
 				sprintf(
 					'[restore_session_data] Cant find Order with ID: %s',
 					wp_json_encode(
@@ -60,9 +48,8 @@ class Session_Bridge {
 
 		$meta_params = (array) $order->get_meta( 'bm_order_payment_params' );
 
-
 		if ( ! isset( $meta_params['params'] ) ) {
-			blue_media()->get_woocommerce_logger( 'session_debug' )->log_error(
+			blue_media()->get_woocommerce_logger( 'bm_woocommerce_session_debug' )->log_error(
 				sprintf(
 					'[restore_session_data] meta bm_order_payment_params is empty: %s',
 					wp_json_encode(
@@ -78,22 +65,14 @@ class Session_Bridge {
 
 		$meta_params['restored_from_order_meta'] = 1;
 
-
 		WC()->session->set( 'bm_order_payment_params', $meta_params );
 		self::save();
 
-		blue_media()->get_woocommerce_logger( 'session_debug' )->log_debug(
+		blue_media()->get_woocommerce_logger( 'bm_woocommerce_session_debug' )->log_debug(
 			sprintf(
 				'[restore_session_data] Restore: Success! Payment params restored from Order Meta to Session: %s',
-				wp_json_encode(
-					[
-						'order_id' => $detected_order_id,
-						'data'     => $meta_params,
-					]
-				)
-
+				wp_json_encode( [ 'order_id' => $detected_order_id ] )
 			) );
-
 	}
 
 	public static function save(): void {

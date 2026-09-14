@@ -8,8 +8,6 @@ use Exception;
 use Ilabs\BM_Woocommerce\Helpers\Helper;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Presentation\Form\Fields\Checkbox;
 use Isolated\BlueMedia\Ilabs\Ilabs_Plugin\Presentation\Woocommerce\Field;
-use function GuzzleHttp\Psr7\str;
-
 class Css_Editor {
 
 	const ID = 'css_editor';
@@ -27,7 +25,6 @@ class Css_Editor {
 		$this->configure_controls();
 		$this->editor_content = $this->read_content_option();
 		$this->enabled        = $this->read_enabled_option();
-
 	}
 
 	public static function enqueue_scripts() {
@@ -55,7 +52,6 @@ class Css_Editor {
 		$checkbox->set_default( 'no' );
 		$checkbox->set_label( __( 'Feature enabled', 'platnosci-online-blue-media' ) );
 		$this->switcher_checkbox = $checkbox;
-
 	}
 
 	/**
@@ -67,7 +63,7 @@ class Css_Editor {
 	}
 
 	private function get_editor( string $content = '' ): string {
-		$id = $this->get_editor_content_option_id();
+		$id      = $this->get_editor_content_option_id();
 		$content = $content === '' ? $this->get_default_css_code() : $content;
 		ob_start();
 
@@ -85,7 +81,7 @@ class Css_Editor {
 					tabSize: 2,
 					mode: 'css',
 				});
-				var editor = wp.codeEditor.initialize($('#<?php echo esc_js( $id )?>'), editorSettings);
+				var editor = wp.codeEditor.initialize($('#<?php echo esc_js( $id ); ?>'), editorSettings);
 			});
 		</script>
 		<?php
@@ -141,7 +137,7 @@ class Css_Editor {
 	}
 
 	private function get_default_css_code(): string {
-		$message = __( "Insert your CSS code here", "platnosci-online-blue-media" );
+		$message = __( 'Insert your CSS code here', 'platnosci-online-blue-media' );
 
 		return "/*$message*/";
 	}

@@ -7,7 +7,6 @@ defined( 'ABSPATH' ) || exit;
 use Exception;
 use Ilabs\BM_Woocommerce\Domain\Service\Versioning\Versioning;
 use WC_Order;
-use function GuzzleHttp\Psr7\str;
 
 class Order_Remote_Status_Legacy_Manager {
 
@@ -15,8 +14,7 @@ class Order_Remote_Status_Legacy_Manager {
 
 	private static $debug_id = 'bm_woocommerce_itn';
 
-	private static function get_itn_status_from_order_meta( WC_Order $order
-	): ?string {
+	private static function get_itn_status_from_order_meta( WC_Order $order ): ?string {
 
 		$status = (string) $order->get_meta( 'bm_order_itn_status' );
 
@@ -34,7 +32,6 @@ class Order_Remote_Status_Legacy_Manager {
 				] ),
 			) );
 
-
 		if ( in_array( $status, [
 			'SUCCESS',
 			'PENDING',
@@ -46,8 +43,7 @@ class Order_Remote_Status_Legacy_Manager {
 		return null;
 	}
 
-	public static function find_itn_status( int $order_id
-	): ?string {
+	public static function find_itn_status( int $order_id ): ?string {
 		$order = wc_get_order( $order_id );
 
 		if ( ! $order ) {
@@ -64,7 +60,6 @@ class Order_Remote_Status_Legacy_Manager {
 					->log_debug(
 						sprintf( '[Order_Remote_Status_Legacy_Manager] [find_itn_status] [order_version found] [is_legacy_version = true]  return: get_itn_status_from_order_meta [order_id: %s]',
 							$order_id ) );
-
 
 				return self::get_itn_status_from_order_meta( $order );
 			} else {
@@ -95,6 +90,5 @@ class Order_Remote_Status_Legacy_Manager {
 		return version_compare( $version_from_order,
 			self::AUTOPAY_PLUGIN_VERSION_4_6_4,
 			'<' );
-
 	}
 }

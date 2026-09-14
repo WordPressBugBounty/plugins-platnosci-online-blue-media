@@ -14,9 +14,9 @@ class Product_Feed {
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Public product feed endpoint; read-only GET routing parameter.
 		if (
 			isset( $_GET['product_feed'] ) && blue_media()
-				                                  ->get_blue_media_gateway()
-				                                  ->get_option( 'campaign_tracking',
-					                                  'no' ) === 'yes'
+													->get_blue_media_gateway()
+													->get_option( 'campaign_tracking',
+														'no' ) === 'yes'
 		) {
 			// phpcs:enable WordPress.Security.NonceVerification.Recommended
 			$this->generate_google_product_feed();
@@ -24,7 +24,7 @@ class Product_Feed {
 	}
 
 	function generate_google_product_feed() {
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting -- Suppresses PHP notices that would corrupt XML product feed HTTP response.
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting,PluginCheck.CodeAnalysis.PHPErrorReporting.DirectErrorReportingCall -- Suppresses PHP notices that would corrupt XML product feed HTTP response.
 		error_reporting( E_ERROR | E_WARNING | E_PARSE );
 
 		$products = wc_get_products( [ 'status' => 'publish' ] );
@@ -106,7 +106,6 @@ class Product_Feed {
 						'service_id'                   => $service_id,
 					];
 
-
 					$pixel_src = add_query_arg( $args,
 						'https://plugins-api.autopay.pl/dokumenty/autopay-pixel.js' );
 
@@ -114,7 +113,6 @@ class Product_Feed {
 
 					return $pixel_src;
 				}
-
 			}
 		}
 
@@ -123,9 +121,6 @@ class Product_Feed {
 				$failure
 			) );
 
-
 		return null;
-
 	}
-
 }

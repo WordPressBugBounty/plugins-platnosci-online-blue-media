@@ -18,9 +18,9 @@ class PaymentMethod {
     private bool $is_expandable;
 
     public function __construct( string $id, string $name, array $gateway_ids = [], bool $is_expandable = false ) {
-        $this->id = $id;
-        $this->name = $name;
-        $this->gateway_ids = $gateway_ids;
+        $this->id            = $id;
+        $this->name          = $name;
+        $this->gateway_ids   = $gateway_ids;
         $this->is_expandable = $is_expandable;
     }
 

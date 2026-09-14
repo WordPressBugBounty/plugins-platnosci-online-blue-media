@@ -42,7 +42,6 @@ class Transaction_Testing_Controller {
 				);
 			}
 
-
 			if ( $order instanceof WC_Order ) {
 				$order_id = $order->get_id();
 				blue_media()->get_order_remote_status_manager()
@@ -57,8 +56,8 @@ class Transaction_Testing_Controller {
 				return new Log_Entry(
 					Log_Entry::LEVEL_CRITICAL,
 					Log_Entry::get_header_critical(),
-					__( "Order create failed",
-						"platnosci-online-blue-media" )
+					__( 'Order create failed',
+						'platnosci-online-blue-media' )
 				);
 			}
 
@@ -75,7 +74,6 @@ class Transaction_Testing_Controller {
 				$order_creator->remove( $order->get_id() );
 			}
 
-
 			return new Log_Entry(
 				Log_Entry::LEVEL_CRITICAL,
 				Log_Entry::get_header_critical(),
@@ -83,7 +81,6 @@ class Transaction_Testing_Controller {
 					$exception->getMessage() )
 			);
 		}
-
 	}
 
 	public function execute_request_verify_itn( $order_id ) {
@@ -109,12 +106,11 @@ class Transaction_Testing_Controller {
 				return new Log_Entry(
 					Log_Entry::LEVEL_CRITICAL,
 					Log_Entry::get_header_critical(),
-					__( "Order create failed",
-						"platnosci-online-blue-media" )
+					__( 'Order create failed',
+						'platnosci-online-blue-media' )
 				);
 
 			}
-
 
 			return $result;
 
@@ -134,7 +130,6 @@ class Transaction_Testing_Controller {
 				Log_Entry::get_header_critical(),
 				$exception->getMessage()
 			);
-
 
 		}
 	}

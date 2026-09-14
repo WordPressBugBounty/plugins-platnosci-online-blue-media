@@ -39,7 +39,7 @@ class Group {
 		return $this->type;
 	}
 
-	public function setType(string $type): void {
+	public function setType( string $type ): void {
 		$this->type = $type;
 	}
 
@@ -47,7 +47,7 @@ class Group {
 		return $this->title;
 	}
 
-	public function setTitle(string $title): void {
+	public function setTitle( string $title ): void {
 		$this->title = $title;
 	}
 
@@ -55,7 +55,7 @@ class Group {
 		return $this->shortDescription;
 	}
 
-	public function setShortDescription(?string $shortDescription): void {
+	public function setShortDescription( ?string $shortDescription ): void {
 		$this->shortDescription = $shortDescription;
 	}
 
@@ -63,7 +63,7 @@ class Group {
 		return $this->description;
 	}
 
-	public function setDescription(?string $description): void {
+	public function setDescription( ?string $description ): void {
 		$this->description = $description;
 	}
 
@@ -71,7 +71,7 @@ class Group {
 		return $this->order;
 	}
 
-	public function setOrder(int $order): void {
+	public function setOrder( int $order ): void {
 		$this->order = $order;
 	}
 
@@ -79,7 +79,7 @@ class Group {
 		return $this->iconUrl;
 	}
 
-	public function setIconUrl(?string $iconUrl): void {
+	public function setIconUrl( ?string $iconUrl ): void {
 		$this->iconUrl = $iconUrl;
 	}
 }

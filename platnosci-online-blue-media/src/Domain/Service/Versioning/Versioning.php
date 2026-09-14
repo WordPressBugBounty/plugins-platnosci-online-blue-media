@@ -15,8 +15,7 @@ class Versioning {
 			blue_media()->get_plugin_version() );
 	}
 
-	public static function get_autopay_version_from_order( WC_Order $order
-	): ?string {
+	public static function get_autopay_version_from_order( WC_Order $order ): ?string {
 		$result = $order->get_meta( self::FIELD_NAME );
 
 		return is_string( $result ) && '' !== $result ? $result : null;

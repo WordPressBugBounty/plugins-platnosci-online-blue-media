@@ -74,7 +74,7 @@ class Banner {
 			'woocommerce_panel',
 			'woocommerce_panel',
 			'vas_tab',
-			(string) get_bloginfo( "language" ),
+			(string) get_bloginfo( 'language' ),
 			blue_media()->get_blue_media_gateway()->get_service_id(),
 			$php_version ?: null
 		);

@@ -28,8 +28,8 @@ final class Continue_Transaction_Response_Xml_Parser {
 	 */
 	public static function parse( string $response_xml ): array {
 		$trimmed = trim( $response_xml );
-		$bom       = Autopay_Payment_Protocol::BINARY_UTF8_BOM;
-		$bom_len   = strlen( $bom );
+		$bom     = Autopay_Payment_Protocol::BINARY_UTF8_BOM;
+		$bom_len = strlen( $bom );
 		if ( strncmp( $trimmed, $bom, $bom_len ) === 0 ) {
 			$trimmed = substr( $trimmed, $bom_len );
 		}
@@ -54,11 +54,11 @@ final class Continue_Transaction_Response_Xml_Parser {
 		if ( strtoupper( (string) $confirmation ) === Autopay_Payment_Protocol::CONFIRMATION_NOT_CONFIRMED ) {
 			return [
 				Autopay_Payment_Protocol::XML_LOCAL_CONFIRMATION => $confirmation,
-				Autopay_Payment_Protocol::XML_LOCAL_REASON       => self::first_value_by_local_name_ci(
+				Autopay_Payment_Protocol::XML_LOCAL_REASON => self::first_value_by_local_name_ci(
 					$xml,
 					Autopay_Payment_Protocol::XML_LOCAL_REASON
 				),
-				Autopay_Payment_Protocol::XML_LOCAL_HASH         => self::first_value_by_local_name_ci(
+				Autopay_Payment_Protocol::XML_LOCAL_HASH   => self::first_value_by_local_name_ci(
 					$xml,
 					Autopay_Payment_Protocol::XML_LOCAL_HASH
 				),
@@ -66,7 +66,7 @@ final class Continue_Transaction_Response_Xml_Parser {
 		}
 
 		return [
-			Autopay_Payment_Protocol::XML_LOCAL_STATUS      => self::first_value_by_local_name_ci(
+			Autopay_Payment_Protocol::XML_LOCAL_STATUS => self::first_value_by_local_name_ci(
 				$xml,
 				Autopay_Payment_Protocol::XML_LOCAL_STATUS
 			),
@@ -74,7 +74,7 @@ final class Continue_Transaction_Response_Xml_Parser {
 				$xml,
 				Autopay_Payment_Protocol::XML_LOCAL_REDIRECT_URL
 			),
-			Autopay_Payment_Protocol::XML_LOCAL_HASH        => self::first_value_by_local_name_ci(
+			Autopay_Payment_Protocol::XML_LOCAL_HASH   => self::first_value_by_local_name_ci(
 				$xml,
 				Autopay_Payment_Protocol::XML_LOCAL_HASH
 			),

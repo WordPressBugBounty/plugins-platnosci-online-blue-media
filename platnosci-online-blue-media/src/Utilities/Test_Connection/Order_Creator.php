@@ -73,6 +73,9 @@ class Order_Creator {
 		if ( $order->get_meta( 'autopay_test_order' ) === '1' ) {
 			$items = $order->get_items();
 			foreach ( $items as $item ) {
+				if ( ! $item instanceof \WC_Order_Item_Product ) {
+					continue;
+				}
 				$product_id = $item->get_product_id();
 				if ( get_post_meta( $product_id,
 						'autopay_test_product',
@@ -113,7 +116,7 @@ class Order_Creator {
 	}
 
 	private function create_test_order( $product_id ): int {
-		$order = wc_create_order();
+		$order = wc_create_order( [] );
 
 		$order->set_address( $this->get_billing_address(), 'billing' );
 		$order->set_address( $this->get_shipping_address(), 'shipping' );

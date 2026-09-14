@@ -44,7 +44,7 @@ class Gateway_List_Response {
 		return $this->result;
 	}
 
-	public function setResult(string $result): void {
+	public function setResult( string $result ): void {
 		$this->result = $result;
 	}
 
@@ -52,7 +52,7 @@ class Gateway_List_Response {
 		return $this->errorStatus;
 	}
 
-	public function setErrorStatus(?string $errorStatus): void {
+	public function setErrorStatus( ?string $errorStatus ): void {
 		$this->errorStatus = $errorStatus;
 	}
 
@@ -60,7 +60,7 @@ class Gateway_List_Response {
 		return $this->description;
 	}
 
-	public function setDescription(?string $description): void {
+	public function setDescription( ?string $description ): void {
 		$this->description = $description;
 	}
 
@@ -74,7 +74,7 @@ class Gateway_List_Response {
 	/**
 	 * @param \Ilabs\BM_Woocommerce\Domain\Model\White_Label\v3\Group[] $gatewayGroups
 	 */
-	public function setGatewayGroups(array $gatewayGroups): void {
+	public function setGatewayGroups( array $gatewayGroups ): void {
 		$this->gatewayGroups = $gatewayGroups;
 	}
 
@@ -82,7 +82,7 @@ class Gateway_List_Response {
 		return $this->serviceID;
 	}
 
-	public function setServiceID(string $serviceID): void {
+	public function setServiceID( string $serviceID ): void {
 		$this->serviceID = $serviceID;
 	}
 
@@ -90,7 +90,7 @@ class Gateway_List_Response {
 		return $this->messageID;
 	}
 
-	public function setMessageID(string $messageID): void {
+	public function setMessageID( string $messageID ): void {
 		$this->messageID = $messageID;
 	}
 
@@ -104,7 +104,7 @@ class Gateway_List_Response {
 	/**
 	 * @param \Ilabs\BM_Woocommerce\Domain\Model\White_Label\v3\Gateway[]|null $gatewayList
 	 */
-	public function setGatewayList(?array $gatewayList): void {
+	public function setGatewayList( ?array $gatewayList ): void {
 		$this->gatewayList = $gatewayList;
 	}
 }
