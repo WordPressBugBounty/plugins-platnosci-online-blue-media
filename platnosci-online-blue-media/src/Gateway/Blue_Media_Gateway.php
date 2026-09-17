@@ -567,7 +567,7 @@ class Blue_Media_Gateway extends WC_Payment_Gateway {
 
 				$gateway_list_response = ( new Gateway_List_Response_Factory() )->create( $gateway_list_data );
 				if ( $this->should_offer_google_pay_on_checkout() ) {
-					$gpay_form_data = $this->configure_google_pay();
+					$gpay_form_data = $this->configure_google_pay() ?? [];
 				}
 
 				// Cache for inline template injection.

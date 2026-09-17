@@ -6,7 +6,7 @@ Requires PHP: 7.4
 Tested up to: 7.1
 WC requires at least: 7.9
 WC tested up to: 11.0
-Stable tag: 5.0.2
+Stable tag: 5.0.3
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,10 @@ The values of the Service ID and Configuration Key are different for the test an
 
 
 == Changelog ==
+
+### 5.0.3 (17.09.2026) ###
+* Fixed: improved Apple Pay availability detection during checkout, preventing empty Apple Pay sections from appearing on unsupported devices and browsers, including when checkout scripts are loaded in a different order.
+* Fixed: improved Google Pay error handling to prevent incomplete configuration data from disrupting the payment section during checkout.
 
 ### 5.0.2 (14.09.2026) ###
 * Fixed: High-Performance Order Storage (HPOS) compatibility declared; order meta reads/writes across the plugin switched to the HPOS-safe order meta API.

@@ -4,7 +4,7 @@ Tags: woocommerce, bluemedia, autopay
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable tag: 5.0.2
+Stable tag: 5.0.3
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -83,6 +83,10 @@ Wartości Identyfikatora serwisu oraz Klucza konfiguracyjnego są różne dla ś
 
 
 == Changelog ==
+
+### 5.0.3 (17.09.2026) ###
+* Naprawiono: poprawiono wykrywanie dostępności Apple Pay w checkout, eliminując puste sekcje Apple Pay na nieobsługiwanych urządzeniach i w przeglądarkach, również przy niestandardowej kolejności ładowania skryptów checkoutu.
+* Naprawiono: poprawiono obsługę błędów Google Pay, aby niepełne dane konfiguracyjne nie zakłócały działania sekcji płatności w checkout.
 
 ### 5.0.2 (14.09.2026) ###
 * Naprawiono: zadeklarowano zgodność z High-Performance Order Storage (HPOS); odczyt/zapis meta zamówienia w całej wtyczce przełączony na bezpieczne dla HPOS API meta zamówienia.

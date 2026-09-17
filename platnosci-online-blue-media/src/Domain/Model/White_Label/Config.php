@@ -196,7 +196,17 @@ class Config {
 	}
 
 	public static function get_applepay_check_script(): string {
-		return "<script>if (!window.ApplePaySession) {
-    jQuery('.bm-apple-pay').css('display', 'none')}</script>";
+		return "<script>jQuery(document).ready(function () {
+    if (!window.ApplePaySession) {
+        var applePayItem = jQuery('.bm-apple-pay').css('display', 'none');
+        var applePayGroup = applePayItem.closest('[class*=\"bm-group-\"]');
+        var visibleSiblingsLeft = applePayGroup.find('li.bm-payment-channel-item').filter(function () {
+            return jQuery(this).css('display') !== 'none';
+        }).length;
+        if (visibleSiblingsLeft === 0) {
+            applePayGroup.css('display', 'none');
+        }
+    }
+})</script>";
 	}
 }
