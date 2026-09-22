@@ -4,7 +4,7 @@ Tags: woocommerce, bluemedia, autopay
 Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.0
-Stable tag: 5.0.3
+Stable tag: 5.0.4
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -83,6 +83,9 @@ Wartości Identyfikatora serwisu oraz Klucza konfiguracyjnego są różne dla ś
 
 
 == Changelog ==
+
+### 5.0.4 (22.09.2026) ###
+* Naprawiono: odpowiedź potwierdzająca ITN wysyłana do Autopay zawierała niepoprawny pseudo-atrybut XML `standalone=""`, przez co Autopay odrzucał odpowiedź z błędem parsowania XML ("Invalid XML pseudo-attribute 'standalone'"). Atrybut ten nie jest już generowany.
 
 ### 5.0.3 (17.09.2026) ###
 * Naprawiono: poprawiono wykrywanie dostępności Apple Pay w checkout, eliminując puste sekcje Apple Pay na nieobsługiwanych urządzeniach i w przeglądarkach, również przy niestandardowej kolejności ładowania skryptów checkoutu.

@@ -90,7 +90,10 @@ class ITN_Webhook_Handler {
 						xmlwriter_set_indent( $xw, true );
 						xmlwriter_set_indent_string( $xw, ' ' );
 
-						xmlwriter_start_document( $xw, '1.0', 'UTF-8', '' );
+						// 4th ($standalone) argument intentionally omitted: passing '' produces
+						// a standalone="" attribute, which libxml rejects ("standalone accepts
+						// only 'yes' or 'no'") -- our own response would then fail to parse.
+						xmlwriter_start_document( $xw, '1.0', 'UTF-8' );
 						xmlwriter_start_element( $xw, 'confirmationList' );
 						xmlwriter_start_element( $xw, 'serviceID' );
 						xmlwriter_text( $xw, $this->gateway->get_service_id() );
