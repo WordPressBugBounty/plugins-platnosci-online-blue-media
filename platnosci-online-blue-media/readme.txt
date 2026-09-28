@@ -6,7 +6,7 @@ Requires PHP: 7.4
 Tested up to: 7.1
 WC requires at least: 7.9
 WC tested up to: 11.0
-Stable tag: 5.0.4
+Stable tag: 5.0.5
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -85,6 +85,9 @@ The values of the Service ID and Configuration Key are different for the test an
 
 
 == Changelog ==
+
+### 5.0.5 (28.09.2026) ###
+* Fixed: the BLIK Pay Later and instalments payment descriptions displayed as raw HTML code instead of formatted text on checkout.
 
 ### 5.0.4 (22.09.2026) ###
 * Fixed: the ITN confirmation response sent back to Autopay declared an invalid `standalone=""` XML pseudo-attribute, causing Autopay to reject the response with an XML parse error ("Invalid XML pseudo-attribute 'standalone'"). The attribute is no longer emitted.

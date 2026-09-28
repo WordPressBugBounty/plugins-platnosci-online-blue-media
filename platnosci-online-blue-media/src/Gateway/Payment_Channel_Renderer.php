@@ -148,7 +148,8 @@ class Payment_Channel_Renderer {
 				</li>',
 					esc_url( $group->getIconUrl() ),
 					esc_html( $group->getTitle() ),
-					esc_html( $group->getShortDescription() ),
+					// Group short description comes from the same Autopay API field family as gateway description; may contain HTML markup.
+					wp_kses_post( (string) $group->getShortDescription() ),
 				);
 
 				echo '<div class="bm-group-expandable-wrapper">';
@@ -186,7 +187,8 @@ class Payment_Channel_Renderer {
 					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Plugin-generated template HTML set via setInlineHtml(); never contains user input.
 					echo $inline_html;
 				} else {
-					echo esc_html( (string) $item->getDescription() );
+					// Gateway description may contain HTML markup (e.g. BNPL BLIK's <div class="payway_desc">) sent by the Autopay API for styling; wp_kses_post() allows it through a safe whitelist instead of escaping it to literal text.
+					echo wp_kses_post( (string) $item->getDescription() );
 				}
 
 				echo '</span></li>';
