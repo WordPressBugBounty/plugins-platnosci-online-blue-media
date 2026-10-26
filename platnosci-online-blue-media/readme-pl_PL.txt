@@ -3,8 +3,8 @@ Contributors: inspirelabs
 Tags: woocommerce, bluemedia, autopay
 Requires at least: 6.0
 Requires PHP: 7.4
-Tested up to: 7.0
-Stable tag: 5.0.5
+Tested up to: 7.1
+Stable tag: 5.1.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,14 +35,16 @@ Autopay to moduł płatności umożliwiający realizację transakcji bezgotówko
 - automatyczna weryfikacja poprawności konfiguracji danych autoryzacyjnych we wtyczce
 - wielojęzyczność – automatyczne dopasowanie do języka sklepu (EN, DE, IT, ES), a w przypadku innych języków – interfejs w języku angielskim
 - możliwość ręcznej zmiany kolejności metod płatności Autopay w panelu WooCommerce metodą drag & drop
+- natywna integracja z wtyczką [Flexible Subscriptions](https://pl.wordpress.org/plugins/flexible-subscriptions/) dla WooCommerce – płatności kartą za produkty subskrypcyjne, z automatycznym odnawianiem, ręcznym odnowieniem/dopłatą oraz synchronizacją anulowania subskrypcji z Autopay
 
 [Zarejestruj swój sklep!](https://autopay.pl/oferta/platnosci-online?utm_campaign=woocommerce&utm_source=woocommerce_description&utm_medium=offer_cta#kalkulator)
 
 
 **Wymagania**
 
-- WordPress – przetestowane na wersjach od 6.0 do 7.0
-- Wtyczka WooCommerce – przetestowano na wersjach od 7.9.0 do 10.8.1
+- WordPress – przetestowane na wersjach od 6.0 do 7.1.3
+- Wtyczka WooCommerce – przetestowano na wersjach od 7.9.0 do 11.2.1
+- (opcjonalnie) [Flexible Subscriptions](https://wordpress.org/plugins/flexible-subscriptions/) – wymagana tylko, jeśli chcesz sprzedawać produkty subskrypcyjne z odnawianiem płatności kartą przez Autopay
 
 == Installation	 ==
 
@@ -83,6 +85,15 @@ Wartości Identyfikatora serwisu oraz Klucza konfiguracyjnego są różne dla ś
 
 
 == Changelog ==
+
+### 5.1.0 (26.10.2026) ###
+* Bezpieczeństwo: usprawniono obsługę powiadomień o płatnościach oraz przetwarzanie statusów zamówień. Zalecana niezwłoczna aktualizacja.
+* Dodano: integrację z wtyczką "Flexible Subscriptions" dla WooCommerce, obejmującą cykliczne płatności kartą, automatyczne odnowienia, ręczne opłacanie odnowień oraz jednorazowe dopłaty.
+* Dodano: synchronizację aktywacji/deaktywacji karty subskrypcyjnej (RPAN/RPDN) oraz anulowania, deaktywacji i wstrzymania subskrypcji z Autopay.
+* Dodano: obsługę koszyków zawierających jednocześnie produkty subskrypcyjne i jednorazowe.
+* Dodano: automatyczne filtrowanie kanałów płatności po zmianach koszyka w klasycznym i blokowym formularzu zamówienia.
+* Dodano: logi płatności cyklicznych oraz diagnostykę subskrypcji i zamówień.
+* Dodano: link do opłacenia nieudanego odnowienia Autopay w wiadomości WooCommerce "Nieudane zamówienie" dla klienta, jeśli jest ona włączona w ustawieniach sklepu.
 
 ### 5.0.5 (28.09.2026) ###
 * Naprawiono: opis płatności BLIK Płacę Później oraz rat wyświetlał się w checkout jako surowy kod HTML zamiast sformatowanego tekstu.

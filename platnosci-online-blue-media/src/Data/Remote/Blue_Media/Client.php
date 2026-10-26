@@ -35,6 +35,53 @@ class Client {
 		}
 	}
 
+	/**
+	 * POST to a form-based Autopay endpoint (e.g. `webapi/transactionStatus`,
+	 * `deactivate_recurring`) and return the raw response body.
+	 *
+	 * Confirmed in Autopay "Specyfikacja integracji Serwisu Partnera z Systemem
+	 * Płatności", Dodatek "Obsługa transakcji" (rozdz. 1.5.3.1, 4.10):
+	 * `Content-Type: application/x-www-form-urlencoded`, NOT JSON -- do not
+	 * assume the request format used by {@see google_pay_merchant_info()} (a
+	 * different, wallet-specific endpoint with its own JSON contract) applies
+	 * here just because both happen to sit under a `webapi/` path.
+	 *
+	 * @param array       $data      Request fields, already including Hash.
+	 * @param string      $url       Full endpoint URL.
+	 * @param string|null $bm_header BmHeader value to send, or null when the
+	 *                                endpoint does not document one (confirmed
+	 *                                absent for `deactivate_recurring`).
+	 *
+	 * @return string Raw response body, or an {@see Autopay_Payment_Protocol::HTTP_TRANSPORT_ERROR_LEADER}-prefixed
+	 *                 string on transport failure.
+	 */
+	public function form_post(
+		array $data,
+		string $url,
+		?string $bm_header = null
+	) {
+		$headers = [];
+
+		if ( null !== $bm_header ) {
+			$headers['BmHeader'] = $bm_header;
+		}
+
+		$client = new GuzzleHttpClient();
+
+		try {
+			$response = $client->post( $url,
+				[
+					'headers'     => $headers,
+					'form_params' => $data,
+					'verify'      => true,
+				] );
+
+			return $response->getBody()->getContents();
+		} catch ( Exception $e ) {
+			return Autopay_Payment_Protocol::HTTP_TRANSPORT_ERROR_LEADER . $e->getMessage();
+		}
+	}
+
 	public function google_pay_merchant_info(
 		array $data,
 		string $gateway_url

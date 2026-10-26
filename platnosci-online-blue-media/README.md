@@ -26,6 +26,7 @@ Wtyczka płatnicza Autopay oferuje szereg funkcjonalności wspierających sprzed
 - automatyczna weryfikacja poprawności konfiguracji danych autoryzacyjnych we wtyczce
 - wielojęzyczność – automatyczne dopasowanie do języka sklepu (EN, DE, IT, ES), a w przypadku innych języków – interfejs w języku angielskim
 - możliwość ręcznej zmiany kolejności metod płatności Autopay w panelu WooCommerce metodą drag & drop.
+- natywna integracja z wtyczką [Flexible Subscriptions](https://pl.wordpress.org/plugins/flexible-subscriptions/) dla WooCommerce – płatności kartą za produkty subskrypcyjne, z automatycznym odnawianiem, ręcznym odnowieniem/dopłatą oraz synchronizacją anulowania subskrypcji z Autopay
 
 [Zarejestruj swój sklep!](https://autopay.pl/oferta/platnosci-online?utm_campaign=woocommerce&utm_source=woocommerce_description&utm_medium=offer_cta#kalkulator)
 
@@ -33,8 +34,8 @@ Wtyczka płatnicza Autopay oferuje szereg funkcjonalności wspierających sprzed
 
 ### Wymagania do instalacji wtyczki
 
-- WordPress – przetestowane na wersjach od `6.0` do `7.0`
-- Wtyczka WooCommerce – przetestowano na wersjach od `7.9.0` do `10.8.1`
+- WordPress – przetestowane na wersjach od `6.0` do `7.1.3`
+- Wtyczka WooCommerce – przetestowano na wersjach od `7.9.0` do `11.2.1`
 - PHP w wersji min. `7.4`
 
 ### Pobierz z Wordpress.org
@@ -194,7 +195,7 @@ W panelu WooCommerce, w zakładce ustawień płatności Autopay, użyj funkcji d
 
 <figure>
   <img
-  src="assets/img/screenshot-1.jpg"
+  src="assets/img/screenshot-1.png"
   alt="Widok pól do uzupełnienia">
   <figcaption>Widok pól do uzupełnienia</figcaption>
 </figure>

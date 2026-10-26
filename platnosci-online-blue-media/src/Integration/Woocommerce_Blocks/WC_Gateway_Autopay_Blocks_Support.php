@@ -5,12 +5,15 @@ namespace Ilabs\BM_Woocommerce\Integration\Woocommerce_Blocks;
 defined( 'ABSPATH' ) || exit;
 
 use Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType;
+use Automattic\WooCommerce\StoreApi\Schemas\V1\CartSchema;
 use Exception;
 use Ilabs\BM_Woocommerce\Controller\Payment_Status_Controller;
 use Ilabs\BM_Woocommerce\Domain\Model\White_Label\v3\Gateway_List_Response_Factory;
 use Ilabs\BM_Woocommerce\Domain\Service\Gateway_List\Gateway_List_Mapper_Block_Checkout;
+use Ilabs\BM_Woocommerce\Domain\Service\Gateway_List\Gateway_List_Recurring_Filter;
 use Ilabs\BM_Woocommerce\Domain\Service\Settings\Settings_Manager;
 use Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway;
+use Ilabs\BM_Woocommerce\Gateway\Recurring\Recurring_Context;
 use Ilabs\BM_Woocommerce\Helpers\Autopay_Urls;
 
 /**
@@ -169,8 +172,14 @@ final class WC_Gateway_Autopay_Blocks_Support extends AbstractPaymentMethodType 
 			return $this->get_payment_method_data_when_gateway_unavailable();
 		}
 
-		$is_whitelabel = $this->gateway->is_whitelabel_mode_enabled();
+		$is_whitelabel  = $this->gateway->is_whitelabel_mode_enabled();
+		$classification = $this->gateway->get_recurring_context()->classify_current_request();
 
+		// Fetched at most once per request, force-rebuilding the cache exactly as before
+		// (this is the initial, static page-render payload -- the live,
+		// cart-triggered refresh reuses the cache instead, see
+		// register_store_api_cart_extension()). Reused below for BOTH the recurring
+		// channel filter and has_card_channel -- never fetched twice.
 		$gateway_list_data = [];
 		if ( $is_whitelabel ) {
 			try {
@@ -180,28 +189,9 @@ final class WC_Gateway_Autopay_Blocks_Support extends AbstractPaymentMethodType 
 			} catch ( Exception $exception ) {
 				$gateway_list_data = [];
 			}
-
-			$offer_gpay     = $this->should_offer_google_pay_for_blocks();
-			$gpay_form_data = [];
-			if ( $offer_gpay ) {
-				try {
-					$gpay_form_data = blue_media()
-						->get_blue_media_gateway()
-						->configure_google_pay();
-				} catch ( Exception $exception ) {
-					$gpay_form_data = null;
-				}
-			}
-
-			$channels                   = ( new Gateway_List_Response_Factory() )->create( $gateway_list_data );
-			$channels_mapped_for_blocks = ( new Gateway_List_Mapper_Block_Checkout(
-				$channels,
-				is_array( $gpay_form_data ) ? $gpay_form_data : [],
-				$offer_gpay
-			) )->map_for_blocks();
-		} else {
-			$channels_mapped_for_blocks = [];
 		}
+
+		$recurring_payload = $this->build_recurring_channels_payload( $classification, true, $gateway_list_data );
 
 		$has_card_channel   = $this->gateway_list_api_response_contains_card_channel(
 			is_array( $gateway_list_data ) ? $gateway_list_data : []
@@ -224,7 +214,9 @@ final class WC_Gateway_Autopay_Blocks_Support extends AbstractPaymentMethodType 
 				'platnosci-online-blue-media' ),
 			'supports'                     => array_filter( $this->gateway->supports,
 				[ $this->gateway, 'supports' ] ),
-			'channels'                     => $channels_mapped_for_blocks,
+			'channels'                     => $recurring_payload['channels'],
+			'recurring_blocked'            => $recurring_payload['recurring_blocked'],
+			'recurring_blocked_message'    => $recurring_payload['recurring_blocked_message'],
 			'messages'                     => $this->get_payment_method_messages(),
 			'adminAjaxUrl'                 => esc_url( admin_url( 'admin-ajax.php' ) ),
 			'nonce'                        => wp_create_nonce( Payment_Status_Controller::NONCE_ACTION ),
@@ -232,6 +224,174 @@ final class WC_Gateway_Autopay_Blocks_Support extends AbstractPaymentMethodType 
 			'shopBaseCountryCode'          => WC()->countries->get_base_country(),
 			'card_widget_config'           => $card_widget_config,
 		];
+	}
+
+	/**
+	 * Computes the recurring-aware channel list + blocking message for a given
+	 * `Recurring_Context` classification — shared by {@see get_payment_method_data()}
+	 * (order-pay aware, static page-render snapshot) and
+	 * {@see get_live_recurring_cart_data()} (cart-only, refreshed on every Store API
+	 * cart mutation via `register_store_api_cart_extension()`).
+	 *
+	 * `RENEWAL_ORDER` and non-whitelabel both return an empty, unblocked channel list —
+	 * rendering for the former is owned entirely elsewhere (never filtered/blocked here),
+	 * and the latter never had a local channel picker to filter (classic mirrors this in
+	 * `payment_fields()`).
+	 *
+	 * @param string     $classification     One of the `Recurring_Context` constants.
+	 * @param bool       $force_rebuild_cache Passed to `gateway_list()` only when
+	 *                                        `$gateway_list_data` is not already supplied.
+	 * @param array|null $gateway_list_data  Already-fetched raw Gateway List response to
+	 *                                       reuse instead of fetching again (avoids a
+	 *                                       second Gateway List lookup within the same
+	 *                                       request) — null fetches it internally.
+	 *
+	 * @return array{channels: array, recurring_blocked: bool, recurring_blocked_message: string}
+	 */
+	private function build_recurring_channels_payload( string $classification, bool $force_rebuild_cache, ?array $gateway_list_data = null ): array {
+		$unblocked_empty = [
+			'channels'                  => [],
+			'recurring_blocked'         => false,
+			'recurring_blocked_message' => '',
+		];
+
+		if ( Recurring_Context::UNSUPPORTED_SUBSCRIPTION_CART === $classification ) {
+			return [
+				'channels'                  => [],
+				'recurring_blocked'         => true,
+				'recurring_blocked_message' => Recurring_Context::get_unsupported_subscription_cart_message(),
+			];
+		}
+
+		if ( Recurring_Context::RENEWAL_ORDER === $classification || ! $this->gateway->is_whitelabel_mode_enabled() ) {
+			return $unblocked_empty;
+		}
+
+		if ( null === $gateway_list_data ) {
+			try {
+				$gateway_list_data = $this->gateway->gateway_list( $force_rebuild_cache );
+			} catch ( Exception $exception ) {
+				return $unblocked_empty;
+			}
+		}
+
+		if ( empty( $gateway_list_data ) ) {
+			return $unblocked_empty;
+		}
+
+		$response = ( new Gateway_List_Response_Factory() )->create( $gateway_list_data );
+
+		if ( Recurring_Context::ORDINARY === $classification
+			|| Recurring_Context::SUPPORTED_SUBSCRIPTION_FIRST_PAYMENT === $classification
+		) {
+			$response = Gateway_List_Recurring_Filter::filter( $response, $classification );
+		}
+
+		$offer_gpay     = $this->should_offer_google_pay_for_blocks();
+		$gpay_form_data = [];
+		if ( $offer_gpay ) {
+			try {
+				$gpay_form_data = blue_media()
+					->get_blue_media_gateway()
+					->configure_google_pay();
+			} catch ( Exception $exception ) {
+				$gpay_form_data = null;
+			}
+		}
+
+		$channels_mapped_for_blocks = ( new Gateway_List_Mapper_Block_Checkout(
+			$response,
+			is_array( $gpay_form_data ) ? $gpay_form_data : [],
+			$offer_gpay
+		) )->map_for_blocks();
+
+		return [
+			'channels'                  => $channels_mapped_for_blocks,
+			'recurring_blocked'         => false,
+			'recurring_blocked_message' => '',
+		];
+	}
+
+	/**
+	 * Registers the live, cart-triggered counterpart of `channels`/`recurring_blocked`
+	 * on the Store API cart endpoint (`/wc/store/v1/cart`), under
+	 * `extensions.bluemedia_recurring`. WooCommerce Blocks refetches this endpoint on
+	 * every cart mutation (add/remove/quantity/coupon/shipping), which is what makes the
+	 * channel list/blocking message react to a cart change without a page reload —
+	 * `get_payment_method_data()` above only ever runs once, at the initial page render.
+	 *
+	 * Deliberately always classifies the SESSION CART (`classify_cart()`), never
+	 * `classify_current_request()` — the Store API cart endpoint has no `order-pay` query
+	 * var to read (it is a bare REST request, not a front-end page load), and
+	 * conceptually represents the cart being purchased, not any specific existing order.
+	 *
+	 * @return void
+	 */
+	public function register_store_api_cart_extension(): void {
+		if ( ! function_exists( 'woocommerce_store_api_register_endpoint_data' ) ) {
+			return;
+		}
+
+		woocommerce_store_api_register_endpoint_data(
+			[
+				'endpoint'        => CartSchema::IDENTIFIER,
+				'namespace'       => 'bluemedia_recurring',
+				'data_callback'   => [ self::class, 'get_live_recurring_cart_data' ],
+				'schema_callback' => static function (): array {
+					return [
+						'channels'                  => [
+							'description' => __( 'Recurring-aware Autopay payment channel list for the current cart.', 'platnosci-online-blue-media' ),
+							'type'        => [ 'array', 'null' ],
+							'context'     => [ 'view', 'edit' ],
+							'readonly'    => true,
+						],
+						'recurring_blocked'         => [
+							'description' => __( 'Whether Autopay cannot process the current cart in its present shape.', 'platnosci-online-blue-media' ),
+							'type'        => 'boolean',
+							'context'     => [ 'view', 'edit' ],
+							'readonly'    => true,
+						],
+						'recurring_blocked_message' => [
+							'description' => __( 'Message to display when recurring_blocked is true.', 'platnosci-online-blue-media' ),
+							'type'        => 'string',
+							'context'     => [ 'view', 'edit' ],
+							'readonly'    => true,
+						],
+					];
+				},
+				'schema_type'     => ARRAY_A,
+			]
+		);
+	}
+
+	/**
+	 * `data_callback` for {@see register_store_api_cart_extension()}. Static because the
+	 * Store API endpoint invokes it with no arguments, on a fresh request outside this
+	 * class's own instance lifecycle — bootstraps a throwaway instance purely to reuse
+	 * {@see build_recurring_channels_payload()} rather than duplicating it.
+	 *
+	 * @return array{channels: array, recurring_blocked: bool, recurring_blocked_message: string}
+	 */
+	public static function get_live_recurring_cart_data(): array {
+		$instance = new self();
+		$instance->maybe_bootstrap_gateway();
+
+		if ( ! $instance->gateway instanceof Blue_Media_Gateway ) {
+			return [
+				'channels'                  => [],
+				'recurring_blocked'         => false,
+				'recurring_blocked_message' => '',
+			];
+		}
+
+		$classification = $instance->gateway->get_recurring_context()->classify_cart();
+
+		// Cache-friendly (no forced rebuild) -- this callback fires on every cart
+		// mutation while the customer is on the checkout page, unlike the one-off,
+		// force-rebuilt fetch in get_payment_method_data(). Reuses the SAME cache
+		// gateway_list() already maintains; never a second, redundant Gateway List
+		// fetch beyond what that cache's own TTL already governs.
+		return $instance->build_recurring_channels_payload( $classification, false );
 	}
 
 	/**
@@ -253,6 +413,8 @@ final class WC_Gateway_Autopay_Blocks_Support extends AbstractPaymentMethodType 
 				'platnosci-online-blue-media' ),
 			'supports'                     => [],
 			'channels'                     => [],
+			'recurring_blocked'            => false,
+			'recurring_blocked_message'    => '',
 			'messages'                     => $this->get_payment_method_messages(),
 			'adminAjaxUrl'                 => esc_url( admin_url( 'admin-ajax.php' ) ),
 			'nonce'                        => wp_create_nonce( Payment_Status_Controller::NONCE_ACTION ),

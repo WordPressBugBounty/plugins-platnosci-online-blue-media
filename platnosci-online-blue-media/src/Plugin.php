@@ -26,6 +26,18 @@ use Ilabs\BM_Woocommerce\Domain\Service\Ga4\View_Product_On_List_Use_Case;
 use Ilabs\BM_Woocommerce\Domain\Service\Settings\Currency_Tabs;
 use Ilabs\BM_Woocommerce\Domain\Service\Settings\WC_Form_Fields_Integration;
 use Ilabs\BM_Woocommerce\Gateway\Blue_Media_Gateway;
+use Ilabs\BM_Woocommerce\Gateway\Recurring\Admin\Renewal_Order_Diagnostics_Panel;
+use Ilabs\BM_Woocommerce\Gateway\Recurring\Admin\Subscription_Diagnostics_Metabox;
+use Ilabs\BM_Woocommerce\Gateway\Recurring\Attempt_State_Store;
+use Ilabs\BM_Woocommerce\Gateway\Recurring\Deactivation_Retry_Job;
+use Ilabs\BM_Woocommerce\Gateway\Recurring\Fs_Lifecycle_Bridge;
+use Ilabs\BM_Woocommerce\Gateway\Recurring\Fs_Pause_Sync_Retry_Job;
+use Ilabs\BM_Woocommerce\Gateway\Recurring\Renewal_Attempt_Sweep;
+use Ilabs\BM_Woocommerce\Gateway\Recurring\Renewal_Failed_Order_Email_Cta;
+use Ilabs\BM_Woocommerce\Gateway\Recurring\Renewal_Status_Check_Job;
+use Ilabs\BM_Woocommerce\Gateway\Recurring\Subscription_Cancellation_Listener;
+use WPDesk\FlexibleSubscriptions\Subscription\Renewal\Renewal;
+use Ilabs\BM_Woocommerce\Integration\Flexible_Subscriptions\Flexible_Subscriptions_Integration;
 use Ilabs\BM_Woocommerce\Integration\Funnel_Builder\Funnel_Builder_Integration;
 use Ilabs\BM_Woocommerce\Integration\Woocommerce_Blocks\WC_Gateway_Autopay_Blocks_Support;
 use Ilabs\BM_Woocommerce\Utilities\Test_Connection\Strings;
@@ -57,6 +69,8 @@ class Plugin extends Abstract_Ilabs_Plugin {
 	private static ?Currency $currency_manager = null;
 
 	private static ?Connection_Testing_Controller $connection_testing_controller = null;
+
+	private static ?Fs_Lifecycle_Bridge $fs_lifecycle_bridge = null;
 
 	/**
 	 * @var Blue_Media_Gateway
@@ -125,6 +139,43 @@ class Plugin extends Abstract_Ilabs_Plugin {
 		$this->configure_third_party_integrations();
 		$this->start_output_buffer_on_itn_request();
 
+		// Registered here, unconditionally, and NOT inside
+		// Blue_Media_Gateway's constructor. A bare Action Scheduler queue-runner
+		// request (WP-Cron, the async-request runner, or WP-CLI) has no reason to call
+		// WC()->payment_gateways() itself, so a gateway-constructor-only registration
+		// would silently never attach when these jobs are due to run. Placed before the
+		// `resolve_is_autopay_hidden()` guard below on purpose: whether the gateway is
+		// currently offered at checkout has no bearing on whether already-active
+		// subscriptions still need their recovery jobs to run.
+		( new Renewal_Status_Check_Job() )->register();
+		( new Renewal_Attempt_Sweep() )->register();
+
+		// Same reasoning as the two registrations above -- FS's own
+		// `init`-hooked `fsub/initialized` (activation), `fsub/subscription/cancel`
+		// (scheduled end-of-period cancellation), and any bare Action Scheduler
+		// worker running a previously-scheduled retry job are none of them
+		// guaranteed to construct `Blue_Media_Gateway` on their own, so these four
+		// registrations must not be deferred into the gateway's constructor.
+		$this->get_fs_lifecycle_bridge()->register();
+		( new Subscription_Cancellation_Listener() )->register();
+		( new Deactivation_Retry_Job() )->register();
+		( new Fs_Pause_Sync_Retry_Job() )->register();
+
+		// Admin-only diagnostics, unconditional for the same
+		// reason as the registrations above -- `add_meta_boxes` on the FS subscription
+		// screen/the WC order edit screen has no dependency on whether Autopay is
+		// currently offered at checkout.
+		( new Subscription_Diagnostics_Metabox() )->register();
+		( new Renewal_Order_Diagnostics_Panel() )->register();
+
+		// Same reasoning as the registrations above -- WooCommerce can render/send the
+		// customer failed-order email from a context that never constructs
+		// Blue_Media_Gateway on its own (an admin "resend email" action, or this
+		// plugin's own Renewal_Status_Check_Job/Renewal_Attempt_Sweep Action Scheduler
+		// workers reaching a `failed` transition), so this registration must not be
+		// deferred into the gateway's constructor either.
+		( new Renewal_Failed_Order_Email_Cta() )->register();
+
 		if ( $this->resolve_is_autopay_hidden() ) {
 			return;
 		}
@@ -137,20 +188,106 @@ class Plugin extends Abstract_Ilabs_Plugin {
 		$this->get_connection_testing_controller()->handle();
 		( new Payment_Status_Controller() )->handle();
 
+		// A renewal order belonging to this integration
+		// (payment_method=bluemedia, or -- covering the moment before that meta is
+		// ever set -- an open card-recurring attempt) is never payable through some
+		// OTHER installed WC gateway on order-pay. WC_Payment_Gateways::
+		// get_available_payment_gateways() applies this filter fresh on every call,
+		// including the one WC_Form_Handler::pay_action() itself makes to validate
+		// $_POST['payment_method'] -- so this blocks selection at POST-time too, not
+		// only in the rendered list. Scoped to renewal orders "belonging to us" only
+		// -- never touches a subscription/renewal-order paid through a different
+		// gateway (no global "no other PSP" rule).
+		add_filter( 'woocommerce_available_payment_gateways', function ( array $gateways ) {
+			if ( is_admin() || ! function_exists( 'is_wc_endpoint_url' ) || ! is_wc_endpoint_url( 'order-pay' ) ) {
+				return $gateways;
+			}
+
+			$order_id = absint( get_query_var( 'order-pay' ) );
+			$order    = $order_id > 0 ? wc_get_order( $order_id ) : false;
+
+			if ( ! $order instanceof WC_Order
+				|| ! class_exists( Renewal::class )
+				|| ! Renewal::is_renewal_order( $order )
+			) {
+				return $gateways;
+			}
+
+			$is_ours = 'bluemedia' === $order->get_payment_method()
+				|| null !== ( new Attempt_State_Store() )->get_current_attempt( $order_id );
+
+			if ( ! $is_ours ) {
+				return $gateways;
+			}
+
+			return array_intersect_key( $gateways, [ 'bluemedia' => true ] );
+		} );
+
 		add_action( 'bm_cancel_failed_pending_order_after_one_hour',
 			function ( $order_id ) {
 				$order = wc_get_order( $order_id );
 				wp_clear_scheduled_hook( 'bm_cancel_failed_pending_order_after_one_hour',
 					[ $order_id ] );
 
-				if ( $order instanceof WC_Order ) {
-					if ( $order->has_status( [ 'pending' ] ) ) {
-						$order->update_status( 'cancelled' );
-						$order->add_order_note( __( 'Unpaid order cancelled - time limit reached.',
-							'platnosci-online-blue-media' ) );
-						$order->save();
-					}
+				if ( ! $order instanceof WC_Order || ! $order->has_status( [ 'pending' ] ) ) {
+					return;
 				}
+
+				// A renewal order with an open (not yet fully
+				// released) card-recurring attempt must never be cancelled here.
+				// get_current_attempt() returning a record at all -- regardless of its
+				// state -- is exactly "not yet released": try_release_lock() only ever
+				// deletes it for SUCCESS/FAILURE AFTER Recurring_Result_Applier has
+				// finished applying the corresponding WC_Order side effects. A terminal
+				// SUCCESS/FAILURE whose side effects are not yet applied is therefore
+				// ALSO protected here, without inspecting `state` at all -- cancelling
+				// in that narrow window would race Recurring_Result_Applier's own
+				// payment_complete()/update_order_status() call for the very same
+				// order. No second coordination mechanism is introduced: the existing
+				// attempt-record lifecycle IS the coordination.
+				if ( class_exists( Renewal::class ) && Renewal::is_renewal_order( $order )
+					&& null !== ( new Attempt_State_Store() )->get_current_attempt( $order_id )
+				) {
+					blue_media()->get_woocommerce_logger()->log_debug(
+						sprintf(
+							'[bm_cancel_failed_pending_order_after_one_hour] [skip: unresolved recurring attempt] [order_id: %d]',
+							$order_id
+						)
+					);
+
+					return;
+				}
+
+				$payment_method = (string) $order->get_payment_method();
+				$is_test_order  = '1' === (string) $order->get_meta( 'autopay_test_order' );
+
+				if ( 'bluemedia' !== $payment_method && ! $is_test_order ) {
+					blue_media()->get_woocommerce_logger()->log_debug(
+						sprintf(
+							'[bm_cancel_failed_pending_order_after_one_hour] [skip: foreign payment method] [order_id: %d] [payment_method: %s]',
+							$order_id,
+							$payment_method
+						)
+					);
+
+					return;
+				}
+
+				if ( blue_media()->get_order_remote_status_manager()->is_success_or_applying( (int) $order_id ) ) {
+					blue_media()->get_woocommerce_logger()->log_debug(
+						sprintf(
+							'[bm_cancel_failed_pending_order_after_one_hour] [skip: order paid or payment finalizing] [order_id: %d]',
+							$order_id
+						)
+					);
+
+					return;
+				}
+
+				$order->update_status( 'cancelled' );
+				$order->add_order_note( __( 'Unpaid order cancelled - time limit reached.',
+					'platnosci-online-blue-media' ) );
+				$order->save();
 			} );
 
 		$this->get_file_downloader()->handle();
@@ -211,6 +348,13 @@ class Plugin extends Abstract_Ilabs_Plugin {
 
 				}
 			);
+
+			if ( false === self::$inactive_on_frontend ) {
+				// Live, cart-triggered counterpart of get_payment_method_data()'s
+				// static `channels`/recurring fields -- see register_store_api_cart_extension()
+				// for why this cannot simply be computed once at page render.
+				( new WC_Gateway_Autopay_Blocks_Support() )->register_store_api_cart_extension();
+			}
 		}
 	}
 
@@ -830,6 +974,7 @@ class Plugin extends Abstract_Ilabs_Plugin {
 
 	private function configure_third_party_integrations(): void {
 		( new Funnel_Builder_Integration() )->init();
+		( new Flexible_Subscriptions_Integration() )->init();
 	}
 
 	public function get_currency_manager(): Currency {
@@ -839,6 +984,20 @@ class Plugin extends Abstract_Ilabs_Plugin {
 		}
 
 		return self::$currency_manager;
+	}
+
+	/**
+	 * Shared `Fs_Lifecycle_Bridge` singleton. Must be the SAME
+	 * instance whose `register()` observed `fsub/initialized` — every caller that
+	 * needs `pause()` (RPDN_Webhook_Handler, Recurring_Result_Applier's late-SUCCESS
+	 * guard) MUST go through this accessor, never `new Fs_Lifecycle_Bridge()`.
+	 */
+	public function get_fs_lifecycle_bridge(): Fs_Lifecycle_Bridge {
+		if ( ! self::$fs_lifecycle_bridge ) {
+			self::$fs_lifecycle_bridge = new Fs_Lifecycle_Bridge();
+		}
+
+		return self::$fs_lifecycle_bridge;
 	}
 
 	public function get_connection_testing_controller(

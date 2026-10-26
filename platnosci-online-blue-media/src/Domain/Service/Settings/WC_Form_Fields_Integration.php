@@ -147,6 +147,11 @@ class WC_Form_Fields_Integration {
 				$current_admin_currency_code ),
 				'no' );
 
+		$is_flexible_subscriptions_active = blue_media()
+			->get_blue_media_gateway()
+			->get_recurring_context()
+			->is_flexible_subscriptions_active();
+
 		$return = [
 
 			'test_connection'                  => [
@@ -194,6 +199,36 @@ class WC_Form_Fields_Integration {
 					'platnosci-online-blue-media' ),
 				'desc_tip'      => true,
 				'bmtab'         => 'authentication',
+			],
+
+			'bm_recurring_card_enabled'        => [
+				'title'         => __( 'Recurring card payments for subscriptions',
+					'platnosci-online-blue-media' ),
+				'label'         => __( 'Offer automatic card payments for new subscription purchases',
+					'platnosci-online-blue-media' ),
+				'type'          => 'autopay_template',
+				'default'       => 'no',
+				'options'       => [
+					'yes' => __( 'Yes', 'platnosci-online-blue-media' ),
+					'no'  => __( 'No', 'platnosci-online-blue-media' ),
+				],
+				'template'      => 'settings_field_extended_radio',
+				'description'   => __( 'Controls only whether automatic card payments are offered for NEW subscription purchases. Already-active subscriptions keep renewing, being checked, and can be deactivated regardless of this setting.',
+					'platnosci-online-blue-media' ),
+				'desc_tip'      => true,
+				'bmtab'         => 'authentication',
+				'template_args' =>
+					[
+						// Shown regardless of the saved 'yes'/'no' value below -- the
+						// feature is inert without Flexible Subscriptions active either
+						// way (see Recurring_Context::is_recurring_feature_enabled()),
+						// so a merchant who enabled this and later deactivated/removed
+						// Flexible Subscriptions must see that it is currently a no-op,
+						// not just a silent difference from the saved setting.
+						'status'      => $is_flexible_subscriptions_active ? false : __( 'Inactive: the Flexible Subscriptions plugin is not active. This setting has no effect until it is installed and active.',
+							'platnosci-online-blue-media' ),
+						'status_type' => 'info',
+					],
 			],
 
 			'currency_tabs'                    => [

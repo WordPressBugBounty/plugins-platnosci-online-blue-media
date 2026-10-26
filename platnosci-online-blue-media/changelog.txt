@@ -1,5 +1,14 @@
 *** Autopay Changelog ***
 
+### [5.1.0] 2026-10-26 ###
+* Security: improved payment notification handling and order status processing. Immediate update is recommended.
+* Added: integration with "Flexible Subscriptions" for WooCommerce, supporting recurring card payments, automatic renewals, manual renewal payments and one-time additional payments.
+* Added: synchronization of subscription card activation/deactivation (RPAN/RPDN) and subscription cancellation, deactivation and suspension with Autopay.
+* Added: support for mixed carts containing subscription and one-time products.
+* Added: automatic filtering of payment channels as the cart changes in classic and block checkout.
+* Added: recurring payment logs and subscription/order diagnostics.
+* Added: a payment link for failed Autopay renewals in the WooCommerce customer "Failed order" email, when that email is enabled in the store settings.
+
 ### [5.0.5] 2026-09-28 ###
 - Fixed: the BLIK Pay Later and instalments payment descriptions displayed as raw HTML code instead of formatted text on checkout.
 

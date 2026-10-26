@@ -84,6 +84,97 @@ final class Autopay_Payment_Protocol {
 	 */
 	public const WALLET_TYPE_WIDGET_VALUE = 'WIDGET';
 
+	// --- Recurring -------------------------------------------------------------
+	/**
+	 * Path segment for the transaction-status query endpoint (relative to gateway
+	 * base URL, which always ends with a trailing slash -- see
+	 * `Blue_Media_Gateway::GATEWAY_PRODUCTION`/`GATEWAY_SANDBOX`).
+	 *
+	 * Confirmed in Autopay "Specyfikacja integracji Serwisu Partnera z Systemem
+	 * Płatności", Dodatek "Obsługa transakcji", rozdz. 4.10: POST,
+	 * `Content-Type: application/x-www-form-urlencoded`, header
+	 * `BmHeader: pay-bm` -- NOT the same contract as `webapi/googlePayMerchantInfo`
+	 * (JSON body), even though both sit under `webapi/`.
+	 */
+	public const HTTP_PATH_TRANSACTION_STATUS = 'webapi/transactionStatus';
+
+	/**
+	 * Path segment for the recurring-instrument deactivation endpoint (relative
+	 * to gateway base URL). Confirmed in the same Dodatek, rozdz. 1.5.3.1: POST,
+	 * form fields `ServiceID`/`MessageID`/`ClientHash`/`Hash`. No `BmHeader` is
+	 * documented for this endpoint specifically (unlike `/payment` and
+	 * `webapi/transactionStatus`, which both document one explicitly) -- do not
+	 * invent one.
+	 */
+	public const HTTP_PATH_DEACTIVATE_RECURRING = 'deactivate_recurring';
+
+	/**
+	 * BmHeader value required for `webapi/transactionStatus` (Dodatek, rozdz. 4.10).
+	 */
+	public const HTTP_HEADER_BM_WEBAPI = 'pay-bm';
+
+	public const FIELD_MESSAGE_ID = 'MessageID';
+
+	public const FIELD_CLIENT_HASH = 'ClientHash';
+
+	public const FIELD_RECURRING_ACCEPTANCE_STATE = 'RecurringAcceptanceState';
+
+	public const FIELD_RECURRING_ACTION = 'RecurringAction';
+
+	/**
+	 * Documented `RecurringAction` values (Dodatek, field #36 of "Lista
+	 * parametrów rozpoczęcia transakcji"). `DEACTIVATE` is documented as a valid
+	 * value of this field but is NOT how this codebase performs deactivation --
+	 * see {@see self::HTTP_PATH_DEACTIVATE_RECURRING}, the dedicated, separately
+	 * documented endpoint used instead (rozdz. 1.5.3.1).
+	 */
+	public const RECURRING_ACTION_INIT_WITH_PAYMENT = 'INIT_WITH_PAYMENT';
+
+	public const RECURRING_ACTION_INIT_WITH_REFUND = 'INIT_WITH_REFUND';
+
+	public const RECURRING_ACTION_AUTO = 'AUTO';
+
+	public const RECURRING_ACTION_MANUAL = 'MANUAL';
+
+	public const RECURRING_ACTION_DEACTIVATE = 'DEACTIVATE';
+
+	/**
+	 * Documented `RecurringAcceptanceState` values (Dodatek, field #35).
+	 * `ACCEPTED`/`PROMPT`/`FORCE` availability "zależy od uzgodnień biznesowych"
+	 * (depends on arrangements agreed with Autopay per ServiceID) -- this
+	 * plugin is distributed to many independent merchants and cannot assume
+	 * any given one has such an arrangement. `ACCEPTED` is used for the
+	 * redirect activation of channel 1503 (see
+	 * `Blue_Media_Gateway::process_card_recurring_init_via_pretransaction()`),
+	 * matching the one other real multi-merchant Autopay integration
+	 * available to compare against (`pay-wp`'s `SubscriptionGateway`, which
+	 * sends `ACCEPTED` unconditionally for every merchant/ServiceID) rather
+	 * than `FORCE`/`PROMPT`, which that same documentation note ties
+	 * explicitly to a per-merchant arrangement this plugin has no way to
+	 * detect or configure per store today. Not confirmed safe by a live
+	 * test at the time of this comment -- see that method's docblock.
+	 */
+	public const RECURRING_ACCEPTANCE_STATE_NOT_APPLICABLE = 'NOT_APPLICABLE';
+
+	public const RECURRING_ACCEPTANCE_STATE_ACCEPTED = 'ACCEPTED';
+
+	public const RECURRING_ACCEPTANCE_STATE_PROMPT = 'PROMPT';
+
+	public const RECURRING_ACCEPTANCE_STATE_FORCE = 'FORCE';
+
+	/**
+	 * Technical `Amount` sent for a card-recurring activation via
+	 * `RECURRING_ACTION_INIT_WITH_REFUND` (first payment due now is 0, e.g. a trial
+	 * with no sign-up fee). Autopay charges and refunds this amount automatically.
+	 */
+	public const INIT_WITH_REFUND_TECHNICAL_AMOUNT = '1.00';
+
+	/**
+	 * Only currency confirmed by Autopay documentation for
+	 * INIT_WITH_REFUND_TECHNICAL_AMOUNT. Never assume an equivalent for other currencies.
+	 */
+	public const INIT_WITH_REFUND_SUPPORTED_CURRENCY = 'PLN';
+
 	// --- Logging (card widget diagnostics) -----------------------------------
 	public const LOG_SOURCE_PREFIX_CARD_WIDGET = '[CardWidget]';
 

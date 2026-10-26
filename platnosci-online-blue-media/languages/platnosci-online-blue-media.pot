@@ -2,76 +2,77 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Autopay 5.0.1\n"
+"Project-Id-Version: Autopay 5.1.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/platnosci-online-blue-media\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-07-17T13:16:45+00:00\n"
+"POT-Creation-Date: 2026-10-26T12:28:46+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: platnosci-online-blue-media\n"
 
 #. Plugin Name of the plugin
-#: platnosci-online-blue-media.php
+#: bluemedia-woocommerce.php
 msgid "Autopay"
 msgstr ""
 
 #. Plugin URI of the plugin
-#: platnosci-online-blue-media.php
+#: bluemedia-woocommerce.php
 msgid "https://wordpress.org/plugins/platnosci-online-blue-media"
 msgstr ""
 
 #. Description of the plugin
-#: platnosci-online-blue-media.php
+#: bluemedia-woocommerce.php
 msgid "Autopay for Woocommerce"
 msgstr ""
 
 #. Author of the plugin
-#: platnosci-online-blue-media.php
+#: bluemedia-woocommerce.php
 msgid "Autopay S.A."
 msgstr ""
 
 #. Author URI of the plugin
-#: platnosci-online-blue-media.php
+#: bluemedia-woocommerce.php
 msgid "https://autopay.pl"
 msgstr ""
 
+#. translators: %s is a URL link to the plugin's WordPress.org page.
 #: compatibility.php:19
 #, php-format
 msgid "It looks like the developer version of the Autopay plug-in is installed instead of the production release. Remove this plugin and install it from this URL: %s"
 msgstr ""
 
 #: compatibility.php:33
-msgid "PHP version is older than 7.2 so this plugin will not work. Please contact your host and ask them to upgrade."
+msgid "PHP version is older than 7.4 so this plugin will not work. Please contact your host and ask them to upgrade."
 msgstr ""
 
-#: src/Controller/Model/Payment_Status_Response_Value_Object.php:110
+#: src/Controller/Model/Payment_Status_Response_Value_Object.php:109
 msgid "Payment successful."
 msgstr ""
 
-#: src/Controller/Model/Payment_Status_Response_Value_Object.php:114
+#: src/Controller/Model/Payment_Status_Response_Value_Object.php:113
 msgid "Check your device."
 msgstr ""
 
-#: src/Controller/Model/Payment_Status_Response_Value_Object.php:118
-#: src/Gateway/Blue_Media_Gateway.php:1220
-#: src/Gateway/Blue_Media_Gateway.php:1466
+#: src/Controller/Model/Payment_Status_Response_Value_Object.php:117
+#: src/Gateway/Blue_Media_Gateway.php:1704
+#: src/Gateway/Blue_Media_Gateway.php:2189
 #: templates/blik_0.php:8
 #: templates/settings_field_status.php:10
 #: templates/settings_status.php:11
 msgid "Payment failed."
 msgstr ""
 
-#: src/Controller/Model/Payment_Status_Response_Value_Object.php:122
+#: src/Controller/Model/Payment_Status_Response_Value_Object.php:121
 msgid "Waiting for transaction confirmation."
 msgstr ""
 
-#: src/Controller/Payment_Status_Controller.php:111
-#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:268
-#: src/Utilities/Test_Connection/Payment_Status_Controller.php:60
+#: src/Controller/Payment_Status_Controller.php:106
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:435
+#: src/Utilities/Test_Connection/Payment_Status_Controller.php:57
 msgid "Payment failed"
 msgstr ""
 
@@ -79,12 +80,12 @@ msgstr ""
 msgid "Pay comfortably using BLIK payments"
 msgstr ""
 
-#: src/Domain/Model/White_Label/Config.php:38
+#: src/Domain/Model/White_Label/Config.php:39
 msgid "Card Payment"
 msgstr ""
 
-#: src/Domain/Model/White_Label/Config.php:41
-#: src/Domain/Model/White_Label/Config.php:43
+#: src/Domain/Model/White_Label/Config.php:42
+#: src/Domain/Model/White_Label/Config.php:44
 msgid "We will redirect you to the website of our partner Autopay, where you will provide your card details"
 msgstr ""
 
@@ -191,27 +192,23 @@ msgstr ""
 msgid "United States (US) dollar"
 msgstr ""
 
-#: src/Domain/Service/Custom_Styles/Css_Editor.php:56
+#: src/Domain/Service/Custom_Styles/Css_Editor.php:53
 msgid "Feature enabled"
 msgstr ""
 
-#: src/Domain/Service/Custom_Styles/Css_Editor.php:122
+#: src/Domain/Service/Custom_Styles/Css_Editor.php:118
 msgid "Changes have been saved."
 msgstr ""
 
-#: src/Domain/Service/Custom_Styles/Css_Editor.php:144
+#: src/Domain/Service/Custom_Styles/Css_Editor.php:140
 msgid "Insert your CSS code here"
 msgstr ""
 
-#: src/Domain/Service/Gateway_List/Gateway_List_Mapper_Block_Checkout.php:393
-msgid "You will be redirected to the page of the selected bank."
-msgstr ""
-
-#: src/Domain/Service/Legacy/Importer.php:46
+#: src/Domain/Service/Legacy/Importer.php:44
 msgid "Autopay: No values found for import"
 msgstr ""
 
-#: src/Domain/Service/Legacy/Importer.php:69
+#: src/Domain/Service/Legacy/Importer.php:66
 msgid "Autopay: Import completed"
 msgstr ""
 
@@ -219,27 +216,27 @@ msgstr ""
 msgid "Use the services of official and verified Autopay partners!"
 msgstr ""
 
-#: src/Domain/Service/Settings/Settings_Manager.php:141
+#: src/Domain/Service/Settings/Settings_Manager.php:139
 msgid "Turn on sandbox mode or accept real payments."
 msgstr ""
 
-#: src/Domain/Service/Settings/Settings_Manager.php:147
+#: src/Domain/Service/Settings/Settings_Manager.php:145
 msgid "The Ad services is a comprehensive solution that enables merchants to effectively promote their products directly from the shop's administration panel. The service is fully integrated with WooCommerce which allows the automatic creation of advertising campaigns tailored to the shop's product range, customers' purchase history and analysis of their preferences. This option is available only for stores with a single active currency."
 msgstr ""
 
-#: src/Domain/Service/Settings/Settings_Manager.php:152
+#: src/Domain/Service/Settings/Settings_Manager.php:150
 msgid "Select the payment methods you wish to use."
 msgstr ""
 
-#: src/Domain/Service/Settings/Settings_Manager.php:161
+#: src/Domain/Service/Settings/Settings_Manager.php:159
 msgid "The Autopay plugin allows you to send payment information to Google Analytics. Among other things, this makes it possible to track sales conversions within the Google Analytics platform. Communication with Google Analytics is an optional feature of the plug-in."
 msgstr ""
 
-#: src/Domain/Service/Settings/Settings_Manager.php:166
+#: src/Domain/Service/Settings/Settings_Manager.php:164
 msgid "Need support? Discover the content library that makes installing and configuring Autopay solutions a piece of cake."
 msgstr ""
 
-#: src/Domain/Service/Settings/Settings_Manager.php:171
+#: src/Domain/Service/Settings/Settings_Manager.php:169
 msgid "Advanced settings intended for developers. When making changes in this section, please refer to the technical specifications to know how it will affect plugin."
 msgstr ""
 
@@ -272,484 +269,698 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:111
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:109
 msgid "Enable campaign tracking via Autopay and publish the product stream."
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:117
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:178
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:629
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:736
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:749
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:762
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:775
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:788
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:115
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:180
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:212
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:659
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:763
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:776
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:789
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:802
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:815
 #: templates/settings_field_currency_remove.php:47
 msgid "Yes"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:118
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:179
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:630
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:735
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:748
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:761
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:774
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:787
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:116
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:181
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:213
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:660
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:762
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:775
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:788
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:801
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:814
 msgid "No"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:123
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:121
 msgid "See how you can run straightforward campaigns with us!"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:125
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:123
 msgid "https://autopay.eu/products/data/ads"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:127
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:125
 msgid "Launch in 5 minutes!"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:156
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:158
 msgid "Test Connection"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:158
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:560
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:160
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:590
 msgid "Expected format: G-XXXXXXX"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:171
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:173
 msgid "Use in sandbox mode"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:173
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:175
 msgid "Enable Sandbox mode"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:184
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:186
 msgid "Sandbox active: the payments are simulated. Customers will not be actually charged for any purchases."
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:187
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:189
 msgid "In order to get access to the sandbox environment contact Autopay using"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:189
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:191
 msgid "https://developers.autopay.pl/kontakt?utm_campaign=help&utm_source=woocommerce_panel&utm_medium=text_link"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:191
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:193
 msgid "this form"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:196
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:198
 msgid "Payments processed using sandbox environment will not affect store’s settlement with Autopay. Sandbox allows stores to verify integration with Autopay and configuration of this plugin."
 msgstr ""
 
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:205
+msgid "Recurring card payments for subscriptions"
+msgstr ""
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:207
+msgid "Offer automatic card payments for new subscription purchases"
+msgstr ""
+
 #: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:216
+msgid "Controls only whether automatic card payments are offered for NEW subscription purchases. Already-active subscriptions keep renewing, being checked, and can be deactivated regardless of this setting."
+msgstr ""
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:228
+msgid "Inactive: the Flexible Subscriptions plugin is not active. This setting has no effect until it is installed and active."
+msgstr ""
+
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:248
 msgid "Select mode of displaying payment methods"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:225
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:383
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:412
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:470
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:677
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:257
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:415
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:444
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:501
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:705
 msgid "https://developers.autopay.pl/en/online/plugins/woocomerce#692d97171d07c"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:227
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:385
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:414
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:679
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:259
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:417
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:446
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:707
 msgid "Learn more"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:241
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:273
 msgid "Redirect to Autopay’s hosted payment page"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:243
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:275
 msgid "Display each payment method separately"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:260
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:292
 msgid "Service identifier"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:262
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:307
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:294
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:339
 msgid "Consists of numbers only. Is unique for each store."
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:270
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:293
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:314
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:335
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:302
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:325
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:346
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:367
 msgid "https://developers.autopay.pl/en/online/portal-autopay-en"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:272
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:295
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:316
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:337
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:472
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:569
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:586
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:602
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:304
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:327
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:348
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:369
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:503
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:599
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:616
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:632
 msgid "where to find?"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:283
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:315
 msgid "Configuration key (hash)"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:285
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:328
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:317
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:360
 msgid "Key containing numbers and lowercase letters to verify communication. Do not share it with anyone."
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:305
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:337
 msgid "Test service identifier"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:326
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:358
 msgid "Test configuration key (hash)"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:364
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:396
 msgid "BLIK payment type"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:370
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:402
 msgid "redirect payer to BLIK’s website"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:372
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:404
 msgid "enter BLIK code directly on your store"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:398
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:430
 msgid "Google Pay payment type"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:404
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:436
 msgid "redirect to Google Pay payment"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:406
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:438
 msgid "pay with Google Pay directly on your store"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:444
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:475
 msgid "Header and description at checkout"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:452
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:483
 msgid "Payment method title"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:463
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:494
 msgid "Payment method description"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:484
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:515
 msgid "Autopay logo on checkout"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:486
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:517
 msgid "Pick the variant that contrasts with your checkout background: dark logo on light pages, light logo on dark pages."
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:492
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:523
 msgid "Dark logo (light checkout background)"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:494
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:525
 msgid "Light logo (dark checkout background)"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:526
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:557
 #: templates/settings_field_channels.php:45
 msgid "Allowed payment method list"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:531
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:850
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:562
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:877
 msgid "Import now"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:558
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:588
 #: templates/settings_ga4_modals.php:5
 msgid "Measurement identifier"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:575
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:605
 #: templates/settings_ga4_modals.php:22
 msgid "Stream ID"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:577
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:607
 msgid "The identifier is in numeric format."
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:592
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:622
 #: templates/settings_ga4_modals.php:41
 msgid "Google Analytics API secret"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:609
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:639
 msgid "Order status triggering the event ‘Completion of transaction’"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:620
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:650
 msgid "ITN SUCCESS triggering the event ‘Completion of transaction’ instead of order status"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:623
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:653
 msgid "If you select “Yes,” a “purchase” event will be sent immediately once an ITN SUCCESS status message is received for the order."
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:637
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:667
 msgid "Once connected with this plugin, Google Analytics will start registering the following events:"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:667
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:695
 msgid "Payment statuses"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:670
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:698
 msgid "Choose how your order statuses will change depending on the status payment has in Autopay."
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:685
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:713
 msgid "Payment started"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:695
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:723
 msgid "Payment accepted"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:705
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:733
 msgid "Payment accepted for purchase of ONLY digital products"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:715
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:743
 msgid "Payment rejected"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:727
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:754
 msgid "Debug mode"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:729
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:756
 msgid "Enable debug mode"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:741
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:768
 msgid "Sandbox mode for logged-in administrator"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:754
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:781
 msgid "Show Autopay payment gateway in Checkout only to logged-in administrators"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:767
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:794
 msgid "Show countdown screen before redirection to increase compatibility"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:780
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:807
 msgid "Compatibility mode with third-party plugins that reload checkout fragments"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:794
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:821
 msgid "Alternative transaction start production URL"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:803
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:830
 msgid "Alternative transaction start test URL"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:845
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:872
 msgid "Import settings from legacy plugin"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:857
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:884
 #: templates/settings_css_editor.php:13
 #: templates/settings_field_css_editor.php:14
 msgid "Use own CSS styles"
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:881
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:907
 msgid "In the available payment methods list we will render a separate, dedicated button for each of the payment methods available through Autopay."
 msgstr ""
 
-#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:883
+#: src/Domain/Service/Settings/WC_Form_Fields_Integration.php:909
 msgid "In the available payment methods list we will render one button, upon clicking which payer will be redirected to Autopay’s hosted payment page where all available payment methods will be displayed."
 msgstr ""
 
-#: src/Gateway/Blue_Media_Gateway.php:150
+#: src/Gateway/Blue_Media_Gateway.php:214
 msgid "Autopay Instant payment"
 msgstr ""
 
-#: src/Gateway/Blue_Media_Gateway.php:153
-#: src/Gateway/Blue_Media_Gateway.php:169
-#: src/Gateway/Blue_Media_Gateway.php:2945
+#: src/Gateway/Blue_Media_Gateway.php:217
+#: src/Gateway/Blue_Media_Gateway.php:2337
 msgid "Instant payment, BLIK, credit card, Google Pay, Apple Pay"
 msgstr ""
 
-#: src/Gateway/Blue_Media_Gateway.php:164
-#: src/Gateway/Blue_Media_Gateway.php:2944
-msgid "Autopay gateway"
+#: src/Gateway/Blue_Media_Gateway.php:784
+msgid "This payment will be made with your saved payment method — clicking \"Pay\" will charge it."
 msgstr ""
 
-#: src/Gateway/Blue_Media_Gateway.php:683
+#: src/Gateway/Blue_Media_Gateway.php:847
 msgid "Payment methods are currently unavailable. Please try again later."
 msgstr ""
 
-#: src/Gateway/Blue_Media_Gateway.php:760
+#: src/Gateway/Blue_Media_Gateway.php:985
+msgid "This order cannot be paid yet: this subscription is not eligible for automatic card payments in this store (e.g. more than one subscription in the order, a zero-amount first payment, or the recurring card channel not being configured for this currency). Please contact the store."
+msgstr ""
+
+#: src/Gateway/Blue_Media_Gateway.php:997
+msgid "This subscription can only be paid with the recurring card payment method."
+msgstr ""
+
+#: src/Gateway/Blue_Media_Gateway.php:1021
+msgid "The selected payment channel is not available for this order."
+msgstr ""
+
+#: src/Gateway/Blue_Media_Gateway.php:1055
+msgid "Payment conditions for this order have changed. Please refresh the page and try again."
+msgstr ""
+
+#: src/Gateway/Blue_Media_Gateway.php:1074
+#: src/Gateway/Blue_Media_Gateway.php:2229
+#: src/Gateway/Recurring/Manual_Renewal_Payment_Handler.php:246
+msgid "Payment could not be started. Please try again."
+msgstr ""
+
+#: src/Gateway/Blue_Media_Gateway.php:1096
+#: src/Gateway/Recurring/Manual_Renewal_Payment_Handler.php:224
+msgid "Payment for this order is already being processed. Please try again shortly."
+msgstr ""
+
+#: src/Gateway/Blue_Media_Gateway.php:1114
 msgid "Autopay payments: Cannot redirect to payment because no payment channel selected."
 msgstr ""
 
-#: src/Gateway/Blue_Media_Gateway.php:787
-#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:276
+#: src/Gateway/Blue_Media_Gateway.php:1153
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:443
 msgid "The code you provided is invalid. Code should be 6 digits."
 msgstr ""
 
-#: src/Gateway/Blue_Media_Gateway.php:829
-#: src/Gateway/Blue_Media_Gateway.php:896
-#: src/Gateway/Blue_Media_Gateway.php:1332
-#: src/Gateway/Blue_Media_Gateway.php:1351
-msgid "Card payment could not be started. Please try again."
-msgstr ""
-
-#: src/Gateway/Blue_Media_Gateway.php:849
-#: src/Gateway/Blue_Media_Gateway.php:1276
+#: src/Gateway/Blue_Media_Gateway.php:1167
+#: src/Gateway/Blue_Media_Gateway.php:1249
+#: src/Gateway/Blue_Media_Gateway.php:1993
 msgid "Card payment data is missing. Please complete the card form and try again."
 msgstr ""
 
-#: src/Gateway/Blue_Media_Gateway.php:910
+#: src/Gateway/Blue_Media_Gateway.php:1225
+#: src/Gateway/Blue_Media_Gateway.php:1306
+#: src/Gateway/Blue_Media_Gateway.php:1794
+#: src/Gateway/Blue_Media_Gateway.php:1846
+#: src/Gateway/Blue_Media_Gateway.php:1881
+#: src/Gateway/Blue_Media_Gateway.php:1887
+#: src/Gateway/Blue_Media_Gateway.php:1899
+#: src/Gateway/Blue_Media_Gateway.php:2050
+#: src/Gateway/Blue_Media_Gateway.php:2069
+msgid "Card payment could not be started. Please try again."
+msgstr ""
+
+#: src/Gateway/Blue_Media_Gateway.php:1320
 msgid "Google Pay is unavailable because the store checkout does not require acceptance of the terms and conditions."
 msgstr ""
 
-#: src/Gateway/Blue_Media_Gateway.php:981
+#: src/Gateway/Blue_Media_Gateway.php:1482
 msgid "Autopay: Payment process started for order ID:"
 msgstr ""
 
-#: src/Gateway/Blue_Media_Gateway.php:1208
+#: src/Gateway/Blue_Media_Gateway.php:1692
 msgid "Autopay: Google Pay payment process started for order ID:"
 msgstr ""
 
+#: src/Gateway/Blue_Media_Gateway.php:1876
+#: src/Gateway/Blue_Media_Gateway.php:2041
+msgid "Card payment was rejected. Please try again."
+msgstr ""
+
+#: src/Gateway/Blue_Media_Gateway.php:1917
+msgid "Autopay: recurring card (1503) pretransaction started for order ID:"
+msgstr ""
+
 #. translators: %s: remote error message.
-#: src/Gateway/Blue_Media_Gateway.php:1301
+#: src/Gateway/Blue_Media_Gateway.php:2019
 #, php-format
 msgid "Card pretransaction request failed: %s"
 msgstr ""
 
 #. translators: %s: rejection reason from payment gateway.
-#: src/Gateway/Blue_Media_Gateway.php:1316
+#: src/Gateway/Blue_Media_Gateway.php:2034
 #, php-format
 msgid "Card payment was rejected: %s"
 msgstr ""
 
-#: src/Gateway/Blue_Media_Gateway.php:1323
-msgid "Card payment was rejected. Please try again."
-msgstr ""
-
-#: src/Gateway/Blue_Media_Gateway.php:1364
+#: src/Gateway/Blue_Media_Gateway.php:2082
 msgid "Autopay: Card payment process started for order ID:"
 msgstr ""
 
-#: src/Gateway/Blue_Media_Gateway.php:1456
+#: src/Gateway/Blue_Media_Gateway.php:2179
 msgid "Autopay: BLIK-0 payment process started for order ID:"
 msgstr ""
 
-#: src/Gateway/Blue_Media_Gateway.php:1748
-msgid "validate_itn_hash - not valid"
-msgstr ""
-
-#: src/Gateway/Blue_Media_Gateway.php:2919
+#: src/Gateway/Blue_Media_Gateway.php:2311
 msgid "Payment method title has been truncated to 80 characters."
 msgstr ""
 
-#: src/Gateway/Blue_Media_Gateway.php:2930
+#: src/Gateway/Blue_Media_Gateway.php:2322
 msgid "Payment method description has been truncated to 500 characters."
 msgstr ""
 
-#: src/Gateway/Blue_Media_Gateway.php:2956
+#: src/Gateway/Blue_Media_Gateway.php:2336
+msgid "Autopay gateway"
+msgstr ""
+
+#: src/Gateway/Blue_Media_Gateway.php:2348
 msgid "Title and description have been reset to defaults."
 msgstr ""
 
-#: src/Gateway/Blue_Media_Gateway.php:2987
+#: src/Gateway/Blue_Media_Gateway.php:2380
 msgid "Reset to default"
 msgstr ""
 
-#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:218
-#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:247
+#: src/Gateway/ITN_Webhook_Handler.php:128
+msgid "Internal error"
+msgstr ""
+
+#: src/Gateway/ITN_Webhook_Handler.php:731
+msgid "validate_itn_hash - not valid"
+msgstr ""
+
+#: src/Gateway/Recurring/Admin/Renewal_Order_Diagnostics_Panel.php:43
+msgid "Autopay recurring"
+msgstr ""
+
+#: src/Gateway/Recurring/Admin/Renewal_Order_Diagnostics_Panel.php:48
+msgid "Current attempt"
+msgstr ""
+
+#. translators: %s: machine-readable reason the outcome could not be determined.
+#: src/Gateway/Recurring/Admin/Renewal_Order_Diagnostics_Panel.php:64
+#, php-format
+msgid "Blocked — requires manual review (reason: %s)."
+msgstr ""
+
+#: src/Gateway/Recurring/Admin/Renewal_Order_Diagnostics_Panel.php:70
+msgid "Blocked — an attempt is currently in progress."
+msgstr ""
+
+#: src/Gateway/Recurring/Admin/Renewal_Order_Diagnostics_Panel.php:84
+msgid "Last attempt (diagnostic only, not authoritative)"
+msgstr ""
+
+#: src/Gateway/Recurring/Admin/Renewal_Order_Diagnostics_Panel.php:98
+msgid "No recurring attempt recorded for this order."
+msgstr ""
+
+#: src/Gateway/Recurring/Admin/Subscription_Diagnostics_Metabox.php:45
+msgid "Autopay — recurring"
+msgstr ""
+
+#: src/Gateway/Recurring/Admin/Subscription_Diagnostics_Metabox.php:71
+msgid "No diagnostic data available."
+msgstr ""
+
+#: src/Gateway/Recurring/Admin/Subscription_Diagnostics_Metabox.php:80
+msgid "No recurring card instrument was ever linked to this subscription."
+msgstr ""
+
+#: src/Gateway/Recurring/Admin/Subscription_Diagnostics_Metabox.php:87
+msgid "Instrument status"
+msgstr ""
+
+#: src/Gateway/Recurring/Admin/Subscription_Diagnostics_Metabox.php:88
+msgid "active"
+msgstr ""
+
+#: src/Gateway/Recurring/Admin/Subscription_Diagnostics_Metabox.php:88
+msgid "inactive"
+msgstr ""
+
+#: src/Gateway/Recurring/Admin/Subscription_Diagnostics_Metabox.php:95
+msgid "Deactivation reason"
+msgstr ""
+
+#: src/Gateway/Recurring/Admin/Subscription_Diagnostics_Metabox.php:98
+msgid "External deactivation confirmed"
+msgstr ""
+
+#: src/Gateway/Recurring/Admin/Subscription_Diagnostics_Metabox.php:99
+msgid "yes"
+msgstr ""
+
+#: src/Gateway/Recurring/Admin/Subscription_Diagnostics_Metabox.php:99
+msgid "no"
+msgstr ""
+
+#: src/Gateway/Recurring/Admin/Subscription_Diagnostics_Metabox.php:105
+msgid "ClientHash"
+msgstr ""
+
+#: src/Gateway/Recurring/Admin/Subscription_Diagnostics_Metabox.php:106
+msgid "Channel"
+msgstr ""
+
+#: src/Gateway/Recurring/Admin/Subscription_Diagnostics_Metabox.php:107
+msgid "Currency"
+msgstr ""
+
+#: src/Gateway/Recurring/Admin/Subscription_Diagnostics_Metabox.php:108
+msgid "ServiceID"
+msgstr ""
+
+#: src/Gateway/Recurring/Admin/Subscription_Diagnostics_Metabox.php:109
+msgid "Environment"
+msgstr ""
+
+#: src/Gateway/Recurring/Admin/Subscription_Diagnostics_Metabox.php:112
+msgid "A local FS pause is not yet confirmed applied — a retry is scheduled."
+msgstr ""
+
+#: src/Gateway/Recurring/Manual_Renewal_Payment_Handler.php:217
+msgid "This payment method is no longer available for this order. Please refresh the page."
+msgstr ""
+
+#: src/Gateway/Recurring/Manual_Renewal_Payment_Handler.php:232
+msgid "Your saved card was declined. Please contact us or try again later."
+msgstr ""
+
+#: src/Gateway/Recurring/Manual_Renewal_Payment_Handler.php:239
+msgid "Payment could not be confirmed immediately. Please check your order status shortly."
+msgstr ""
+
+#: src/Gateway/Recurring/Recurring_Context.php:530
+msgid "Autopay is not available for this specific order with the current store configuration (e.g. more than one subscription, a zero-amount first payment, or the recurring card channel not being configured for this currency). Please choose a different payment method, or contact the store."
+msgstr ""
+
+#. translators: %s: machine-readable reason the outcome could not be determined.
+#: src/Gateway/Recurring/Recurring_Result_Applier.php:210
+#, php-format
+msgid "Autopay recurring: charge outcome could not be determined and requires manual review (reason: %s)."
+msgstr ""
+
+#. translators: %s: machine-readable deactivation reason.
+#: src/Gateway/Recurring/Recurring_Subscription_Store.php:285
+#, php-format
+msgid "Autopay recurring card link deactivated locally (reason: %s)."
+msgstr ""
+
+#: src/Gateway/Recurring/Renewal_Failed_Order_Email_Cta.php:141
+msgid "You can pay for this renewal directly using the link below:"
+msgstr ""
+
+#: src/Gateway/Recurring/Renewal_Failed_Order_Email_Cta.php:150
+msgid "Pay for this renewal now"
+msgstr ""
+
+#: src/Gateway/Recurring/Subscription_Cancellation_Listener.php:85
+msgid "Autopay: instrument recurring pozostaje aktywny zewnętrznie — współdzielony przez inną, wciąż uprawnioną subskrypcję."
+msgstr ""
+
+#: src/Gateway/Recurring/Subscription_Cancellation_Listener.php:138
+msgid "Autopay: instrument recurring stał się współdzielony przed ponowieniem — zewnętrzna dezaktywacja porzucona."
+msgstr ""
+
+#. translators: %s: machine-readable reason.
+#: src/Gateway/Recurring/Subscription_Cancellation_Listener.php:200
+#, php-format
+msgid "Autopay: external recurring instrument deactivation NOT CONFIRMED (%s) - manual verification required."
+msgstr ""
+
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:213
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:412
 msgid "Pay with Autopay"
 msgstr ""
 
-#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:270
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:343
+msgid "Recurring-aware Autopay payment channel list for the current cart."
+msgstr ""
+
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:349
+msgid "Whether Autopay cannot process the current cart in its present shape."
+msgstr ""
+
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:355
+msgid "Message to display when recurring_blocked is true."
+msgstr ""
+
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:437
 msgid "No payment channel selected."
 msgstr ""
 
-#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:272
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:439
 #: templates/blik_0.php:28
 msgid "Enter the BLIK code."
 msgstr ""
 
-#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:274
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:441
 msgid "You'll find it in your banking app."
 msgstr ""
 
-#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:278
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:445
 #: templates/google_pay.php:42
 msgid "Please read and accept the"
 msgstr ""
 
-#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:280
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:447
 #: templates/google_pay.php:45
 msgid "Terms & Conditions"
 msgstr ""
 
-#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:282
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:449
 #: templates/google_pay.php:34
 msgid "Pay with Google Pay"
 msgstr ""
 
-#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:284
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:451
 #: templates/card_widget.php:21
 msgid "Enter your card details in the form above to place the order."
 msgstr ""
 
-#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:286
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:453
 msgid "Complete the card form before placing the order."
 msgstr ""
 
-#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:288
+#: src/Integration/Woocommerce_Blocks/WC_Gateway_Autopay_Blocks_Support.php:455
 #: templates/card_widget.php:46
 msgid "Card payment form"
 msgstr ""
 
-#: src/Plugin.php:149
+#: src/Plugin.php:288
 msgid "Unpaid order cancelled - time limit reached."
 msgstr ""
 
-#: src/Plugin.php:499
+#: src/Plugin.php:643
 msgid "The selected currency is not supported by the Autopay payment gateway. The gateway has been disabled"
 msgstr ""
 
-#: src/Plugin.php:634
+#: src/Plugin.php:838
 msgid "Autopay BLIK-0: Timed out while waiting for confirmation."
 msgstr ""
 
-#: src/Plugin.php:763
+#: src/Plugin.php:967
 msgid "The block-based payment module will not work with the installed version of Woocommerce. Install at least 8.1.0 version."
 msgstr ""
 
-#: src/Utilities/File_System/Log_Downloader.php:101
+#: src/Utilities/File_System/Log_Downloader.php:99
 msgid "Log download failed. Please try again."
 msgstr ""
 
@@ -769,152 +980,158 @@ msgstr ""
 msgid "Action field not exists"
 msgstr ""
 
-#: src/Utilities/Test_Connection/Async_Request.php:74
+#: src/Utilities/Test_Connection/Async_Request.php:71
 msgid "test_id field not exists"
 msgstr ""
 
-#: src/Utilities/Test_Connection/Async_Request.php:97
+#: src/Utilities/Test_Connection/Async_Request.php:93
 msgid "Your store is not ready to accept payments. Please check the logs for more details."
 msgstr ""
 
-#: src/Utilities/Test_Connection/Async_Request.php:102
+#: src/Utilities/Test_Connection/Async_Request.php:98
 msgid "Minor inconsistencies in your shop were detected, though they may not block transactions entirely. Review your integration steps to optimize performance. If you encounter issues, you can share the log file by downloading or copying it."
 msgstr ""
 
-#: src/Utilities/Test_Connection/Async_Request.php:107
+#: src/Utilities/Test_Connection/Async_Request.php:103
 msgid "All gateway prerequisites were met, and transactions should proceed smoothly. Keep this success summary so you can reference it if updates are needed."
 msgstr ""
 
-#: src/Utilities/Test_Connection/Async_Request.php:139
+#: src/Utilities/Test_Connection/Async_Request.php:133
 msgid "Invalid action"
 msgstr ""
 
-#: src/Utilities/Test_Connection/Auditor.php:241
+#: src/Utilities/Test_Connection/Auditor.php:238
 msgid "Transaction testing"
 msgstr ""
 
-#: src/Utilities/Test_Connection/Auditor.php:243
+#: src/Utilities/Test_Connection/Auditor.php:240
 msgid "Autopay configuration testing"
 msgstr ""
 
-#: src/Utilities/Test_Connection/Auditor.php:245
-#: src/Utilities/Test_Connection/Auditor.php:255
+#: src/Utilities/Test_Connection/Auditor.php:242
+#: src/Utilities/Test_Connection/Auditor.php:252
 #: src/Utilities/Test_Connection/Strings.php:17
 msgid "Server configuration testing"
 msgstr ""
 
-#: src/Utilities/Test_Connection/Auditor.php:247
+#: src/Utilities/Test_Connection/Auditor.php:244
 msgid "Wordpress configuration testing"
 msgstr ""
 
 #. translators: %s is the detected PHP version number.
-#: src/Utilities/Test_Connection/Auditor.php:267
+#: src/Utilities/Test_Connection/Auditor.php:264
 #, php-format
 msgid "PHP version %s is below the minimum required version 7.4. Please update your PHP installation."
 msgstr ""
 
 #. translators: %s is the detected PHP version number.
-#: src/Utilities/Test_Connection/Auditor.php:276
+#: src/Utilities/Test_Connection/Auditor.php:273
 #, php-format
-msgid "PHP version %s is higher than 8.4. Some Wordpress configurations may experience compatibility issues."
+msgid "PHP version %s is higher than 8.4. Some WordPress configurations may experience compatibility issues."
 msgstr ""
 
 #. translators: %s is a comma-separated list of missing PHP extension names.
-#: src/Utilities/Test_Connection/Auditor.php:303
+#: src/Utilities/Test_Connection/Auditor.php:300
 #, php-format
 msgid "Missing required PHP extensions: %s. Please install them."
 msgstr ""
 
-#: src/Utilities/Test_Connection/Auditor.php:318
+#: src/Utilities/Test_Connection/Auditor.php:315
 msgid "HTTPS is not enabled. Please secure your site with an SSL certificate."
 msgstr ""
 
-#: src/Utilities/Test_Connection/Auditor.php:332
+#: src/Utilities/Test_Connection/Auditor.php:329
 msgid "WooCommerce log directory is not writable. Please check file permissions."
 msgstr ""
 
-#: src/Utilities/Test_Connection/Auditor.php:348
+#: src/Utilities/Test_Connection/Auditor.php:345
 msgid "No internet connection detected. Please contact your hosting provider."
 msgstr ""
 
 #. translators: %s is the detected WooCommerce version number.
-#: src/Utilities/Test_Connection/Auditor.php:362
+#: src/Utilities/Test_Connection/Auditor.php:359
 #, php-format
 msgid "Detected unsupported WooCommerce version (%s). We recommend updating to version 8.1 or higher."
 msgstr ""
 
 #. translators: %s is the detected WooCommerce version number including beta label.
-#: src/Utilities/Test_Connection/Auditor.php:368
+#: src/Utilities/Test_Connection/Auditor.php:365
 #, php-format
 msgid "Beta version of WooCommerce (%s) detected. It might not be fully supported."
 msgstr ""
 
 #. translators: %s is the detected WordPress version number.
-#: src/Utilities/Test_Connection/Auditor.php:389
+#: src/Utilities/Test_Connection/Auditor.php:386
 #, php-format
 msgid "Detected unsupported WordPress version (%s). We recommend updating to version 6.0 or higher."
 msgstr ""
 
 #. translators: %s is the detected WordPress version number including beta label.
-#: src/Utilities/Test_Connection/Auditor.php:395
+#: src/Utilities/Test_Connection/Auditor.php:392
 #, php-format
 msgid "Beta version of WordPress (%s) detected. It might not be fully supported."
 msgstr ""
 
-#: src/Utilities/Test_Connection/Auditor.php:418
+#: src/Utilities/Test_Connection/Auditor.php:415
 msgid "Unable to fetch the latest Autopay plugin version from the WordPress repository."
 msgstr ""
 
-#: src/Utilities/Test_Connection/Auditor.php:454
+#. translators: %1$s is the current installed plugin version, %2$s is the latest available version.
+#: src/Utilities/Test_Connection/Auditor.php:430
+#, php-format
+msgid "An update is available for the Autopay plugin. Current version: %1$s, latest version: %2$s."
+msgstr ""
+
+#: src/Utilities/Test_Connection/Auditor.php:451
 msgid "Old BlueMedia plugin is active. Please remove it or deactivate it."
 msgstr ""
 
-#: src/Utilities/Test_Connection/Auditor.php:477
+#: src/Utilities/Test_Connection/Auditor.php:474
 msgid "Conflicting third-party plugin 'pay-wp' is active. Please deactivate it to avoid conflicts with Autopay."
 msgstr ""
 
-#: src/Utilities/Test_Connection/Auditor.php:497
+#: src/Utilities/Test_Connection/Auditor.php:494
 msgid "No configured currencies found"
 msgstr ""
 
 #. translators: %s is the currency code (e.g. PLN, EUR).
-#: src/Utilities/Test_Connection/Auditor.php:527
+#: src/Utilities/Test_Connection/Auditor.php:523
 #, php-format
 msgid "ServiceID was not provided for currency: %s"
 msgstr ""
 
 #. translators: %s is the currency code (e.g. PLN, EUR).
-#: src/Utilities/Test_Connection/Auditor.php:542
+#: src/Utilities/Test_Connection/Auditor.php:538
 #, php-format
 msgid "An invalid ServiceID was provided for currency: %s"
 msgstr ""
 
 #. translators: %s is the currency code (e.g. PLN, EUR).
-#: src/Utilities/Test_Connection/Auditor.php:557
+#: src/Utilities/Test_Connection/Auditor.php:553
 #, php-format
 msgid "API secret key (Hash) was not provided for currency: %s"
 msgstr ""
 
-#: src/Utilities/Test_Connection/Auditor.php:578
+#: src/Utilities/Test_Connection/Auditor.php:574
 msgid "Autopay URL cannot be reached. Make sure you have a valid internet connection"
 msgstr ""
 
 #. translators: %s is the currency code (e.g. PLN, EUR).
-#: src/Utilities/Test_Connection/Auditor.php:627
+#: src/Utilities/Test_Connection/Auditor.php:622
 #, php-format
 msgid "Failed to download payment channel list for currency: %s. Check the validity of the provided key (hash) and serviceID"
 msgstr ""
 
-#: src/Utilities/Test_Connection/Log_Entry.php:70
+#: src/Utilities/Test_Connection/Log_Entry.php:69
 #: src/Utilities/Test_Connection/Strings.php:33
 msgid "Critical"
 msgstr ""
 
-#: src/Utilities/Test_Connection/Log_Entry.php:75
+#: src/Utilities/Test_Connection/Log_Entry.php:74
 msgid "Warning"
 msgstr ""
 
-#: src/Utilities/Test_Connection/Log_Entry.php:80
+#: src/Utilities/Test_Connection/Log_Entry.php:79
 msgid "Info"
 msgstr ""
 
@@ -927,11 +1144,11 @@ msgid "Failed to create order"
 msgstr ""
 
 #: src/Utilities/Test_Connection/Order_Creator.php:62
-#: src/Utilities/Test_Connection/Order_Creator.php:93
+#: src/Utilities/Test_Connection/Order_Creator.php:96
 msgid "Failed to delete test order"
 msgstr ""
 
-#: src/Utilities/Test_Connection/Payment_Status_Controller.php:26
+#: src/Utilities/Test_Connection/Payment_Status_Controller.php:25
 msgid "Order get failed"
 msgstr ""
 
@@ -976,8 +1193,8 @@ msgstr ""
 msgid "The testing procedure was stopped by a critical error. Copy the log contents to the clipboard and download the logs to disk. If you don't see the error message or can't download the logs to disk, ask the administrator for the server error log file."
 msgstr ""
 
-#: src/Utilities/Test_Connection/Transaction_Testing_Controller.php:60
-#: src/Utilities/Test_Connection/Transaction_Testing_Controller.php:112
+#: src/Utilities/Test_Connection/Transaction_Testing_Controller.php:59
+#: src/Utilities/Test_Connection/Transaction_Testing_Controller.php:109
 msgid "Order create failed"
 msgstr ""
 

@@ -57,11 +57,14 @@ final class Card_Widget_Payment_Service {
 	/**
 	 * Run pretransaction: normalize token, sign, POST, parse XML.
 	 *
-	 * @param WC_Order $order               WooCommerce order.
-	 * @param string   $payment_token_input Raw token from POST (atp_card_payment_token).
-	 * @param string   $amount_string       Formatted order total for the Autopay Amount field.
-	 * @param string   $service_id          Autopay ServiceID.
-	 * @param string   $gateway_base_url    Trailing-slash base (e.g. https://testpay.autopay.eu/).
+	 * @param WC_Order    $order               WooCommerce order.
+	 * @param string      $payment_token_input Raw token from POST (atp_card_payment_token).
+	 * @param string      $amount_string       Formatted order total for the Autopay Amount field.
+	 * @param string      $service_id          Autopay ServiceID.
+	 * @param string      $gateway_base_url    Trailing-slash base (e.g. https://testpay.autopay.eu/).
+	 * @param string|null $order_id_override   Per-attempt OrderID for a renewal-
+	 *                                         order repayment. Null for every existing
+	 *                                         caller (OrderID stays $order->get_id()).
 	 *
 	 * @return Card_Widget_Start_Result Outcome with params for meta persistence on success.
 	 */
@@ -70,7 +73,8 @@ final class Card_Widget_Payment_Service {
 		string $payment_token_input,
 		string $amount_string,
 		string $service_id,
-		string $gateway_base_url
+		string $gateway_base_url,
+		?string $order_id_override = null
 	): Card_Widget_Start_Result {
 		$order_id = $order->get_id();
 
@@ -80,7 +84,8 @@ final class Card_Widget_Payment_Service {
 			$order,
 			$amount_string,
 			$service_id,
-			$payment_token_param
+			$payment_token_param,
+			$order_id_override
 		);
 
 		$params_with_hash = array_merge(
@@ -195,10 +200,11 @@ final class Card_Widget_Payment_Service {
 	/**
 	 * Build ordered fields for Hash (CustomerIP omitted when empty).
 	 *
-	 * @param WC_Order $order               Order.
-	 * @param string   $amount_string       API amount.
-	 * @param string   $service_id          Service ID.
-	 * @param string   $payment_token_param Normalized token.
+	 * @param WC_Order    $order               Order.
+	 * @param string      $amount_string       API amount.
+	 * @param string      $service_id          Service ID.
+	 * @param string      $payment_token_param Normalized token.
+	 * @param string|null $order_id_override   Per-attempt OrderID override.
 	 *
 	 * @return array<string, mixed>
 	 */
@@ -206,13 +212,14 @@ final class Card_Widget_Payment_Service {
 		WC_Order $order,
 		string $amount_string,
 		string $service_id,
-		string $payment_token_param
+		string $payment_token_param,
+		?string $order_id_override = null
 	): array {
 		$customer_ip = trim( (string) blue_media()->get_core_helpers()->get_visitor_ip() );
 
 		$params = [
 			Autopay_Payment_Protocol::FIELD_SERVICE_ID     => $service_id,
-			Autopay_Payment_Protocol::FIELD_ORDER_ID       => $order->get_id(),
+			Autopay_Payment_Protocol::FIELD_ORDER_ID       => $order_id_override ?? $order->get_id(),
 			Autopay_Payment_Protocol::FIELD_AMOUNT         => $amount_string,
 			Autopay_Payment_Protocol::FIELD_DESCRIPTION    => (string) $order->get_id(),
 			Autopay_Payment_Protocol::FIELD_GATEWAY_ID     => Blue_Media_Gateway::CARD_CHANNEL,

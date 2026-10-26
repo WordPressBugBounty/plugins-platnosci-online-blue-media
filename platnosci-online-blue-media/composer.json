@@ -61,5 +61,14 @@
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true
     }
+  },
+  "scripts": {
+    "phpcompat-install": "composer install --working-dir=tools/phpcompatibility",
+    "phpcompat-min": "tools/phpcompatibility/vendor/bin/phpcs --standard=PHPCompatibility --runtime-set testVersion 7.4 --extensions=php -p src",
+    "phpcompat-max": "tools/phpcompatibility/vendor/bin/phpcs --standard=PHPCompatibility --runtime-set testVersion 8.5 --extensions=php -p src",
+    "phpcompat": [
+      "@phpcompat-min",
+      "@phpcompat-max"
+    ]
   }
 }

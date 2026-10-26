@@ -5,8 +5,8 @@ Requires at least: 6.0
 Requires PHP: 7.4
 Tested up to: 7.1
 WC requires at least: 7.9
-WC tested up to: 11.0
-Stable tag: 5.0.5
+WC tested up to: 11.2.1
+Stable tag: 5.1.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -40,15 +40,17 @@ Autopay is a payment module that enables cashless transactions in a shop based o
   DE, IT, ES); for other languages, the interface is displayed in English
 - ability to manually change the order of Autopay payment methods in the
   WooCommerce panel using drag & drop
+- native integration with the [Flexible Subscriptions](https://wordpress.org/plugins/flexible-subscriptions/) WooCommerce extension – card payments for subscription products, with automatic renewals, manual renewal/repayment, and subscription cancellation kept in sync with Autopay
 
 [Register your shop!](https://autopay.pl/oferta/platnosci-online?utm_campaign=woocommerce&utm_source=woocommerce_description&utm_medium=offer_cta#kalkulator)
 
 
 **Requirements for installing the plug-in**
 
-- WordPress - tested on versions `6.0` to `7.0`
-- WooCommerce plugin - tested on versions `7.9.0` to `10.8.1`
+- WordPress - tested on versions `6.0` to `7.1.3`
+- WooCommerce plugin - tested on versions `7.9.0` to `11.2.1`
 - PHP version min. `7.4`
+- (optional) [Flexible Subscriptions](https://wordpress.org/plugins/flexible-subscriptions/) - required only if you want to sell subscription products with card payment renewals through Autopay
 
 == Installation	 ==
 
@@ -85,6 +87,15 @@ The values of the Service ID and Configuration Key are different for the test an
 
 
 == Changelog ==
+
+### 5.1.0 (26.10.2026) ###
+* Security: improved payment notification handling and order status processing. Immediate update is recommended.
+* Added: integration with "Flexible Subscriptions" for WooCommerce, supporting recurring card payments, automatic renewals, manual renewal payments and one-time additional payments.
+* Added: synchronization of subscription card activation/deactivation (RPAN/RPDN) and subscription cancellation, deactivation and suspension with Autopay.
+* Added: support for mixed carts containing subscription and one-time products.
+* Added: automatic filtering of payment channels as the cart changes in classic and block checkout.
+* Added: recurring payment logs and subscription/order diagnostics.
+* Added: a payment link for failed Autopay renewals in the WooCommerce customer "Failed order" email, when that email is enabled in the store settings.
 
 ### 5.0.5 (28.09.2026) ###
 * Fixed: the BLIK Pay Later and instalments payment descriptions displayed as raw HTML code instead of formatted text on checkout.
